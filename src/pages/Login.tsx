@@ -1,40 +1,40 @@
 import { useState } from 'react';
-import { Mail, MessageSquare, Send } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
-const Contact = () => {
+const Login = () => {
   const { toast } = useToast();
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
+    // Simulate login - in production this would connect to auth
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     toast({
-      title: 'Message sent!',
-      description: "We'll get back to you as soon as possible.",
+      title: 'Coming soon!',
+      description: 'Account functionality will be available soon.',
     });
 
     setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
   };
 
   return (
     <div className="min-h-screen py-16 md:py-24 bg-background">
       <div className="container">
-        <div className="max-w-xl mx-auto">
+        <div className="max-w-md mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Contact Us</h1>
+          <div className="text-center mb-10">
+            <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Welcome Back</h1>
             <p className="text-muted-foreground">
-              Have a question or need assistance? We're here to help. Send us a message and we'll respond as soon as possible.
+              Sign in to access your account
             </p>
           </div>
 
@@ -43,7 +43,7 @@ const Contact = () => {
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
-                  Your Email
+                  Email
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -58,47 +58,44 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="subject" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
-                  Subject
-                </Label>
-                <Input
-                  id="subject"
-                  type="text"
-                  placeholder="What is this about?"
-                  required
-                  className="h-12 bg-secondary border-border focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="message" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
-                  Your Message
+                <Label htmlFor="password" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                  Password
                 </Label>
                 <div className="relative">
-                  <MessageSquare className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
-                  <Textarea
-                    id="message"
-                    placeholder="Tell us how we can help..."
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
                     required
-                    className="pl-11 min-h-[140px] bg-secondary border-border focus:border-primary resize-none"
+                    className="pl-11 pr-11 h-12 bg-secondary border-border focus:border-primary"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
               <Button
                 type="submit"
                 size="lg"
-                className="w-full h-12 font-medium tracking-wider text-sm bg-card text-foreground border border-border hover:bg-secondary gap-2"
+                className="w-full h-12 font-medium tracking-wider text-sm"
                 disabled={isSubmitting}
               >
-                <Send className="h-4 w-4" />
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Signing in...' : 'Sign In'}
               </Button>
             </div>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-8">
-            We typically respond within 24-48 hours during business days.
+          <p className="text-center text-sm text-muted-foreground mt-6">
+            Don't have an account?{' '}
+            <Link to="/signup" className="text-primary hover:underline">
+              Create one
+            </Link>
           </p>
         </div>
       </div>
@@ -106,4 +103,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default Login;

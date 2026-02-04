@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ProductCard } from '@/components/product';
 import { products } from '@/data/products';
+import heroImage from '@/assets/hero-perfumes.jpg';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'newest';
 
@@ -19,12 +20,12 @@ const Shop = () => {
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const pageTitle = category === 'men' ? 'Men' : category === 'women' ? 'Women' : 'All Fragrances';
+  const pageTitle = category === 'men' ? 'Men' : category === 'women' ? 'Women' : 'Our Collection';
   const pageDescription = category === 'men'
     ? 'Fragrances for men'
     : category === 'women'
     ? 'Fragrances for women'
-    : 'Explore our complete collection';
+    : 'Discover our curated selection of premium fragrances from the world\'s most prestigious houses';
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -69,7 +70,7 @@ const Shop = () => {
                   checked={selectedCategories.includes(cat.value)}
                   onCheckedChange={(checked) => handleCategoryChange(cat.value, checked as boolean)}
                 />
-                <Label htmlFor={cat.value} className="text-sm cursor-pointer">{cat.label}</Label>
+                <Label htmlFor={cat.value} className="text-sm cursor-pointer text-muted-foreground">{cat.label}</Label>
               </div>
             ))}
           </div>
@@ -89,24 +90,65 @@ const Shop = () => {
         className="w-full"
         onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}
       >
-        Reset
+        Reset Filters
       </Button>
     </div>
   );
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <section className="py-10 md:py-14 bg-secondary border-b border-border">
-        <div className="container">
-          <h1 className="text-2xl md:text-3xl font-semibold text-foreground">{pageTitle}</h1>
-          <p className="text-muted-foreground mt-1">{pageDescription}</p>
+      {/* Hero Header */}
+      <section 
+        className="relative py-20 md:py-28"
+        style={{
+          backgroundImage: `linear-gradient(to bottom, rgba(17,17,22,0.85) 0%, rgba(17,17,22,0.95) 100%), url(${heroImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="container text-center">
+          <p className="text-xs tracking-[0.3em] text-primary font-medium mb-3 uppercase">Premium Fragrances</p>
+          <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">{pageTitle}</h1>
+          <p className="text-muted-foreground max-w-lg mx-auto">{pageDescription}</p>
         </div>
       </section>
 
       {/* Main */}
-      <section className="py-8 md:py-12">
+      <section className="py-8 md:py-12 bg-background">
         <div className="container">
+          {/* Toolbar */}
+          <div className="flex items-center justify-between mb-8 pb-6 border-b border-border">
+            <p className="text-sm text-muted-foreground">{filteredProducts.length} fragrances</p>
+            <div className="flex items-center gap-3">
+              <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="lg:hidden gap-2">
+                    <SlidersHorizontal className="h-4 w-4" />
+                    Filters
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="bg-background">
+                  <SheetHeader>
+                    <SheetTitle>Filters</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6"><FilterContent /></div>
+                </SheetContent>
+              </Sheet>
+
+              <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+                <SelectTrigger className="w-36 h-9 text-sm bg-secondary border-border">
+                  <SelectValue placeholder="Sort" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="featured">Featured</SelectItem>
+                  <SelectItem value="price-asc">Price: Low-High</SelectItem>
+                  <SelectItem value="price-desc">Price: High-Low</SelectItem>
+                  <SelectItem value="newest">Newest</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
             <aside className="hidden lg:block w-56 flex-shrink-0">
@@ -116,40 +158,8 @@ const Shop = () => {
               </div>
             </aside>
 
-            {/* Products */}
+            {/* Products Grid */}
             <div className="flex-1">
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-sm text-muted-foreground">{filteredProducts.length} products</p>
-                <div className="flex items-center gap-3">
-                  <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" size="sm" className="lg:hidden gap-2">
-                        <SlidersHorizontal className="h-4 w-4" />
-                        Filters
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left">
-                      <SheetHeader>
-                        <SheetTitle>Filters</SheetTitle>
-                      </SheetHeader>
-                      <div className="mt-6"><FilterContent /></div>
-                    </SheetContent>
-                  </Sheet>
-
-                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-                    <SelectTrigger className="w-36 h-9 text-sm">
-                      <SelectValue placeholder="Sort" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="featured">Featured</SelectItem>
-                      <SelectItem value="price-asc">Price: Low-High</SelectItem>
-                      <SelectItem value="price-desc">Price: High-Low</SelectItem>
-                      <SelectItem value="newest">Newest</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
               {filteredProducts.length === 0 ? (
                 <div className="text-center py-16">
                   <p className="text-muted-foreground mb-4">No products found</p>
@@ -158,9 +168,9 @@ const Shop = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   {filteredProducts.map((product, index) => (
-                    <div key={product.id} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+                    <div key={product.id} className="animate-slide-up" style={{ animationDelay: `${index * 30}ms` }}>
                       <ProductCard product={product} />
                     </div>
                   ))}

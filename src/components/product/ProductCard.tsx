@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
     : 0;
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-EU', {
+    return new Intl.NumberFormat('nl-NL', {
       style: 'currency',
       currency: 'EUR',
     }).format(price);
@@ -26,32 +26,46 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
 
   return (
     <div className={cn('group', className)}>
-      {/* Image */}
-      <Link to={`/product/${product.id}`} className="block relative mb-5">
-        <div className="aspect-square bg-secondary rounded-lg p-8 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:bg-secondary/80">
+      {/* Image Container */}
+      <Link to={`/product/${product.id}`} className="block relative mb-4">
+        <div className="aspect-square bg-secondary rounded-lg overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
         
         {/* Category Badge */}
-        <span className="absolute top-3 left-3 text-[10px] font-medium tracking-wider px-3 py-1.5 rounded-full bg-background/90 text-foreground uppercase">
+        <span className="absolute top-3 left-3 text-[10px] font-medium tracking-wider px-3 py-1.5 rounded-full bg-card/90 backdrop-blur-sm text-foreground uppercase border border-border">
           {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : 'Unisex'}
         </span>
         
+        {/* Discount Badge */}
         {hasDiscount && (
-          <span className="absolute top-3 right-3 bg-accent text-accent-foreground text-[10px] font-semibold px-2.5 py-1 rounded-full">
+          <span className="absolute top-3 right-3 bg-destructive text-destructive-foreground text-[10px] font-semibold px-2 py-1 rounded-full">
             -{discountPercent}%
           </span>
         )}
+
+        {/* Quick Add Button */}
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            addItem(product);
+          }}
+          size="icon"
+          className="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-primary text-primary-foreground opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+          disabled={!product.inStock}
+        >
+          <Plus className="h-5 w-5" />
+        </Button>
       </Link>
 
       {/* Content */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <Link to={`/product/${product.id}`}>
-          <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors leading-tight">
+          <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-2">
             {product.name}
           </h3>
         </Link>
@@ -70,11 +84,11 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         <Button
           onClick={() => addItem(product)}
           variant="outline"
-          className="w-full mt-1 gap-2 text-sm font-medium h-11"
+          className="w-full h-10 text-xs font-medium tracking-wider uppercase mt-2 border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary"
           disabled={!product.inStock}
         >
-          <ShoppingBag className="h-4 w-4" />
-          {product.inStock ? 'Add to Cart' : 'Sold Out'}
+          {product.inStock ? 'Add' : 'Sold Out'}
+          {product.inStock && <span className="hidden sm:inline ml-1">· Buy</span>}
         </Button>
       </div>
     </div>
