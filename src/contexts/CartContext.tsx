@@ -7,9 +7,9 @@ interface CartState {
 }
 
 type CartAction =
-  | { type: 'ADD_ITEM'; payload: Product }
+  | { type: 'ADD_ITEM'; payload: { product: Product; selectedMl?: number; selectedPrice?: number } }
   | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: { productId: string; quantity: number } }
+  | { type: 'UPDATE_QUANTITY'; payload: { productId: string; quantity: number; selectedMl?: number } }
   | { type: 'CLEAR_CART' }
   | { type: 'TOGGLE_CART' }
   | { type: 'OPEN_CART' }
@@ -17,9 +17,9 @@ type CartAction =
   | { type: 'LOAD_CART'; payload: CartItem[] };
 
 interface CartContextType extends CartState {
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, selectedMl?: number, selectedPrice?: number) => void;
+  removeItem: (productId: string, selectedMl?: number) => void;
+  updateQuantity: (productId: string, quantity: number, selectedMl?: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
   openCart: () => void;
@@ -35,42 +35,60 @@ const CART_STORAGE_KEY = 'profparfums-cart';
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.product.id === action.payload.id);
+      const { product, selectedMl, selectedPrice } = action.payload;
+      const cartKey = selectedMl ? `${product.id}-${selectedMl}` : product.id;
+      const existingItem = state.items.find(item => {
+        const itemKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+        return itemKey === cartKey;
+      });
       if (existingItem) {
         return {
           ...state,
-          items: state.items.map(item =>
-            item.product.id === action.payload.id
+          items: state.items.map(item => {
+            const itemKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+            return itemKey === cartKey
               ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
+              : item;
+          }),
         };
       }
       return {
         ...state,
-        items: [...state.items, { product: action.payload, quantity: 1 }],
+        items: [...state.items, { product, quantity: 1, selectedMl, selectedPrice }],
       };
     }
-    case 'REMOVE_ITEM':
+    case 'REMOVE_ITEM': {
+      // action.payload can be "productId" or "productId-ml"
       return {
         ...state,
-        items: state.items.filter(item => item.product.id !== action.payload),
+        items: state.items.filter(item => {
+          const itemKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+          return itemKey !== action.payload;
+        }),
       };
-    case 'UPDATE_QUANTITY':
-      if (action.payload.quantity <= 0) {
+    }
+    case 'UPDATE_QUANTITY': {
+      const { productId, quantity, selectedMl } = action.payload;
+      const cartKey = selectedMl ? `${productId}-${selectedMl}` : productId;
+      if (quantity <= 0) {
         return {
           ...state,
-          items: state.items.filter(item => item.product.id !== action.payload.productId),
+          items: state.items.filter(item => {
+            const itemKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+            return itemKey !== cartKey;
+          }),
         };
       }
       return {
         ...state,
-        items: state.items.map(item =>
-          item.product.id === action.payload.productId
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        ),
+        items: state.items.map(item => {
+          const itemKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+          return itemKey === cartKey
+            ? { ...item, quantity }
+            : item;
+        }),
       };
+    }
     case 'CLEAR_CART':
       return { ...state, items: [] };
     case 'TOGGLE_CART':
@@ -111,17 +129,25 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state.items]);
 
-  const addItem = (product: Product) => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
+  const addItem = (product: Product, selectedMl?: number, selectedPrice?: number) => {
+    dispatch({ type: 'ADD_ITEM', payload: { product, selectedMl, selectedPrice } });
     dispatch({ type: 'OPEN_CART' });
   };
 
-  const removeItem = (productId: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: productId });
+  const removeItem = (productId: string, selectedMl?: number) => {
+    const cartKey = selectedMl ? `${productId}-${selectedMl}` : productId;
+    // Find and remove by the composite key
+    const itemToRemove = state.items.find(item => {
+      const itemKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+      return itemKey === cartKey;
+    });
+    if (itemToRemove) {
+      dispatch({ type: 'REMOVE_ITEM', payload: itemToRemove.product.id + (itemToRemove.selectedMl ? `-${itemToRemove.selectedMl}` : '') });
+    }
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
+  const updateQuantity = (productId: string, quantity: number, selectedMl?: number) => {
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity, selectedMl } });
   };
 
   const clearCart = () => {
@@ -142,7 +168,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = state.items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + (item.selectedPrice || item.product.price) * item.quantity,
     0
   );
 

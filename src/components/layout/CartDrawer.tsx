@@ -55,67 +55,74 @@ export const CartDrawer = () => {
           <>
             <div className="flex-1 overflow-y-auto px-6 py-6">
               <div className="space-y-6">
-                {items.map((item) => (
-                  <div key={item.product.id} className="flex gap-4">
-                    <Link
-                      to={`/product/${item.product.id}`}
-                      onClick={closeCart}
-                      className="w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden"
-                    >
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </Link>
-
-                    <div className="flex-1 min-w-0">
+                {items.map((item) => {
+                  const cartKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+                  const displayPrice = item.selectedPrice || item.product.price;
+                  return (
+                    <div key={cartKey} className="flex gap-4">
                       <Link
                         to={`/product/${item.product.id}`}
                         onClick={closeCart}
-                        className="text-sm font-medium text-foreground hover:text-accent transition-colors line-clamp-2"
+                        className="w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden"
                       >
-                        {item.product.name}
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="w-full h-full object-cover"
+                        />
                       </Link>
-                      <p className="text-sm font-semibold text-foreground mt-1">
-                        {formatPrice(item.product.price)}
-                      </p>
 
-                      <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center border border-border">
+                      <div className="flex-1 min-w-0">
+                        <Link
+                          to={`/product/${item.product.id}`}
+                          onClick={closeCart}
+                          className="text-sm font-medium text-foreground hover:text-accent transition-colors line-clamp-2"
+                        >
+                          {item.product.name}
+                        </Link>
+                        {item.selectedMl && (
+                          <p className="text-xs text-muted-foreground mt-0.5">{item.selectedMl}ml</p>
+                        )}
+                        <p className="text-sm font-semibold text-foreground mt-1">
+                          {formatPrice(displayPrice)}
+                        </p>
+
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="flex items-center border border-border">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-none hover:bg-secondary"
+                              onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedMl)}
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="w-10 text-center text-sm font-medium">
+                              {item.quantity}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-none hover:bg-secondary"
+                              onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedMl)}
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+
                           <Button
                             variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-none hover:bg-secondary"
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            size="sm"
+                            className="text-xs text-muted-foreground hover:text-accent h-8 px-2"
+                            onClick={() => removeItem(item.product.id, item.selectedMl)}
                           >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="w-10 text-center text-sm font-medium">
-                            {item.quantity}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-none hover:bg-secondary"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          >
-                            <Plus className="h-3 w-3" />
+                            Remove
                           </Button>
                         </div>
-
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs text-muted-foreground hover:text-accent h-8 px-2"
-                          onClick={() => removeItem(item.product.id)}
-                        >
-                          Remove
-                        </Button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
