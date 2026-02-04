@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Zap } from 'lucide-react';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -50,6 +49,19 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
     navigate('/checkout');
   };
 
+  // Get top 3 scent notes to display (combine all types)
+  const getScentNotesDisplay = () => {
+    if (!product.scentNotes) return null;
+    const allNotes = [
+      ...(product.scentNotes.top || []),
+      ...(product.scentNotes.heart || []),
+      ...(product.scentNotes.base || []),
+    ];
+    return allNotes.slice(0, 3);
+  };
+
+  const scentNotes = getScentNotesDisplay();
+
   return (
     <div className={cn('group', className)}>
       {/* Image Container */}
@@ -65,7 +77,7 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         
         {/* Category Badge */}
         <span className="absolute top-2 left-2 text-[9px] font-medium tracking-[0.08em] px-2 py-1 bg-background/90 text-foreground uppercase">
-          {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : 'Unisex'}
+          {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : product.category === 'bundle' ? 'Bundle' : 'Unisex'}
         </span>
         
         {/* Discount Badge */}
@@ -102,12 +114,19 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
       </Link>
 
       {/* Content - Compact */}
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <Link to={`/product/${product.id}`}>
           <h3 className="text-xs font-medium text-foreground group-hover:text-accent transition-colors leading-tight line-clamp-2">
             {product.name}
           </h3>
         </Link>
+
+        {/* Scent Notes */}
+        {scentNotes && scentNotes.length > 0 && (
+          <p className="text-[10px] text-muted-foreground leading-tight line-clamp-1">
+            {scentNotes.join(' · ')}
+          </p>
+        )}
 
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-foreground">
