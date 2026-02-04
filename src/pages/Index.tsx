@@ -43,17 +43,21 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[100svh] md:min-h-[85vh] flex items-center pt-24 md:pt-0">
-        {/* Background Image */}
+      <section className="relative min-h-[100svh] md:min-h-[85vh] flex items-center pt-24 md:pt-0 overflow-hidden">
+        {/* Background Image - GPU accelerated */}
         <motion.div 
-          className="absolute inset-0 bg-cover bg-center will-change-transform"
-          style={{ backgroundImage: `url(${heroImage})` }}
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: `url(${heroImage})`,
+            willChange: 'transform',
+            transform: 'translateZ(0)',
+          }}
+          initial={{ scale: 1.05, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-background/98 via-background/85 to-background/50" />
+        {/* White Fade Overlay - stronger on mobile */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background/60 md:bg-gradient-to-r md:from-background md:via-background/85 md:to-background/40" />
         
         <div className="container relative z-10 pb-8 md:pb-0">
           <motion.div 
