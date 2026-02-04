@@ -32,20 +32,49 @@ const COUNTRIES = [
   'Hungary',
 ];
 
-// Simple address suggestions
+// Extended address suggestions with common Dutch streets
 const ADDRESS_SUGGESTIONS: { [key: string]: { street: string; city: string }[] } = {
   'NL': [
+    { street: 'Papiermolenstraat 12', city: 'Amsterdam' },
+    { street: 'Papiermolen 5', city: 'Utrecht' },
+    { street: 'Papierweg 34', city: 'Rotterdam' },
+    { street: 'Papierbaan 8', city: 'Den Haag' },
+    { street: 'Prinsengracht 100', city: 'Amsterdam' },
+    { street: 'Prinsenstraat 45', city: 'Amsterdam' },
     { street: 'Herengracht 100', city: 'Amsterdam' },
+    { street: 'Herestraat 25', city: 'Groningen' },
     { street: 'Kalverstraat 50', city: 'Amsterdam' },
+    { street: 'Keizersgracht 200', city: 'Amsterdam' },
     { street: 'Lijnbaan 25', city: 'Rotterdam' },
+    { street: 'Leidseplein 10', city: 'Amsterdam' },
+    { street: 'Markt 1', city: 'Eindhoven' },
+    { street: 'Marktstraat 15', city: 'Utrecht' },
+    { street: 'Nieuwstraat 8', city: 'Den Haag' },
+    { street: 'Nieuwendijk 100', city: 'Amsterdam' },
+    { street: 'Oudegracht 50', city: 'Utrecht' },
+    { street: 'Overtoom 300', city: 'Amsterdam' },
+    { street: 'Rembrandtplein 5', city: 'Amsterdam' },
+    { street: 'Rokin 100', city: 'Amsterdam' },
+    { street: 'Spuistraat 75', city: 'Amsterdam' },
+    { street: 'Stationsweg 10', city: 'Den Haag' },
+    { street: 'Vondelstraat 20', city: 'Amsterdam' },
+    { street: 'Westerstraat 50', city: 'Amsterdam' },
+    { street: 'Zeedijk 30', city: 'Amsterdam' },
   ],
   'BE': [
     { street: 'Meir 100', city: 'Antwerpen' },
+    { street: 'Meirstraat 25', city: 'Antwerpen' },
     { street: 'Rue Neuve 50', city: 'Brussels' },
+    { street: 'Rue de la Loi 16', city: 'Brussels' },
+    { street: 'Veldstraat 25', city: 'Gent' },
+    { street: 'Graslei 10', city: 'Gent' },
   ],
   'DE': [
     { street: 'Kurfürstendamm 100', city: 'Berlin' },
+    { street: 'Königstraße 50', city: 'Stuttgart' },
     { street: 'Maximilianstraße 50', city: 'München' },
+    { street: 'Marienplatz 1', city: 'München' },
+    { street: 'Friedrichstraße 100', city: 'Berlin' },
   ],
 };
 
@@ -78,7 +107,7 @@ const Checkout = () => {
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // Trigger address suggestions when typing - show all suggestions when starting to type
+    // Trigger address suggestions when typing
     if (field === 'streetAddress' && value.length >= 1) {
       // Get country code based on selected country
       let countryCode: string | null = null;
@@ -90,13 +119,13 @@ const Checkout = () => {
       const code = countryCode || 'NL';
       const suggestions = ADDRESS_SUGGESTIONS[code] || [];
       
-      if (value.length >= 1) {
-        const filtered = suggestions.filter(
-          addr => addr.street.toLowerCase().includes(value.toLowerCase())
-        );
-        setAddressSuggestions(filtered.length > 0 ? filtered : suggestions);
-        setShowSuggestions(true);
-      }
+      // Filter streets that START with the typed text (case-insensitive)
+      const filtered = suggestions.filter(
+        addr => addr.street.toLowerCase().startsWith(value.toLowerCase())
+      );
+      
+      setAddressSuggestions(filtered);
+      setShowSuggestions(filtered.length > 0);
     } else if (field === 'streetAddress' && value.length === 0) {
       setShowSuggestions(false);
     }
