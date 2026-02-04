@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, Info } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -15,7 +15,7 @@ const reviews = [
   { id: 5, name: 'Sarah', text: 'Absolutely love it. Professional and sophisticated.', verified: true, rating: 5, date: '2 weeks ago' },
 ];
 
-const ProductDetail = () => {
+const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
   const { addItem, toggleCart } = useCart();
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24 md:pb-12">
+    <div ref={ref} className="min-h-screen bg-background pb-24 md:pb-12">
       <div className="container py-4 md:py-8">
         {/* Breadcrumb - Hidden on mobile */}
         <nav className="hidden md:flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -301,6 +301,8 @@ const ProductDetail = () => {
       </div>
     </div>
   );
-};
+});
+
+ProductDetail.displayName = 'ProductDetail';
 
 export default ProductDetail;
