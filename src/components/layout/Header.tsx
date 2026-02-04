@@ -33,23 +33,20 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        'fixed top-[38px] left-0 right-0 z-40 transition-all duration-300',
-        isScrolled
-          ? 'bg-background/80 backdrop-blur-xl border-b border-border/50'
-          : 'bg-background/60 backdrop-blur-md'
+        'fixed top-[38px] left-0 right-0 z-40 transition-all duration-300 bg-background/95 backdrop-blur-xl border-b border-border/50'
       )}
     >
       <div className="container">
-        <div className="flex items-center justify-between h-12">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-lg font-semibold tracking-tight text-foreground">
-              ProfParfums
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              PROFPARFUMS
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -67,17 +64,17 @@ export const Header = () => {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
-              className="relative h-9 w-9 text-foreground hover:bg-transparent hover:text-primary"
+              className="relative h-10 w-10 text-foreground hover:bg-secondary"
               onClick={toggleCart}
               aria-label="Open cart"
             >
               <ShoppingBag className="h-5 w-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-semibold">
+                <span className="absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-primary text-primary-foreground text-[11px] flex items-center justify-center font-bold">
                   {totalItems}
                 </span>
               )}
@@ -86,7 +83,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden h-9 w-9 text-foreground hover:bg-transparent"
+              className="md:hidden h-10 w-10 text-foreground hover:bg-secondary"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -103,7 +100,7 @@ export const Header = () => {
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden fixed inset-x-0 top-[86px] bg-background/95 backdrop-blur-xl border-b border-border transition-all duration-300 overflow-hidden',
+          'md:hidden fixed inset-x-0 top-[90px] bg-background border-b border-border transition-all duration-300 overflow-hidden',
           isMobileMenuOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
