@@ -78,18 +78,26 @@ const Checkout = () => {
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    if (field === 'streetAddress' && value.length >= 2) {
-      const countryCode = formData.country === 'Netherlands' ? 'NL' : 
-                         formData.country === 'Belgium' ? 'BE' : 
-                         formData.country === 'Germany' ? 'DE' : null;
-      if (countryCode && ADDRESS_SUGGESTIONS[countryCode]) {
-        const filtered = ADDRESS_SUGGESTIONS[countryCode].filter(
+    // Trigger address suggestions when typing - show all suggestions when starting to type
+    if (field === 'streetAddress' && value.length >= 1) {
+      // Get country code based on selected country
+      let countryCode: string | null = null;
+      if (formData.country === 'Netherlands') countryCode = 'NL';
+      else if (formData.country === 'Belgium') countryCode = 'BE';
+      else if (formData.country === 'Germany') countryCode = 'DE';
+      
+      // If no country selected, show Dutch suggestions by default
+      const code = countryCode || 'NL';
+      const suggestions = ADDRESS_SUGGESTIONS[code] || [];
+      
+      if (value.length >= 1) {
+        const filtered = suggestions.filter(
           addr => addr.street.toLowerCase().includes(value.toLowerCase())
         );
-        setAddressSuggestions(filtered);
-        setShowSuggestions(filtered.length > 0);
+        setAddressSuggestions(filtered.length > 0 ? filtered : suggestions);
+        setShowSuggestions(true);
       }
-    } else if (field === 'streetAddress') {
+    } else if (field === 'streetAddress' && value.length === 0) {
       setShowSuggestions(false);
     }
   };
@@ -367,7 +375,7 @@ const Checkout = () => {
                   </Label>
                   <Input
                     type="text"
-                    placeholder="Amsterdam"
+                    placeholder="City"
                     value={formData.city}
                     onChange={(e) => updateFormData('city', e.target.value)}
                     className="h-12 bg-background border-border rounded-md"
