@@ -20,6 +20,7 @@ export interface Product {
     heart: string[];
     base: string[];
   };
+  scentNotesImage?: string; // URL to combined scent notes image
   image: string;
   affiliateUrl: string;
   inStock: boolean;
