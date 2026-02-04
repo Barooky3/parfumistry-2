@@ -92,7 +92,7 @@ const Index = () => {
             </div>
             
             {/* Trust Badges */}
-            <div className="flex flex-wrap gap-6 opacity-65">
+            <div className="flex flex-wrap gap-6 opacity-85">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <feature.icon className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1} />
