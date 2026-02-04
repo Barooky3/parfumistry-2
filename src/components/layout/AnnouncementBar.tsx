@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Truck, Shield } from 'lucide-react';
 
 const messages = [
-  { icon: Sparkles, text: 'EXCLUSIVE FRAGRANCE ON SALE' },
-  { icon: Truck, text: 'FREE SHIPPING ON ORDERS OVER €50' },
-  { icon: Shield, text: '100% AUTHENTIC GUARANTEED' },
+  '✨ EXCLUSIVE FRAGRANCE ON SALE ✨',
+  '✨ INSTANT DIGITAL DELIVERY ✨',
+  '✨ PREMIUM QUALITY GUARANTEED ✨',
 ];
 
 export const AnnouncementBar = () => {
@@ -17,14 +16,12 @@ export const AnnouncementBar = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const current = messages[currentIndex];
-
   return (
-    <div className="bg-gradient-to-r from-foreground via-foreground to-foreground text-background py-2.5 relative overflow-hidden">
+    <div className="bg-foreground text-background py-2.5 fixed top-0 left-0 right-0 z-50">
       <div className="container">
-        <div className="flex items-center justify-center gap-2 text-xs font-semibold tracking-widest">
-          <span key={currentIndex} className="animate-fade-in flex items-center gap-2">
-            ✨ {current.text} ✨
+        <div className="flex items-center justify-center text-xs font-semibold tracking-widest">
+          <span key={currentIndex} className="animate-fade-in">
+            {messages[currentIndex]}
           </span>
         </div>
       </div>
