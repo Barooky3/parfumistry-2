@@ -66,6 +66,16 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
+            {/* Logo */}
+            <motion.img 
+              src={logo} 
+              alt="ProfParfums" 
+              className="h-12 md:h-16 w-auto mb-6 md:mb-8"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+            />
+            
             <motion.p 
               className="text-[10px] md:text-xs tracking-[0.3em] text-muted-foreground font-medium mb-4 md:mb-6 uppercase"
               initial={{ opacity: 0, y: 20 }}
