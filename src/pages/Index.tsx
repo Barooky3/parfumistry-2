@@ -92,11 +92,16 @@ const Index = () => {
             </div>
             
             {/* Trust Badges */}
-            <div className="flex flex-wrap gap-8">
+            <div className="flex flex-wrap gap-4">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <feature.icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
-                  <span className="text-xs tracking-[0.1em] text-muted-foreground font-medium uppercase">
+                <div 
+                  key={index} 
+                  className="flex items-center gap-3 bg-background/90 backdrop-blur-sm border border-foreground/10 px-5 py-3 hover:bg-background hover:border-foreground/20 transition-all duration-300"
+                >
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                    <feature.icon className="h-5 w-5 text-accent" strokeWidth={2} />
+                  </div>
+                  <span className="text-xs tracking-[0.15em] text-foreground font-semibold uppercase">
                     {feature.label}
                   </span>
                 </div>
