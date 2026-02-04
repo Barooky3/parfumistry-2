@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, CheckCircle, ShoppingBag, Shield, Truck, CreditCard } from 'lucide-react';
+import { ArrowLeft, CheckCircle, ShoppingBag, Shield, Truck, CreditCard, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -20,7 +20,7 @@ const Checkout = () => {
     });
     setIsCompleted(true);
     clearCart();
-    toast({ title: 'Redirecting...', description: 'Complete your purchase on our partner site.' });
+    toast({ title: 'Order Processing', description: 'Complete your purchase to receive your fragrance.' });
   };
 
   if (items.length === 0 && !isCompleted) {
@@ -45,8 +45,8 @@ const Checkout = () => {
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-xl font-semibold text-foreground mb-2">Almost Done!</h1>
-          <p className="text-sm text-muted-foreground mb-6">Complete your purchase in the new tab.</p>
+          <h1 className="text-xl font-semibold text-foreground mb-2">Order Confirmed!</h1>
+          <p className="text-sm text-muted-foreground mb-6">Complete your payment in the new window to finalize your order.</p>
           <div className="flex gap-3 justify-center">
             <Button asChild><Link to="/shop">Continue Shopping</Link></Button>
             <Button variant="outline" asChild><Link to="/">Home</Link></Button>
@@ -94,14 +94,15 @@ const Checkout = () => {
           {/* Checkout */}
           <div className="lg:col-span-2">
             <div className="bg-secondary rounded-xl p-5 sticky top-[110px]">
-              <p className="text-sm text-muted-foreground mb-4">You'll be redirected to our trusted seller to complete your purchase.</p>
               <Button size="lg" className="w-full gap-2 font-medium rounded-full" onClick={handleCompletePurchase}>
-                Complete Purchase <ExternalLink className="h-4 w-4" />
+                <Package className="h-4 w-4" />
+                Complete Order
               </Button>
+              <p className="text-xs text-muted-foreground text-center mt-3">Secure checkout • Instant processing</p>
               <div className="mt-4 space-y-2">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground"><Shield className="h-3.5 w-3.5 text-primary" />100% authentic</div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground"><Shield className="h-3.5 w-3.5 text-primary" />100% authentic products</div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground"><CreditCard className="h-3.5 w-3.5 text-primary" />Secure payment</div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground"><Truck className="h-3.5 w-3.5 text-primary" />Fast delivery</div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground"><Truck className="h-3.5 w-3.5 text-primary" />Fast worldwide delivery</div>
               </div>
             </div>
           </div>

@@ -8,10 +8,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { useToast } from '@/hooks/use-toast';
 
 const faqs = [
-  { question: 'How do I track my order?', answer: 'Tracking info is provided by our partner seller via email after purchase.' },
-  { question: 'Can I return a fragrance?', answer: 'Returns are handled by our partner sellers. Check their policy at checkout.' },
-  { question: 'Are products authentic?', answer: 'Yes, we only partner with verified sellers who guarantee 100% authentic products.' },
-  { question: 'Why am I redirected?', answer: 'We curate fragrances from trusted sellers. You complete your purchase securely on their site.' },
+  { question: 'How do I track my order?', answer: 'You will receive tracking information via email once your order has shipped.' },
+  { question: 'Can I return a fragrance?', answer: 'We offer a 14-day return policy on unopened items. Contact us to initiate a return.' },
+  { question: 'Are products authentic?', answer: 'Yes, all our fragrances are 100% authentic and sourced from authorized distributors.' },
+  { question: 'How long does delivery take?', answer: 'Most orders arrive within 3-7 business days depending on your location.' },
 ];
 
 const Contact = () => {
