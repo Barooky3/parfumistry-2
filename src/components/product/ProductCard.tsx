@@ -24,65 +24,37 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
     }).format(price);
   };
 
-  const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'men':
-        return 'For Him';
-      case 'women':
-        return 'For Her';
-      default:
-        return 'Unisex';
-    }
-  };
-
   return (
-    <div
-      className={cn(
-        'group bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 shadow-card hover:shadow-card-hover',
-        className
-      )}
-    >
-      {/* Image Container */}
-      <Link to={`/product/${product.id}`} className="block relative">
-        <div className="aspect-square bg-gradient-to-b from-muted to-background p-6 flex items-center justify-center overflow-hidden">
+    <div className={cn('group', className)}>
+      {/* Image */}
+      <Link to={`/product/${product.id}`} className="block relative mb-4">
+        <div className="aspect-square bg-secondary rounded-2xl p-6 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:bg-secondary/80">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
         </div>
-
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {hasDiscount && (
-            <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded">
-              -{discountPercent}%
-            </span>
-          )}
-        </div>
-
-        {/* Category Badge */}
-        <div className="absolute top-3 right-3">
-          <span className="bg-background/80 backdrop-blur-sm text-foreground text-xs font-medium px-3 py-1 rounded border border-border">
-            {getCategoryLabel(product.category)}
+        {hasDiscount && (
+          <span className="absolute top-3 left-3 bg-foreground text-background text-xs font-medium px-2.5 py-1 rounded-full">
+            -{discountPercent}%
           </span>
-        </div>
+        )}
       </Link>
 
       {/* Content */}
-      <div className="p-5">
-        <Link to={`/product/${product.id}`} className="block">
-          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
-            {product.brand}
+      <div className="space-y-2">
+        <Link to={`/product/${product.id}`}>
+          <p className="text-xs text-muted-foreground">
+            {product.category === 'men' ? 'Men' : product.category === 'women' ? 'Women' : 'Unisex'}
           </p>
-          <h3 className="font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
+          <h3 className="text-base font-medium text-foreground group-hover:text-primary transition-colors leading-tight">
             {product.name}
           </h3>
         </Link>
 
-        {/* Price */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="font-bold text-xl text-primary">
+        <div className="flex items-center gap-2">
+          <span className="text-base font-semibold text-foreground">
             {formatPrice(product.price)}
           </span>
           {hasDiscount && (
@@ -92,10 +64,10 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
           )}
         </div>
 
-        {/* Add to Cart Button */}
         <Button
           onClick={() => addItem(product)}
-          className="w-full gap-2 font-semibold"
+          variant="outline"
+          className="w-full mt-2 gap-2 font-medium hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
           disabled={!product.inStock}
         >
           <ShoppingBag className="h-4 w-4" />

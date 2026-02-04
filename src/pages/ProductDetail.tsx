@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Minus, Plus, Truck, ShieldCheck, RotateCcw, Heart } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Minus, Plus, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/contexts/CartContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard } from '@/components/product';
@@ -20,204 +19,97 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="font-serif text-2xl font-semibold text-foreground mb-4">
-            Product Not Found
-          </h1>
-          <Button asChild>
-            <Link to="/shop">Back to Shop</Link>
-          </Button>
+          <h1 className="text-xl font-semibold text-foreground mb-4">Product Not Found</h1>
+          <Button asChild><Link to="/shop">Back to Shop</Link></Button>
         </div>
       </div>
     );
   }
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-EU', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(price);
-  };
+  const formatPrice = (price: number) => new Intl.NumberFormat('en-EU', { style: 'currency', currency: 'EUR' }).format(price);
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
-  const discountPercent = hasDiscount
-    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
-    : 0;
-
-  const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'men':
-        return 'For Him';
-      case 'women':
-        return 'For Her';
-      default:
-        return 'Unisex';
-    }
-  };
+  const discountPercent = hasDiscount ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100) : 0;
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addItem(product);
-    }
+    for (let i = 0; i < quantity; i++) addItem(product);
   };
 
   return (
-    <div className="min-h-screen py-8 lg:py-12">
+    <div className="min-h-screen py-6 md:py-10">
       <div className="container">
-        {/* Breadcrumb */}
-        <Button
-          variant="ghost"
-          className="mb-8 gap-2 text-muted-foreground hover:text-foreground"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Shop
+        <Button variant="ghost" size="sm" className="mb-6 gap-2 text-muted-foreground hover:text-foreground" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-4 w-4" /> Back
         </Button>
 
-        {/* Product Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-20">
-          {/* Product Image */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-16">
+          {/* Image */}
           <div className="animate-fade-in">
-            <div className="aspect-square bg-card rounded-lg border border-border p-8 lg:p-12 flex items-center justify-center">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-contain"
-              />
+            <div className="aspect-square bg-secondary rounded-2xl p-8 lg:p-12 flex items-center justify-center">
+              <img src={product.image} alt={product.name} className="w-full h-full object-contain" />
             </div>
           </div>
 
-          {/* Product Info */}
+          {/* Info */}
           <div className="animate-slide-up">
-            {/* Category & Brand */}
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-primary font-medium uppercase tracking-wider text-sm">
-                {getCategoryLabel(product.category)}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-sm text-muted-foreground">
+                {product.category === 'men' ? 'Men' : product.category === 'women' ? 'Women' : 'Unisex'}
               </span>
               {hasDiscount && (
-                <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded">
-                  -{discountPercent}% OFF
+                <span className="bg-foreground text-background text-xs font-medium px-2 py-0.5 rounded-full">
+                  -{discountPercent}%
                 </span>
               )}
             </div>
 
-            <p className="text-muted-foreground uppercase tracking-wider text-sm mb-2">
-              {product.brand}
-            </p>
-            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
-              {product.name}
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">{product.name}</h1>
 
-            {/* Price */}
-            <div className="flex items-baseline gap-4 mb-6">
-              <span className="font-serif text-4xl font-semibold text-primary">
-                {formatPrice(product.price)}
-              </span>
-              {hasDiscount && (
-                <span className="text-xl text-muted-foreground line-through">
-                  {formatPrice(product.originalPrice!)}
-                </span>
-              )}
+            <div className="flex items-baseline gap-3 mb-6">
+              <span className="text-2xl font-semibold text-foreground">{formatPrice(product.price)}</span>
+              {hasDiscount && <span className="text-lg text-muted-foreground line-through">{formatPrice(product.originalPrice!)}</span>}
             </div>
 
-            {/* Description */}
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              {product.description}
-            </p>
+            <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 
             {/* Scent Notes */}
-            <div className="bg-card rounded-lg p-6 border border-border mb-8">
-              <h3 className="font-semibold text-foreground mb-4 uppercase tracking-wider text-sm">
-                Scent Profile
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <span className="text-sm font-medium text-primary w-16 uppercase tracking-wider">Top</span>
-                  <p className="text-sm text-foreground/80">{product.scentNotes.top.join(' • ')}</p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <span className="text-sm font-medium text-primary w-16 uppercase tracking-wider">Heart</span>
-                  <p className="text-sm text-foreground/80">{product.scentNotes.heart.join(' • ')}</p>
-                </div>
-                <div className="flex items-start gap-4">
-                  <span className="text-sm font-medium text-primary w-16 uppercase tracking-wider">Base</span>
-                  <p className="text-sm text-foreground/80">{product.scentNotes.base.join(' • ')}</p>
-                </div>
+            <div className="bg-secondary rounded-xl p-5 mb-6">
+              <h3 className="text-sm font-medium text-foreground mb-3">Scent Notes</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex gap-3"><span className="text-primary font-medium w-12">Top</span><span className="text-muted-foreground">{product.scentNotes.top.join(', ')}</span></div>
+                <div className="flex gap-3"><span className="text-primary font-medium w-12">Heart</span><span className="text-muted-foreground">{product.scentNotes.heart.join(', ')}</span></div>
+                <div className="flex gap-3"><span className="text-primary font-medium w-12">Base</span><span className="text-muted-foreground">{product.scentNotes.base.join(', ')}</span></div>
               </div>
             </div>
 
-            {/* Quantity & Add to Cart */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center gap-1 bg-card border border-border rounded-lg">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-12 w-12"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="w-12 text-center font-semibold text-lg">{quantity}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-12 w-12"
-                  onClick={() => setQuantity(quantity + 1)}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+            {/* Add to Cart */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-1 bg-secondary rounded-lg">
+                <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus className="h-4 w-4" /></Button>
+                <span className="w-10 text-center font-medium">{quantity}</span>
+                <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => setQuantity(quantity + 1)}><Plus className="h-4 w-4" /></Button>
               </div>
-              <Button
-                size="lg"
-                className="flex-1 h-12 gap-2 font-semibold text-base"
-                onClick={handleAddToCart}
-                disabled={!product.inStock}
-              >
+              <Button size="lg" className="flex-1 gap-2 font-medium rounded-full" onClick={handleAddToCart} disabled={!product.inStock}>
                 <ShoppingBag className="h-5 w-5" />
                 {product.inStock ? 'Add to Bag' : 'Out of Stock'}
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-12 w-12 border-border hover:border-primary"
-              >
-                <Heart className="h-5 w-5" />
-              </Button>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border">
-              <div className="text-center">
-                <Truck className="h-5 w-5 mx-auto text-primary mb-2" />
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">Fast Shipping</p>
-              </div>
-              <div className="text-center">
-                <ShieldCheck className="h-5 w-5 mx-auto text-primary mb-2" />
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">100% Authentic</p>
-              </div>
-              <div className="text-center">
-                <RotateCcw className="h-5 w-5 mx-auto text-primary mb-2" />
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">Easy Returns</p>
-              </div>
+            {/* Trust */}
+            <div className="flex gap-6 pt-4 border-t border-border">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground"><Truck className="h-4 w-4 text-primary" />Fast Shipping</div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground"><Shield className="h-4 w-4 text-primary" />Authentic</div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground"><RotateCcw className="h-4 w-4 text-primary" />Easy Returns</div>
             </div>
           </div>
         </div>
 
-        {/* Related Products */}
+        {/* Related */}
         {relatedProducts.length > 0 && (
-          <section>
-            <Separator className="mb-12" />
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground">
-                You May Also Like
-              </h2>
-              <Button variant="ghost" className="text-muted-foreground hover:text-primary" asChild>
-                <Link to="/shop">View All</Link>
-              </Button>
-            </div>
+          <section className="border-t border-border pt-12">
+            <h2 className="text-xl font-semibold text-foreground mb-6">You May Also Like</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           </section>
         )}
