@@ -16,7 +16,10 @@ export const CartDrawer = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
-      <SheetContent className="w-full sm:max-w-md bg-background border-l border-border p-0 flex flex-col">
+      <SheetContent 
+        className="w-full sm:max-w-md bg-background border-l border-border p-0 flex flex-col" 
+        hideCloseButton
+      >
         <SheetHeader className="px-6 py-5 border-b border-border">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-base font-semibold tracking-[0.1em] uppercase">
