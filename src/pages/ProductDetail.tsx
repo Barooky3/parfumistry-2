@@ -91,7 +91,7 @@ const ProductDetail = () => {
               </div>
               <Button size="lg" className="flex-1 gap-2 font-medium rounded-full" onClick={handleAddToCart} disabled={!product.inStock}>
                 <ShoppingBag className="h-5 w-5" />
-                {product.inStock ? 'Add to Bag' : 'Out of Stock'}
+                {product.inStock ? 'Buy Now' : 'Out of Stock'}
               </Button>
             </div>
 

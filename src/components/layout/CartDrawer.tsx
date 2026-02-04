@@ -122,9 +122,9 @@ export const CartDrawer = () => {
                     {formatPrice(totalPrice)}
                   </span>
                 </div>
-                <Button className="w-full gap-2 font-medium" size="lg" onClick={closeCart} asChild>
+                <Button className="w-full gap-2 font-medium rounded-full" size="lg" onClick={closeCart} asChild>
                   <Link to="/checkout">
-                    Checkout
+                    Proceed to Checkout
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>

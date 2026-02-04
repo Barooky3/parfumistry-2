@@ -32,7 +32,7 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs leading-relaxed">
-              Premium fragrances from verified sellers. Authentic scents, delivered fast.
+              Premium fragrances at unbeatable prices. Authentic scents, delivered worldwide.
             </p>
             <div className="space-y-2">
               <p className="text-sm font-medium text-foreground">Stay updated</p>

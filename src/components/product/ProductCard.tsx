@@ -67,11 +67,11 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         <Button
           onClick={() => addItem(product)}
           variant="outline"
-          className="w-full mt-2 gap-2 font-medium hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+          className="w-full mt-2 gap-2 font-medium hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all rounded-full"
           disabled={!product.inStock}
         >
           <ShoppingBag className="h-4 w-4" />
-          {product.inStock ? 'Add to Bag' : 'Out of Stock'}
+          {product.inStock ? 'Buy Now' : 'Out of Stock'}
         </Button>
       </div>
     </div>

@@ -7,26 +7,26 @@ import { getFeaturedProducts } from '@/data/products';
 
 const trustBadges = [
   { icon: Truck, label: 'Fast Delivery', description: 'Express shipping' },
-  { icon: Shield, label: '100% Authentic', description: 'Verified sellers' },
+  { icon: Shield, label: '100% Authentic', description: 'Guaranteed genuine' },
   { icon: Award, label: 'Premium Quality', description: 'Curated selection' },
 ];
 
 const faqs = [
   {
-    question: 'How does ProfParfums work?',
-    answer: 'We curate premium fragrances from verified sellers. When you purchase, you\'ll be redirected to our trusted partner to complete your order securely.',
+    question: 'How do I receive my fragrance?',
+    answer: 'After checkout, your order is processed and shipped directly to your address. You will receive tracking information via email.',
   },
   {
     question: 'Are all fragrances authentic?',
-    answer: 'Yes. We only partner with verified sellers who guarantee 100% authentic products. Every fragrance is genuine and sourced from legitimate distributors.',
+    answer: 'Yes, all our fragrances are 100% authentic and sourced from authorized distributors. We guarantee genuine products only.',
   },
   {
     question: 'What is the return policy?',
-    answer: 'Return policies are handled by our partner sellers. Each seller has their own policy which will be displayed during checkout.',
+    answer: 'We offer a 14-day return policy on unopened items. Please contact our support team to initiate a return.',
   },
   {
     question: 'How long does shipping take?',
-    answer: 'Most orders ship within 1-3 business days with delivery in 3-7 business days depending on location.',
+    answer: 'Most orders ship within 1-3 business days with delivery in 3-7 business days depending on your location.',
   },
 ];
 
@@ -45,7 +45,7 @@ const Index = () => {
               <span className="text-gradient">Signature Scent</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
-              Premium fragrances from verified sellers. Authentic, fast delivery, unforgettable.
+              Premium fragrances at unbeatable prices. Authentic, fast delivery, unforgettable.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button size="lg" className="px-8 font-medium gap-2 rounded-full" asChild>
@@ -119,7 +119,7 @@ const Index = () => {
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-              Premium Fragrances, Trusted Sellers
+              Premium Fragrances, Best Prices
             </h2>
             <p className="text-muted-foreground mb-6">
               Join thousands who discovered their signature scent with us.
