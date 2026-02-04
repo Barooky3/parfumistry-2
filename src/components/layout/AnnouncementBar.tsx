@@ -18,17 +18,14 @@ export const AnnouncementBar = () => {
   }, []);
 
   const current = messages[currentIndex];
-  const Icon = current.icon;
 
   return (
-    <div className="bg-foreground text-background py-2.5 relative overflow-hidden">
+    <div className="bg-gradient-to-r from-foreground via-foreground to-foreground text-background py-2.5 relative overflow-hidden">
       <div className="container">
-        <div className="flex items-center justify-center gap-2 text-xs font-medium tracking-widest">
-          <Icon className="h-3.5 w-3.5" />
-          <span key={currentIndex} className="animate-fade-in">
+        <div className="flex items-center justify-center gap-2 text-xs font-semibold tracking-widest">
+          <span key={currentIndex} className="animate-fade-in flex items-center gap-2">
             ✨ {current.text} ✨
           </span>
-          <Icon className="h-3.5 w-3.5" />
         </div>
       </div>
     </div>
