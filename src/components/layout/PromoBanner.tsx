@@ -42,6 +42,17 @@ export const PromoBanner = () => {
 
   if (!isVisible) return null;
 
+  const TimerBlock = ({ value, label }: { value: number; label: string }) => (
+    <div className="flex flex-col items-center">
+      <span className="bg-secondary text-secondary-foreground text-base sm:text-lg md:text-2xl font-bold w-10 sm:w-12 md:w-14 py-1.5 sm:py-2 rounded text-center tabular-nums">
+        {formatNumber(value)}
+      </span>
+      <span className="text-[9px] sm:text-[10px] md:text-xs text-primary-foreground/60 mt-1 uppercase tracking-wide">
+        {label}
+      </span>
+    </div>
+  );
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -49,54 +60,34 @@ export const PromoBanner = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-primary text-primary-foreground py-4 md:py-5"
+          className="bg-primary text-primary-foreground py-3 sm:py-4 md:py-5"
         >
-          <div className="container relative">
+          <div className="container relative px-4">
             <button
               onClick={() => setIsVisible(false)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 p-2 hover:opacity-70 transition-opacity"
+              className="absolute right-2 sm:right-4 top-0 p-1.5 hover:opacity-70 transition-opacity"
               aria-label="Sluiten"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
-            <div className="text-center pr-8 md:pr-0">
-              <h3 className="text-sm md:text-lg font-bold tracking-wide uppercase mb-1">
-                Buy 2 Fragrances and Get a 3rd for Free
+            <div className="text-center max-w-md mx-auto">
+              <h3 className="text-xs sm:text-sm md:text-base font-bold tracking-wide uppercase mb-0.5 sm:mb-1 pr-6 sm:pr-0">
+                Buy 2 Fragrances, Get 1 Free
               </h3>
-              <p className="text-xs md:text-sm text-primary-foreground/80 mb-4">
-                When you add 3 fragrances to your cart, one of them instantly becomes free!
+              <p className="text-[10px] sm:text-xs md:text-sm text-primary-foreground/70 mb-3 sm:mb-4 leading-relaxed pr-6 sm:pr-0">
+                Add 3 fragrances to your cart and one becomes free!
               </p>
 
               {/* Countdown Timer */}
-              <div className="flex items-center justify-center gap-1 md:gap-2">
-                <div className="flex flex-col items-center">
-                  <span className="bg-secondary text-secondary-foreground text-lg md:text-2xl font-bold px-2.5 md:px-4 py-1.5 md:py-2 rounded-md min-w-[40px] md:min-w-[56px]">
-                    {formatNumber(timeLeft.days)}
-                  </span>
-                  <span className="text-[10px] md:text-xs text-primary-foreground/70 mt-1">days</span>
-                </div>
-                <span className="text-lg md:text-2xl font-bold mb-4">:</span>
-                <div className="flex flex-col items-center">
-                  <span className="bg-secondary text-secondary-foreground text-lg md:text-2xl font-bold px-2.5 md:px-4 py-1.5 md:py-2 rounded-md min-w-[40px] md:min-w-[56px]">
-                    {formatNumber(timeLeft.hours)}
-                  </span>
-                  <span className="text-[10px] md:text-xs text-primary-foreground/70 mt-1">hours</span>
-                </div>
-                <span className="text-lg md:text-2xl font-bold mb-4">:</span>
-                <div className="flex flex-col items-center">
-                  <span className="bg-secondary text-secondary-foreground text-lg md:text-2xl font-bold px-2.5 md:px-4 py-1.5 md:py-2 rounded-md min-w-[40px] md:min-w-[56px]">
-                    {formatNumber(timeLeft.mins)}
-                  </span>
-                  <span className="text-[10px] md:text-xs text-primary-foreground/70 mt-1">mins</span>
-                </div>
-                <span className="text-lg md:text-2xl font-bold mb-4">:</span>
-                <div className="flex flex-col items-center">
-                  <span className="bg-secondary text-secondary-foreground text-lg md:text-2xl font-bold px-2.5 md:px-4 py-1.5 md:py-2 rounded-md min-w-[40px] md:min-w-[56px]">
-                    {formatNumber(timeLeft.secs)}
-                  </span>
-                  <span className="text-[10px] md:text-xs text-primary-foreground/70 mt-1">secs</span>
-                </div>
+              <div className="flex items-start justify-center gap-1.5 sm:gap-2 md:gap-3">
+                <TimerBlock value={timeLeft.days} label="days" />
+                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-primary-foreground/40">:</span>
+                <TimerBlock value={timeLeft.hours} label="hours" />
+                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-primary-foreground/40">:</span>
+                <TimerBlock value={timeLeft.mins} label="mins" />
+                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-primary-foreground/40">:</span>
+                <TimerBlock value={timeLeft.secs} label="secs" />
               </div>
             </div>
           </div>
