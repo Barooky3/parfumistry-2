@@ -12,15 +12,15 @@ import { cn } from '@/lib/utils';
 type CheckoutStep = 1 | 2 | 3;
 
 const COUNTRIES = [
-  'Nederland',
-  'België',
-  'Duitsland',
-  'Frankrijk',
-  'Verenigd Koninkrijk',
-  'Spanje',
-  'Italië',
-  'Oostenrijk',
-  'Zwitserland',
+  'Netherlands',
+  'Belgium',
+  'Germany',
+  'France',
+  'United Kingdom',
+  'Spain',
+  'Italy',
+  'Austria',
+  'Switzerland',
   'Portugal',
 ];
 
@@ -70,7 +70,7 @@ const Checkout = () => {
     setCurrentStep(3);
     setIsCompleted(true);
     clearCart();
-    toast({ title: 'Bestelling Bevestigd!', description: 'Check je email voor de bestelgegevens.' });
+    toast({ title: 'Order Confirmed!', description: 'Check your email for order details.' });
   };
 
   if (items.length === 0 && !isCompleted) {
@@ -78,10 +78,10 @@ const Checkout = () => {
       <div className="min-h-screen flex items-center justify-center py-16 bg-background">
         <div className="text-center">
           <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mx-auto mb-6" strokeWidth={1} />
-          <h1 className="font-display text-2xl text-foreground mb-3">Je winkelwagen is leeg</h1>
-          <p className="text-sm text-muted-foreground mb-8">Voeg eerst parfums toe aan je winkelwagen</p>
+          <h1 className="font-display text-2xl text-foreground mb-3">Your cart is empty</h1>
+          <p className="text-sm text-muted-foreground mb-8">Add some fragrances to checkout</p>
           <Button asChild className="rounded-none h-12 px-8 text-xs tracking-[0.1em] uppercase">
-            <Link to="/shop">Bekijk Collectie</Link>
+            <Link to="/shop">Browse Collection</Link>
           </Button>
         </div>
       </div>
@@ -95,13 +95,13 @@ const Checkout = () => {
           <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-10 w-10 text-accent" strokeWidth={1.5} />
           </div>
-          <h1 className="font-display text-3xl text-foreground mb-4">Bestelling Bevestigd</h1>
+          <h1 className="font-display text-3xl text-foreground mb-4">Order Confirmed</h1>
           <p className="text-muted-foreground mb-10">
-            Bedankt voor je bestelling. Je ontvangt je bestelgegevens en toegang tot de verkoper via email.
+            Thank you for your purchase. You will receive your order details and seller access via email.
           </p>
           <div className="flex gap-4 justify-center">
             <Button asChild className="rounded-none h-12 px-8 text-xs tracking-[0.1em] uppercase">
-              <Link to="/shop">Verder Winkelen</Link>
+              <Link to="/shop">Continue Shopping</Link>
             </Button>
           </div>
         </div>
@@ -110,9 +110,9 @@ const Checkout = () => {
   }
 
   const steps = [
-    { number: 1, label: 'INFORMATIE' },
-    { number: 2, label: 'BETALING' },
-    { number: 3, label: 'BEVESTIGING' },
+    { number: 1, label: 'INFORMATION' },
+    { number: 2, label: 'PAYMENT' },
+    { number: 3, label: 'CONFIRMATION' },
   ];
 
   return (
@@ -121,7 +121,7 @@ const Checkout = () => {
       <div className="py-8 md:py-12 border-b border-border">
         <div className="container text-center">
           <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">Checkout</h1>
-          <p className="text-muted-foreground text-sm">Rond je bestelling af</p>
+          <p className="text-muted-foreground text-sm">Complete your purchase</p>
         </div>
       </div>
 
@@ -185,19 +185,19 @@ const Checkout = () => {
                   {/* Section Header */}
                   <div className="flex items-center gap-3">
                     <User className="h-5 w-5 text-accent" strokeWidth={1.5} />
-                    <h2 className="font-display text-xl text-foreground">Jouw Gegevens</h2>
+                    <h2 className="font-display text-xl text-foreground">Your Information</h2>
                   </div>
 
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      Email Adres <span className="text-accent">*</span>
+                      Email Address <span className="text-accent">*</span>
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="email"
-                        placeholder="jouw@email.com"
+                        placeholder="your@email.com"
                         value={formData.email}
                         onChange={(e) => updateFormData('email', e.target.value)}
                         required
@@ -210,7 +210,7 @@ const Checkout = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                        Voornaam <span className="text-accent">*</span>
+                        First Name <span className="text-accent">*</span>
                       </Label>
                       <Input
                         type="text"
@@ -223,7 +223,7 @@ const Checkout = () => {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                        Achternaam <span className="text-accent">*</span>
+                        Last Name <span className="text-accent">*</span>
                       </Label>
                       <Input
                         type="text"
@@ -239,11 +239,11 @@ const Checkout = () => {
                   {/* Country Field */}
                   <div className="space-y-2">
                     <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      Land <span className="text-accent">*</span>
+                      Country <span className="text-accent">*</span>
                     </Label>
                     <Select value={formData.country} onValueChange={(value) => updateFormData('country', value)}>
                       <SelectTrigger className="h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent">
-                        <SelectValue placeholder="Selecteer je land" />
+                        <SelectValue placeholder="Select your country" />
                       </SelectTrigger>
                       <SelectContent>
                         {COUNTRIES.map((country) => (
@@ -258,13 +258,13 @@ const Checkout = () => {
                   {/* Street Address */}
                   <div className="space-y-2">
                     <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      Straat & Huisnummer <span className="text-accent">*</span>
+                      Street Address <span className="text-accent">*</span>
                     </Label>
                     <div className="relative">
                       <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="text"
-                        placeholder="Begin met typen..."
+                        placeholder="Start typing your address..."
                         value={formData.streetAddress}
                         onChange={(e) => updateFormData('streetAddress', e.target.value)}
                         required
@@ -277,7 +277,7 @@ const Checkout = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                        Postcode <span className="text-accent">*</span>
+                        Postal Code <span className="text-accent">*</span>
                       </Label>
                       <Input
                         type="text"
@@ -290,7 +290,7 @@ const Checkout = () => {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                        Stad <span className="text-accent">*</span>
+                        City <span className="text-accent">*</span>
                       </Label>
                       <Input
                         type="text"
@@ -310,7 +310,7 @@ const Checkout = () => {
                       disabled={!isStep1Valid()}
                       className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-sm"
                     >
-                      Doorgaan naar Betaling
+                      Continue to Payment
                     </Button>
                   </div>
                 </div>
@@ -321,12 +321,12 @@ const Checkout = () => {
                   {/* Section Header */}
                   <div className="flex items-center gap-3">
                     <CreditCard className="h-5 w-5 text-accent" strokeWidth={1.5} />
-                    <h2 className="font-display text-xl text-foreground">Betaling</h2>
+                    <h2 className="font-display text-xl text-foreground">Payment</h2>
                   </div>
 
                   {/* Order Summary for Step 2 */}
                   <div className="border border-border p-6 space-y-4">
-                    <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-4">Besteloverzicht</h3>
+                    <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-4">Order Summary</h3>
                     {items.map((item) => {
                       const cartKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
                       const displayPrice = item.selectedPrice || item.product.price;
@@ -338,9 +338,9 @@ const Checkout = () => {
                           <div className="flex-1 min-w-0">
                             <h4 className="text-sm font-medium text-foreground line-clamp-1">{item.product.name}</h4>
                             {item.selectedMl && (
-                              <p className="text-xs text-muted-foreground">{item.selectedMl}ml</p>
+                            <p className="text-xs text-muted-foreground">{item.selectedMl}ml</p>
                             )}
-                            <p className="text-xs text-muted-foreground">Aantal: {item.quantity}</p>
+                            <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                           </div>
                           <p className="text-sm font-semibold text-foreground">{formatPrice(displayPrice * item.quantity)}</p>
                         </div>
@@ -350,7 +350,7 @@ const Checkout = () => {
 
                   {/* Shipping Address Preview */}
                   <div className="border border-border p-6">
-                    <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-4">Verzendadres</h3>
+                    <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-4">Shipping Address</h3>
                     <div className="text-sm text-muted-foreground space-y-1">
                       <p className="text-foreground font-medium">{formData.firstName} {formData.lastName}</p>
                       <p>{formData.streetAddress}</p>
@@ -363,7 +363,7 @@ const Checkout = () => {
                   {/* Payment Notice */}
                   <div className="bg-secondary/50 border border-border p-6 rounded-sm">
                     <p className="text-sm text-muted-foreground">
-                      Door op "Bestelling Plaatsen" te klikken, word je doorgestuurd naar de verkoper om je aankoop af te ronden.
+                      By clicking "Place Order", you will be redirected to the seller to complete your purchase.
                     </p>
                   </div>
 
@@ -373,7 +373,7 @@ const Checkout = () => {
                       onClick={handleCompletePurchase}
                       className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-sm"
                     >
-                      Bestelling Plaatsen — {formatPrice(totalPrice)}
+                      Place Order — {formatPrice(totalPrice)}
                     </Button>
                   </div>
                 </div>
@@ -383,7 +383,7 @@ const Checkout = () => {
             {/* Right Column - Order Summary Sidebar */}
             <div className="lg:col-span-2">
               <div className="border border-border p-6 lg:p-8 sticky top-[120px] rounded-sm">
-                <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-6">Overzicht</h3>
+                <h3 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-6">Summary</h3>
                 
                 {/* Order Items Preview (Step 1 only) */}
                 {currentStep === 1 && (
@@ -412,10 +412,10 @@ const Checkout = () => {
                 {freeItemDiscount > 0 && (
                   <div className="mb-6 p-3 bg-accent/10 border border-accent/20 rounded-sm">
                     <p className="text-xs font-semibold text-accent uppercase tracking-wide mb-1">
-                      🎉 Koop 2 Krijg 1 Gratis!
+                      🎉 Buy 2 Get 1 Free Applied!
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {freeItemsCount} gratis parfum{freeItemsCount > 1 ? 's' : ''} inbegrepen
+                      {freeItemsCount} free fragrance{freeItemsCount > 1 ? 's' : ''} included
                     </p>
                   </div>
                 )}
@@ -423,7 +423,7 @@ const Checkout = () => {
                 {/* Price Breakdown */}
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Subtotaal</span>
+                    <span className="text-muted-foreground">Subtotal</span>
                     <span className={freeItemDiscount > 0 ? "text-muted-foreground line-through" : "text-foreground"}>
                       {formatPrice(subtotalBeforeDiscount)}
                     </span>
@@ -431,20 +431,20 @@ const Checkout = () => {
                   
                   {freeItemDiscount > 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-accent font-medium">Gratis Parfum Korting</span>
+                      <span className="text-accent font-medium">Free Fragrance Discount</span>
                       <span className="text-accent font-medium">-{formatPrice(freeItemDiscount)}</span>
                     </div>
                   )}
                   
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Verzending</span>
-                    <span className="text-foreground">Gratis</span>
+                    <span className="text-muted-foreground">Shipping</span>
+                    <span className="text-foreground">Free</span>
                   </div>
                   
                   <div className="h-px bg-border my-2" />
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-foreground font-medium">Totaal</span>
+                    <span className="text-foreground font-medium">Total</span>
                     <span className="text-xl font-semibold text-foreground">{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
@@ -457,7 +457,7 @@ const Checkout = () => {
                       disabled={!isStep1Valid()}
                       className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-sm"
                     >
-                      Doorgaan naar Betaling
+                      Continue to Payment
                     </Button>
                   )}
                   {currentStep === 2 && (
@@ -465,28 +465,28 @@ const Checkout = () => {
                       onClick={handleCompletePurchase}
                       className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-sm"
                     >
-                      Bestelling Plaatsen
+                      Place Order
                     </Button>
                   )}
                 </div>
 
                 <p className="text-xs text-muted-foreground text-center mt-4">
-                  Door verder te gaan ga je akkoord met onze Algemene Voorwaarden
+                  By continuing you agree to our Terms of Service
                 </p>
 
                 {/* Trust Badges */}
                 <div className="mt-6 pt-6 border-t border-border space-y-3">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <Shield className="h-4 w-4 text-accent" strokeWidth={1.5} />
-                    100% Authentiek Gegarandeerd
+                    100% Authentic Guarantee
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <Truck className="h-4 w-4 text-accent" strokeWidth={1.5} />
-                    Snelle Levering
+                    Fast Delivery
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <CreditCard className="h-4 w-4 text-accent" strokeWidth={1.5} />
-                    Veilig Betalen
+                    Secure Payment
                   </div>
                 </div>
               </div>
