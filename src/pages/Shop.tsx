@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { SlidersHorizontal, Grid3X3, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import { ProductCard } from '@/components/product';
 import { products } from '@/data/products';
 
@@ -29,25 +30,21 @@ const Shop = () => {
     ? 'Masculine scents for the modern gentleman'
     : category === 'women'
     ? 'Elegant fragrances for the sophisticated woman'
-    : 'Explore our complete collection of exquisite fragrances';
+    : 'Explore our complete collection of premium fragrances';
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Filter by URL category
     if (category && category !== 'all') {
       result = result.filter(p => p.category === category);
     }
 
-    // Filter by selected categories (if any)
     if (selectedCategories.length > 0) {
       result = result.filter(p => selectedCategories.includes(p.category));
     }
 
-    // Filter by price range
     result = result.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
-    // Sort
     switch (sortBy) {
       case 'price-asc':
         result.sort((a, b) => a.price - b.price);
@@ -59,7 +56,6 @@ const Shop = () => {
         result.reverse();
         break;
       default:
-        // Keep original order for 'featured'
         break;
     }
 
@@ -76,23 +72,23 @@ const Shop = () => {
 
   const FilterContent = () => (
     <div className="space-y-8">
-      {/* Category Filter (only show when not on a category page) */}
       {!category && (
         <div>
-          <h3 className="font-medium text-foreground mb-4">Category</h3>
+          <h3 className="font-semibold text-foreground mb-4 uppercase tracking-wider text-sm">Category</h3>
           <div className="space-y-3">
             {[
               { value: 'men', label: 'For Him' },
               { value: 'women', label: 'For Her' },
               { value: 'unisex', label: 'Unisex' },
             ].map((cat) => (
-              <div key={cat.value} className="flex items-center gap-2">
+              <div key={cat.value} className="flex items-center gap-3">
                 <Checkbox
                   id={cat.value}
                   checked={selectedCategories.includes(cat.value)}
                   onCheckedChange={(checked) => handleCategoryChange(cat.value, checked as boolean)}
+                  className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
-                <Label htmlFor={cat.value} className="text-sm cursor-pointer">
+                <Label htmlFor={cat.value} className="text-sm cursor-pointer text-foreground/80">
                   {cat.label}
                 </Label>
               </div>
@@ -101,9 +97,8 @@ const Shop = () => {
         </div>
       )}
 
-      {/* Price Range Filter */}
       <div>
-        <h3 className="font-medium text-foreground mb-4">Price Range</h3>
+        <h3 className="font-semibold text-foreground mb-4 uppercase tracking-wider text-sm">Price Range</h3>
         <Slider
           value={priceRange}
           onValueChange={setPriceRange}
@@ -118,7 +113,8 @@ const Shop = () => {
         </div>
       </div>
 
-      {/* Reset Filters */}
+      <Separator />
+
       <Button
         variant="outline"
         className="w-full"
@@ -135,9 +131,10 @@ const Shop = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Banner */}
-      <section className="gradient-hero py-12 md:py-16">
+      <section className="py-12 lg:py-16 bg-card border-b border-border">
         <div className="container">
           <div className="max-w-2xl animate-fade-in">
+            <p className="text-primary font-medium uppercase tracking-[0.2em] mb-2 text-sm">Collection</p>
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
               {pageTitle}
             </h1>
@@ -149,13 +146,13 @@ const Shop = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 md:py-12">
+      <section className="py-8 lg:py-12">
         <div className="container">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Desktop Sidebar */}
             <aside className="hidden lg:block w-64 flex-shrink-0">
-              <div className="sticky top-24 bg-card rounded-xl p-6 shadow-card">
-                <h2 className="font-serif text-lg font-semibold text-foreground mb-6">Filters</h2>
+              <div className="sticky top-[calc(42px+80px+2rem)] bg-card rounded-lg p-6 border border-border">
+                <h2 className="font-semibold text-foreground mb-6 uppercase tracking-wider text-sm">Filters</h2>
                 <FilterContent />
               </div>
             </aside>
@@ -163,12 +160,11 @@ const Shop = () => {
             {/* Products Grid */}
             <div className="flex-1">
               {/* Toolbar */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-border">
                 <p className="text-sm text-muted-foreground">
-                  {filteredProducts.length} fragrance{filteredProducts.length !== 1 ? 's' : ''}
+                  Showing <span className="text-foreground font-medium">{filteredProducts.length}</span> products
                 </p>
                 <div className="flex items-center gap-4">
-                  {/* Mobile Filter Button */}
                   <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                     <SheetTrigger asChild>
                       <Button variant="outline" size="sm" className="lg:hidden gap-2">
@@ -176,22 +172,21 @@ const Shop = () => {
                         Filters
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left">
+                    <SheetContent side="left" className="bg-card">
                       <SheetHeader>
-                        <SheetTitle>Filters</SheetTitle>
+                        <SheetTitle className="uppercase tracking-wider text-sm">Filters</SheetTitle>
                       </SheetHeader>
-                      <div className="mt-6">
+                      <div className="mt-8">
                         <FilterContent />
                       </div>
                     </SheetContent>
                   </Sheet>
 
-                  {/* Sort Dropdown */}
                   <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-44 bg-card">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-card border-border">
                       <SelectItem value="featured">Featured</SelectItem>
                       <SelectItem value="price-asc">Price: Low to High</SelectItem>
                       <SelectItem value="price-desc">Price: High to Low</SelectItem>
@@ -203,11 +198,10 @@ const Shop = () => {
 
               {/* Products */}
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-16">
-                  <p className="text-lg text-muted-foreground">No fragrances match your filters.</p>
+                <div className="text-center py-20">
+                  <p className="text-lg text-muted-foreground mb-4">No fragrances match your filters.</p>
                   <Button
                     variant="outline"
-                    className="mt-4"
                     onClick={() => {
                       setSelectedCategories([]);
                       setPriceRange([0, 100]);
