@@ -31,10 +31,15 @@ export const Header = () => {
   }, [location]);
 
   return (
-    <header className={cn(
-      "fixed left-0 right-0 z-40 bg-background border-b border-border transition-all duration-300",
-      "top-[var(--promo-banner-height,0px)]"
-    )}>
+    <header 
+      className={cn(
+        "fixed left-0 right-0 z-40 bg-background border-b border-border",
+      )}
+      style={{
+        top: 'var(--promo-banner-height, 0px)',
+        transition: 'top 0.3s ease-out'
+      }}
+    >
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
