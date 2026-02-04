@@ -57,9 +57,9 @@ const Index = () => {
             </p>
             
             <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-foreground mb-6 leading-[1.05]">
-              Discover Your
+              Where <span className="text-accent">Signature</span>
               <br />
-              <span className="italic">Signature Scent</span>
+              <span className="italic">Scents</span> Begin.
             </h1>
             
             <p className="text-base text-muted-foreground mb-10 max-w-md leading-relaxed">
