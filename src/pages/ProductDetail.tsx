@@ -53,8 +53,8 @@ const ProductDetail = () => {
           {/* Info */}
           <div className="animate-slide-up">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-sm text-muted-foreground">
-                {product.category === 'men' ? 'Men' : product.category === 'women' ? 'Women' : 'Unisex'}
+              <span className="text-xs px-3 py-1 rounded-full bg-secondary text-muted-foreground font-medium">
+                {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : 'Unisex'}
               </span>
               {hasDiscount && (
                 <span className="bg-foreground text-background text-xs font-medium px-2 py-0.5 rounded-full">
@@ -91,7 +91,7 @@ const ProductDetail = () => {
               </div>
               <Button size="lg" className="flex-1 gap-2 font-medium rounded-full" onClick={handleAddToCart} disabled={!product.inStock}>
                 <ShoppingBag className="h-5 w-5" />
-                {product.inStock ? 'Buy Now' : 'Out of Stock'}
+                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
               </Button>
             </div>
 

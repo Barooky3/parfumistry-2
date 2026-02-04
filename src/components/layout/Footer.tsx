@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/button';
 const footerLinks = {
   shop: [
     { href: '/shop', label: 'All Fragrances' },
-    { href: '/shop/men', label: 'Men' },
-    { href: '/shop/women', label: 'Women' },
+    { href: '/shop/men', label: 'For Him' },
+    { href: '/shop/women', label: 'For Her' },
   ],
   support: [
-    { href: '/contact', label: 'Contact' },
-    { href: '/faq', label: 'FAQ' },
-    { href: '/shipping', label: 'Shipping' },
+    { href: '/contact', label: 'Contact Us' },
+    { href: '/contact', label: 'FAQ' },
+    { href: '/contact', label: 'Shipping' },
   ],
   legal: [
-    { href: '/privacy', label: 'Privacy' },
-    { href: '/terms', label: 'Terms' },
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/terms', label: 'Terms of Service' },
   ],
 };
 
@@ -32,7 +32,7 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs leading-relaxed">
-              Premium fragrances at unbeatable prices. Authentic scents, delivered worldwide.
+              Premium fragrances at unbeatable prices. Authentic quality, worldwide delivery.
             </p>
             <div className="space-y-2">
               <p className="text-sm font-medium text-foreground">Stay updated</p>
@@ -54,7 +54,7 @@ export const Footer = () => {
             <h4 className="text-sm font-semibold text-foreground mb-4">Shop</h4>
             <ul className="space-y-2.5">
               {footerLinks.shop.map((link) => (
-                <li key={link.href}>
+                <li key={link.href + link.label}>
                   <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {link.label}
                   </Link>
@@ -67,8 +67,8 @@ export const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-4">Support</h4>
             <ul className="space-y-2.5">
-              {footerLinks.support.map((link) => (
-                <li key={link.href}>
+              {footerLinks.support.map((link, i) => (
+                <li key={link.href + i}>
                   <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {link.label}
                   </Link>
