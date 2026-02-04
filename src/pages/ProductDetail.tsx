@@ -187,13 +187,56 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               </Button>
             </div>
 
+            {/* Scent Notes Pyramid */}
+            {product.scentNotes && (
+              <div className="py-6 border-t border-border">
+                <h3 className="text-sm font-semibold text-foreground mb-4">Fragrance Notes</h3>
+                <div className="space-y-3">
+                  {product.scentNotes.top && product.scentNotes.top.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide w-14 pt-0.5">Top</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {product.scentNotes.top.map((note) => (
+                          <span key={note} className="text-xs px-2 py-1 bg-secondary text-foreground">
+                            {note}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {product.scentNotes.heart && product.scentNotes.heart.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide w-14 pt-0.5">Heart</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {product.scentNotes.heart.map((note) => (
+                          <span key={note} className="text-xs px-2 py-1 bg-secondary text-foreground">
+                            {note}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {product.scentNotes.base && product.scentNotes.base.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide w-14 pt-0.5">Base</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {product.scentNotes.base.map((note) => (
+                          <span key={note} className="text-xs px-2 py-1 bg-secondary text-foreground">
+                            {note}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Description */}
             <div className="space-y-3 py-6 border-t border-border">
-              <h3 className="text-sm font-semibold text-foreground">
-                A refined opportunity for independent distribution.
-              </h3>
+              <h3 className="text-sm font-semibold text-foreground">About This Fragrance</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Immediate delivery, with supplier information sent discreetly by email after purchase. Carefully selected pricing, suitable for professional reselling. Designed to preserve value while enabling healthy profit margins. Verified source — trusted, consistent, and reliable.
+                {product.description}
               </p>
               
               {/* Info Box - Compact */}
