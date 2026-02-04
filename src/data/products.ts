@@ -1,5 +1,19 @@
 import { Product } from '@/types/product';
 
+// Bestseller IDs matching profparfums.store homepage order
+export const bestsellerIds = [
+  'stronger-with-you-intensely',
+  'amore-caffe',
+  'le-beau-le-parfum',
+  'spicebomb-extreme',
+  'born-in-roma-coral-fantasy',
+  'imagination',
+  'le-male-le-parfum',
+  'le-male-elixir',
+  'khamrah-parfum',
+  'the-most-wanted-parfum',
+];
+
 export const products: Product[] = [
   // ===== FRAGRANCE BUNDLES =====
   {
@@ -1019,6 +1033,13 @@ export const getProductsByCategory = (category: string): Product[] => {
 
 export const getFeaturedProducts = (): Product[] => {
   return products.filter(product => product.featured);
+};
+
+// Get bestsellers in the exact order from profparfums.store
+export const getBestsellers = (): Product[] => {
+  return bestsellerIds
+    .map(id => products.find(p => p.id === id))
+    .filter((p): p is Product => p !== undefined);
 };
 
 export const getBundles = (): Product[] => {

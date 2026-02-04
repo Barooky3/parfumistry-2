@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ProductCard } from '@/components/product';
-import { getFeaturedProducts } from '@/data/products';
+import { getBestsellers } from '@/data/products';
+import { BrandNavigation, BundleSection } from '@/components/home';
 import heroImage from '@/assets/hero-perfumes.jpg';
 import logo from '@/assets/logo.png';
 
@@ -38,7 +39,7 @@ const faqs = [
 ];
 
 const Index = () => {
-  const featuredProducts = getFeaturedProducts();
+  const bestsellers = getBestsellers();
 
   return (
     <div className="min-h-screen">
@@ -180,6 +181,9 @@ const Index = () => {
         </motion.div>
       </section>
 
+      {/* Brand Navigation */}
+      <BrandNavigation />
+
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
         <div className="container">
@@ -190,19 +194,13 @@ const Index = () => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-[10px] md:text-xs tracking-[0.3em] text-muted-foreground font-medium mb-2 uppercase">
-              Most Loved
-            </p>
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
-              Our Bestsellers
+              Current Best Sellers
             </h2>
-            <p className="text-sm text-muted-foreground mt-3 max-w-md mx-auto">
-              Discover our most sought-after fragrance collections, handpicked by our community
-            </p>
           </motion.div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-            {featuredProducts.slice(0, 8).map((product, index) => (
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-5">
+            {bestsellers.slice(0, 10).map((product, index) => (
               <motion.div 
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -237,8 +235,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Bundle Section */}
+      <BundleSection />
+
       {/* FAQ Section */}
-      <section className="py-14 md:py-20 bg-secondary">
+      <section className="py-14 md:py-20 bg-background">
         <div className="container">
           <div className="max-w-2xl mx-auto">
             <motion.div 
@@ -267,7 +268,7 @@ const Index = () => {
                   <AccordionItem 
                     key={index} 
                     value={`item-${index}`} 
-                    className="border border-border bg-background px-4 md:px-5"
+                    className="border border-border bg-secondary px-4 md:px-5"
                   >
                     <AccordionTrigger className="text-left text-sm font-medium text-foreground hover:text-accent hover:no-underline py-4">
                       {faq.question}
@@ -284,7 +285,7 @@ const Index = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-14 md:py-20 bg-background">
+      <section className="py-14 md:py-20 bg-secondary">
         <div className="container">
           <motion.div 
             className="max-w-lg mx-auto text-center"
