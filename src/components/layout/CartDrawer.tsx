@@ -1,11 +1,11 @@
-import { X, Minus, Plus, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 export const CartDrawer = () => {
-  const { isOpen, closeCart, items, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
+  const { isOpen, closeCart, items, removeItem, updateQuantity, totalPrice } = useCart();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('nl-NL', {
@@ -15,130 +15,136 @@ export const CartDrawer = () => {
   };
 
   return (
-    <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
-          onClick={closeCart}
-        />
-      )}
-
-      {/* Drawer */}
-      <div
-        className={cn(
-          'fixed top-0 right-0 h-full w-full sm:w-[420px] bg-background border-l border-border z-50 transform transition-transform duration-300 ease-out',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        )}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-border">
-          <div className="flex items-center gap-3">
-            <ShoppingBag className="h-5 w-5 text-foreground" />
-            <h2 className="text-base font-medium text-foreground">Your Cart ({totalItems})</h2>
+    <Sheet open={isOpen} onOpenChange={closeCart}>
+      <SheetContent className="w-full sm:max-w-md bg-background border-l border-border p-0 flex flex-col">
+        <SheetHeader className="px-6 py-5 border-b border-border">
+          <div className="flex items-center justify-between">
+            <SheetTitle className="text-base font-semibold tracking-[0.1em] uppercase">
+              Shopping Cart
+            </SheetTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={closeCart}
+              className="h-8 w-8 text-foreground hover:bg-transparent"
+            >
+              <X className="h-5 w-5" strokeWidth={1.5} />
+            </Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={closeCart} className="h-9 w-9 text-muted-foreground hover:text-foreground">
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
+        </SheetHeader>
 
-        {/* Content */}
-        <div className="flex flex-col h-[calc(100%-73px)]">
-          {items.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-              <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-6">
-                <ShoppingBag className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <p className="text-lg font-medium text-foreground mb-2">Your cart is empty</p>
-              <p className="text-sm text-muted-foreground mb-8">
-                Start shopping to add items
-              </p>
-              <Button onClick={closeCart} asChild>
-                <Link to="/shop">Browse Products</Link>
-              </Button>
-            </div>
-          ) : (
-            <>
-              {/* Items */}
-              <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        {items.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+            <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mb-6" strokeWidth={1} />
+            <p className="text-base font-medium text-foreground mb-2">Your cart is empty</p>
+            <p className="text-sm text-muted-foreground mb-8 text-center">
+              Discover our exclusive fragrance collection
+            </p>
+            <Button
+              onClick={closeCart}
+              className="h-12 px-8 text-xs font-medium tracking-[0.1em] uppercase bg-primary text-primary-foreground hover:bg-primary/90 rounded-none"
+              asChild
+            >
+              <Link to="/shop">Start Shopping</Link>
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="flex-1 overflow-y-auto px-6 py-6">
+              <div className="space-y-6">
                 {items.map((item) => (
-                  <div key={item.product.id} className="flex gap-4 p-4 bg-secondary rounded-lg border border-border">
-                    <div className="w-20 h-20 bg-card rounded-md overflow-hidden flex-shrink-0">
-                      <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
-                    </div>
+                  <div key={item.product.id} className="flex gap-4">
+                    <Link
+                      to={`/product/${item.product.id}`}
+                      onClick={closeCart}
+                      className="w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden"
+                    >
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </Link>
+
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="text-sm font-medium text-foreground leading-tight line-clamp-2">
-                            {item.product.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {item.product.category === 'men' ? 'For Him' : item.product.category === 'women' ? 'For Her' : 'Unisex'}
-                          </p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                          onClick={() => removeItem(item.product.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Link
+                        to={`/product/${item.product.id}`}
+                        onClick={closeCart}
+                        className="text-sm font-medium text-foreground hover:text-accent transition-colors line-clamp-2"
+                      >
+                        {item.product.name}
+                      </Link>
+                      <p className="text-sm font-semibold text-foreground mt-1">
+                        {formatPrice(item.product.price)}
+                      </p>
+
                       <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center gap-1 bg-card rounded-lg border border-border">
+                        <div className="flex items-center border border-border">
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                            className="h-8 w-8 rounded-none hover:bg-secondary"
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="text-sm font-medium w-8 text-center text-foreground">{item.quantity}</span>
+                          <span className="w-10 text-center text-sm font-medium">
+                            {item.quantity}
+                          </span>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                            className="h-8 w-8 rounded-none hover:bg-secondary"
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
                         </div>
-                        <p className="text-sm font-semibold text-foreground">
-                          {formatPrice(item.product.price * item.quantity)}
-                        </p>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-muted-foreground hover:text-accent h-8 px-2"
+                          onClick={() => removeItem(item.product.id)}
+                        >
+                          Remove
+                        </Button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
+            </div>
 
-              {/* Footer */}
-              <div className="border-t border-border p-5 space-y-4 bg-background">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="text-xl font-semibold text-foreground">
-                    {formatPrice(totalPrice)}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Taxes included. Digital delivery via email.
-                </p>
-                <Button className="w-full h-12 gap-2 font-medium tracking-wider" size="lg" onClick={closeCart} asChild>
-                  <Link to="/checkout">
-                    Checkout
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button variant="outline" className="w-full" onClick={closeCart}>
-                  Continue Shopping
-                </Button>
+            <div className="border-t border-border px-6 py-6">
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-sm font-medium text-muted-foreground uppercase tracking-[0.1em]">
+                  Subtotal
+                </span>
+                <span className="text-lg font-semibold text-foreground">
+                  {formatPrice(totalPrice)}
+                </span>
               </div>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+
+              <Button
+                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase bg-primary text-primary-foreground hover:bg-primary/90 rounded-none"
+                onClick={closeCart}
+                asChild
+              >
+                <Link to="/checkout">Proceed to Checkout</Link>
+              </Button>
+
+              <Button
+                variant="ghost"
+                className="w-full mt-3 text-xs text-muted-foreground hover:text-foreground"
+                onClick={closeCart}
+              >
+                Continue Shopping
+              </Button>
+            </div>
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 };

@@ -14,24 +14,20 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate signup - in production this would connect to auth
     await new Promise(resolve => setTimeout(resolve, 1000));
-
     toast({
       title: 'Coming soon!',
       description: 'Account functionality will be available soon.',
     });
-
     setIsSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen py-16 md:py-24 bg-background">
+    <div className="min-h-screen py-20 md:py-28 bg-background">
       <div className="container">
         <div className="max-w-md mx-auto">
           {/* Header */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-12">
             <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Create Account</h1>
             <p className="text-muted-foreground">
               Join ProfParfums for exclusive deals
@@ -39,10 +35,10 @@ const Signup = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-8">
+          <form onSubmit={handleSubmit} className="border border-border p-8">
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                <Label htmlFor="name" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
                   Full Name
                 </Label>
                 <div className="relative">
@@ -52,13 +48,13 @@ const Signup = () => {
                     type="text"
                     placeholder="Your name"
                     required
-                    className="pl-11 h-12 bg-secondary border-border focus:border-primary"
+                    className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                <Label htmlFor="email" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
                   Email
                 </Label>
                 <div className="relative">
@@ -68,13 +64,13 @@ const Signup = () => {
                     type="email"
                     placeholder="your@email.com"
                     required
-                    className="pl-11 h-12 bg-secondary border-border focus:border-primary"
+                    className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                <Label htmlFor="password" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
                   Password
                 </Label>
                 <div className="relative">
@@ -84,7 +80,7 @@ const Signup = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     required
-                    className="pl-11 pr-11 h-12 bg-secondary border-border focus:border-primary"
+                    className="pl-11 pr-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                   <button
                     type="button"
@@ -99,7 +95,7 @@ const Signup = () => {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full h-12 font-medium tracking-wider text-sm"
+                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Creating account...' : 'Create Account'}
@@ -107,9 +103,9 @@ const Signup = () => {
             </div>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-6">
+          <p className="text-center text-sm text-muted-foreground mt-8">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to="/login" className="text-foreground hover:text-accent transition-colors underline">
               Sign in
             </Link>
           </p>

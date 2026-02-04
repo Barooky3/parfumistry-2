@@ -13,36 +13,33 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1000));
-
     toast({
       title: 'Message sent!',
       description: "We'll get back to you as soon as possible.",
     });
-
     setIsSubmitting(false);
     (e.target as HTMLFormElement).reset();
   };
 
   return (
-    <div className="min-h-screen py-16 md:py-24 bg-background">
+    <div className="min-h-screen py-20 md:py-28 bg-background">
       <div className="container">
         <div className="max-w-xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
+            <p className="text-xs tracking-[0.3em] text-muted-foreground font-medium mb-4 uppercase">Get in Touch</p>
             <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Contact Us</h1>
             <p className="text-muted-foreground">
-              Have a question or need assistance? We're here to help. Send us a message and we'll respond as soon as possible.
+              Have a question or need assistance? We're here to help.
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-8">
+          <form onSubmit={handleSubmit} className="border border-border p-8">
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                <Label htmlFor="email" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
                   Your Email
                 </Label>
                 <div className="relative">
@@ -52,13 +49,13 @@ const Contact = () => {
                     type="email"
                     placeholder="your@email.com"
                     required
-                    className="pl-11 h-12 bg-secondary border-border focus:border-primary"
+                    className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="subject" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                <Label htmlFor="subject" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
                   Subject
                 </Label>
                 <Input
@@ -66,12 +63,12 @@ const Contact = () => {
                   type="text"
                   placeholder="What is this about?"
                   required
-                  className="h-12 bg-secondary border-border focus:border-primary"
+                  className="h-12 bg-background border-border rounded-none focus:border-foreground"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message" className="text-xs font-medium tracking-wider uppercase text-muted-foreground">
+                <Label htmlFor="message" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
                   Your Message
                 </Label>
                 <div className="relative">
@@ -80,7 +77,7 @@ const Contact = () => {
                     id="message"
                     placeholder="Tell us how we can help..."
                     required
-                    className="pl-11 min-h-[140px] bg-secondary border-border focus:border-primary resize-none"
+                    className="pl-11 min-h-[160px] bg-background border-border rounded-none focus:border-foreground resize-none"
                   />
                 </div>
               </div>
@@ -88,7 +85,7 @@ const Contact = () => {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full h-12 font-medium tracking-wider text-sm bg-card text-foreground border border-border hover:bg-secondary gap-2"
+                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none gap-2"
                 disabled={isSubmitting}
               >
                 <Send className="h-4 w-4" />
