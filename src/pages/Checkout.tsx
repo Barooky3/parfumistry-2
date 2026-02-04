@@ -126,25 +126,25 @@ const Checkout = () => {
       </div>
 
       {/* Progress Stepper */}
-      <div className="py-6 md:py-8 bg-secondary/50 border-b border-border">
+      <div className="py-8 md:py-10 bg-secondary border-b border-border">
         <div className="container">
-          <div className="flex items-center justify-center max-w-md mx-auto">
+          <div className="flex items-center justify-center max-w-lg mx-auto px-4">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
                   {/* Step Circle */}
                   <div 
                     className={cn(
-                      "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm md:text-base font-semibold border-2 transition-all shadow-sm",
+                      "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-base md:text-lg font-bold transition-all",
                       currentStep === step.number 
-                        ? "bg-accent border-accent text-accent-foreground" 
+                        ? "bg-accent text-white shadow-lg ring-4 ring-accent/20" 
                         : currentStep > step.number
-                          ? "bg-accent border-accent text-accent-foreground"
-                          : "bg-background border-accent/40 text-foreground"
+                          ? "bg-accent text-white"
+                          : "bg-white text-foreground border-2 border-foreground/30 shadow-md"
                     )}
                   >
                     {currentStep > step.number ? (
-                      <Check className="h-5 w-5 md:h-6 md:w-6" />
+                      <Check className="h-6 w-6 md:h-7 md:w-7" />
                     ) : (
                       step.number
                     )}
@@ -152,8 +152,8 @@ const Checkout = () => {
                   {/* Step Label */}
                   <span 
                     className={cn(
-                      "text-[10px] md:text-xs tracking-[0.1em] mt-3 font-semibold",
-                      currentStep >= step.number ? "text-foreground" : "text-muted-foreground"
+                      "text-xs md:text-sm tracking-[0.08em] mt-3 font-semibold",
+                      currentStep >= step.number ? "text-foreground" : "text-foreground/60"
                     )}
                   >
                     {step.label}
@@ -163,8 +163,8 @@ const Checkout = () => {
                 {index < steps.length - 1 && (
                   <div 
                     className={cn(
-                      "h-[2px] w-10 md:w-16 -mt-6 md:-mt-7 mx-2",
-                      currentStep > step.number ? "bg-accent" : "bg-accent/30"
+                      "h-1 w-12 md:w-20 -mt-7 md:-mt-8 mx-1 md:mx-2 rounded-full",
+                      currentStep > step.number ? "bg-accent" : "bg-foreground/20"
                     )}
                   />
                 )}
