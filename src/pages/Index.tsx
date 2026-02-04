@@ -43,37 +43,57 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Centered Logo with Fade */}
-      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
+      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black">
+        {/* Background Image with blur */}
         <motion.div 
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center opacity-40 blur-[2px]"
           style={{ 
             backgroundImage: `url(${heroImage})`,
             willChange: 'transform',
           }}
-          initial={{ scale: 1.05, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.4 }}
+          transition={{ duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         />
-        {/* Elegant fade overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        
+        {/* Radial vignette fade - dark edges, lighter center */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse 80% 60% at 50% 45%, transparent 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.85) 100%)'
+          }}
+        />
+        
+        {/* Additional top/bottom fade */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/80" />
         
         <div className="container relative z-10 text-center">
           <motion.div 
             className="max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: 1, delay: 0.2 }}
           >
-            {/* Centered Logo */}
-            <motion.img 
-              src={logo} 
-              alt="ProfParfums" 
-              className="h-20 md:h-28 lg:h-32 w-auto mx-auto mb-8 opacity-95 brightness-0 invert"
-              initial={{ opacity: 0, scale: 0.9 }}
+            {/* Centered Logo with glow effect */}
+            <motion.div
+              className="relative mb-10"
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            />
+              transition={{ duration: 1, delay: 0.4 }}
+            >
+              {/* Soft glow behind logo */}
+              <div 
+                className="absolute inset-0 blur-3xl opacity-30"
+                style={{
+                  background: 'radial-gradient(circle at 50% 50%, hsl(345 60% 32% / 0.6), transparent 70%)'
+                }}
+              />
+              <img 
+                src={logo} 
+                alt="ProfParfums" 
+                className="h-24 md:h-32 lg:h-40 w-auto mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
+              />
+            </motion.div>
             
             {/* Tagline */}
             <motion.p 
