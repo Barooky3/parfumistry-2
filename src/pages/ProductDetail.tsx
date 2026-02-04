@@ -144,18 +144,18 @@ const ProductDetail = () => {
             </div>
 
             {/* Description */}
-            <div className="space-y-4 py-6 border-t border-border">
+            <div className="space-y-3 py-6 border-t border-border">
               <h3 className="text-sm font-semibold text-foreground">
                 A refined opportunity for independent distribution.
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {product.description || 'Immediate delivery, with supplier information sent discreetly by email after purchase. Carefully selected pricing, suitable for professional reselling. Designed to preserve value while enabling healthy profit margins. Verified source — trusted, consistent, and reliable.'}
+                Immediate delivery, with supplier information sent discreetly by email after purchase. Carefully selected pricing, suitable for professional reselling. Designed to preserve value while enabling healthy profit margins. Verified source — trusted, consistent, and reliable.
               </p>
               
-              {/* Info Box */}
-              <div className="flex items-start gap-3 p-4 bg-secondary/50 border border-border">
-                <Info className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-muted-foreground">
+              {/* Info Box - Compact */}
+              <div className="flex items-center gap-2 py-3 text-muted-foreground">
+                <Info className="h-4 w-4 flex-shrink-0" />
+                <p className="text-xs">
                   This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
                 </p>
               </div>
