@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Shield, Truck, Tag, Mail, User, MapPin, CreditCard, Lock } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Shield, Truck, Tag, Mail, MapPin, CreditCard, Lock, User, CheckSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,23 +31,24 @@ const COUNTRIES = [
   'Hungary',
 ];
 
-// Simple address suggestions based on postal code patterns
+// Simple address suggestions based on input
 const ADDRESS_SUGGESTIONS: { [key: string]: { street: string; city: string }[] } = {
   'NL': [
-    { street: 'Herengracht', city: 'Amsterdam' },
-    { street: 'Kalverstraat', city: 'Amsterdam' },
-    { street: 'Lijnbaan', city: 'Rotterdam' },
-    { street: 'Mariaplaats', city: 'Utrecht' },
+    { street: 'Herengracht 100', city: 'Amsterdam' },
+    { street: 'Kalverstraat 50', city: 'Amsterdam' },
+    { street: 'Lijnbaan 25', city: 'Rotterdam' },
+    { street: 'Mariaplaats 10', city: 'Utrecht' },
+    { street: 'Grote Markt 1', city: 'Groningen' },
   ],
   'BE': [
-    { street: 'Meir', city: 'Antwerpen' },
-    { street: 'Rue Neuve', city: 'Brussels' },
-    { street: 'Veldstraat', city: 'Gent' },
+    { street: 'Meir 100', city: 'Antwerpen' },
+    { street: 'Rue Neuve 50', city: 'Brussels' },
+    { street: 'Veldstraat 25', city: 'Gent' },
   ],
   'DE': [
-    { street: 'Kurfürstendamm', city: 'Berlin' },
-    { street: 'Maximilianstraße', city: 'München' },
-    { street: 'Königsallee', city: 'Düsseldorf' },
+    { street: 'Kurfürstendamm 100', city: 'Berlin' },
+    { street: 'Maximilianstraße 50', city: 'München' },
+    { street: 'Königsallee 25', city: 'Düsseldorf' },
   ],
 };
 
@@ -61,7 +62,7 @@ const Checkout = () => {
   // Address autocomplete state
   const [addressSuggestions, setAddressSuggestions] = useState<{ street: string; city: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const addressInputRef = useRef<HTMLInputElement>(null);
+  const addressInputRef = useRef<HTMLDivElement>(null);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -80,7 +81,7 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
     // Trigger address suggestions when typing street address
-    if (field === 'streetAddress' && value.length >= 3) {
+    if (field === 'streetAddress' && value.length >= 2) {
       const countryCode = formData.country === 'Netherlands' ? 'NL' : 
                          formData.country === 'Belgium' ? 'BE' : 
                          formData.country === 'Germany' ? 'DE' : null;
@@ -155,6 +156,7 @@ const Checkout = () => {
     toast({ title: 'Order Confirmed!', description: 'Check your email for order details.' });
   };
 
+  // Empty cart state
   if (items.length === 0 && !isCompleted) {
     return (
       <div className="min-h-screen flex items-center justify-center py-16 bg-background">
@@ -170,6 +172,7 @@ const Checkout = () => {
     );
   }
 
+  // Order completed state
   if (isCompleted) {
     return (
       <div className="min-h-screen flex items-center justify-center py-16 bg-background">
@@ -192,154 +195,146 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/30">
-      <div className="container py-8 md:py-12 max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+    <div className="min-h-screen bg-secondary/50">
+      <div className="container py-10 md:py-16 max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
           
-          {/* Left Column - Form */}
+          {/* Left Column - Your Information Form */}
           <div className="order-2 lg:order-1">
-            <div className="bg-background p-6 md:p-8 rounded-sm">
-              {/* Section Header */}
-              <div className="flex items-center gap-3 mb-8">
-                <User className="h-5 w-5 text-accent" strokeWidth={1.5} />
-                <h2 className="font-display text-xl text-foreground">Your Information</h2>
+            {/* Section Header */}
+            <div className="flex items-center gap-3 mb-8">
+              <User className="h-6 w-6 text-accent" strokeWidth={1.5} />
+              <h2 className="font-display text-2xl text-foreground">Your Information</h2>
+            </div>
+
+            <div className="space-y-6">
+              {/* Email Field */}
+              <div className="space-y-2">
+                <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                  EMAIL ADDRESS <span className="text-accent">*</span>
+                </Label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={(e) => updateFormData('email', e.target.value)}
+                    className="pl-12 h-14 bg-background border-border text-base rounded-md focus:border-foreground"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-5">
-                {/* Email Field */}
+              {/* Name Fields - Side by Side */}
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                    EMAIL ADDRESS <span className="text-accent">*</span>
+                  <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                    FIRST NAME <span className="text-accent">*</span>
                   </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={formData.email}
-                      onChange={(e) => updateFormData('email', e.target.value)}
-                      required
-                      className="pl-11 h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent"
-                    />
-                  </div>
+                  <Input
+                    type="text"
+                    placeholder="John"
+                    value={formData.firstName}
+                    onChange={(e) => updateFormData('firstName', e.target.value)}
+                    className="h-14 bg-background border-border text-base rounded-md focus:border-foreground"
+                  />
                 </div>
-
-                {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      FIRST NAME <span className="text-accent">*</span>
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="John"
-                      value={formData.firstName}
-                      onChange={(e) => updateFormData('firstName', e.target.value)}
-                      required
-                      className="h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      LAST NAME <span className="text-accent">*</span>
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="Doe"
-                      value={formData.lastName}
-                      onChange={(e) => updateFormData('lastName', e.target.value)}
-                      required
-                      className="h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent"
-                    />
-                  </div>
-                </div>
-
-                {/* Country Field */}
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                    COUNTRY <span className="text-accent">*</span>
+                  <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                    LAST NAME <span className="text-accent">*</span>
                   </Label>
-                  <Select value={formData.country} onValueChange={(value) => updateFormData('country', value)}>
-                    <SelectTrigger className="h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent">
-                      <SelectValue placeholder="Select your country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {COUNTRIES.map((country) => (
-                        <SelectItem key={country} value={country}>
-                          {country}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    type="text"
+                    placeholder="Doe"
+                    value={formData.lastName}
+                    onChange={(e) => updateFormData('lastName', e.target.value)}
+                    className="h-14 bg-background border-border text-base rounded-md focus:border-foreground"
+                  />
                 </div>
+              </div>
 
-                {/* Street Address with Autocomplete */}
-                <div className="space-y-2 relative" ref={addressInputRef}>
-                  <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                    STREET ADDRESS <span className="text-accent">*</span>
+              {/* Country Dropdown */}
+              <div className="space-y-2">
+                <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                  COUNTRY <span className="text-accent">*</span>
+                </Label>
+                <Select value={formData.country} onValueChange={(value) => updateFormData('country', value)}>
+                  <SelectTrigger className="h-14 bg-background border-border text-base rounded-md focus:border-foreground">
+                    <SelectValue placeholder="Select your country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COUNTRIES.map((country) => (
+                      <SelectItem key={country} value={country}>
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Street Address with Autocomplete */}
+              <div className="space-y-2 relative" ref={addressInputRef}>
+                <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                  STREET ADDRESS <span className="text-accent">*</span>
+                </Label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Start typing your address..."
+                    value={formData.streetAddress}
+                    onChange={(e) => updateFormData('streetAddress', e.target.value)}
+                    onFocus={() => formData.streetAddress.length >= 2 && addressSuggestions.length > 0 && setShowSuggestions(true)}
+                    className="pl-12 h-14 bg-background border-border text-base rounded-md focus:border-foreground"
+                  />
+                </div>
+                
+                {/* Address Suggestions Dropdown */}
+                {showSuggestions && addressSuggestions.length > 0 && (
+                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-48 overflow-auto">
+                    {addressSuggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => selectAddressSuggestion(suggestion)}
+                        className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 border-b border-border last:border-0"
+                      >
+                        <MapPin className="h-4 w-4 text-accent flex-shrink-0" />
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{suggestion.street}</p>
+                          <p className="text-xs text-muted-foreground">{suggestion.city}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Postal Code & City - Side by Side */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                    POSTAL CODE <span className="text-accent">*</span>
                   </Label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder="Start typing your address..."
-                      value={formData.streetAddress}
-                      onChange={(e) => updateFormData('streetAddress', e.target.value)}
-                      onFocus={() => formData.streetAddress.length >= 3 && addressSuggestions.length > 0 && setShowSuggestions(true)}
-                      required
-                      className="pl-11 h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent"
-                    />
-                  </div>
-                  
-                  {/* Address Suggestions Dropdown */}
-                  {showSuggestions && addressSuggestions.length > 0 && (
-                    <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-sm shadow-lg max-h-48 overflow-auto">
-                      {addressSuggestions.map((suggestion, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => selectAddressSuggestion(suggestion)}
-                          className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3"
-                        >
-                          <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-foreground">{suggestion.street}</p>
-                            <p className="text-xs text-muted-foreground">{suggestion.city}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  <Input
+                    type="text"
+                    placeholder="1234 AB"
+                    value={formData.postalCode}
+                    onChange={(e) => updateFormData('postalCode', e.target.value)}
+                    className="h-14 bg-background border-border text-base rounded-md focus:border-foreground"
+                  />
                 </div>
-
-                {/* Postal Code & City */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      POSTAL CODE <span className="text-accent">*</span>
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="1234 AB"
-                      value={formData.postalCode}
-                      onChange={(e) => updateFormData('postalCode', e.target.value)}
-                      required
-                      className="h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium tracking-[0.08em] uppercase text-foreground">
-                      CITY <span className="text-accent">*</span>
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="Amsterdam"
-                      value={formData.city}
-                      onChange={(e) => updateFormData('city', e.target.value)}
-                      required
-                      className="h-12 bg-background border-border rounded-sm focus:border-accent focus:ring-accent"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium tracking-wider uppercase text-foreground">
+                    CITY <span className="text-accent">*</span>
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder="Amsterdam"
+                    value={formData.city}
+                    onChange={(e) => updateFormData('city', e.target.value)}
+                    className="h-14 bg-background border-border text-base rounded-md focus:border-foreground"
+                  />
                 </div>
               </div>
             </div>
@@ -347,41 +342,41 @@ const Checkout = () => {
 
           {/* Right Column - Order Summary */}
           <div className="order-1 lg:order-2">
-            <div className="bg-background p-6 md:p-8 rounded-sm lg:sticky lg:top-[120px]">
-              {/* Section Header */}
-              <div className="flex items-center gap-3 mb-6">
-                <ShoppingBag className="h-5 w-5 text-accent" strokeWidth={1.5} />
-                <h2 className="font-display text-xl text-foreground">Order Summary</h2>
-              </div>
+            {/* Section Header */}
+            <div className="flex items-center gap-3 mb-8">
+              <CheckSquare className="h-6 w-6 text-accent" strokeWidth={1.5} />
+              <h2 className="font-display text-2xl text-foreground">Order Summary</h2>
+            </div>
 
+            <div className="bg-background rounded-lg border border-border p-6 lg:sticky lg:top-[100px]">
               {/* Order Items */}
-              <div className="space-y-4 mb-6 pb-6 border-b border-border">
+              <div className="space-y-4 mb-6">
                 {items.map((item) => {
                   const cartKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
                   const displayPrice = item.selectedPrice || item.product.price;
                   return (
-                    <div key={cartKey} className="flex gap-4">
-                      <div className="w-16 h-20 bg-secondary overflow-hidden flex-shrink-0 rounded-sm border border-border">
+                    <div key={cartKey} className="flex gap-4 items-start">
+                      <div className="w-16 h-20 bg-secondary overflow-hidden flex-shrink-0 rounded border border-border">
                         <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-foreground line-clamp-1">{item.product.name}</h4>
+                        <h4 className="text-sm font-semibold text-foreground line-clamp-1">{item.product.name}</h4>
                         <p className="text-xs text-muted-foreground mt-1">
                           Qty: {item.quantity}
                           {item.selectedMl && ` • ${item.selectedMl}ml`}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold text-foreground">{formatPrice(displayPrice * item.quantity)}</p>
+                      <p className="text-sm font-bold text-foreground">{formatPrice(displayPrice * item.quantity)}</p>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Discount Code */}
+              {/* Discount Code Section */}
               <div className="mb-6 pb-6 border-b border-border">
                 <div className="flex items-center gap-2 mb-3">
                   <Tag className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs font-medium tracking-[0.08em] uppercase text-muted-foreground">DISCOUNT CODE</span>
+                  <span className="text-xs font-medium tracking-wider uppercase text-muted-foreground">DISCOUNT CODE</span>
                 </div>
                 <div className="flex gap-2">
                   <Input
@@ -389,26 +384,26 @@ const Checkout = () => {
                     placeholder="Enter code"
                     value={discountCode}
                     onChange={(e) => setDiscountCode(e.target.value)}
-                    className="h-11 flex-1 bg-background border-accent/50 focus:border-accent rounded-sm"
+                    className="h-12 flex-1 bg-background border-2 border-accent/60 focus:border-accent rounded-md text-sm"
                   />
                   <Button 
                     variant="outline" 
                     onClick={handleApplyDiscount}
                     disabled={!discountCode || isApplyingDiscount}
-                    className="h-11 px-5 rounded-sm border-border hover:bg-secondary"
+                    className="h-12 px-6 rounded-md border-border font-medium"
                   >
                     {isApplyingDiscount ? '...' : 'Apply'}
                   </Button>
                 </div>
               </div>
 
-              {/* Discount Banner */}
+              {/* Discount Applied Banner */}
               {freeItemDiscount > 0 && (
-                <div className="mb-6 p-3 bg-accent/10 border border-accent/20 rounded-sm">
-                  <p className="text-xs font-semibold text-accent uppercase tracking-wide mb-1">
+                <div className="mb-6 p-4 bg-accent/10 border border-accent/20 rounded-md">
+                  <p className="text-sm font-semibold text-accent">
                     🎉 Buy 2 Get 1 Free Applied!
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {freeItemsCount} free fragrance{freeItemsCount > 1 ? 's' : ''} included
                   </p>
                 </div>
@@ -418,7 +413,7 @@ const Checkout = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className={freeItemDiscount > 0 ? "text-muted-foreground line-through" : "text-foreground"}>
+                  <span className={freeItemDiscount > 0 ? "text-muted-foreground line-through" : "text-foreground font-medium"}>
                     {formatPrice(subtotalBeforeDiscount)}
                   </span>
                 </div>
@@ -432,84 +427,85 @@ const Checkout = () => {
                 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="text-green-600 font-medium">Free</span>
+                  <span className="text-green-600 font-semibold">Free</span>
                 </div>
-                
-                <div className="h-px bg-border my-2" />
-                
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-lg text-foreground">Total</span>
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-foreground">{formatPrice(totalPrice)}</span>
-                    <p className="text-xs text-muted-foreground mt-1">Taxes included</p>
-                  </div>
+              </div>
+
+              {/* Total */}
+              <div className="flex items-center justify-between py-4 border-t border-border mb-6">
+                <span className="font-display text-xl text-foreground">Total</span>
+                <div className="text-right">
+                  <span className="text-2xl font-bold text-foreground">{formatPrice(totalPrice)}</span>
+                  <p className="text-xs text-muted-foreground">Taxes included</p>
                 </div>
               </div>
 
               {/* Form validation message */}
               {!isFormValid() && (
-                <p className="text-xs text-center text-muted-foreground mb-4">
+                <p className="text-sm text-center text-muted-foreground mb-4">
                   Fill in all required fields to proceed with payment.
                 </p>
               )}
 
               {/* Payment Buttons */}
               <div className="space-y-3">
-                {/* Primary Payment Button */}
+                {/* Pay with Shopify - Green */}
                 <Button 
                   onClick={() => handlePayment('shopify')}
                   disabled={!isFormValid()}
-                  className="w-full h-14 text-sm font-medium tracking-wide rounded-sm bg-[#96bf48] hover:bg-[#7ea83d] text-white disabled:opacity-50"
+                  className="w-full h-14 text-sm font-semibold rounded-md disabled:opacity-50"
+                  style={{ backgroundColor: '#96bf48', color: 'white' }}
                 >
                   <Lock className="h-4 w-4 mr-2" />
                   Pay with Shopify
                 </Button>
 
                 {/* Divider */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 py-2">
                   <div className="flex-1 h-px bg-border" />
-                  <span className="text-xs text-muted-foreground uppercase">Or pay with</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Or pay with</span>
                   <div className="flex-1 h-px bg-border" />
                 </div>
 
-                {/* PayPal Button */}
+                {/* PayPal - Yellow */}
                 <Button 
                   onClick={() => handlePayment('paypal')}
                   disabled={!isFormValid()}
                   variant="outline"
-                  className="w-full h-12 text-sm font-bold rounded-sm border-border bg-[#ffc439] hover:bg-[#f0b82d] text-[#003087] disabled:opacity-50"
+                  className="w-full h-12 text-base font-bold rounded-md border-border disabled:opacity-50"
+                  style={{ backgroundColor: '#ffc439', color: '#003087' }}
                 >
                   PayPal
                 </Button>
 
-                {/* Credit Card Button */}
+                {/* Creditcard - Gray */}
                 <Button 
                   onClick={() => handlePayment('creditcard')}
                   disabled={!isFormValid()}
                   variant="outline"
-                  className="w-full h-12 text-sm font-medium rounded-sm border-border bg-muted hover:bg-muted/80 text-foreground disabled:opacity-50"
+                  className="w-full h-12 text-sm font-medium rounded-md bg-muted hover:bg-muted/80 text-foreground border-border disabled:opacity-50"
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
                   Creditcard
                 </Button>
 
                 {/* PayPal Attribution */}
-                <p className="text-xs text-center text-muted-foreground">
-                  Powered by <span className="font-semibold text-[#003087]">PayPal</span>
+                <p className="text-xs text-center text-muted-foreground pt-2">
+                  Powered by <span className="font-bold" style={{ color: '#003087' }}>PayPal</span>
                 </p>
               </div>
 
               {/* Trust Badges */}
               <div className="mt-8 pt-6 border-t border-border space-y-3">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Shield className="h-4 w-4 text-accent flex-shrink-0" strokeWidth={1.5} />
                   100% Authentic Guarantee
                 </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Truck className="h-4 w-4 text-accent flex-shrink-0" strokeWidth={1.5} />
                   Fast Delivery
                 </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Lock className="h-4 w-4 text-accent flex-shrink-0" strokeWidth={1.5} />
                   Secure Payment
                 </div>
