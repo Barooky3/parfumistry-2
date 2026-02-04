@@ -19,7 +19,7 @@ export const AnnouncementBar = () => {
     >
       <div className="container">
         <p className="text-center text-xs font-medium tracking-[0.2em] uppercase">
-          ✨ Exclusive Fragrance On Sale ✨
+          Exclusive Fragrance On Sale
         </p>
       </div>
     </div>
