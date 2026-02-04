@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Minus, Plus, Truck, ShieldCheck, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Minus, Plus, Truck, ShieldCheck, RotateCcw, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/contexts/CartContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard } from '@/components/product';
-import { cn } from '@/lib/utils';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -63,23 +61,23 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen py-8 md:py-12">
+    <div className="min-h-screen py-8 lg:py-12">
       <div className="container">
-        {/* Back Button */}
+        {/* Breadcrumb */}
         <Button
           variant="ghost"
-          className="mb-6 gap-2"
+          className="mb-8 gap-2 text-muted-foreground hover:text-foreground"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Back to Shop
         </Button>
 
         {/* Product Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-20">
           {/* Product Image */}
           <div className="animate-fade-in">
-            <div className="aspect-square bg-card rounded-2xl p-8 flex items-center justify-center shadow-card">
+            <div className="aspect-square bg-card rounded-lg border border-border p-8 lg:p-12 flex items-center justify-center">
               <img
                 src={product.image}
                 alt={product.name}
@@ -90,27 +88,28 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="animate-slide-up">
-            {/* Badges */}
-            <div className="flex items-center gap-2 mb-4">
-              <Badge variant="outline" className="rounded-full">
+            {/* Category & Brand */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-primary font-medium uppercase tracking-wider text-sm">
                 {getCategoryLabel(product.category)}
-              </Badge>
+              </span>
               {hasDiscount && (
-                <Badge className="bg-accent text-accent-foreground rounded-full">
-                  Save {discountPercent}%
-                </Badge>
+                <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded">
+                  -{discountPercent}% OFF
+                </span>
               )}
             </div>
 
-            {/* Title */}
-            <p className="text-sm text-muted-foreground mb-2">{product.brand}</p>
-            <h1 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-4">
+            <p className="text-muted-foreground uppercase tracking-wider text-sm mb-2">
+              {product.brand}
+            </p>
+            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
               {product.name}
             </h1>
 
             {/* Price */}
-            <div className="flex items-center gap-3 mb-6">
-              <span className="font-serif text-3xl font-semibold text-foreground">
+            <div className="flex items-baseline gap-4 mb-6">
+              <span className="font-serif text-4xl font-semibold text-primary">
                 {formatPrice(product.price)}
               </span>
               {hasDiscount && (
@@ -126,42 +125,42 @@ const ProductDetail = () => {
             </p>
 
             {/* Scent Notes */}
-            <div className="bg-background rounded-xl p-6 mb-8">
-              <h3 className="font-serif text-lg font-semibold text-foreground mb-4">
-                Scent Notes
+            <div className="bg-card rounded-lg p-6 border border-border mb-8">
+              <h3 className="font-semibold text-foreground mb-4 uppercase tracking-wider text-sm">
+                Scent Profile
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <span className="text-sm font-medium text-muted-foreground w-16">Top</span>
-                  <p className="text-sm text-foreground">{product.scentNotes.top.join(', ')}</p>
+                  <span className="text-sm font-medium text-primary w-16 uppercase tracking-wider">Top</span>
+                  <p className="text-sm text-foreground/80">{product.scentNotes.top.join(' • ')}</p>
                 </div>
                 <div className="flex items-start gap-4">
-                  <span className="text-sm font-medium text-muted-foreground w-16">Heart</span>
-                  <p className="text-sm text-foreground">{product.scentNotes.heart.join(', ')}</p>
+                  <span className="text-sm font-medium text-primary w-16 uppercase tracking-wider">Heart</span>
+                  <p className="text-sm text-foreground/80">{product.scentNotes.heart.join(' • ')}</p>
                 </div>
                 <div className="flex items-start gap-4">
-                  <span className="text-sm font-medium text-muted-foreground w-16">Base</span>
-                  <p className="text-sm text-foreground">{product.scentNotes.base.join(', ')}</p>
+                  <span className="text-sm font-medium text-primary w-16 uppercase tracking-wider">Base</span>
+                  <p className="text-sm text-foreground/80">{product.scentNotes.base.join(' • ')}</p>
                 </div>
               </div>
             </div>
 
             {/* Quantity & Add to Cart */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center gap-2 bg-background rounded-full p-1">
+              <div className="flex items-center gap-1 bg-card border border-border rounded-lg">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full"
+                  className="h-12 w-12"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-12 text-center font-medium">{quantity}</span>
+                <span className="w-12 text-center font-semibold text-lg">{quantity}</span>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full"
+                  className="h-12 w-12"
                   onClick={() => setQuantity(quantity + 1)}
                 >
                   <Plus className="h-4 w-4" />
@@ -169,12 +168,19 @@ const ProductDetail = () => {
               </div>
               <Button
                 size="lg"
-                className="flex-1 rounded-full gap-2"
+                className="flex-1 h-12 gap-2 font-semibold text-base"
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
               >
                 <ShoppingBag className="h-5 w-5" />
-                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                {product.inStock ? 'Add to Bag' : 'Out of Stock'}
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-12 w-12 border-border hover:border-primary"
+              >
+                <Heart className="h-5 w-5" />
               </Button>
             </div>
 
@@ -182,15 +188,15 @@ const ProductDetail = () => {
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border">
               <div className="text-center">
                 <Truck className="h-5 w-5 mx-auto text-primary mb-2" />
-                <p className="text-xs text-muted-foreground">Fast Shipping</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Fast Shipping</p>
               </div>
               <div className="text-center">
                 <ShieldCheck className="h-5 w-5 mx-auto text-primary mb-2" />
-                <p className="text-xs text-muted-foreground">100% Authentic</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">100% Authentic</p>
               </div>
               <div className="text-center">
                 <RotateCcw className="h-5 w-5 mx-auto text-primary mb-2" />
-                <p className="text-xs text-muted-foreground">Easy Returns</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Easy Returns</p>
               </div>
             </div>
           </div>
@@ -200,9 +206,14 @@ const ProductDetail = () => {
         {relatedProducts.length > 0 && (
           <section>
             <Separator className="mb-12" />
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-8">
-              You May Also Like
-            </h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+                You May Also Like
+              </h2>
+              <Button variant="ghost" className="text-muted-foreground hover:text-primary" asChild>
+                <Link to="/shop">View All</Link>
+              </Button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />

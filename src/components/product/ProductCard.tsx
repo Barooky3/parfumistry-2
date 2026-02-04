@@ -3,7 +3,6 @@ import { ShoppingBag } from 'lucide-react';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
@@ -36,65 +35,54 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'men':
-        return 'bg-accent/20 text-accent-foreground border-accent/30';
-      case 'women':
-        return 'bg-secondary/30 text-secondary-foreground border-secondary/30';
-      default:
-        return 'bg-primary/20 text-primary border-primary/30';
-    }
-  };
-
   return (
     <div
       className={cn(
-        'group bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1',
+        'group bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 shadow-card hover:shadow-card-hover',
         className
       )}
     >
       {/* Image Container */}
       <Link to={`/product/${product.id}`} className="block relative">
-        <div className="aspect-square bg-muted p-6 flex items-center justify-center overflow-hidden">
+        <div className="aspect-square bg-gradient-to-b from-muted to-background p-6 flex items-center justify-center overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
           />
         </div>
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <Badge
-            variant="outline"
-            className={cn(
-              'text-xs font-medium rounded-full',
-              getCategoryColor(product.category)
-            )}
-          >
-            {getCategoryLabel(product.category)}
-          </Badge>
           {hasDiscount && (
-            <Badge className="bg-accent text-accent-foreground text-xs font-medium rounded-full">
+            <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded">
               -{discountPercent}%
-            </Badge>
+            </span>
           )}
+        </div>
+
+        {/* Category Badge */}
+        <div className="absolute top-3 right-3">
+          <span className="bg-background/80 backdrop-blur-sm text-foreground text-xs font-medium px-3 py-1 rounded border border-border">
+            {getCategoryLabel(product.category)}
+          </span>
         </div>
       </Link>
 
       {/* Content */}
-      <div className="p-4">
-        <Link to={`/product/${product.id}`}>
-          <p className="text-xs text-muted-foreground mb-1">{product.brand}</p>
-          <h3 className="font-serif text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+      <div className="p-5">
+        <Link to={`/product/${product.id}`} className="block">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+            {product.brand}
+          </p>
+          <h3 className="font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-3">
             {product.name}
           </h3>
         </Link>
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="font-semibold text-lg text-foreground">
+          <span className="font-bold text-xl text-primary">
             {formatPrice(product.price)}
           </span>
           {hasDiscount && (
@@ -107,11 +95,11 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         {/* Add to Cart Button */}
         <Button
           onClick={() => addItem(product)}
-          className="w-full rounded-full gap-2"
+          className="w-full gap-2 font-semibold"
           disabled={!product.inStock}
         >
           <ShoppingBag className="h-4 w-4" />
-          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+          {product.inStock ? 'Add to Bag' : 'Out of Stock'}
         </Button>
       </div>
     </div>
