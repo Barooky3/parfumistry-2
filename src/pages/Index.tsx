@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { ProductCard } from '@/components/product';
 import { getFeaturedProducts } from '@/data/products';
 import heroImage from '@/assets/hero-perfumes.jpg';
+import logo from '@/assets/logo.png';
 
 const features = [
   { icon: Truck, label: 'Instant Delivery' },
@@ -178,6 +179,7 @@ const Index = () => {
       <section className="py-24 bg-background">
         <div className="container">
           <div className="max-w-xl mx-auto text-center">
+            <img src={logo} alt="ProfParfums" className="h-20 w-auto mx-auto mb-8 opacity-80" />
             <h2 className="font-display text-3xl md:text-4xl text-foreground mb-4">
               Join the ProfParfums Family
             </h2>

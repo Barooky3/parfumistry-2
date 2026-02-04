@@ -4,7 +4,6 @@ import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import logo from '@/assets/logo.png';
 
 const navLinks = [
   { href: '/shop/men', label: 'MEN' },
@@ -39,8 +38,10 @@ export const Header = () => {
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="ProfParfums" className="h-10 w-auto" />
+          <Link to="/" className="flex items-center">
+            <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
+              ProfParfums
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
