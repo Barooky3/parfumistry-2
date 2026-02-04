@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Minus, Plus, Truck, Shield, Home, ChevronRight, Star } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, Info } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
@@ -17,7 +18,8 @@ const reviews = [
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { addItem, toggleCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+  const [quantity] = useState(1);
 
   const product = id ? getProductById(id) : undefined;
   const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
@@ -38,18 +40,19 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) addItem(product);
+    toggleCart();
   };
 
   const handleBuyNow = () => {
     for (let i = 0; i < quantity; i++) addItem(product);
-    toggleCart();
+    navigate('/checkout');
   };
 
   return (
-    <div className="min-h-screen py-8 md:py-12 bg-background">
-      <div className="container">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+    <div className="min-h-screen bg-background pb-24 md:pb-12">
+      <div className="container py-4 md:py-8">
+        {/* Breadcrumb - Hidden on mobile */}
+        <nav className="hidden md:flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link to="/" className="hover:text-foreground transition-colors">
             <Home className="h-4 w-4" />
           </Link>
@@ -59,147 +62,198 @@ const ProductDetail = () => {
           <span className="text-foreground truncate">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 mb-12 md:mb-24">
           {/* Image */}
-          <div className="animate-fade-in">
-            <div className="aspect-[3/4] bg-secondary overflow-hidden">
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="aspect-square md:aspect-[3/4] bg-secondary overflow-hidden">
+              <img 
+                src={product.image} 
+                alt={product.name} 
+                className="w-full h-full object-cover"
+                loading="eager"
+              />
             </div>
-          </div>
+          </motion.div>
 
           {/* Info */}
-          <div className="animate-slide-up">
-            <p className="text-xs tracking-[0.2em] text-muted-foreground font-medium uppercase mb-3">{product.brand}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="px-1 md:px-0"
+          >
+            {/* Brand & Name */}
+            <p className="text-[10px] md:text-xs tracking-[0.2em] text-muted-foreground font-medium uppercase mb-2">
+              {product.brand}
+            </p>
             
-            <h1 className="font-display text-3xl md:text-4xl text-foreground mb-6">{product.name}</h1>
+            <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground mb-4">
+              {product.name}
+            </h1>
 
-            <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-2xl font-semibold text-foreground">{formatPrice(product.price)}</span>
+            {/* Price */}
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-xl md:text-2xl font-semibold text-foreground">
+                {formatPrice(product.price)}
+              </span>
               {hasDiscount && (
-                <span className="text-lg text-muted-foreground line-through">{formatPrice(product.originalPrice!)}</span>
+                <span className="text-base md:text-lg text-muted-foreground line-through">
+                  {formatPrice(product.originalPrice!)}
+                </span>
               )}
             </div>
 
             {/* Trust Badges */}
-            <div className="flex items-center gap-8 mb-8 pb-8 border-b border-border">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Truck className="h-4 w-4" strokeWidth={1.5} />
-                Instant Delivery
+            <div className="flex items-center gap-6 mb-6 text-muted-foreground">
+              <div className="flex items-center gap-2 text-sm">
+                <Zap className="h-4 w-4" strokeWidth={1.5} />
+                <span>Instant Delivery</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 text-sm">
                 <Shield className="h-4 w-4" strokeWidth={1.5} />
-                Verified Seller
+                <span>Verified Seller</span>
               </div>
             </div>
 
-            {/* Quantity & Add to Cart */}
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center gap-4">
-                <span className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">Quantity</span>
-                <div className="flex items-center border border-border">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-10 w-10 rounded-none hover:bg-secondary" 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-12 text-center font-medium text-foreground">{quantity}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-10 w-10 rounded-none hover:bg-secondary" 
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-
+            {/* Action Buttons - Desktop */}
+            <div className="hidden md:block space-y-3 mb-8">
               <Button 
                 size="lg" 
-                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90" 
+                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.99] transition-all" 
                 onClick={handleAddToCart} 
                 disabled={!product.inStock}
               >
+                <ShoppingBag className="h-4 w-4 mr-2" />
                 Add to Cart
               </Button>
 
               <Button 
                 size="lg" 
                 variant="outline"
-                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
+                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none border-accent text-accent hover:bg-accent hover:text-accent-foreground active:scale-[0.99] transition-all" 
                 onClick={handleBuyNow} 
                 disabled={!product.inStock}
               >
+                <CreditCard className="h-4 w-4 mr-2" />
                 Buy Now
               </Button>
             </div>
 
             {/* Description */}
-            <div className="space-y-4 pt-8 border-t border-border">
-              <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
-              <p className="text-xs text-muted-foreground">
-                Digital product. After purchase, you'll receive access to the seller link via email.
+            <div className="space-y-4 py-6 border-t border-border">
+              <h3 className="text-sm font-semibold text-foreground">
+                A refined opportunity for independent distribution.
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {product.description || 'Immediate delivery, with supplier information sent discreetly by email after purchase. Carefully selected pricing, suitable for professional reselling. Designed to preserve value while enabling healthy profit margins. Verified source — trusted, consistent, and reliable.'}
               </p>
+              
+              {/* Info Box */}
+              <div className="flex items-start gap-3 p-4 bg-secondary/50 border border-border">
+                <Info className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-muted-foreground">
+                  This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
+                </p>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Reviews Section */}
-        <section className="mb-24">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="font-display text-3xl text-foreground">Customer Reviews</h2>
+        <motion.section 
+          className="mb-12 md:mb-24 border-t border-border pt-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="font-display text-2xl md:text-3xl text-foreground">Customer Reviews</h2>
             <div className="flex items-center gap-2">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-foreground text-foreground" />
+                  <Star key={i} className="h-4 w-4 md:h-5 md:w-5 fill-accent text-accent" />
                 ))}
               </div>
               <span className="text-sm text-muted-foreground">({reviews.length})</span>
             </div>
           </div>
 
-          <div className="grid gap-4">
-            {reviews.map((review) => (
-              <div key={review.id} className="border border-border p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-secondary flex items-center justify-center text-foreground font-medium">
+          <div className="grid gap-3 md:gap-4">
+            {reviews.map((review, index) => (
+              <motion.div 
+                key={review.id} 
+                className="border border-border p-4 md:p-6 bg-background"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 md:w-10 md:h-10 bg-secondary flex items-center justify-center text-foreground font-medium text-sm">
                     {review.name.charAt(0)}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-foreground">{review.name}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium text-sm text-foreground">{review.name}</span>
                       {review.verified && (
-                        <span className="text-xs text-muted-foreground">Verified Buyer</span>
+                        <span className="text-[10px] md:text-xs text-muted-foreground">Verified Buyer</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex">
                         {[...Array(review.rating)].map((_, i) => (
-                          <Star key={i} className="h-3 w-3 fill-foreground text-foreground" />
+                          <Star key={i} className="h-3 w-3 fill-accent text-accent" />
                         ))}
                       </div>
                       <span className="text-xs text-muted-foreground">{review.date}</span>
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">{review.text}</p>
-              </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{review.text}</p>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <section>
-            <h2 className="font-display text-3xl text-foreground mb-10">You May Also Like</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <motion.section
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
+          >
+            <h2 className="font-display text-2xl md:text-3xl text-foreground mb-8">You May Also Like</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
-          </section>
+          </motion.section>
         )}
+      </div>
+
+      {/* Sticky Bottom Bar - Mobile Only */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 flex gap-3 md:hidden z-30">
+        <Button 
+          className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all" 
+          onClick={handleAddToCart} 
+          disabled={!product.inStock}
+        >
+          <ShoppingBag className="h-4 w-4 mr-2" />
+          Add
+        </Button>
+        <Button 
+          className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98] transition-all" 
+          onClick={handleBuyNow} 
+          disabled={!product.inStock}
+        >
+          <CreditCard className="h-4 w-4 mr-2" />
+          Buy Now
+        </Button>
       </div>
     </div>
   );

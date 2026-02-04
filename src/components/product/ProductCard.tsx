@@ -93,20 +93,20 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
 
         {/* Action Buttons */}
         {product.inStock ? (
-          <div className="flex gap-2 pt-1">
+          <div className="flex flex-col gap-2 pt-1">
             <Button
               onClick={handleAddToCart}
-              variant="outline"
-              className="flex-1 h-9 md:h-10 text-[10px] md:text-xs font-medium tracking-[0.05em] md:tracking-[0.1em] uppercase rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background active:scale-[0.98] transition-all"
+              className="w-full h-10 text-[10px] md:text-xs font-medium tracking-[0.08em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all"
             >
-              <ShoppingBag className="h-3 w-3 md:h-3.5 md:w-3.5 mr-1.5" />
-              <span className="hidden sm:inline">Add to</span> Cart
+              <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
+              Add to Cart
             </Button>
             <Button
               onClick={handleBuyNow}
-              className="flex-1 h-9 md:h-10 text-[10px] md:text-xs font-medium tracking-[0.05em] md:tracking-[0.1em] uppercase rounded-none bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98] transition-all"
+              variant="outline"
+              className="w-full h-10 text-[10px] md:text-xs font-medium tracking-[0.08em] uppercase rounded-none border-accent text-accent hover:bg-accent hover:text-accent-foreground active:scale-[0.98] transition-all"
             >
-              <Zap className="h-3 w-3 md:h-3.5 md:w-3.5 mr-1.5" />
+              <Zap className="h-3.5 w-3.5 mr-1.5" />
               Buy Now
             </Button>
           </div>
@@ -114,7 +114,7 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
           <Button
             disabled
             variant="outline"
-            className="w-full h-9 md:h-10 text-[10px] md:text-xs font-medium tracking-[0.1em] uppercase rounded-none border-muted text-muted-foreground"
+            className="w-full h-10 text-[10px] md:text-xs font-medium tracking-[0.1em] uppercase rounded-none border-muted text-muted-foreground mt-1"
           >
             Sold Out
           </Button>
