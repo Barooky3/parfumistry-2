@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Clock, Send } from 'lucide-react';
+import { Mail, Clock, Send, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,10 +8,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { useToast } from '@/hooks/use-toast';
 
 const faqs = [
-  { question: 'How do I track my order?', answer: 'You will receive tracking information via email once your order has shipped.' },
-  { question: 'Can I return a fragrance?', answer: 'We offer a 14-day return policy on unopened items. Contact us to initiate a return.' },
-  { question: 'Are products authentic?', answer: 'Yes, all our fragrances are 100% authentic and sourced from authorized distributors.' },
-  { question: 'How long does delivery take?', answer: 'Most orders arrive within 3-7 business days depending on your location.' },
+  { question: 'How do I track my order?', answer: 'You will receive tracking information via email once your order is processed.' },
+  { question: 'Can I return a product?', answer: 'Yes, we offer a 14-day satisfaction guarantee. Contact us to initiate a return.' },
+  { question: 'Are all products authentic?', answer: 'Absolutely. We guarantee 100% authentic products with every purchase.' },
+  { question: 'How long does delivery take?', answer: 'Digital delivery is instant. Physical products ship within 1-3 business days.' },
 ];
 
 const Contact = () => {
@@ -73,20 +73,20 @@ const Contact = () => {
             <div className="flex gap-4 p-4 bg-secondary rounded-xl">
               <Mail className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-foreground">hello@profparfums.com</p>
-                <p className="text-xs text-muted-foreground">Response within 24h</p>
+                <p className="text-sm font-medium text-foreground">support@profparfums.com</p>
+                <p className="text-xs text-muted-foreground">We reply within 24 hours</p>
               </div>
             </div>
             <div className="flex gap-4 p-4 bg-secondary rounded-xl">
               <Clock className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-foreground">24-48 hours</p>
-                <p className="text-xs text-muted-foreground">Mon-Fri response time</p>
+                <p className="text-sm font-medium text-foreground">Business Hours</p>
+                <p className="text-xs text-muted-foreground">Mon-Fri, 9AM-6PM CET</p>
               </div>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-foreground mb-3">FAQ</h3>
+              <h3 className="text-sm font-medium text-foreground mb-3">Quick Answers</h3>
               <Accordion type="single" collapsible className="bg-secondary rounded-xl px-4">
                 {faqs.map((faq, i) => (
                   <AccordionItem key={i} value={`item-${i}`} className="border-border">

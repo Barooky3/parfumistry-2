@@ -6,11 +6,10 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/shop', label: 'Shop' },
-  { href: '/shop/men', label: 'Men' },
-  { href: '/shop/women', label: 'Women' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/shop/men', label: 'MEN' },
+  { href: '/shop/women', label: 'WOMEN' },
+  { href: '/shop', label: 'SHOP ALL' },
+  { href: '/contact', label: 'CONTACT' },
 ];
 
 export const Header = () => {
@@ -50,13 +49,13 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  'text-xs font-medium transition-colors hover:text-foreground',
+                  'text-xs font-medium tracking-wider transition-colors hover:text-foreground',
                   location.pathname === link.href
                     ? 'text-foreground'
                     : 'text-muted-foreground'

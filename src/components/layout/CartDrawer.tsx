@@ -35,7 +35,7 @@ export const CartDrawer = () => {
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5" />
-            <h2 className="text-base font-semibold">Bag ({totalItems})</h2>
+            <h2 className="text-base font-semibold">Your Cart ({totalItems})</h2>
           </div>
           <Button variant="ghost" size="icon" onClick={closeCart} className="h-8 w-8">
             <X className="h-4 w-4" />
@@ -49,12 +49,12 @@ export const CartDrawer = () => {
               <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mb-4">
                 <ShoppingBag className="h-7 w-7 text-muted-foreground" />
               </div>
-              <p className="text-base font-medium text-foreground mb-1">Your bag is empty</p>
+              <p className="text-base font-medium text-foreground mb-1">Your cart is empty</p>
               <p className="text-sm text-muted-foreground mb-6">
-                Add items to get started
+                Start shopping to add items
               </p>
-              <Button onClick={closeCart} size="sm" asChild>
-                <Link to="/shop">Shop Now</Link>
+              <Button onClick={closeCart} size="sm" className="rounded-full" asChild>
+                <Link to="/shop">Browse Products</Link>
               </Button>
             </div>
           ) : (
@@ -73,7 +73,7 @@ export const CartDrawer = () => {
                             {item.product.name}
                           </h3>
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {item.product.category === 'men' ? 'Men' : item.product.category === 'women' ? 'Women' : 'Unisex'}
+                            {item.product.category === 'men' ? 'For Him' : item.product.category === 'women' ? 'For Her' : 'Unisex'}
                           </p>
                         </div>
                         <Button
@@ -124,10 +124,13 @@ export const CartDrawer = () => {
                 </div>
                 <Button className="w-full gap-2 font-medium rounded-full" size="lg" onClick={closeCart} asChild>
                   <Link to="/checkout">
-                    Proceed to Checkout
+                    Checkout
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
+                <p className="text-xs text-center text-muted-foreground">
+                  Secure checkout • Instant delivery
+                </p>
               </div>
             </>
           )}

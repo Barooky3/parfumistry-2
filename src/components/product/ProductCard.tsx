@@ -35,8 +35,14 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
             className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
         </div>
+        
+        {/* Category Badge */}
+        <span className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm text-foreground text-xs font-medium px-2.5 py-1 rounded-full">
+          {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : 'Unisex'}
+        </span>
+        
         {hasDiscount && (
-          <span className="absolute top-3 left-3 bg-foreground text-background text-xs font-medium px-2.5 py-1 rounded-full">
+          <span className="absolute top-3 right-3 bg-foreground text-background text-xs font-medium px-2.5 py-1 rounded-full">
             -{discountPercent}%
           </span>
         )}
@@ -45,9 +51,6 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
       {/* Content */}
       <div className="space-y-2">
         <Link to={`/product/${product.id}`}>
-          <p className="text-xs text-muted-foreground">
-            {product.category === 'men' ? 'Men' : product.category === 'women' ? 'Women' : 'Unisex'}
-          </p>
           <h3 className="text-base font-medium text-foreground group-hover:text-primary transition-colors leading-tight">
             {product.name}
           </h3>
@@ -66,12 +69,11 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
 
         <Button
           onClick={() => addItem(product)}
-          variant="outline"
-          className="w-full mt-2 gap-2 font-medium hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all rounded-full"
+          className="w-full mt-2 gap-2 font-medium rounded-full"
           disabled={!product.inStock}
         >
           <ShoppingBag className="h-4 w-4" />
-          {product.inStock ? 'Buy Now' : 'Out of Stock'}
+          {product.inStock ? 'Add' : 'Sold Out'}
         </Button>
       </div>
     </div>
