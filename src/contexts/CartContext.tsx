@@ -26,6 +26,9 @@ interface CartContextType extends CartState {
   closeCart: () => void;
   totalItems: number;
   totalPrice: number;
+  subtotalBeforeDiscount: number;
+  freeItemDiscount: number;
+  freeItemsCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -167,10 +170,43 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = state.items.reduce(
+  
+  // Calculate subtotal before any discount
+  const subtotalBeforeDiscount = state.items.reduce(
     (sum, item) => sum + (item.selectedPrice || item.product.price) * item.quantity,
     0
   );
+
+  // Calculate "Buy 2 Get 1 Free" discount for fragrances only (not bundles)
+  const calculateFreeItemDiscount = () => {
+    // Get all individual fragrance items (not bundles), expanded by quantity
+    const fragranceItems: number[] = [];
+    state.items.forEach(item => {
+      if (!item.product.isBundle) {
+        const price = item.selectedPrice || item.product.price;
+        for (let i = 0; i < item.quantity; i++) {
+          fragranceItems.push(price);
+        }
+      }
+    });
+
+    // Sort prices from lowest to highest
+    fragranceItems.sort((a, b) => a - b);
+
+    // For every 3 fragrances, the cheapest is free
+    const freeItemsCount = Math.floor(fragranceItems.length / 3);
+    let discount = 0;
+    
+    // The cheapest items become free (first N items after sorting)
+    for (let i = 0; i < freeItemsCount; i++) {
+      discount += fragranceItems[i];
+    }
+
+    return { discount, freeItemsCount };
+  };
+
+  const { discount: freeItemDiscount, freeItemsCount } = calculateFreeItemDiscount();
+  const totalPrice = subtotalBeforeDiscount - freeItemDiscount;
 
   return (
     <CartContext.Provider
@@ -185,6 +221,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         closeCart,
         totalItems,
         totalPrice,
+        subtotalBeforeDiscount,
+        freeItemDiscount,
+        freeItemsCount,
       }}
     >
       {children}
