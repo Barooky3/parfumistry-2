@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { AnnouncementBar } from './AnnouncementBar';
+import { PromoBanner } from './PromoBanner';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
@@ -11,9 +11,9 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <AnnouncementBar />
+      <PromoBanner />
       <Header />
-      <main className="flex-1 pt-[102px]">{children}</main>
+      <main className="flex-1 pt-[62px]">{children}</main>
       <Footer />
       <CartDrawer />
     </div>
