@@ -33,7 +33,7 @@ export const Header = () => {
   return (
     <header className={cn(
       "fixed left-0 right-0 z-40 bg-background border-b border-border transition-all duration-300",
-      isScrolled ? "top-0" : "top-[38px]"
+      "top-[var(--promo-banner-height,0px)]"
     )}>
       <div className="container">
         <div className="flex items-center justify-between h-16">

@@ -13,7 +13,7 @@ export const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen flex flex-col bg-background">
       <PromoBanner />
       <Header />
-      <main className="flex-1 pt-[62px]">{children}</main>
+      <main className="flex-1">{children}</main>
       <Footer />
       <CartDrawer />
     </div>

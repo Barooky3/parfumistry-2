@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,6 +12,23 @@ interface TimeLeft {
 export const PromoBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 2, hours: 1, mins: 9, secs: 43 });
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  // Update CSS variable for header positioning
+  useEffect(() => {
+    const updateHeight = () => {
+      if (bannerRef.current && isVisible) {
+        const height = bannerRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--promo-banner-height', `${height}px`);
+      } else {
+        document.documentElement.style.setProperty('--promo-banner-height', '0px');
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, [isVisible]);
 
   useEffect(() => {
     // Set end date to 3 days from now
@@ -40,7 +57,10 @@ export const PromoBanner = () => {
 
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
-  if (!isVisible) return null;
+  const handleClose = () => {
+    setIsVisible(false);
+    document.documentElement.style.setProperty('--promo-banner-height', '0px');
+  };
 
   const TimerBlock = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
@@ -57,14 +77,15 @@ export const PromoBanner = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
+          ref={bannerRef}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-primary text-primary-foreground py-3 sm:py-4 md:py-5"
+          className="bg-primary text-primary-foreground py-3 sm:py-4 md:py-5 fixed top-0 left-0 right-0 z-50"
         >
           <div className="container relative px-4">
             <button
-              onClick={() => setIsVisible(false)}
+              onClick={handleClose}
               className="absolute right-2 sm:right-4 top-0 p-1.5 hover:opacity-70 transition-opacity"
               aria-label="Sluiten"
             >
