@@ -28,14 +28,25 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product);
+    // Use first variant if available, otherwise base price
+    const firstVariant = product.variants?.[0];
+    if (firstVariant) {
+      addItem(product, firstVariant.ml, firstVariant.price);
+    } else {
+      addItem(product);
+    }
     toggleCart();
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product);
+    const firstVariant = product.variants?.[0];
+    if (firstVariant) {
+      addItem(product, firstVariant.ml, firstVariant.price);
+    } else {
+      addItem(product);
+    }
     navigate('/checkout');
   };
 

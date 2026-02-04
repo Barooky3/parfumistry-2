@@ -24,6 +24,13 @@ const ProductDetail = () => {
   const product = id ? getProductById(id) : undefined;
   const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
 
+  // ML variant selection state
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const selectedVariant = product?.variants?.[selectedVariantIndex];
+  const displayPrice = selectedVariant?.price || product?.price || 0;
+  const displayOriginalPrice = selectedVariant?.originalPrice || product?.originalPrice;
+  const isInStock = selectedVariant?.inStock ?? product?.inStock ?? false;
+
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -36,15 +43,27 @@ const ProductDetail = () => {
   }
 
   const formatPrice = (price: number) => new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(price);
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const hasDiscount = displayOriginalPrice && displayOriginalPrice > displayPrice;
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) addItem(product);
+    for (let i = 0; i < quantity; i++) {
+      if (selectedVariant) {
+        addItem(product, selectedVariant.ml, selectedVariant.price);
+      } else {
+        addItem(product);
+      }
+    }
     toggleCart();
   };
 
   const handleBuyNow = () => {
-    for (let i = 0; i < quantity; i++) addItem(product);
+    for (let i = 0; i < quantity; i++) {
+      if (selectedVariant) {
+        addItem(product, selectedVariant.ml, selectedVariant.price);
+      } else {
+        addItem(product);
+      }
+    }
     navigate('/checkout');
   };
 
@@ -95,14 +114,39 @@ const ProductDetail = () => {
               {product.name}
             </h1>
 
+            {/* ML Selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="mb-4">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Select Size</p>
+                <div className="flex flex-wrap gap-2">
+                  {product.variants.map((variant, index) => (
+                    <button
+                      key={variant.ml}
+                      onClick={() => setSelectedVariantIndex(index)}
+                      disabled={!variant.inStock}
+                      className={`px-4 py-2 border text-sm font-medium transition-all ${
+                        selectedVariantIndex === index
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : variant.inStock
+                          ? 'border-border bg-background text-foreground hover:border-primary'
+                          : 'border-border bg-muted text-muted-foreground cursor-not-allowed line-through'
+                      }`}
+                    >
+                      {variant.ml}ml
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-4">
               <span className="text-xl md:text-2xl font-semibold text-foreground">
-                {formatPrice(product.price)}
+                {formatPrice(displayPrice)}
               </span>
-              {hasDiscount && (
+              {hasDiscount && displayOriginalPrice && (
                 <span className="text-base md:text-lg text-muted-foreground line-through">
-                  {formatPrice(product.originalPrice!)}
+                  {formatPrice(displayOriginalPrice)}
                 </span>
               )}
             </div>
@@ -125,7 +169,7 @@ const ProductDetail = () => {
                 size="lg" 
                 className="w-full h-12 md:h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.99] transition-all" 
                 onClick={handleAddToCart} 
-                disabled={!product.inStock}
+                disabled={!isInStock}
               >
                 <ShoppingBag className="h-4 w-4 mr-2" />
                 Add to Cart
@@ -136,7 +180,7 @@ const ProductDetail = () => {
                 variant="outline"
                 className="w-full h-12 md:h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none border-accent text-accent hover:bg-accent hover:text-accent-foreground active:scale-[0.99] transition-all" 
                 onClick={handleBuyNow} 
-                disabled={!product.inStock}
+                disabled={!isInStock}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
                 Buy Now
@@ -241,7 +285,7 @@ const ProductDetail = () => {
         <Button 
           className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all" 
           onClick={handleAddToCart} 
-          disabled={!product.inStock}
+          disabled={!isInStock}
         >
           <ShoppingBag className="h-4 w-4 mr-2" />
           Add
@@ -249,7 +293,7 @@ const ProductDetail = () => {
         <Button 
           className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98] transition-all" 
           onClick={handleBuyNow} 
-          disabled={!product.inStock}
+          disabled={!isInStock}
         >
           <CreditCard className="h-4 w-4 mr-2" />
           Buy Now
