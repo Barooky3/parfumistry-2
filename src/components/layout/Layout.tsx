@@ -13,7 +13,7 @@ export const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen flex flex-col bg-background">
       <AnnouncementBar />
       <Header />
-      <main className="flex-1 pt-[calc(42px+64px)] lg:pt-[calc(42px+80px)]">{children}</main>
+      <main className="flex-1 pt-[86px]">{children}</main>
       <Footer />
       <CartDrawer />
     </div>
