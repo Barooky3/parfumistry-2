@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, CreditCard, Lock, User, CheckSquare } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, CreditCard, Lock, User, CheckSquare, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,50 +32,25 @@ const COUNTRIES = [
   'Hungary',
 ];
 
-// Extended address suggestions with common Dutch streets
-const ADDRESS_SUGGESTIONS: { [key: string]: { street: string; city: string }[] } = {
-  'NL': [
-    { street: 'Papiermolenstraat 12', city: 'Amsterdam' },
-    { street: 'Papiermolen 5', city: 'Utrecht' },
-    { street: 'Papierweg 34', city: 'Rotterdam' },
-    { street: 'Papierbaan 8', city: 'Den Haag' },
-    { street: 'Prinsengracht 100', city: 'Amsterdam' },
-    { street: 'Prinsenstraat 45', city: 'Amsterdam' },
-    { street: 'Herengracht 100', city: 'Amsterdam' },
-    { street: 'Herestraat 25', city: 'Groningen' },
-    { street: 'Kalverstraat 50', city: 'Amsterdam' },
-    { street: 'Keizersgracht 200', city: 'Amsterdam' },
-    { street: 'Lijnbaan 25', city: 'Rotterdam' },
-    { street: 'Leidseplein 10', city: 'Amsterdam' },
-    { street: 'Markt 1', city: 'Eindhoven' },
-    { street: 'Marktstraat 15', city: 'Utrecht' },
-    { street: 'Nieuwstraat 8', city: 'Den Haag' },
-    { street: 'Nieuwendijk 100', city: 'Amsterdam' },
-    { street: 'Oudegracht 50', city: 'Utrecht' },
-    { street: 'Overtoom 300', city: 'Amsterdam' },
-    { street: 'Rembrandtplein 5', city: 'Amsterdam' },
-    { street: 'Rokin 100', city: 'Amsterdam' },
-    { street: 'Spuistraat 75', city: 'Amsterdam' },
-    { street: 'Stationsweg 10', city: 'Den Haag' },
-    { street: 'Vondelstraat 20', city: 'Amsterdam' },
-    { street: 'Westerstraat 50', city: 'Amsterdam' },
-    { street: 'Zeedijk 30', city: 'Amsterdam' },
-  ],
-  'BE': [
-    { street: 'Meir 100', city: 'Antwerpen' },
-    { street: 'Meirstraat 25', city: 'Antwerpen' },
-    { street: 'Rue Neuve 50', city: 'Brussels' },
-    { street: 'Rue de la Loi 16', city: 'Brussels' },
-    { street: 'Veldstraat 25', city: 'Gent' },
-    { street: 'Graslei 10', city: 'Gent' },
-  ],
-  'DE': [
-    { street: 'Kurfürstendamm 100', city: 'Berlin' },
-    { street: 'Königstraße 50', city: 'Stuttgart' },
-    { street: 'Maximilianstraße 50', city: 'München' },
-    { street: 'Marienplatz 1', city: 'München' },
-    { street: 'Friedrichstraße 100', city: 'Berlin' },
-  ],
+// Interface for PDOK API response
+interface PDOKSuggestion {
+  weergavenaam: string;
+  straatnaam: string;
+  woonplaatsnaam: string;
+  postcode: string;
+  huisnummer: string;
+}
+
+// Debounce function
+const debounce = <T extends (...args: Parameters<T>) => void>(
+  func: T,
+  wait: number
+): ((...args: Parameters<T>) => void) => {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
 };
 
 const Checkout = () => {
@@ -85,9 +60,10 @@ const Checkout = () => {
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [currentStep] = useState(1);
+  const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   
   // Address autocomplete state
-  const [addressSuggestions, setAddressSuggestions] = useState<{ street: string; city: string }[]>([]);
+  const [addressSuggestions, setAddressSuggestions] = useState<{ street: string; city: string; postcode?: string; display: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const addressInputRef = useRef<HTMLDivElement>(null);
   
@@ -104,38 +80,72 @@ const Checkout = () => {
 
   const formatPrice = (price: number) => new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(price);
 
+  // Fetch addresses from PDOK (Dutch government free API)
+  const fetchAddressSuggestions = useCallback(
+    debounce(async (query: string) => {
+      if (query.length < 2) {
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      // Only use PDOK for Netherlands
+      if (formData.country && formData.country !== 'Netherlands') {
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      setIsLoadingAddress(true);
+      
+      try {
+        // PDOK Locatieserver - Free Dutch government API
+        const response = await fetch(
+          `https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=${encodeURIComponent(query)}&fq=type:adres&rows=8`
+        );
+        
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const data = await response.json();
+        
+        if (data.response?.docs) {
+          const suggestions = data.response.docs.map((doc: PDOKSuggestion) => ({
+            street: doc.straatnaam && doc.huisnummer 
+              ? `${doc.straatnaam} ${doc.huisnummer}` 
+              : doc.straatnaam || doc.weergavenaam,
+            city: doc.woonplaatsnaam || '',
+            postcode: doc.postcode || '',
+            display: doc.weergavenaam,
+          }));
+          
+          setAddressSuggestions(suggestions);
+          setShowSuggestions(suggestions.length > 0);
+        }
+      } catch (error) {
+        console.error('Address lookup failed:', error);
+        setAddressSuggestions([]);
+      } finally {
+        setIsLoadingAddress(false);
+      }
+    }, 300),
+    [formData.country]
+  );
+
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // Trigger address suggestions when typing
-    if (field === 'streetAddress' && value.length >= 1) {
-      // Get country code based on selected country
-      let countryCode: string | null = null;
-      if (formData.country === 'Netherlands') countryCode = 'NL';
-      else if (formData.country === 'Belgium') countryCode = 'BE';
-      else if (formData.country === 'Germany') countryCode = 'DE';
-      
-      // If no country selected, show Dutch suggestions by default
-      const code = countryCode || 'NL';
-      const suggestions = ADDRESS_SUGGESTIONS[code] || [];
-      
-      // Filter streets that START with the typed text (case-insensitive)
-      const filtered = suggestions.filter(
-        addr => addr.street.toLowerCase().startsWith(value.toLowerCase())
-      );
-      
-      setAddressSuggestions(filtered);
-      setShowSuggestions(filtered.length > 0);
-    } else if (field === 'streetAddress' && value.length === 0) {
-      setShowSuggestions(false);
+    // Trigger address suggestions when typing street address
+    if (field === 'streetAddress') {
+      fetchAddressSuggestions(value);
     }
   };
 
-  const selectAddressSuggestion = (suggestion: { street: string; city: string }) => {
+  const selectAddressSuggestion = (suggestion: { street: string; city: string; postcode?: string }) => {
     setFormData(prev => ({
       ...prev,
       streetAddress: suggestion.street,
       city: suggestion.city,
+      postalCode: suggestion.postcode || prev.postalCode,
     }));
     setShowSuggestions(false);
   };
@@ -364,22 +374,31 @@ const Checkout = () => {
                 </div>
                 
                 {/* Address Suggestions */}
-                {showSuggestions && addressSuggestions.length > 0 && (
-                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg">
-                    {addressSuggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => selectAddressSuggestion(suggestion)}
-                        className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 border-b border-border last:border-0"
-                      >
-                        <MapPin className="h-4 w-4 text-accent flex-shrink-0" />
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{suggestion.street}</p>
-                          <p className="text-xs text-muted-foreground">{suggestion.city}</p>
-                        </div>
-                      </button>
-                    ))}
+                {(showSuggestions || isLoadingAddress) && (
+                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-64 overflow-auto">
+                    {isLoadingAddress ? (
+                      <div className="px-4 py-3 flex items-center gap-3 text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-sm">Searching addresses...</span>
+                      </div>
+                    ) : addressSuggestions.length > 0 ? (
+                      addressSuggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => selectAddressSuggestion(suggestion)}
+                          className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 border-b border-border last:border-0"
+                        >
+                          <MapPin className="h-4 w-4 text-accent flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground truncate">{suggestion.display || suggestion.street}</p>
+                            {suggestion.city && (
+                              <p className="text-xs text-muted-foreground">{suggestion.postcode} {suggestion.city}</p>
+                            )}
+                          </div>
+                        </button>
+                      ))
+                    ) : null}
                   </div>
                 )}
               </div>
