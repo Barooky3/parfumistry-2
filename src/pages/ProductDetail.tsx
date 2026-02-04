@@ -119,11 +119,11 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Action Buttons - Desktop */}
-            <div className="hidden md:block space-y-3 mb-8">
+            {/* Action Buttons - All Screens */}
+            <div className="space-y-3 mb-6 md:mb-8">
               <Button 
                 size="lg" 
-                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.99] transition-all" 
+                className="w-full h-12 md:h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.99] transition-all" 
                 onClick={handleAddToCart} 
                 disabled={!product.inStock}
               >
@@ -134,7 +134,7 @@ const ProductDetail = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none border-accent text-accent hover:bg-accent hover:text-accent-foreground active:scale-[0.99] transition-all" 
+                className="w-full h-12 md:h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none border-accent text-accent hover:bg-accent hover:text-accent-foreground active:scale-[0.99] transition-all" 
                 onClick={handleBuyNow} 
                 disabled={!product.inStock}
               >
