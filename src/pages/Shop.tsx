@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ProductCard } from '@/components/product';
 import { products } from '@/data/products';
-import heroImage from '@/assets/hero-perfumes.jpg';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'newest';
 
@@ -20,12 +19,12 @@ const Shop = () => {
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const pageTitle = category === 'men' ? 'Men' : category === 'women' ? 'Women' : 'Our Collection';
+  const pageTitle = category === 'men' ? 'For Him' : category === 'women' ? 'For Her' : 'All Fragrances';
   const pageDescription = category === 'men'
-    ? 'Fragrances for men'
+    ? 'Discover masculine scents that leave a lasting impression'
     : category === 'women'
-    ? 'Fragrances for women'
-    : 'Discover our curated selection of premium fragrances from the world\'s most prestigious houses';
+    ? 'Elegant fragrances crafted for the modern woman'
+    : 'Explore our curated collection of premium fragrances';
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -54,17 +53,17 @@ const Shop = () => {
   };
 
   const FilterContent = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {!category && (
         <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">Category</h3>
-          <div className="space-y-2">
+          <h3 className="text-xs font-semibold tracking-[0.1em] uppercase text-foreground mb-4">Category</h3>
+          <div className="space-y-3">
             {[
-              { value: 'men', label: 'Men' },
-              { value: 'women', label: 'Women' },
+              { value: 'men', label: 'For Him' },
+              { value: 'women', label: 'For Her' },
               { value: 'unisex', label: 'Unisex' },
             ].map((cat) => (
-              <div key={cat.value} className="flex items-center gap-2">
+              <div key={cat.value} className="flex items-center gap-3">
                 <Checkbox
                   id={cat.value}
                   checked={selectedCategories.includes(cat.value)}
@@ -77,9 +76,9 @@ const Shop = () => {
         </div>
       )}
       <div>
-        <h3 className="text-sm font-medium text-foreground mb-3">Price Range</h3>
-        <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={100} step={5} className="mb-2" />
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <h3 className="text-xs font-semibold tracking-[0.1em] uppercase text-foreground mb-4">Price Range</h3>
+        <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={100} step={5} className="mb-3" />
+        <div className="flex justify-between text-sm text-muted-foreground">
           <span>€{priceRange[0]}</span>
           <span>€{priceRange[1]}</span>
         </div>
@@ -87,7 +86,7 @@ const Shop = () => {
       <Button
         variant="outline"
         size="sm"
-        className="w-full"
+        className="w-full rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background"
         onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}
       >
         Reset Filters
@@ -96,64 +95,57 @@ const Shop = () => {
   );
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Header */}
-      <section 
-        className="relative py-20 md:py-28"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(17,17,22,0.85) 0%, rgba(17,17,22,0.95) 100%), url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <section className="py-16 md:py-20 border-b border-border">
         <div className="container text-center">
-          <p className="text-xs tracking-[0.3em] text-primary font-medium mb-3 uppercase">Premium Fragrances</p>
+          <p className="text-xs tracking-[0.3em] text-muted-foreground font-medium mb-4 uppercase">Collection</p>
           <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">{pageTitle}</h1>
-          <p className="text-muted-foreground max-w-lg mx-auto">{pageDescription}</p>
+          <p className="text-muted-foreground max-w-md mx-auto">{pageDescription}</p>
         </div>
       </section>
 
       {/* Main */}
-      <section className="py-8 md:py-12 bg-background">
+      <section className="py-10 md:py-14">
         <div className="container">
           {/* Toolbar */}
-          <div className="flex items-center justify-between mb-8 pb-6 border-b border-border">
-            <p className="text-sm text-muted-foreground">{filteredProducts.length} fragrances</p>
+          <div className="flex items-center justify-between mb-10 pb-6 border-b border-border">
+            <p className="text-sm text-muted-foreground">{filteredProducts.length} products</p>
             <div className="flex items-center gap-3">
               <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="sm" className="lg:hidden gap-2">
+                  <Button variant="outline" size="sm" className="lg:hidden gap-2 rounded-none border-foreground">
                     <SlidersHorizontal className="h-4 w-4" />
                     Filters
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="bg-background">
+                <SheetContent side="left" className="bg-background border-r border-border">
                   <SheetHeader>
-                    <SheetTitle>Filters</SheetTitle>
+                    <SheetTitle className="text-left text-base font-semibold tracking-[0.1em] uppercase">Filters</SheetTitle>
                   </SheetHeader>
-                  <div className="mt-6"><FilterContent /></div>
+                  <div className="mt-8"><FilterContent /></div>
                 </SheetContent>
               </Sheet>
 
               <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-                <SelectTrigger className="w-36 h-9 text-sm bg-secondary border-border">
-                  <SelectValue placeholder="Sort" />
+                <SelectTrigger className="w-44 h-10 text-sm bg-background border-border rounded-none">
+                  <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="featured">Featured</SelectItem>
-                  <SelectItem value="price-asc">Price: Low-High</SelectItem>
-                  <SelectItem value="price-desc">Price: High-Low</SelectItem>
+                  <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                  <SelectItem value="price-desc">Price: High to Low</SelectItem>
                   <SelectItem value="newest">Newest</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-12">
             {/* Sidebar */}
-            <aside className="hidden lg:block w-56 flex-shrink-0">
-              <div className="sticky top-[110px]">
-                <h2 className="text-sm font-medium text-foreground mb-4">Filters</h2>
+            <aside className="hidden lg:block w-60 flex-shrink-0">
+              <div className="sticky top-[120px]">
+                <h2 className="text-xs font-semibold tracking-[0.1em] uppercase text-foreground mb-6">Filters</h2>
                 <FilterContent />
               </div>
             </aside>
@@ -161,14 +153,18 @@ const Shop = () => {
             {/* Products Grid */}
             <div className="flex-1">
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground mb-4">No products found</p>
-                  <Button variant="outline" onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}>
+                <div className="text-center py-20">
+                  <p className="text-muted-foreground mb-6">No products match your filters</p>
+                  <Button 
+                    variant="outline" 
+                    className="rounded-none border-foreground"
+                    onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}
+                  >
                     Clear Filters
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                   {filteredProducts.map((product, index) => (
                     <div key={product.id} className="animate-slide-up" style={{ animationDelay: `${index * 30}ms` }}>
                       <ProductCard product={product} />

@@ -28,7 +28,7 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
     <div className={cn('group', className)}>
       {/* Image Container */}
       <Link to={`/product/${product.id}`} className="block relative mb-4">
-        <div className="aspect-square bg-secondary rounded-lg overflow-hidden">
+        <div className="aspect-[3/4] bg-secondary overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
@@ -37,13 +37,13 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         </div>
         
         {/* Category Badge */}
-        <span className="absolute top-3 left-3 text-[10px] font-medium tracking-wider px-3 py-1.5 rounded-full bg-card/90 backdrop-blur-sm text-foreground uppercase border border-border">
+        <span className="absolute top-3 left-3 text-[10px] font-medium tracking-[0.1em] px-3 py-1.5 bg-background text-foreground uppercase border border-border">
           {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : 'Unisex'}
         </span>
         
         {/* Discount Badge */}
         {hasDiscount && (
-          <span className="absolute top-3 right-3 bg-destructive text-destructive-foreground text-[10px] font-semibold px-2 py-1 rounded-full">
+          <span className="absolute top-3 right-3 bg-accent text-accent-foreground text-[10px] font-semibold px-2 py-1">
             -{discountPercent}%
           </span>
         )}
@@ -55,7 +55,7 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
             addItem(product);
           }}
           size="icon"
-          className="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-primary text-primary-foreground opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+          className="absolute bottom-3 right-3 h-10 w-10 bg-primary text-primary-foreground opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 rounded-none"
           disabled={!product.inStock}
         >
           <Plus className="h-5 w-5" />
@@ -65,13 +65,13 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
       {/* Content */}
       <div className="space-y-2">
         <Link to={`/product/${product.id}`}>
-          <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-2">
+          <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors leading-tight line-clamp-2">
             {product.name}
           </h3>
         </Link>
 
         <div className="flex items-center gap-2">
-          <span className="text-base font-semibold text-foreground">
+          <span className="text-sm font-semibold text-foreground">
             {formatPrice(product.price)}
           </span>
           {hasDiscount && (
@@ -84,11 +84,10 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         <Button
           onClick={() => addItem(product)}
           variant="outline"
-          className="w-full h-10 text-xs font-medium tracking-wider uppercase mt-2 border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary"
+          className="w-full h-11 text-xs font-medium tracking-[0.1em] uppercase mt-2 rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background"
           disabled={!product.inStock}
         >
-          {product.inStock ? 'Add' : 'Sold Out'}
-          {product.inStock && <span className="hidden sm:inline ml-1">· Buy</span>}
+          {product.inStock ? 'Add to Cart' : 'Sold Out'}
         </Button>
       </div>
     </div>
