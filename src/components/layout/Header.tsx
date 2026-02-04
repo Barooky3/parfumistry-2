@@ -33,14 +33,14 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        'fixed top-[38px] left-0 right-0 z-40 transition-all duration-300 bg-background/95 backdrop-blur-xl border-b border-border/50'
+        'fixed top-[38px] left-0 right-0 z-40 transition-all duration-300 bg-background/98 backdrop-blur-xl border-b border-border'
       )}
     >
       <div className="container">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-xl font-bold tracking-tight text-foreground">
+            <span className="text-lg font-semibold tracking-tight text-foreground">
               PROFPARFUMS
             </span>
           </Link>
