@@ -70,7 +70,7 @@ const Index = () => {
             <motion.img 
               src={logo} 
               alt="ProfParfums" 
-              className="h-36 md:h-44 lg:h-52 w-auto mb-6 md:mb-8"
+              className="h-36 md:h-44 lg:h-52 w-auto mx-auto mb-6 md:mb-8"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.25 }}
