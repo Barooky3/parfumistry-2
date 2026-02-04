@@ -126,25 +126,25 @@ const Checkout = () => {
       </div>
 
       {/* Progress Stepper */}
-      <div className="py-8 border-b border-border bg-secondary/30">
+      <div className="py-6 md:py-8 bg-background border-b border-border">
         <div className="container">
-          <div className="flex items-center justify-center max-w-md mx-auto">
+          <div className="flex items-center justify-center max-w-sm mx-auto">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
                   {/* Step Circle */}
                   <div 
                     className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-all",
+                      "w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-all",
                       currentStep === step.number 
                         ? "bg-accent border-accent text-accent-foreground" 
                         : currentStep > step.number
-                          ? "bg-accent/20 border-accent text-accent"
-                          : "bg-background border-border text-muted-foreground"
+                          ? "bg-accent border-accent text-accent-foreground"
+                          : "bg-secondary border-border text-muted-foreground"
                     )}
                   >
                     {currentStep > step.number ? (
-                      <Check className="h-5 w-5" />
+                      <Check className="h-4 w-4 md:h-5 md:w-5" />
                     ) : (
                       step.number
                     )}
@@ -152,7 +152,7 @@ const Checkout = () => {
                   {/* Step Label */}
                   <span 
                     className={cn(
-                      "text-[10px] tracking-[0.1em] mt-2 font-medium",
+                      "text-[9px] md:text-[10px] tracking-[0.08em] md:tracking-[0.1em] mt-2 font-medium",
                       currentStep >= step.number ? "text-foreground" : "text-muted-foreground"
                     )}
                   >
@@ -163,7 +163,7 @@ const Checkout = () => {
                 {index < steps.length - 1 && (
                   <div 
                     className={cn(
-                      "h-[2px] flex-1 -mt-6",
+                      "h-[2px] w-8 md:w-12 -mt-5 md:-mt-6 mx-1",
                       currentStep > step.number ? "bg-accent" : "bg-border"
                     )}
                   />
