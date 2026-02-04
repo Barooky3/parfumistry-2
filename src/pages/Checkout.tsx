@@ -66,7 +66,6 @@ const COUNTRIES = [
   'Philippines',
   'United Arab Emirates',
   'Saudi Arabia',
-  'Israel',
   // Oceania
   'Australia',
   'New Zealand',
@@ -158,7 +157,6 @@ const COUNTRY_CODES: Record<string, string> = {
   'Philippines': 'ph',
   'United Arab Emirates': 'ae',
   'Saudi Arabia': 'sa',
-  'Israel': 'il',
   // Oceania
   'Australia': 'au',
   'New Zealand': 'nz',
