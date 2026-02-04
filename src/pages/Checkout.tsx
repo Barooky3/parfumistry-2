@@ -8,7 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 
 const Checkout = () => {
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount, clearCart } = useCart();
   const { toast } = useToast();
   const [isCompleted, setIsCompleted] = useState(false);
   const [email, setEmail] = useState('');
@@ -119,18 +119,25 @@ const Checkout = () => {
               <div className="border border-border p-8">
                 <h2 className="text-xs font-semibold tracking-[0.15em] uppercase text-foreground mb-6">Order Summary</h2>
                 <div className="space-y-4">
-                  {items.map((item) => (
-                    <div key={item.product.id} className="flex gap-4 pb-4 border-b border-border last:border-0 last:pb-0">
-                      <div className="w-16 h-20 bg-secondary overflow-hidden flex-shrink-0">
-                        <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                  {items.map((item) => {
+                    const cartKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
+                    const displayPrice = item.selectedPrice || item.product.price;
+                    return (
+                      <div key={cartKey} className="flex gap-4 pb-4 border-b border-border last:border-0 last:pb-0">
+                        <div className="w-16 h-20 bg-secondary overflow-hidden flex-shrink-0">
+                          <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-medium text-foreground line-clamp-1">{item.product.name}</h3>
+                          {item.selectedMl && (
+                            <p className="text-xs text-muted-foreground">{item.selectedMl}ml</p>
+                          )}
+                          <p className="text-xs text-muted-foreground mt-1">Qty: {item.quantity}</p>
+                        </div>
+                        <p className="text-sm font-semibold text-foreground">{formatPrice(displayPrice * item.quantity)}</p>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-foreground line-clamp-1">{item.product.name}</h3>
-                        <p className="text-xs text-muted-foreground mt-1">Qty: {item.quantity}</p>
-                      </div>
-                      <p className="text-sm font-semibold text-foreground">{formatPrice(item.product.price * item.quantity)}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -146,11 +153,33 @@ const Checkout = () => {
           {/* Sidebar */}
           <div className="lg:col-span-2">
             <div className="border border-border p-8 sticky top-[120px]">
+              {/* Show discount banner if applicable */}
+              {freeItemDiscount > 0 && (
+                <div className="mb-6 p-3 bg-accent/10 border border-accent/20">
+                  <p className="text-xs font-semibold text-accent uppercase tracking-wide mb-1">
+                    🎉 Buy 2 Get 1 Free Applied!
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {freeItemsCount} free fragrance{freeItemsCount > 1 ? 's' : ''} included
+                  </p>
+                </div>
+              )}
+
               <div className="space-y-4 mb-8">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="text-foreground">{formatPrice(totalPrice)}</span>
+                  <span className={freeItemDiscount > 0 ? "text-muted-foreground line-through" : "text-foreground"}>
+                    {formatPrice(subtotalBeforeDiscount)}
+                  </span>
                 </div>
+                
+                {freeItemDiscount > 0 && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-accent font-medium">Free Fragrance Discount</span>
+                    <span className="text-accent font-medium">-{formatPrice(freeItemDiscount)}</span>
+                  </div>
+                )}
+                
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Digital Delivery</span>
                   <span className="text-foreground">Free</span>

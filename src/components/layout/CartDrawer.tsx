@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 export const CartDrawer = () => {
-  const { isOpen, closeCart, items, removeItem, updateQuantity, totalPrice } = useCart();
+  const { isOpen, closeCart, items, removeItem, updateQuantity, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount } = useCart();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('nl-NL', {
@@ -127,9 +127,42 @@ export const CartDrawer = () => {
             </div>
 
             <div className="border-t border-border px-6 py-6">
+              {/* Show discount if applicable */}
+              {freeItemDiscount > 0 && (
+                <div className="mb-4 p-3 bg-accent/10 border border-accent/20">
+                  <p className="text-xs font-semibold text-accent uppercase tracking-wide mb-1">
+                    🎉 Buy 2 Get 1 Free Applied!
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {freeItemsCount} free fragrance{freeItemsCount > 1 ? 's' : ''} — You save {formatPrice(freeItemDiscount)}
+                  </p>
+                </div>
+              )}
+
+              {/* Subtotal before discount */}
+              {freeItemDiscount > 0 && (
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-muted-foreground">Subtotal</span>
+                  <span className="text-sm text-muted-foreground line-through">
+                    {formatPrice(subtotalBeforeDiscount)}
+                  </span>
+                </div>
+              )}
+
+              {/* Discount line */}
+              {freeItemDiscount > 0 && (
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-accent font-medium">Free Fragrance Discount</span>
+                  <span className="text-sm text-accent font-medium">
+                    -{formatPrice(freeItemDiscount)}
+                  </span>
+                </div>
+              )}
+
+              {/* Total */}
               <div className="flex items-center justify-between mb-6">
                 <span className="text-sm font-medium text-muted-foreground uppercase tracking-[0.1em]">
-                  Subtotal
+                  {freeItemDiscount > 0 ? 'Total' : 'Subtotal'}
                 </span>
                 <span className="text-lg font-semibold text-foreground">
                   {formatPrice(totalPrice)}
