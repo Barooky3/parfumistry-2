@@ -32,7 +32,7 @@ const COUNTRIES = [
   'Hungary',
 ];
 
-// Interface for PDOK API response
+// Interface for PDOK API response (Netherlands)
 interface PDOKSuggestion {
   weergavenaam: string;
   straatnaam: string;
@@ -40,6 +40,44 @@ interface PDOKSuggestion {
   postcode: string;
   huisnummer: string;
 }
+
+// Interface for Nominatim API response (worldwide)
+interface NominatimSuggestion {
+  display_name: string;
+  address: {
+    road?: string;
+    house_number?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    municipality?: string;
+    postcode?: string;
+    country?: string;
+  };
+}
+
+// Country code mapping for Nominatim
+const COUNTRY_CODES: Record<string, string> = {
+  'Belgium': 'be',
+  'Germany': 'de',
+  'France': 'fr',
+  'United Kingdom': 'gb',
+  'Spain': 'es',
+  'Italy': 'it',
+  'Austria': 'at',
+  'Switzerland': 'ch',
+  'Portugal': 'pt',
+  'Poland': 'pl',
+  'Sweden': 'se',
+  'Denmark': 'dk',
+  'Norway': 'no',
+  'Finland': 'fi',
+  'Ireland': 'ie',
+  'Luxembourg': 'lu',
+  'Czech Republic': 'cz',
+  'Greece': 'gr',
+  'Hungary': 'hu',
+};
 
 // Debounce function
 const debounce = <T extends (...args: Parameters<T>) => void>(
@@ -80,17 +118,16 @@ const Checkout = () => {
 
   const formatPrice = (price: number) => new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(price);
 
-  // Fetch addresses from PDOK (Dutch government free API)
+  // Fetch addresses from PDOK (Netherlands) or Nominatim (worldwide)
   const fetchAddressSuggestions = useCallback(
     debounce(async (query: string) => {
-      if (query.length < 2) {
+      if (query.length < 3) {
         setAddressSuggestions([]);
         setShowSuggestions(false);
         return;
       }
 
-      // Only use PDOK for Netherlands
-      if (formData.country && formData.country !== 'Netherlands') {
+      if (!formData.country) {
         setAddressSuggestions([]);
         setShowSuggestions(false);
         return;
@@ -99,24 +136,62 @@ const Checkout = () => {
       setIsLoadingAddress(true);
       
       try {
-        // PDOK Locatieserver - Free Dutch government API
-        const response = await fetch(
-          `https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=${encodeURIComponent(query)}&fq=type:adres&rows=8`
-        );
-        
-        if (!response.ok) throw new Error('Failed to fetch');
-        
-        const data = await response.json();
-        
-        if (data.response?.docs) {
-          const suggestions = data.response.docs.map((doc: PDOKSuggestion) => ({
-            street: doc.straatnaam && doc.huisnummer 
-              ? `${doc.straatnaam} ${doc.huisnummer}` 
-              : doc.straatnaam || doc.weergavenaam,
-            city: doc.woonplaatsnaam || '',
-            postcode: doc.postcode || '',
-            display: doc.weergavenaam,
-          }));
+        if (formData.country === 'Netherlands') {
+          // PDOK Locatieserver - Free Dutch government API
+          const response = await fetch(
+            `https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=${encodeURIComponent(query)}&fq=type:adres&rows=8`
+          );
+          
+          if (!response.ok) throw new Error('Failed to fetch');
+          
+          const data = await response.json();
+          
+          if (data.response?.docs) {
+            const suggestions = data.response.docs.map((doc: PDOKSuggestion) => ({
+              street: doc.straatnaam && doc.huisnummer 
+                ? `${doc.straatnaam} ${doc.huisnummer}` 
+                : doc.straatnaam || doc.weergavenaam,
+              city: doc.woonplaatsnaam || '',
+              postcode: doc.postcode || '',
+              display: doc.weergavenaam,
+            }));
+            
+            setAddressSuggestions(suggestions);
+            setShowSuggestions(suggestions.length > 0);
+          }
+        } else {
+          // Nominatim (OpenStreetMap) - Free worldwide API
+          const countryCode = COUNTRY_CODES[formData.country] || '';
+          const countryFilter = countryCode ? `&countrycodes=${countryCode}` : '';
+          
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=8&q=${encodeURIComponent(query)}${countryFilter}`,
+            {
+              headers: {
+                'Accept-Language': 'en',
+              }
+            }
+          );
+          
+          if (!response.ok) throw new Error('Failed to fetch');
+          
+          const data: NominatimSuggestion[] = await response.json();
+          
+          const suggestions = data.map((item) => {
+            const street = item.address.road 
+              ? (item.address.house_number 
+                  ? `${item.address.road} ${item.address.house_number}` 
+                  : item.address.road)
+              : '';
+            const city = item.address.city || item.address.town || item.address.village || item.address.municipality || '';
+            
+            return {
+              street,
+              city,
+              postcode: item.address.postcode || '',
+              display: item.display_name,
+            };
+          }).filter(s => s.street); // Only show results with a street
           
           setAddressSuggestions(suggestions);
           setShowSuggestions(suggestions.length > 0);
@@ -127,7 +202,7 @@ const Checkout = () => {
       } finally {
         setIsLoadingAddress(false);
       }
-    }, 300),
+    }, 400),
     [formData.country]
   );
 
