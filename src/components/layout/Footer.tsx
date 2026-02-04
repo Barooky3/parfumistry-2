@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from '@/assets/logo.png';
 
 const footerLinks = {
   shop: [
@@ -24,9 +25,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block mb-6">
-              <span className="text-xl font-semibold tracking-[0.15em] uppercase">
-                ProfParfums
-              </span>
+              <img src={logo} alt="ProfParfums" className="h-14 w-auto brightness-0 invert" />
             </Link>
             <p className="text-sm text-primary-foreground/70 leading-relaxed">
               Premium fragrance seller links. Instant digital delivery.
