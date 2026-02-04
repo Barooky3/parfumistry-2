@@ -512,9 +512,10 @@ export const products: Product[] = [
     description: 'One of the best fragrances of all time, pretty much everyone has it, its good for a reason. Its a powerful and modern fragrance built around warmth and spice. It opens with vibrant pink pepper and juniper, the heart reveals sweet vanilla and toffee, settling into a deep amber base.',
     scentNotes: {
       top: ['Pink Pepper', 'Juniper Berries', 'Violet'],
-      heart: ['Sage', 'Lavender', 'Cinnamon'],
-      base: ['Vanilla', 'Amber', 'Toffee'],
+      heart: ['Toffee', 'Cinnamon', 'Lavender', 'Sage'],
+      base: ['Vanilla', 'Amber', 'Tonka Bean', 'Suede'],
     },
+    scentNotesImage: '/images/scent-notes/stronger-with-you-intensely.png',
     image: 'https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=800',
     affiliateUrl: 'https://profparfums.store/products/stronger-with-you-intensly',
     inStock: true,
