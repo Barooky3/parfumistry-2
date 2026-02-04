@@ -14,15 +14,27 @@ const navLinks = [
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { toggleCart, totalItems } = useCart();
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
   return (
-    <header className="fixed top-[38px] left-0 right-0 z-40 bg-background border-b border-border">
+    <header className={cn(
+      "fixed left-0 right-0 z-40 bg-background border-b border-border transition-all duration-300",
+      isScrolled ? "top-0" : "top-[38px]"
+    )}>
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -101,7 +113,7 @@ export const Header = () => {
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden absolute left-0 right-0 top-full bg-background border-b border-border transition-all duration-300 overflow-hidden',
+          'md:hidden absolute left-0 right-0 top-full bg-background border-b border-border transition-all duration-300 overflow-hidden z-40',
           isMobileMenuOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
