@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const COUNTRIES = [
+  // Europe
   'Netherlands',
   'Belgium',
   'Germany',
@@ -30,6 +31,50 @@ const COUNTRIES = [
   'Czech Republic',
   'Greece',
   'Hungary',
+  'Romania',
+  'Bulgaria',
+  'Croatia',
+  'Slovakia',
+  'Slovenia',
+  'Estonia',
+  'Latvia',
+  'Lithuania',
+  'Iceland',
+  'Turkey',
+  'Russia',
+  'Ukraine',
+  // North America
+  'United States',
+  'Canada',
+  'Mexico',
+  // South America
+  'Brazil',
+  'Argentina',
+  'Chile',
+  'Colombia',
+  'Peru',
+  // Asia
+  'Japan',
+  'South Korea',
+  'China',
+  'India',
+  'Thailand',
+  'Vietnam',
+  'Indonesia',
+  'Malaysia',
+  'Singapore',
+  'Philippines',
+  'United Arab Emirates',
+  'Saudi Arabia',
+  'Israel',
+  // Oceania
+  'Australia',
+  'New Zealand',
+  // Africa
+  'South Africa',
+  'Egypt',
+  'Morocco',
+  'Nigeria',
 ];
 
 // Interface for PDOK API response (Netherlands)
@@ -56,8 +101,9 @@ interface NominatimSuggestion {
   };
 }
 
-// Country code mapping for Nominatim
+// Country code mapping for Nominatim (ISO 3166-1 alpha-2)
 const COUNTRY_CODES: Record<string, string> = {
+  // Europe
   'Belgium': 'be',
   'Germany': 'de',
   'France': 'fr',
@@ -77,6 +123,50 @@ const COUNTRY_CODES: Record<string, string> = {
   'Czech Republic': 'cz',
   'Greece': 'gr',
   'Hungary': 'hu',
+  'Romania': 'ro',
+  'Bulgaria': 'bg',
+  'Croatia': 'hr',
+  'Slovakia': 'sk',
+  'Slovenia': 'si',
+  'Estonia': 'ee',
+  'Latvia': 'lv',
+  'Lithuania': 'lt',
+  'Iceland': 'is',
+  'Turkey': 'tr',
+  'Russia': 'ru',
+  'Ukraine': 'ua',
+  // North America
+  'United States': 'us',
+  'Canada': 'ca',
+  'Mexico': 'mx',
+  // South America
+  'Brazil': 'br',
+  'Argentina': 'ar',
+  'Chile': 'cl',
+  'Colombia': 'co',
+  'Peru': 'pe',
+  // Asia
+  'Japan': 'jp',
+  'South Korea': 'kr',
+  'China': 'cn',
+  'India': 'in',
+  'Thailand': 'th',
+  'Vietnam': 'vn',
+  'Indonesia': 'id',
+  'Malaysia': 'my',
+  'Singapore': 'sg',
+  'Philippines': 'ph',
+  'United Arab Emirates': 'ae',
+  'Saudi Arabia': 'sa',
+  'Israel': 'il',
+  // Oceania
+  'Australia': 'au',
+  'New Zealand': 'nz',
+  // Africa
+  'South Africa': 'za',
+  'Egypt': 'eg',
+  'Morocco': 'ma',
+  'Nigeria': 'ng',
 };
 
 // Debounce function
