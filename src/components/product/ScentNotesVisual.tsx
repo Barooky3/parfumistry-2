@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 // Cache bust version - increment when updating images
-const SCENT_NOTES_VERSION = 'v8';
+const SCENT_NOTES_VERSION = 'v9';
 
 interface ScentNotesVisualProps {
   scentNotes: {
