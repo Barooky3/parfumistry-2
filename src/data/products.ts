@@ -226,6 +226,7 @@ export const products: Product[] = [
       heart: ['Sage', 'Lavender'],
       base: ['Vanilla', 'Cashmeran'],
     },
+    scentNotesImage: '/images/scent-notes/born-in-roma.png',
     image: 'https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=800',
     affiliateUrl: 'https://profparfums.store/products/valentino-born-in-roma',
     inStock: true,
