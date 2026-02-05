@@ -1,6 +1,6 @@
 import { useState, forwardRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, Info } from 'lucide-react';
+import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
@@ -204,13 +204,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 {product.description}
               </p>
               
-              {/* Info Box - Compact */}
-              <div className="flex items-center gap-2 py-3 text-muted-foreground">
-                <Info className="h-4 w-4 flex-shrink-0" />
-                <p className="text-xs">
-                  This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
-                </p>
-              </div>
             </div>
           </motion.div>
         </div>
