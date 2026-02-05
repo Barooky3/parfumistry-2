@@ -6,14 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
-
-const reviews = [
-  { id: 1, name: 'Tyler', text: 'This one hits different, everyone keeps asking what I\'m wearing.', verified: true, rating: 5, date: '1 week ago' },
-  { id: 2, name: 'Oliver', text: 'Makes people turn their head when you walk by. Trust.', verified: true, rating: 5, date: '3 weeks ago' },
-  { id: 3, name: 'Tony', text: 'Walked into a party and instantly got asked about it.', verified: true, rating: 5, date: '1 week ago' },
-  { id: 4, name: 'Emma', text: 'The perfect signature scent. Elegant and long-lasting.', verified: true, rating: 5, date: '2 weeks ago' },
-  { id: 5, name: 'Sarah', text: 'Absolutely love it. Professional and sophisticated.', verified: true, rating: 5, date: '2 weeks ago' },
-];
+import { getProductReviews } from '@/data/productReviews';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +16,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
   const product = id ? getProductById(id) : undefined;
   const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
+  const reviews = id ? getProductReviews(id) : [];
 
   // ML variant selection state
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
