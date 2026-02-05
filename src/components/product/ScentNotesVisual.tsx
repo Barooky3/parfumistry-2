@@ -24,7 +24,7 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="py-4"
+        className="py-4 bg-white rounded-lg p-4"
       >
         <img 
           src={scentNotesImage} 
