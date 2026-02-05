@@ -745,6 +745,7 @@ export const products: Product[] = [
       heart: ['Honey', 'Orange Blossom'],
       base: ['Vanilla', 'Benzoin', 'Tonka Bean'],
     },
+    scentNotesImage: '/images/scent-notes/elixir-absolu.png',
     image: 'https://profparfums.store/cdn/shop/files/gold_resized_to_match_black_object_1.png?v=1768068488&width=800',
     affiliateUrl: 'https://profparfums.store/products/jpg-le-male-elixir-absolu',
     inStock: true,
