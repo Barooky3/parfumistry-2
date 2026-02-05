@@ -1,6 +1,6 @@
 import { useState, forwardRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star } from 'lucide-react';
+import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, StarHalf } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
@@ -214,11 +214,29 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             <h2 className="font-display text-2xl md:text-3xl text-foreground">Customer Reviews</h2>
             <div className="flex items-center gap-2">
               <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 md:h-5 md:w-5 fill-accent text-accent" />
-                ))}
+                {(() => {
+                  const avgRating = reviews.length > 0 
+                    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
+                    : 5;
+                  const fullStars = Math.floor(avgRating);
+                  const hasHalf = avgRating % 1 >= 0.25 && avgRating % 1 < 0.75;
+                  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+                  return (
+                    <>
+                      {[...Array(fullStars)].map((_, i) => (
+                        <Star key={`full-${i}`} className="h-4 w-4 md:h-5 md:w-5 fill-accent text-accent" />
+                      ))}
+                      {hasHalf && <StarHalf className="h-4 w-4 md:h-5 md:w-5 fill-accent text-accent" />}
+                      {[...Array(emptyStars)].map((_, i) => (
+                        <Star key={`empty-${i}`} className="h-4 w-4 md:h-5 md:w-5 text-accent" />
+                      ))}
+                    </>
+                  );
+                })()}
               </div>
-              <span className="text-sm text-muted-foreground">({reviews.length})</span>
+              <span className="text-sm text-muted-foreground">
+                ({reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : '5.0'})
+              </span>
             </div>
           </div>
 
@@ -245,9 +263,18 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex">
-                        {[...Array(review.rating)].map((_, i) => (
-                          <Star key={i} className="h-3 w-3 fill-accent text-accent" />
-                        ))}
+                        {(() => {
+                          const fullStars = Math.floor(review.rating);
+                          const hasHalf = review.rating % 1 >= 0.5;
+                          return (
+                            <>
+                              {[...Array(fullStars)].map((_, i) => (
+                                <Star key={`full-${i}`} className="h-3 w-3 fill-accent text-accent" />
+                              ))}
+                              {hasHalf && <StarHalf className="h-3 w-3 fill-accent text-accent" />}
+                            </>
+                          );
+                        })()}
                       </div>
                       <span className="text-xs text-muted-foreground">{review.date}</span>
                     </div>
