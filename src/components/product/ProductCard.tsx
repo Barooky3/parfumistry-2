@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
@@ -15,6 +15,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
     const { addItem, toggleCart } = useCart();
     const navigate = useNavigate();
+    const [isTouched, setIsTouched] = useState(false);
+    
     const hasDiscount = product.originalPrice && product.originalPrice > product.price;
     const discountPercent = hasDiscount
       ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
@@ -64,12 +66,21 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
     const scentNotes = getScentNotesDisplay();
 
+    // Touch handlers for mobile
+    const handleTouchStart = () => setIsTouched(true);
+    const handleTouchEnd = () => {
+      // Delay hiding to allow button clicks
+      setTimeout(() => setIsTouched(false), 150);
+    };
+
     return (
       <motion.div 
         ref={ref} 
         className={cn('group', className)}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Image Container */}
         <Link to={`/product/${product.id}`} className="block relative mb-2.5">
@@ -96,7 +107,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             </span>
           )}
 
-          {/* Quick Action Overlay - Desktop: hover, Mobile: always visible */}
+          {/* Quick Action Overlay - Desktop: hover, Mobile: touch */}
           <div className="absolute bottom-2 left-2 right-2 flex gap-1.5">
             {/* Desktop - hover only */}
             <div className="hidden md:flex gap-1.5 w-full pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -116,8 +127,15 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               </Button>
             </div>
             
-            {/* Mobile - always visible */}
-            <div className="flex md:hidden gap-1.5 w-full">
+            {/* Mobile - touch only */}
+            <div 
+              className={cn(
+                "flex md:hidden gap-1.5 w-full transition-all duration-200",
+                isTouched 
+                  ? "opacity-100 translate-y-0 pointer-events-auto" 
+                  : "opacity-0 translate-y-2 pointer-events-none"
+              )}
+            >
               <Button
                 onClick={handleAddToCart}
                 className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
