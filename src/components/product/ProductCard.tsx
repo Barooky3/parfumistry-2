@@ -96,16 +96,10 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             </span>
           )}
 
-          {/* Quick Action Overlay - appears on hover */}
-          <motion.div 
-            className="absolute bottom-2 left-2 right-2 flex gap-1.5"
-            initial={{ opacity: 0, y: 10 }}
-            whileHover={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.25 }}
-            style={{ pointerEvents: 'none' }}
-          >
-            <div className="flex gap-1.5 w-full group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+          {/* Quick Action Overlay - Desktop: hover, Mobile: always visible */}
+          <div className="absolute bottom-2 left-2 right-2 flex gap-1.5">
+            {/* Desktop - hover only */}
+            <div className="hidden md:flex gap-1.5 w-full pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
               <Button
                 onClick={handleAddToCart}
                 className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
@@ -121,7 +115,25 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                 Buy
               </Button>
             </div>
-          </motion.div>
+            
+            {/* Mobile - always visible */}
+            <div className="flex md:hidden gap-1.5 w-full">
+              <Button
+                onClick={handleAddToCart}
+                className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
+                disabled={!product.inStock}
+              >
+                Add
+              </Button>
+              <Button
+                onClick={handleBuyNow}
+                className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-accent/95 text-accent-foreground hover:bg-accent active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
+                disabled={!product.inStock}
+              >
+                Buy
+              </Button>
+            </div>
+          </div>
 
           {/* Out of Stock Overlay */}
           {!product.inStock && (
