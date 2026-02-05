@@ -67,20 +67,21 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
     const scentNotes = getScentNotesDisplay();
 
-    // Handle card tap for mobile
+    // Handle touch for mobile - show buttons on touch
+    const handleTouchStart = () => {
+      setShowButtons(true);
+    };
+
+    // Handle card tap for navigation
     const handleCardClick = (e: React.MouseEvent) => {
-      // Only apply touch logic on mobile (check for touch capability)
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       
-      if (isTouchDevice) {
-        if (!showButtons) {
-          // First tap: show buttons, prevent navigation
-          e.preventDefault();
-          setShowButtons(true);
-        }
-        // Second tap: allow normal navigation (don't prevent default)
+      if (isTouchDevice && !showButtons) {
+        // If buttons not showing yet, show them and prevent navigation
+        e.preventDefault();
+        setShowButtons(true);
       }
-      // On desktop: always allow normal navigation
+      // If buttons are showing, allow normal navigation
     };
 
     // Close buttons when clicking outside
@@ -113,6 +114,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         className={cn('group', className)}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        onTouchStart={handleTouchStart}
       >
         {/* Image Container */}
         <Link 
