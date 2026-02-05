@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag, Menu, X, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -116,35 +117,52 @@ export const Header = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={cn(
-          'md:hidden absolute left-0 right-0 top-full bg-background border-b border-border transition-all duration-300 overflow-hidden z-40',
-          isMobileMenuOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'
-        )}
-      >
-        <nav className="container py-6 flex flex-col gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className={cn(
-                'text-sm font-medium tracking-[0.1em] py-3 transition-colors border-b border-border',
-                location.pathname === link.href
-                  ? 'text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link
-            to="/login"
-            className="text-sm font-medium tracking-[0.1em] py-3 text-muted-foreground hover:text-foreground"
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="md:hidden absolute left-0 right-0 top-full bg-background border-b border-border overflow-hidden z-40"
           >
-            ACCOUNT
-          </Link>
-        </nav>
-      </div>
+            <nav className="container py-6 flex flex-col gap-1">
+              {navLinks.map((link, index) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                >
+                  <Link
+                    to={link.href}
+                    className={cn(
+                      'text-sm font-medium tracking-[0.1em] py-3 transition-colors border-b border-border block',
+                      location.pathname === link.href
+                        ? 'text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navLinks.length * 0.05, duration: 0.3 }}
+              >
+                <Link
+                  to="/login"
+                  className="text-sm font-medium tracking-[0.1em] py-3 text-muted-foreground hover:text-foreground block"
+                >
+                  ACCOUNT
+                </Link>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
