@@ -570,6 +570,7 @@ export const products: Product[] = [
       heart: ['Cinnamon', 'Saffron'],
       base: ['Tobacco', 'Vanilla', 'Leather'],
     },
+    scentNotesImage: '/images/scent-notes/spicebomb-extreme.png',
     image: 'https://profparfums.store/cdn/shop/files/spicebomb.png?v=1768410549&width=800',
     affiliateUrl: 'https://profparfums.store/products/spicebomb-extreme',
     inStock: false,
