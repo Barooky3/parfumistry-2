@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
@@ -15,7 +15,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
     const { addItem, toggleCart } = useCart();
     const navigate = useNavigate();
-    const [isTouched, setIsTouched] = useState(false);
+    const [showButtons, setShowButtons] = useState(false);
+    const cardRef = useRef<HTMLDivElement>(null);
     
     const hasDiscount = product.originalPrice && product.originalPrice > product.price;
     const discountPercent = hasDiscount
@@ -66,24 +67,59 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
     const scentNotes = getScentNotesDisplay();
 
-    // Touch handlers for mobile
-    const handleTouchStart = () => setIsTouched(true);
-    const handleTouchEnd = () => {
-      // Delay hiding to allow button clicks
-      setTimeout(() => setIsTouched(false), 150);
+    // Handle card tap for mobile
+    const handleCardClick = (e: React.MouseEvent) => {
+      // Only apply touch logic on mobile (check for touch capability)
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      if (isTouchDevice) {
+        if (!showButtons) {
+          // First tap: show buttons, prevent navigation
+          e.preventDefault();
+          setShowButtons(true);
+        }
+        // Second tap: allow normal navigation (don't prevent default)
+      }
+      // On desktop: always allow normal navigation
     };
+
+    // Close buttons when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+        if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
+          setShowButtons(false);
+        }
+      };
+
+      if (showButtons) {
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+      }
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('touchstart', handleClickOutside);
+      };
+    }, [showButtons]);
 
     return (
       <motion.div 
-        ref={ref} 
+        ref={(node) => {
+          // Handle both refs
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+          (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }}
         className={cn('group', className)}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
         {/* Image Container */}
-        <Link to={`/product/${product.id}`} className="block relative mb-2.5">
+        <Link 
+          to={`/product/${product.id}`} 
+          className="block relative mb-2.5"
+          onClick={handleCardClick}
+        >
           <div className="aspect-[3/4] bg-secondary overflow-hidden rounded-sm">
             <motion.img
               src={product.image}
@@ -127,11 +163,11 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               </Button>
             </div>
             
-            {/* Mobile - touch only */}
+            {/* Mobile - tap to show */}
             <div 
               className={cn(
                 "flex md:hidden gap-1.5 w-full transition-all duration-200",
-                isTouched 
+                showButtons 
                   ? "opacity-100 translate-y-0 pointer-events-auto" 
                   : "opacity-0 translate-y-2 pointer-events-none"
               )}
