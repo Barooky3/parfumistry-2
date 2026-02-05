@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { SlidersHorizontal } from 'lucide-react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { SlidersHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -12,37 +12,107 @@ import { products } from '@/data/products';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'newest';
 
+// Brand name mapping for display and filtering
+const brandMap: Record<string, string[]> = {
+  versace: ['Versace'],
+  jpg: ['Jean Paul Gaultier', 'JPG'],
+  ysl: ['Yves Saint Laurent', 'YSL'],
+  azzaro: ['Azzaro'],
+  armani: ['Giorgio Armani', 'Armani', 'Emporio Armani'],
+  lv: ['Louis Vuitton'],
+  pdm: ['Parfums de Marly'],
+  creed: ['Creed'],
+  mancera: ['Mancera'],
+  dior: ['Dior', 'Christian Dior'],
+  tomford: ['Tom Ford'],
+  viktor: ['Viktor & Rolf'],
+  xerjoff: ['Xerjoff'],
+};
+
+const brandDisplayNames: Record<string, string> = {
+  versace: 'Versace',
+  jpg: 'Jean Paul Gaultier',
+  ysl: 'Yves Saint Laurent',
+  azzaro: 'Azzaro',
+  armani: 'Giorgio Armani',
+  lv: 'Louis Vuitton',
+  pdm: 'Parfums de Marly',
+  creed: 'Creed',
+  mancera: 'Mancera',
+  dior: 'Dior',
+  tomford: 'Tom Ford',
+  viktor: 'Viktor & Rolf',
+  xerjoff: 'Xerjoff',
+};
+
 const Shop = () => {
   const { category } = useParams<{ category?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const brandFilter = searchParams.get('brand');
+  
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const pageTitle = category === 'men' ? 'For Him' : category === 'women' ? 'For Her' : 'All Fragrances';
-  const pageDescription = category === 'men'
-    ? 'Discover masculine scents that leave a lasting impression'
-    : category === 'women'
-    ? 'Elegant fragrances crafted for the modern woman'
-    : 'Explore our curated collection of premium fragrances';
+  // Dynamic page title based on filters
+  const getPageTitle = () => {
+    if (brandFilter && brandDisplayNames[brandFilter]) {
+      return brandDisplayNames[brandFilter];
+    }
+    if (category === 'men') return 'For Him';
+    if (category === 'women') return 'For Her';
+    return 'All Fragrances';
+  };
+
+  const getPageDescription = () => {
+    if (brandFilter && brandDisplayNames[brandFilter]) {
+      return `Discover our collection of ${brandDisplayNames[brandFilter]} fragrances`;
+    }
+    if (category === 'men') return 'Discover masculine scents that leave a lasting impression';
+    if (category === 'women') return 'Elegant fragrances crafted for the modern woman';
+    return 'Explore our curated collection of premium fragrances';
+  };
+
+  const clearBrandFilter = () => {
+    searchParams.delete('brand');
+    setSearchParams(searchParams);
+  };
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
+    
+    // Filter by brand if specified
+    if (brandFilter && brandMap[brandFilter]) {
+      const brandNames = brandMap[brandFilter];
+      result = result.filter(p => 
+        brandNames.some(brandName => 
+          p.brand.toLowerCase().includes(brandName.toLowerCase())
+        )
+      );
+    }
+    
+    // Filter by category from URL params
     if (category && category !== 'all') {
       result = result.filter(p => p.category === category);
     }
+    
+    // Filter by selected categories
     if (selectedCategories.length > 0) {
       result = result.filter(p => selectedCategories.includes(p.category));
     }
+    
+    // Filter by price range
     result = result.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
+    // Sort
     switch (sortBy) {
       case 'price-asc': result.sort((a, b) => a.price - b.price); break;
       case 'price-desc': result.sort((a, b) => b.price - a.price); break;
       case 'newest': result.reverse(); break;
     }
     return result;
-  }, [category, selectedCategories, priceRange, sortBy]);
+  }, [category, brandFilter, selectedCategories, priceRange, sortBy]);
 
   const handleCategoryChange = (cat: string, checked: boolean) => {
     if (checked) {
@@ -100,8 +170,24 @@ const Shop = () => {
       <section className="py-16 md:py-20 border-b border-border">
         <div className="container text-center">
           <p className="text-xs tracking-[0.3em] text-muted-foreground font-medium mb-4 uppercase">Collection</p>
-          <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">{pageTitle}</h1>
-          <p className="text-muted-foreground max-w-md mx-auto">{pageDescription}</p>
+          <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">{getPageTitle()}</h1>
+          <p className="text-muted-foreground max-w-md mx-auto">{getPageDescription()}</p>
+          
+          {/* Active Brand Filter Badge */}
+          {brandFilter && brandDisplayNames[brandFilter] && (
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <span className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-foreground text-sm">
+                {brandDisplayNames[brandFilter]}
+                <button 
+                  onClick={clearBrandFilter}
+                  className="hover:text-accent transition-colors"
+                  aria-label="Remove brand filter"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </span>
+            </div>
+          )}
         </div>
       </section>
 
