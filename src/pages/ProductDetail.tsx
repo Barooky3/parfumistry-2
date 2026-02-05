@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
-import { ProductCard, ScentNotesVisual } from '@/components/product';
+import { ProductCard, ScentNotesVisual, DeliveryInfo } from '@/components/product';
 import { getProductReviews } from '@/data/productReviews';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
@@ -145,16 +145,9 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               )}
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex items-center gap-6 mb-6 text-muted-foreground">
-              <div className="flex items-center gap-2 text-sm">
-                <Zap className="h-4 w-4" strokeWidth={1.5} />
-                <span>Instant Delivery</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Shield className="h-4 w-4" strokeWidth={1.5} />
-                <span>Verified Seller</span>
-              </div>
+            {/* Delivery Info */}
+            <div className="mb-6">
+              <DeliveryInfo />
             </div>
 
             {/* Action Buttons - All Screens */}
