@@ -86,7 +86,7 @@ export const products: Product[] = [
     price: 23.99,
     originalPrice: 301.00,
     category: 'men',
-    description: 'A sweet and creamy fragrance with a luxurious feel. Perfect for evening wear and special occasions.',
+    description: 'Parfums de Marly Althair is a creamy vanilla scent with a spicy, citrusy kick – think kinda like a smooth bourbon vanilla mixed with cinnamon, orange blossom, and soft woods for a warm, slightly boozy feel. One of the absolute best fragrances ever made.',
     scentNotes: {
       top: ['Apple', 'Bergamot'],
       heart: ['Vanilla', 'Praline'],
@@ -131,7 +131,7 @@ export const products: Product[] = [
     price: 19.99,
     originalPrice: 169.00,
     category: 'unisex',
-    description: 'A luxurious blend of precious oud and creamy vanilla. Rich, warm, and sophisticated.',
+    description: 'This is my personal favourite mancera after xplicit vanilla. Its a harmonious blend of oriental and woody accords with a touch of sweetness. Powerful oud and vanilla combine with warm spices and fresh citrus, creating a warm, powdery scent with depth and an irresistible creamy vanilla trail.',
     scentNotes: {
       top: ['Saffron', 'Rose'],
       heart: ['Oud', 'Vanilla'],
@@ -153,7 +153,7 @@ export const products: Product[] = [
     price: 22.99,
     originalPrice: 410.00,
     category: 'men',
-    description: 'The legendary king of fragrances. A powerful blend of pineapple, birch, and musk that exudes confidence and success.',
+    description: 'A legendary fragrance known for its bold and confident character, everyone and their mother has smelt this. Aventus opens with vibrant pineapple and bergamot, delivering an instantly recognizable freshness. Smoky woods and musk develop in the base, creating a powerful and masculine finish. Versatile and iconic, its suitable for both casual and formal wear.',
     scentNotes: {
       top: ['Pineapple', 'Bergamot', 'Apple'],
       heart: ['Birch', 'Jasmine', 'Rose'],
@@ -198,7 +198,7 @@ export const products: Product[] = [
     price: 20.99,
     originalPrice: 205.00,
     category: 'unisex',
-    description: 'Dark, mysterious, and sensual. A luxurious blend of black truffle, orchid, and dark chocolate.',
+    description: 'Dark, mysterious, and sensual. Tom Ford Black Orchid is a luxurious blend of black truffle, orchid, and dark chocolate. A daring and captivating scent that leaves a lasting impression.',
     scentNotes: {
       top: ['Black Truffle', 'Ylang-Ylang'],
       heart: ['Black Orchid', 'Spicy Notes'],
@@ -220,7 +220,7 @@ export const products: Product[] = [
     price: 11.99,
     originalPrice: 97.00,
     category: 'men',
-    description: 'Modern and bold with notes of ginger and green tea, balanced by vanilla and mineral notes.',
+    description: 'Valentino Uomo Born in Roma smells like a modern, slightly sweet woody scent with fresh violet leaf, sage, and ginger over smoked vetiver. It feels clean, a bit sexy, and easy to wear, sitting somewhere between a fresh everyday fragrance and a clubbing scent.',
     scentNotes: {
       top: ['Ginger', 'Green Tea'],
       heart: ['Sage', 'Lavender'],
@@ -242,7 +242,7 @@ export const products: Product[] = [
     price: 13.99,
     originalPrice: 169.00,
     category: 'men',
-    description: 'Fresh and woody with citrus opening and deep cedar base. A crowd-pleaser fragrance.',
+    description: 'A crowd-pleaser fragrance. Cedrat Boisé opens with fresh citrus and black currant, developing into spicy leather notes over a deep cedar and white musk base. Versatile and long-lasting.',
     scentNotes: {
       top: ['Citrus', 'Black Currant'],
       heart: ['Leather', 'Spicy Notes'],
@@ -264,7 +264,7 @@ export const products: Product[] = [
     price: 25.95,
     originalPrice: 229.00,
     category: 'women',
-    description: 'A romantic and feminine floral with Turkish rose, peony, and vanilla. Elegant and sophisticated.',
+    description: 'A luxurious floral fragrance with a contemporary twist. Delina opens with fresh rose, lychee, and rhubarb, creating a vibrant and slightly tart introduction. Soft vanilla and musk smooth the composition, adding warmth and longevity. Feminine and confident, its both romantic and modern.',
     scentNotes: {
       top: ['Lychee', 'Rhubarb', 'Bergamot'],
       heart: ['Turkish Rose', 'Peony', 'Vanilla'],
@@ -286,7 +286,7 @@ export const products: Product[] = [
     brand: 'Xerjoff',
     price: 21.99,
     category: 'unisex',
-    description: 'A golden interpretation of the iconic Erba Pura. Luxurious, sweet, and absolutely captivating.',
+    description: 'Erba Gold smells like a bright citrus and tropical fruit mix over warm vanilla, amber, and soft musk. It opens with lemon, bergamot, orange, and ginger, then brings in green apple, melon, and pear with a touch of cardamom and cinnamon, drying down to a smooth, slightly creamy base that feels sunny and playful.',
     scentNotes: {
       top: ['Sicilian Orange', 'Calabrian Bergamot'],
       heart: ['Fruity Notes', 'Amber'],
@@ -308,7 +308,7 @@ export const products: Product[] = [
     price: 20.99,
     originalPrice: 67.00,
     category: 'unisex',
-    description: 'A fresh and fruity fragrance with vibrant citrus and sweet amber. Pure energy in a bottle.',
+    description: 'A clean and addictive fruity fragrance, my favourite xerjoff. It has a strong, long-lasting fruity shampoo feel – zesty citrus and mixed fruits up top that stay sweet and smooth for hours, making it stand out in warm weather or nights out.',
     scentNotes: {
       top: ['Sicilian Orange', 'Calabrian Bergamot'],
       heart: ['Fruity Notes', 'Flowers'],
@@ -330,7 +330,7 @@ export const products: Product[] = [
     price: 11.99,
     originalPrice: 109.00,
     category: 'men',
-    description: 'A fresh and energetic take on the classic Eros. Vibrant, youthful, and dynamic.',
+    description: 'Versace Eros Energy takes the OG eros DNA and makes it fresher, with a lot more citrus (lemon, grapefruit, blood orange) on a clean woody base, perfect for warm days and casual wear. My favourite eros, it smells like Creed Aventus.',
     scentNotes: {
       top: ['Mandarin', 'Grapefruit'],
       heart: ['Mint', 'Rosemary'],
@@ -374,7 +374,7 @@ export const products: Product[] = [
     price: 8.99,
     originalPrice: 109.00,
     category: 'men',
-    description: 'The most intense version of Eros. Deep, sensual, and long-lasting.',
+    description: 'One of the most popular fragrances. Smells like cool mint, green apple, and lemon over sweet vanilla and woods – playful, sweet, and a bit loud, great for nights out. Not the best versace but for sure the safest blind buy.',
     scentNotes: {
       top: ['Mint', 'Green Apple', 'Lemon'],
       heart: ['Tonka Bean', 'Geranium'],
@@ -505,7 +505,7 @@ export const products: Product[] = [
     brand: 'Parfums de Marly',
     price: 25.99,
     category: 'men',
-    description: 'A sophisticated blend of apple, vanilla, and aromatic notes. One of the most beloved fragrances.',
+    description: 'My favourite PDM. It smells like sweet spiced apple over creamy vanilla and woods. You get a fresh mix of apple, bergamot, and lavender at the start, then it dries down into warm vanilla, cardamom, and sandalwood, it can be used any time of the year.',
     scentNotes: {
       top: ['Apple', 'Bergamot', 'Lavender'],
       heart: ['Jasmine', 'Violet', 'Geranium'],
@@ -669,7 +669,7 @@ export const products: Product[] = [
     price: 16.00,
     originalPrice: 127.00,
     category: 'women',
-    description: 'A rock\'n\'roll fragrance with coffee and vanilla. Addictive, bold, and unforgettable.',
+    description: 'YSL Black Opium smells like sweet coffee with vanilla and white flowers. You get a hit of coffee, pear, and orange blossom at the start, then it settles into a cozy mix of jasmine, vanilla, patchouli, and soft woods, the best womans fragrance for sure.',
     scentNotes: {
       top: ['Pink Pepper', 'Orange Blossom'],
       heart: ['Coffee', 'Jasmine'],
@@ -919,7 +919,7 @@ export const products: Product[] = [
     price: 21.00,
     originalPrice: 145.00,
     category: 'men',
-    description: 'The iconic Sauvage in its most intense form. Raw, noble, and absolutely magnetic.',
+    description: 'Dior Sauvage Parfum smells like a smoother, darker take on the original Sauvage – less sharp, more warm and woody. You get a soft citrus opening of bergamot and mandarin, quickly wrapped in creamy sandalwood, with vanilla, tonka, and a touch of incense in the base that makes it feel more suited to evenings and cooler weather.',
     scentNotes: {
       top: ['Bergamot', 'Pepper'],
       heart: ['Lavender', 'Star Anise'],
