@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 
+// Cache bust version - increment when updating images
+const SCENT_NOTES_VERSION = 'v2';
+
 interface ScentNotesVisualProps {
   scentNotes: {
     top: string[];
@@ -27,7 +30,7 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
         className="py-4 bg-white rounded-lg p-4"
       >
         <img 
-          src={scentNotesImage} 
+          src={`${scentNotesImage}?${SCENT_NOTES_VERSION}`} 
           alt="Fragrance Notes" 
           className="w-full max-w-md mx-auto"
           loading="lazy"
