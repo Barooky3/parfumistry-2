@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -64,15 +65,22 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     const scentNotes = getScentNotesDisplay();
 
     return (
-      <div ref={ref} className={cn('group', className)}>
+      <motion.div 
+        ref={ref} 
+        className={cn('group', className)}
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         {/* Image Container */}
         <Link to={`/product/${product.id}`} className="block relative mb-2.5">
-          <div className="aspect-[3/4] bg-secondary overflow-hidden">
-            <img
+          <div className="aspect-[3/4] bg-secondary overflow-hidden rounded-sm">
+            <motion.img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover"
               loading="lazy"
+              whileHover={{ scale: 1.08 }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             />
           </div>
           
@@ -89,22 +97,31 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           )}
 
           {/* Quick Action Overlay - appears on hover */}
-          <div className="absolute bottom-2 left-2 right-2 flex gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
-            <Button
-              onClick={handleAddToCart}
-              className="flex-1 h-8 text-[9px] font-medium tracking-[0.05em] uppercase rounded-none bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.98] transition-all"
-              disabled={!product.inStock}
-            >
-              Add
-            </Button>
-            <Button
-              onClick={handleBuyNow}
-              className="flex-1 h-8 text-[9px] font-medium tracking-[0.05em] uppercase rounded-none bg-accent/95 text-accent-foreground hover:bg-accent active:scale-[0.98] transition-all"
-              disabled={!product.inStock}
-            >
-              Buy
-            </Button>
-          </div>
+          <motion.div 
+            className="absolute bottom-2 left-2 right-2 flex gap-1.5"
+            initial={{ opacity: 0, y: 10 }}
+            whileHover={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.25 }}
+            style={{ pointerEvents: 'none' }}
+          >
+            <div className="flex gap-1.5 w-full group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+              <Button
+                onClick={handleAddToCart}
+                className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
+                disabled={!product.inStock}
+              >
+                Add
+              </Button>
+              <Button
+                onClick={handleBuyNow}
+                className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-accent/95 text-accent-foreground hover:bg-accent active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
+                disabled={!product.inStock}
+              >
+                Buy
+              </Button>
+            </div>
+          </motion.div>
 
           {/* Out of Stock Overlay */}
           {!product.inStock && (
@@ -140,7 +157,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 );
