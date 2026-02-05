@@ -182,6 +182,7 @@ export const products: Product[] = [
       heart: ['Rose', 'Jasmine'],
       base: ['Ambergris', 'Musk', 'Sandalwood'],
     },
+    scentNotesImage: '/images/scent-notes/aventus-absolu.png',
     image: 'https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=800',
     affiliateUrl: 'https://profparfums.store/products/creed-aventus-absolu',
     inStock: true,
