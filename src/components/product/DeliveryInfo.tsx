@@ -24,7 +24,7 @@ export const DeliveryInfo = () => {
       {/* Main message */}
       <div className="bg-secondary/50 border border-border p-4">
         <p className="text-sm text-foreground">
-          Order today, and get your link between{' '}
+          Order today from our link, and get your package between{' '}
           <span className="font-semibold">{formatDate(deliveryStart)}</span> and{' '}
           <span className="font-semibold">{formatDate(deliveryEnd)}</span>
         </p>
