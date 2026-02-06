@@ -177,29 +177,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     0
   );
 
-  // Calculate "Buy 2 Get 1 Free" discount for fragrances only (not bundles)
+  // Calculate "Buy 3 Get Cheapest Free" discount (bundles + fragrances all count)
   const calculateFreeItemDiscount = () => {
-    // Get all individual fragrance items (not bundles), expanded by quantity
-    const fragranceItems: number[] = [];
+    // Expand all items (bundles + fragrances) by quantity
+    const allItems: number[] = [];
     state.items.forEach(item => {
-      if (!item.product.isBundle) {
-        const price = item.selectedPrice || item.product.price;
-        for (let i = 0; i < item.quantity; i++) {
-          fragranceItems.push(price);
-        }
+      const price = item.selectedPrice || item.product.price;
+      for (let i = 0; i < item.quantity; i++) {
+        allItems.push(price);
       }
     });
 
     // Sort prices from lowest to highest
-    fragranceItems.sort((a, b) => a - b);
+    allItems.sort((a, b) => a - b);
 
-    // For every 3 fragrances, the cheapest is free
-    const freeItemsCount = Math.floor(fragranceItems.length / 3);
+    // For every 3 items, the cheapest is free
+    const freeItemsCount = Math.floor(allItems.length / 3);
     let discount = 0;
     
     // The cheapest items become free (first N items after sorting)
     for (let i = 0; i < freeItemsCount; i++) {
-      discount += fragranceItems[i];
+      discount += allItems[i];
     }
 
     return { discount, freeItemsCount };
