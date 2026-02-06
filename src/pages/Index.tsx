@@ -26,11 +26,11 @@ const faqs = [
   },
   {
     question: "What's your refund policy?",
-    answer: 'We offer a satisfaction guarantee. If you have any issues, contact our support team within 14 days.',
+    answer: 'Due to the digital nature of our products, all sales are final. No refunds or exchanges are available once seller links have been delivered.',
   },
   {
-    question: 'Are the fragrances authentic?',
-    answer: 'Yes, all sellers we work with provide 100% authentic fragrances. Quality is guaranteed.',
+    question: 'What kind of fragrances do you sell?',
+    answer: 'We offer high-quality 1:1 inspired fragrances sourced from trusted sellers. These are not original brand products.',
   },
   {
     question: 'How do I contact the sellers?',
