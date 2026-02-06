@@ -345,9 +345,19 @@ const Checkout = () => {
 
   // Handle Stripe success/cancel redirects
   useEffect(() => {
+    const sessionId = searchParams.get('session_id');
     if (searchParams.get('success') === 'true') {
       setIsCompleted(true);
       clearCart();
+      
+      // Send order confirmation email
+      if (sessionId) {
+        supabase.functions.invoke('send-order-confirmation', {
+          body: { sessionId },
+        }).then(({ error }) => {
+          if (error) console.error('Failed to send confirmation email:', error);
+        });
+      }
     }
     if (searchParams.get('canceled') === 'true') {
       toast({ title: 'Payment canceled', description: 'Your payment was canceled. You can try again.' });

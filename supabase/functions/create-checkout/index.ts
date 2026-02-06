@@ -69,7 +69,7 @@ serve(async (req) => {
       customer_email: customerEmail,
       line_items,
       mode: "payment",
-      success_url: `${origin}/checkout?success=true`,
+      success_url: `${origin}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout?canceled=true`,
       metadata: {
         customer_name: customerName,
