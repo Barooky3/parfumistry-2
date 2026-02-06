@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -182,6 +183,7 @@ const debounce = <T extends (...args: Parameters<T>) => void>(
 const Checkout = () => {
   const { items, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount, clearCart } = useCart();
   const { toast } = useToast();
+  const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
@@ -204,7 +206,7 @@ const Checkout = () => {
     city: '',
   });
 
-  const formatPrice = (price: number) => new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(price);
+  
 
   // Fetch addresses from PDOK (Netherlands) or Nominatim (worldwide)
   const fetchAddressSuggestions = useCallback(

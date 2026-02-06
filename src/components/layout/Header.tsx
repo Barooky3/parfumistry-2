@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency, Currency } from '@/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +18,9 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { toggleCart, totalItems } = useCart();
+  const { currency, setCurrency } = useCurrency();
   const location = useLocation();
+  const currencies: Currency[] = ['EUR', 'GBP', 'USD'];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,7 +72,25 @@ export const Header = () => {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            {/* Currency Selector */}
+            <div className="hidden md:flex items-center border border-border rounded-sm overflow-hidden mr-1">
+              {currencies.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCurrency(c)}
+                  className={cn(
+                    'px-2 py-1.5 text-[10px] font-medium tracking-wide transition-colors',
+                    currency === c
+                      ? 'bg-foreground text-background'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+
             {/* Account */}
             <Button
               variant="ghost"
@@ -158,6 +179,29 @@ export const Header = () => {
                 >
                   ACCOUNT
                 </Link>
+              </motion.div>
+              {/* Mobile Currency Selector */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (navLinks.length + 1) * 0.05, duration: 0.3 }}
+              >
+                <div className="flex items-center gap-2 py-3">
+                  {currencies.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setCurrency(c)}
+                      className={cn(
+                        'px-3 py-1.5 text-xs font-medium tracking-wide border transition-colors',
+                        currency === c
+                          ? 'bg-foreground text-background border-foreground'
+                          : 'text-muted-foreground border-border hover:text-foreground'
+                      )}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
               </motion.div>
             </nav>
           </motion.div>
