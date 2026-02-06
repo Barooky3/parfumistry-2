@@ -619,8 +619,8 @@ export const products: Product[] = [
     id: 'le-male-elixir',
     name: 'Le Male Elixir',
     brand: 'Jean Paul Gaultier',
-    price: 11.99,
-    originalPrice: 133.00,
+    price: 16.99,
+    originalPrice: 175.00,
     category: 'men',
     description: 'Le Male Elixir is incredibly popular and you must have seen this bottle somewhere before even if you know nothing about fragrances. It has a creamy vanilla and honey wrapped around cool lavender and mint, with a soft tobacco touch in the drydown.',
     scentNotes: {
@@ -634,7 +634,6 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 11.99, originalPrice: 133.00, inStock: true },
       { ml: 75, price: 16.99, originalPrice: 175.00, inStock: true },
       { ml: 125, price: 24.99, originalPrice: 225.00, inStock: true },
     ],
