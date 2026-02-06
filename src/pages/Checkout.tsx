@@ -348,16 +348,21 @@ const Checkout = () => {
     const sessionId = searchParams.get('session_id');
     if (searchParams.get('success') === 'true') {
       setIsCompleted(true);
-      clearCart();
       
-      // Send order confirmation email
+      // Send order confirmation email with cart items
       if (sessionId) {
+        const savedItems = localStorage.getItem('profparfums-pending-order');
+        const orderItems = savedItems ? JSON.parse(savedItems) : [];
+        localStorage.removeItem('profparfums-pending-order');
+        
         supabase.functions.invoke('send-order-confirmation', {
-          body: { sessionId },
+          body: { sessionId, orderItems },
         }).then(({ error }) => {
           if (error) console.error('Failed to send confirmation email:', error);
         });
       }
+      
+      clearCart();
     }
     if (searchParams.get('canceled') === 'true') {
       toast({ title: 'Payment canceled', description: 'Your payment was canceled. You can try again.' });
@@ -428,6 +433,8 @@ const Checkout = () => {
 
       if (error) throw error;
       if (data?.url) {
+        // Save cart items for order confirmation email
+        localStorage.setItem('profparfums-pending-order', JSON.stringify(cartItems));
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL received');
