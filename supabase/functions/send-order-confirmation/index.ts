@@ -25,38 +25,47 @@ serve(async (req) => {
   }
 
   try {
-    const { sessionId, orderItems } = await req.json() as { sessionId: string; orderItems: OrderItem[] };
-
-    if (!sessionId) {
-      throw new Error("Session ID is required");
-    }
-
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
-    });
-
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["line_items"],
-    });
-
-    if (session.payment_status !== "paid") {
-      throw new Error("Payment not completed");
-    }
-
-    const customerEmail = session.customer_email || session.customer_details?.email;
-    if (!customerEmail) {
-      throw new Error("Customer email not found");
-    }
-
-    const customerName = session.metadata?.customer_name || "Valued Customer";
-    const shippingAddress = {
-      line1: session.metadata?.shipping_line1 || "",
-      city: session.metadata?.shipping_city || "",
-      postalCode: session.metadata?.shipping_postal || "",
-      country: session.metadata?.shipping_country || "",
+    const { sessionId, orderItems, testMode, testEmail, testName } = await req.json() as { 
+      sessionId: string; orderItems: OrderItem[]; testMode?: boolean; testEmail?: string; testName?: string 
     };
 
-    const totalAmount = ((session.amount_total || 0) / 100).toFixed(2);
+    let customerEmail: string;
+    let customerName: string;
+    let shippingAddress: { line1: string; city: string; postalCode: string; country: string };
+    let totalAmount: string;
+
+    if (testMode && testEmail) {
+      // Test mode — skip Stripe verification
+      customerEmail = testEmail;
+      customerName = testName || "Test Customer";
+      shippingAddress = { line1: "Teststraat 1", city: "Amsterdam", postalCode: "1000 AA", country: "Netherlands" };
+      totalAmount = (orderItems || []).reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
+    } else {
+      if (!sessionId) throw new Error("Session ID is required");
+
+      const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+        apiVersion: "2025-08-27.basil",
+      });
+
+      const session = await stripe.checkout.sessions.retrieve(sessionId, {
+        expand: ["line_items"],
+      });
+
+      if (session.payment_status !== "paid") throw new Error("Payment not completed");
+
+      customerEmail = session.customer_email || session.customer_details?.email || "";
+      if (!customerEmail) throw new Error("Customer email not found");
+
+      customerName = session.metadata?.customer_name || "Valued Customer";
+      shippingAddress = {
+        line1: session.metadata?.shipping_line1 || "",
+        city: session.metadata?.shipping_city || "",
+        postalCode: session.metadata?.shipping_postal || "",
+        country: session.metadata?.shipping_country || "",
+      };
+      totalAmount = ((session.amount_total || 0) / 100).toFixed(2);
+    }
+
     const origin = "https://profparfums.lovable.app";
 
     // Build product rows HTML using the passed orderItems
