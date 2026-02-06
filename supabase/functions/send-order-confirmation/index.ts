@@ -66,7 +66,8 @@ function buildItemRow(item: OrderItem, origin: string): string {
     '<td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">',
     '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">' + item.brand + '</div>',
     '<a href="' + productLink + '" style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; display: block; text-decoration: none;">' + item.name + mlLabel + '</a>',
-    '<div style="font-size: 13px; color: #666; margin-bottom: 4px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
+    '<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
+    '<a href="' + productLink + '" style="display: inline-block; background-color: #c9a96e; color: #ffffff; text-decoration: none; padding: 8px 20px; border-radius: 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">Access Product &rarr;</a>',
     '</td></tr></table>',
     '</td></tr>',
   ].join("\n");
