@@ -1,40 +1,119 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, User, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+
+const PASSWORD_RULES = [
+  { label: 'Minimaal 8 tekens', test: (p: string) => p.length >= 8 },
+  { label: 'Minstens 1 hoofdletter', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'Minstens 1 cijfer', test: (p: string) => /\d/.test(p) },
+  { label: 'Minstens 1 speciaal teken (!@#$...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
 
 const Signup = () => {
   const { toast } = useToast();
+  const { signUp, verifyOtp } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  // OTP verification state
+  const [showOtp, setShowOtp] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
+
+  const allRulesPass = PASSWORD_RULES.every(r => r.test(password));
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!allRulesPass) {
+      toast({ title: 'Wachtwoord voldoet niet aan de eisen', variant: 'destructive' });
+      return;
+    }
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast({
-      title: 'Coming soon!',
-      description: 'Account functionality will be available soon.',
-    });
+    const { error } = await signUp(email, password, name);
     setIsSubmitting(false);
+    if (error) {
+      toast({ title: 'Fout bij registratie', description: error, variant: 'destructive' });
+    } else {
+      setShowOtp(true);
+      toast({ title: 'Verificatiecode verstuurd!', description: 'Check je e-mail voor de code.' });
+    }
   };
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setVerifying(true);
+    const { error } = await verifyOtp(email, otpCode);
+    setVerifying(false);
+    if (error) {
+      toast({ title: 'Ongeldige code', description: error, variant: 'destructive' });
+    } else {
+      toast({ title: 'Account geverifieerd! 🎉' });
+      navigate('/');
+    }
+  };
+
+  if (showOtp) {
+    return (
+      <div className="min-h-screen py-20 md:py-28 bg-background">
+        <div className="container">
+          <div className="max-w-md mx-auto">
+            <div className="text-center mb-12">
+              <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Verify Email</h1>
+              <p className="text-muted-foreground">
+                We hebben een code naar <strong>{email}</strong> gestuurd
+              </p>
+            </div>
+            <form onSubmit={handleVerify} className="border border-border p-8">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="otp" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
+                    Verificatiecode
+                  </Label>
+                  <Input
+                    id="otp"
+                    type="text"
+                    placeholder="123456"
+                    required
+                    value={otpCode}
+                    onChange={e => setOtpCode(e.target.value)}
+                    className="h-12 bg-background border-border rounded-none focus:border-foreground text-center text-lg tracking-[0.3em]"
+                    maxLength={6}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
+                  disabled={verifying || otpCode.length < 6}
+                >
+                  {verifying ? 'Verifiëren...' : 'Verifieer Account'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-20 md:py-28 bg-background">
       <div className="container">
         <div className="max-w-md mx-auto">
-          {/* Header */}
           <div className="text-center mb-12">
             <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Create Account</h1>
-            <p className="text-muted-foreground">
-              Join ProfParfums for exclusive deals
-            </p>
+            <p className="text-muted-foreground">Join ProfParfums for exclusive deals</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="border border-border p-8">
             <div className="space-y-6">
               <div className="space-y-2">
@@ -48,7 +127,10 @@ const Signup = () => {
                     type="text"
                     placeholder="Your name"
                     required
+                    value={name}
+                    onChange={e => setName(e.target.value)}
                     className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
+                    maxLength={100}
                   />
                 </div>
               </div>
@@ -64,7 +146,10 @@ const Signup = () => {
                     type="email"
                     placeholder="your@email.com"
                     required
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
+                    maxLength={255}
                   />
                 </div>
               </div>
@@ -80,6 +165,8 @@ const Signup = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     required
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                     className="pl-11 pr-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                   <button
@@ -90,13 +177,32 @@ const Signup = () => {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+
+                {/* Password strength indicators */}
+                {password.length > 0 && (
+                  <div className="space-y-1.5 pt-2">
+                    {PASSWORD_RULES.map((rule, i) => {
+                      const passes = rule.test(password);
+                      return (
+                        <div key={i} className="flex items-center gap-2 text-xs">
+                          {passes ? (
+                            <Check className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <X className="h-3.5 w-3.5 text-destructive" />
+                          )}
+                          <span className={passes ? 'text-green-600' : 'text-muted-foreground'}>{rule.label}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               <Button
                 type="submit"
                 size="lg"
                 className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !allRulesPass}
               >
                 {isSubmitting ? 'Creating account...' : 'Create Account'}
               </Button>
