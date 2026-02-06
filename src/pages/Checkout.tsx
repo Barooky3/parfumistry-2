@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, CreditCard, Lock, User, CheckSquare, Loader2 } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, Lock, User, CheckSquare, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+
 
 const COUNTRIES = [
   // Europe
@@ -184,10 +185,11 @@ const Checkout = () => {
   const { items, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount, clearCart } = useCart();
   const { toast } = useToast();
   const { formatPrice } = useCurrency();
+  const [searchParams] = useSearchParams();
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
-  const [currentStep] = useState(1);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   
   // Address autocomplete state
@@ -315,6 +317,17 @@ const Checkout = () => {
     setShowSuggestions(false);
   };
 
+  // Handle Stripe success/cancel redirects
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      setIsCompleted(true);
+      clearCart();
+    }
+    if (searchParams.get('canceled') === 'true') {
+      toast({ title: 'Payment canceled', description: 'Your payment was canceled. You can try again.' });
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (addressInputRef.current && !addressInputRef.current.contains(e.target as Node)) {
@@ -342,7 +355,7 @@ const Checkout = () => {
     }, 1000);
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!isFormValid()) {
       toast({ 
         title: 'Missing information', 
@@ -352,15 +365,47 @@ const Checkout = () => {
       return;
     }
 
-    items.forEach((item) => {
-      if (item.product.affiliateUrl && item.product.affiliateUrl !== '#') {
-        window.open(item.product.affiliateUrl, '_blank');
+    setIsProcessing(true);
+    try {
+      const cartItems = items.map(item => ({
+        name: item.product.name,
+        brand: item.product.brand,
+        image: item.product.image,
+        price: item.selectedPrice || item.product.price,
+        quantity: item.quantity,
+        selectedMl: item.selectedMl,
+      }));
+
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: {
+          items: cartItems,
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+          shippingAddress: {
+            country: formData.country,
+            city: formData.city,
+            postalCode: formData.postalCode,
+            line1: formData.streetAddress,
+          },
+        },
+      });
+
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
       }
-    });
-    
-    setIsCompleted(true);
-    clearCart();
-    toast({ title: 'Order Confirmed!', description: 'Check your email for order details.' });
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      toast({
+        title: 'Payment error',
+        description: error.message || 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Empty cart state
@@ -399,49 +444,12 @@ const Checkout = () => {
     );
   }
 
-  const steps = [
-    { number: 1, label: 'INFORMATION' },
-    { number: 2, label: 'PAYMENT' },
-    { number: 3, label: 'CONFIRMATION' },
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header Section */}
       <div className="py-8 md:py-10 text-center">
         <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">Checkout</h1>
         <p className="text-muted-foreground">Complete your purchase</p>
-      </div>
-
-      {/* Progress Stepper */}
-      <div className="pb-10">
-        <div className="flex items-center justify-center max-w-md mx-auto px-4">
-          {steps.map((step, index) => (
-            <div key={step.number} className="flex items-center">
-              <div className="flex flex-col items-center">
-                {/* Step Circle */}
-                <div 
-                  className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all",
-                    currentStep === step.number 
-                      ? "bg-foreground text-background" 
-                      : "bg-transparent border-2 border-border text-muted-foreground"
-                  )}
-                >
-                  {step.number}
-                </div>
-                {/* Step Label */}
-                <span className="text-[10px] tracking-wider mt-2 text-muted-foreground font-medium">
-                  {step.label}
-                </span>
-              </div>
-              {/* Connector Line */}
-              {index < steps.length - 1 && (
-                <div className="w-16 md:w-24 h-[2px] bg-border mx-2 -mt-5" />
-              )}
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Main Content */}
@@ -706,52 +714,25 @@ const Checkout = () => {
                 </p>
               )}
 
-              {/* Payment Buttons */}
+              {/* Payment Button */}
               <div className="space-y-3">
-                {/* Pay with Shopify - Green */}
                 <Button 
                   onClick={handlePayment}
-                  disabled={!isFormValid()}
+                  disabled={!isFormValid() || isProcessing}
                   className="w-full h-12 text-sm font-medium rounded-md disabled:opacity-50"
-                  style={{ backgroundColor: '#96bf48', color: 'white' }}
                 >
-                  <Lock className="h-4 w-4 mr-2" />
-                  Pay with Shopify
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="h-4 w-4 mr-2" />
+                      Pay with Stripe
+                    </>
+                  )}
                 </Button>
-
-                {/* Divider */}
-                <div className="flex items-center gap-3 py-1">
-                  <div className="flex-1 h-px bg-border" />
-                  <span className="text-xs text-muted-foreground uppercase">Or pay with</span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-
-                {/* PayPal - Cream/Yellow */}
-                <Button 
-                  onClick={handlePayment}
-                  disabled={!isFormValid()}
-                  variant="outline"
-                  className="w-full h-11 text-base font-bold rounded-md border-border disabled:opacity-50"
-                  style={{ backgroundColor: '#ffc439', color: '#003087' }}
-                >
-                  PayPal
-                </Button>
-
-                {/* Creditcard - Gray */}
-                <Button 
-                  onClick={handlePayment}
-                  disabled={!isFormValid()}
-                  variant="outline"
-                  className="w-full h-11 text-sm font-medium rounded-md bg-muted hover:bg-muted/80 text-muted-foreground border-border disabled:opacity-50"
-                >
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Creditcard
-                </Button>
-
-                {/* PayPal Attribution */}
-                <p className="text-xs text-center text-muted-foreground">
-                  Powered by <span className="font-bold" style={{ color: '#003087' }}>PayPal</span>
-                </p>
 
                 {/* Terms */}
                 <p className="text-xs text-center text-muted-foreground pt-2">
