@@ -19,6 +19,7 @@ const PRODUCT_LINKS: Record<string, string> = {
   "eros": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7665241752&affcode=c5v3b",
   "dior": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661870378&affcode=c5v3b",
   "parfums-de-marly": "https://m.orientdig.com/pages/product/product?id=857200052892&shoptype=ALI_1688&ref=100144636",
+  "jean-paul-gaultier": "https://litbuy.shop/lit/JeaFpAPH",
 };
 
 function getProductLink(name: string, brand: string): string {
@@ -32,6 +33,7 @@ function getProductLink(name: string, brand: string): string {
   if (n.includes("eros")) return PRODUCT_LINKS["eros"];
   if (b.includes("dior")) return PRODUCT_LINKS["dior"];
   if (b.includes("parfums de marly")) return PRODUCT_LINKS["parfums-de-marly"];
+  if (b.includes("jean paul gaultier")) return PRODUCT_LINKS["jean-paul-gaultier"];
   return DEFAULT_SELLER_LINK;
 }
 
