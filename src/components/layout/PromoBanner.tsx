@@ -31,12 +31,20 @@ export const PromoBanner = () => {
   }, [isVisible]);
 
   useEffect(() => {
-    // Set end date to 3 days from now
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 3);
+    // Use a fixed end date stored in localStorage so it persists across refreshes
+    const STORAGE_KEY = 'promo-banner-end-date';
+    let endDate: Date;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && new Date(stored).getTime() > Date.now()) {
+      endDate = new Date(stored);
+    } else {
+      endDate = new Date();
+      endDate.setDate(endDate.getDate() + 3);
+      localStorage.setItem(STORAGE_KEY, endDate.toISOString());
+    }
 
     const calculateTimeLeft = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const distance = endDate.getTime() - now;
 
       if (distance > 0) {
@@ -46,6 +54,8 @@ export const PromoBanner = () => {
           mins: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
           secs: Math.floor((distance % (1000 * 60)) / 1000),
         });
+      } else {
+        setIsVisible(false);
       }
     };
 
