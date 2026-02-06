@@ -3,127 +3,94 @@ const PrivacyPolicy = () => {
     <div className="min-h-screen bg-background py-20">
       <div className="container">
         <div className="max-w-3xl mx-auto">
-          <h1 className="font-display text-4xl md:text-5xl text-foreground mb-8">
+          <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4 text-center">
             Privacy Policy
           </h1>
-          <p className="text-muted-foreground mb-12">
+          <p className="text-muted-foreground mb-12 text-center">
             Last updated: February 2026
           </p>
 
-          <div className="space-y-8 text-foreground">
+          <div className="space-y-10 text-foreground">
             <section>
-              <h2 className="text-xl font-semibold mb-4">1. Introduction</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                At ProfParfums, we are committed to protecting your privacy. This Privacy Policy explains 
-                how we collect, use, disclose, and safeguard your information when you visit our website 
-                or make a purchase through our platform.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">2. Information We Collect</h2>
+              <h2 className="font-display text-2xl mb-4">1. Information We Collect</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                We may collect information about you in various ways, including:
+                When you make a purchase on ProfParfums, we collect the following information:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li><strong>Personal Data:</strong> Name, email address, phone number, and billing information</li>
-                <li><strong>Transaction Data:</strong> Details about purchases and orders</li>
-                <li><strong>Technical Data:</strong> IP address, browser type, device information</li>
-                <li><strong>Usage Data:</strong> How you interact with our website</li>
+                <li>Email address (for order confirmation and delivery of digital products)</li>
+                <li>Name and billing address (for payment processing)</li>
+                <li>Payment information (processed securely through our payment providers)</li>
+                <li>Purchase history (to provide access to your digital products)</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">3. How We Use Your Information</h2>
+              <h2 className="font-display text-2xl mb-4">2. How We Use Your Information</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                We use the information we collect for various purposes:
+                Your information is used to:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>To process and fulfill your orders</li>
-                <li>To send you seller information after purchase</li>
-                <li>To communicate with you about your account or transactions</li>
-                <li>To send promotional emails (with your consent)</li>
-                <li>To improve our website and services</li>
-                <li>To detect and prevent fraud</li>
+                <li>Process and fulfill your orders</li>
+                <li>Deliver digital products (seller links) to you</li>
+                <li>Send order confirmations and updates</li>
+                <li>Respond to customer service inquiries</li>
+                <li>Improve our website and services</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">4. Information Sharing</h2>
+              <h2 className="font-display text-2xl mb-4">3. Digital Products</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                ProfParfums sells digital products in the form of links to third-party sellers. Once you complete a purchase, you will receive access to these links. As these are digital products, all sales are final and no refunds are available. We do not control the third-party sellers and are not responsible for their products or services.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl mb-4">4. Data Security</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                We implement industry-standard security measures to protect your personal information. Payment processing is handled by trusted third-party providers who comply with PCI DSS standards. We do not store your complete payment card information on our servers.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl mb-4">5. Cookies</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                We use cookies to enhance your browsing experience, remember your preferences (such as currency selection), and maintain your shopping cart. You can disable cookies in your browser settings, though this may affect some website functionality.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl mb-4">6. Third-Party Services</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                We may share your information with third-party service providers who assist us in operating our website, processing payments, and delivering our services. These providers are contractually obligated to protect your information.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl mb-4">7. Your Rights</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                We may share your information in the following situations:
+                Under GDPR and other applicable laws, you have the right to:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li><strong>With Sellers:</strong> Your contact information may be shared with verified sellers to complete transactions</li>
-                <li><strong>Service Providers:</strong> We may share data with third-party vendors who perform services on our behalf</li>
-                <li><strong>Legal Requirements:</strong> We may disclose information if required by law</li>
+                <li>Access your personal data</li>
+                <li>Request correction of inaccurate data</li>
+                <li>Request deletion of your data (subject to legal requirements)</li>
+                <li>Object to processing of your data</li>
+                <li>Data portability</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">5. Data Security</h2>
+              <h2 className="font-display text-2xl mb-4">8. Contact Us</h2>
               <p className="text-muted-foreground leading-relaxed">
-                We implement appropriate technical and organizational security measures to protect your 
-                personal information. However, no method of transmission over the Internet is 100% secure, 
-                and we cannot guarantee absolute security.
+                If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us through our Contact page. We will respond to your inquiry within 30 days.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">6. Cookies</h2>
+              <h2 className="font-display text-2xl mb-4">9. Changes to This Policy</h2>
               <p className="text-muted-foreground leading-relaxed">
-                We use cookies and similar tracking technologies to enhance your experience on our website. 
-                Cookies help us understand how you use our site and allow us to remember your preferences. 
-                You can control cookie settings through your browser preferences.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">7. Your Rights</h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Depending on your location, you may have the following rights regarding your personal data:
-              </p>
-              <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Right to access your personal information</li>
-                <li>Right to correct inaccurate data</li>
-                <li>Right to request deletion of your data</li>
-                <li>Right to object to processing</li>
-                <li>Right to data portability</li>
-                <li>Right to withdraw consent</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">8. Third-Party Links</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Our website may contain links to third-party websites. We are not responsible for the 
-                privacy practices or content of these external sites. We encourage you to review the 
-                privacy policies of any third-party sites you visit.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">9. Children's Privacy</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Our services are not intended for individuals under the age of 18. We do not knowingly 
-                collect personal information from children. If we become aware that we have collected 
-                data from a minor, we will take steps to delete that information.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">10. Changes to This Policy</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                We may update this Privacy Policy from time to time. We will notify you of any changes 
-                by posting the new policy on this page and updating the "Last updated" date.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">11. Contact Us</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                If you have questions or concerns about this Privacy Policy, please contact us through 
-                our Contact page or email us at privacy@profparfums.com.
+                We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last updated" date. We encourage you to review this policy periodically.
               </p>
             </section>
           </div>
