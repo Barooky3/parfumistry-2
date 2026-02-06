@@ -8,10 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
 const PASSWORD_RULES = [
-  { label: 'Minimaal 8 tekens', test: (p: string) => p.length >= 8 },
-  { label: 'Minstens 1 hoofdletter', test: (p: string) => /[A-Z]/.test(p) },
-  { label: 'Minstens 1 cijfer', test: (p: string) => /\d/.test(p) },
-  { label: 'Minstens 1 speciaal teken (!@#$...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { label: 'At least 1 uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'At least 1 number', test: (p: string) => /\d/.test(p) },
+  { label: 'At least 1 special character (!@#$...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
 ];
 
 const Signup = () => {
@@ -34,17 +34,17 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!allRulesPass) {
-      toast({ title: 'Wachtwoord voldoet niet aan de eisen', variant: 'destructive' });
+      toast({ title: 'Password does not meet requirements', variant: 'destructive' });
       return;
     }
     setIsSubmitting(true);
     const { error } = await signUp(email, password, name);
     setIsSubmitting(false);
     if (error) {
-      toast({ title: 'Fout bij registratie', description: error, variant: 'destructive' });
+      toast({ title: 'Registration failed', description: error, variant: 'destructive' });
     } else {
       setShowOtp(true);
-      toast({ title: 'Verificatiecode verstuurd!', description: 'Check je e-mail voor de code.' });
+      toast({ title: 'Verification code sent!', description: 'Check your email for the code.' });
     }
   };
 
@@ -54,9 +54,9 @@ const Signup = () => {
     const { error } = await verifyOtp(email, otpCode);
     setVerifying(false);
     if (error) {
-      toast({ title: 'Ongeldige code', description: error, variant: 'destructive' });
+      toast({ title: 'Invalid code', description: error, variant: 'destructive' });
     } else {
-      toast({ title: 'Account geverifieerd! 🎉' });
+      toast({ title: 'Account verified! 🎉' });
       navigate('/');
     }
   };
@@ -69,14 +69,14 @@ const Signup = () => {
             <div className="text-center mb-12">
               <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Verify Email</h1>
               <p className="text-muted-foreground">
-                We hebben een code naar <strong>{email}</strong> gestuurd
+                We sent a code to <strong>{email}</strong>
               </p>
             </div>
             <form onSubmit={handleVerify} className="border border-border p-8">
               <div className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="otp" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
-                    Verificatiecode
+                    Verification Code
                   </Label>
                   <Input
                     id="otp"
@@ -95,7 +95,7 @@ const Signup = () => {
                   className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
                   disabled={verifying || otpCode.length < 6}
                 >
-                  {verifying ? 'Verifiëren...' : 'Verifieer Account'}
+                  {verifying ? 'Verifying...' : 'Verify Account'}
                 </Button>
               </div>
             </form>
