@@ -133,42 +133,16 @@ export const Header = () => {
 
             {/* Account */}
             {user ? (
-              <div ref={accountRef} className="relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 text-accent hover:text-accent hover:bg-transparent"
-                  onClick={() => setAccountOpen(!accountOpen)}
-                  aria-label="Account menu"
-                >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 text-accent hover:text-accent hover:bg-transparent"
+                asChild
+              >
+                <Link to="/account" aria-label="My Account">
                   <User className="h-5 w-5" strokeWidth={1.5} />
-                </Button>
-                <AnimatePresence>
-                  {accountOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 4 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full mt-1 bg-background border border-border rounded-sm shadow-lg z-50 min-w-[160px]"
-                    >
-                      <div className="px-3 py-2 border-b border-border">
-                        <p className="text-xs font-medium text-foreground truncate">
-                          {user.user_metadata?.full_name || user.email}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
-                      </div>
-                      <button
-                        onClick={async () => { await signOut(); setAccountOpen(false); navigate('/'); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors flex items-center gap-2"
-                      >
-                        <LogOut className="h-3.5 w-3.5" />
-                        Sign Out
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                </Link>
+              </Button>
             ) : (
               <Button
                 variant="ghost"
@@ -253,12 +227,12 @@ export const Header = () => {
                 transition={{ delay: navLinks.length * 0.05, duration: 0.3 }}
               >
                 {user ? (
-                  <button
-                    onClick={async () => { await signOut(); setIsMobileMenuOpen(false); navigate('/'); }}
-                    className="text-sm font-medium tracking-[0.1em] py-3 text-muted-foreground hover:text-foreground block w-full text-left"
+                  <Link
+                    to="/account"
+                    className="text-sm font-medium tracking-[0.1em] py-3 text-muted-foreground hover:text-foreground block"
                   >
-                    SIGN OUT
-                  </button>
+                    MY ACCOUNT
+                  </Link>
                 ) : (
                   <Link
                     to="/login"
