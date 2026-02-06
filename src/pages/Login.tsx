@@ -22,9 +22,9 @@ const Login = () => {
     const { error } = await signIn(email, password);
     setIsSubmitting(false);
     if (error) {
-      toast({ title: 'Login mislukt', description: error, variant: 'destructive' });
+      toast({ title: 'Login failed', description: error, variant: 'destructive' });
     } else {
-      toast({ title: 'Welkom terug! 🎉' });
+      toast({ title: 'Welcome back! 🎉' });
       navigate('/');
     }
   };
