@@ -32,14 +32,14 @@ export const PromoBanner = () => {
 
   useEffect(() => {
     // Use a fixed end date stored in localStorage so it persists across refreshes
-    const STORAGE_KEY = 'promo-banner-end-date';
+    const STORAGE_KEY = 'promo-banner-end-date-v2';
     let endDate: Date;
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && new Date(stored).getTime() > Date.now()) {
       endDate = new Date(stored);
     } else {
       endDate = new Date();
-      endDate.setDate(endDate.getDate() + 3);
+      endDate.setTime(endDate.getTime() + (2 * 24 + 21) * 60 * 60 * 1000 + 59 * 1000);
       localStorage.setItem(STORAGE_KEY, endDate.toISOString());
     }
 
