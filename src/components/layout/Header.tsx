@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
-import { useCurrency, Currency } from '@/contexts/CurrencyContext';
+import { useCurrency, CURRENCIES, Currency } from '@/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -20,7 +20,19 @@ export const Header = () => {
   const { toggleCart, totalItems } = useCart();
   const { currency, setCurrency } = useCurrency();
   const location = useLocation();
-  const currencies: Currency[] = ['EUR', 'GBP', 'USD'];
+  const [currencyOpen, setCurrencyOpen] = useState(false);
+  const currencyRef = useRef<HTMLDivElement>(null);
+
+  // Close currency dropdown on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (currencyRef.current && !currencyRef.current.contains(e.target as Node)) {
+        setCurrencyOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,22 +85,42 @@ export const Header = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-1">
-            {/* Currency Selector */}
-            <div className="hidden md:flex items-center border border-border rounded-sm overflow-hidden mr-1">
-              {currencies.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCurrency(c)}
-                  className={cn(
-                    'px-2 py-1.5 text-[10px] font-medium tracking-wide transition-colors',
-                    currency === c
-                      ? 'bg-foreground text-background'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  {c}
-                </button>
-              ))}
+            {/* Currency Dropdown - aromaeu style */}
+            <div ref={currencyRef} className="relative hidden md:block mr-1">
+              <button
+                onClick={() => setCurrencyOpen(!currencyOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-sm text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
+              >
+                {currency}
+                <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition-transform', currencyOpen && 'rotate-180')} />
+              </button>
+              <AnimatePresence>
+                {currencyOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 4 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-1 bg-background border border-border rounded-sm shadow-lg z-50 max-h-64 overflow-y-auto min-w-[100px]"
+                  >
+                    {CURRENCIES.map((c) => (
+                      <button
+                        key={c.code}
+                        onClick={() => { setCurrency(c.code); setCurrencyOpen(false); }}
+                        className={cn(
+                          'w-full text-left px-3 py-2 text-xs font-medium transition-colors flex items-center gap-2',
+                          currency === c.code
+                            ? 'bg-secondary text-foreground'
+                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                        )}
+                      >
+                        <span>{c.symbol}</span>
+                        <span>{c.code}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Account */}
@@ -186,21 +218,19 @@ export const Header = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: (navLinks.length + 1) * 0.05, duration: 0.3 }}
               >
-                <div className="flex items-center gap-2 py-3">
-                  {currencies.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setCurrency(c)}
-                      className={cn(
-                        'px-3 py-1.5 text-xs font-medium tracking-wide border transition-colors',
-                        currency === c
-                          ? 'bg-foreground text-background border-foreground'
-                          : 'text-muted-foreground border-border hover:text-foreground'
-                      )}
-                    >
-                      {c}
-                    </button>
-                  ))}
+                <div className="py-3">
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value as Currency)}
+                    className="bg-background border border-border text-foreground text-sm font-medium px-3 py-2 pr-8 appearance-none"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
+                  >
+                    {CURRENCIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.symbol} {c.code}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </motion.div>
             </nav>
