@@ -195,8 +195,8 @@ const Checkout = () => {
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
-    'parfum20': 20,
-    'parfum50': 50,
+    'parfumz20': 20,
+    'parfumz50': 50,
   };
   
   // Address autocomplete state
