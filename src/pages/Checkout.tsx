@@ -447,6 +447,7 @@ const Checkout = () => {
             line1: formData.streetAddress,
           },
           discountPercent: appliedDiscount?.percent || 0,
+          freeItemDiscount: freeItemDiscount,
         },
       });
 

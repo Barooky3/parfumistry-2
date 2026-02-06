@@ -689,7 +689,7 @@ export const products: Product[] = [
     id: 'le-male-le-parfum',
     name: 'Le Male Le Parfum',
     brand: 'Jean Paul Gaultier',
-    price: 11.00,
+    price: 15.99,
     originalPrice: 121.00,
     category: 'men',
     description: 'Best JPG in my opinion. A complex fragrance with an oriental character. The opening blends warm spices and woods, creating a luxurious and enveloping feel.',
@@ -704,7 +704,6 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 11.00, originalPrice: 121.00, inStock: true },
       { ml: 75, price: 15.99, originalPrice: 155.00, inStock: true },
       { ml: 125, price: 22.99, originalPrice: 195.00, inStock: true },
     ],
