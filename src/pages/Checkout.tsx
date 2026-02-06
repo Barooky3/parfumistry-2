@@ -762,8 +762,7 @@ const Checkout = () => {
 
                 {/* Terms */}
                 <p className="text-xs text-center text-muted-foreground pt-2">
-                  By completing this purchase, you agree to our{' '}
-                  <Link to="/terms" className="underline hover:text-foreground">terms and conditions</Link>.
+                  By completing this purchase, you agree to our terms and conditions.
                 </p>
               </div>
             </div>
