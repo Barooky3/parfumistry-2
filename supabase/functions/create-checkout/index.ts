@@ -26,6 +26,7 @@ interface CheckoutRequest {
     postalCode: string;
     line1: string;
   };
+  discountPercent?: number;
 }
 
 serve(async (req) => {
@@ -38,8 +39,12 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    const { items, customerEmail, customerName, shippingAddress } =
+    const { items, customerEmail, customerName, shippingAddress, discountPercent } =
       (await req.json()) as CheckoutRequest;
+
+    const validDiscounts = [10, 20, 50];
+    const discount = validDiscounts.includes(discountPercent || 0) ? (discountPercent || 0) : 0;
+    const multiplier = 1 - discount / 100;
 
     if (!items || items.length === 0) {
       throw new Error("No items in cart");
@@ -58,7 +63,7 @@ serve(async (req) => {
             name: `${item.brand} - ${item.name}${item.selectedMl ? ` (${item.selectedMl}ml)` : ""}`,
             images: item.image.startsWith("http") ? [item.image] : [],
           },
-          unit_amount: Math.round(item.price * 100), // Convert EUR to cents
+          unit_amount: Math.round(item.price * 100 * multiplier), // Convert EUR to cents, apply discount
         },
         quantity: item.quantity,
       }));

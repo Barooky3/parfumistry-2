@@ -191,6 +191,13 @@ const Checkout = () => {
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
+
+  const VALID_CODES: Record<string, number> = {
+    'parfum10': 10,
+    'parfum20': 20,
+    'parfum50': 50,
+  };
   
   // Address autocomplete state
   const [addressSuggestions, setAddressSuggestions] = useState<{ id?: string; street: string; city: string; postcode?: string; display: string }[]>([]);
@@ -388,16 +395,22 @@ const Checkout = () => {
            formData.country && formData.streetAddress && formData.postalCode && formData.city;
   };
 
+
+
   const handleApplyDiscount = () => {
     setIsApplyingDiscount(true);
     setTimeout(() => {
       setIsApplyingDiscount(false);
-      toast({ 
-        title: 'Invalid code', 
-        description: 'This discount code is not valid.',
-        variant: 'destructive'
-      });
-    }, 1000);
+      const code = discountCode.trim().toLowerCase();
+      const percent = VALID_CODES[code];
+      if (percent) {
+        setAppliedDiscount({ code: discountCode.trim(), percent });
+        toast({ title: 'Discount applied!', description: `${percent}% off has been applied to your order.` });
+      } else {
+        setAppliedDiscount(null);
+        toast({ title: 'Invalid code', description: 'This discount code is not valid.', variant: 'destructive' });
+      }
+    }, 600);
   };
 
   const handlePayment = async () => {
@@ -433,6 +446,7 @@ const Checkout = () => {
             postalCode: formData.postalCode,
             line1: formData.streetAddress,
           },
+          discountPercent: appliedDiscount?.percent || 0,
         },
       });
 
@@ -735,11 +749,18 @@ const Checkout = () => {
                 
                 {freeItemDiscount > 0 && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-accent font-medium">Discount</span>
+                    <span className="text-accent font-medium">Buy 2 Get 1 Free</span>
                     <span className="text-accent font-medium">-{formatPrice(freeItemDiscount)}</span>
                   </div>
                 )}
                 
+                {appliedDiscount && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-accent font-medium">Code: {appliedDiscount.code} ({appliedDiscount.percent}%)</span>
+                    <span className="text-accent font-medium">-{formatPrice(totalPrice * appliedDiscount.percent / 100)}</span>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="text-green-600 font-medium">Free</span>
@@ -750,7 +771,7 @@ const Checkout = () => {
               <div className="flex items-center justify-between mb-6">
                 <span className="font-display text-lg text-foreground">Total</span>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-foreground">{formatPrice(totalPrice)}</span>
+                  <span className="text-xl font-bold text-foreground">{formatPrice(appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice)}</span>
                   <p className="text-xs text-muted-foreground">Taxes included</p>
                 </div>
               </div>

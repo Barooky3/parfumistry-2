@@ -59,13 +59,14 @@ function buildItemRow(item: OrderItem, origin: string): string {
     '<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">',
     '<table cellpadding="0" cellspacing="0" border="0"><tr>',
     '<td style="width: 80px; vertical-align: top;">',
+    '<a href="' + productLink + '" style="text-decoration: none;">',
     '<img src="' + imageUrl + '" alt="' + item.name + '" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />',
+    '</a>',
     '</td>',
     '<td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">',
     '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">' + item.brand + '</div>',
-    '<div style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px;">' + item.name + mlLabel + '</div>',
-    '<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
-    '<a href="' + productLink + '" style="display: inline-block; background-color: #c9a96e; color: #ffffff; text-decoration: none; padding: 8px 20px; border-radius: 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">Access Product &rarr;</a>',
+    '<a href="' + productLink + '" style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; display: block; text-decoration: none;">' + item.name + mlLabel + '</a>',
+    '<div style="font-size: 13px; color: #666; margin-bottom: 4px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
     '</td></tr></table>',
     '</td></tr>',
   ].join("\n");
@@ -94,10 +95,18 @@ function buildEmailHtml(
     '<h2 style="color: #ffffff; font-size: 22px; font-weight: 400; margin: 0; letter-spacing: 1px;">Thank You for Your Order! &#127881;</h2>',
     '</div>',
 
+    // Special Offer
+    '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center; border-bottom: 3px solid #c9a96e;">',
+    '<h2 style="color: #c9a96e; font-size: 22px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: 1px;">Thank you for your purchase!</h2>',
+    '<h2 style="color: #ffffff; font-size: 20px; font-weight: 600; margin: 0 0 14px 0;">&#127873; Special Offer!</h2>',
+    '<p style="color: #ffffff; font-size: 16px; margin: 0 0 6px 0; line-height: 1.5;">Use code <span style="background-color: #c9a96e; color: #1a1a1a; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 18px; letter-spacing: 1px;">Parfum50</span> for <strong>50% off</strong> your next order</p>',
+    '<p style="color: #ccc; font-size: 13px; margin: 8px 0 0 0; line-height: 1.5;">Valid for 24 hours only &#9200;<br><span style="color: #999; font-size: 11px;">(Valid for short time only in order to avoid order hoarding. Code can be used for multiple orders)</span></p>',
+    '</div>',
+
     // Greeting
     '<div style="padding: 32px 32px 0 32px;">',
     '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
-    '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products with direct access links. Click the button on each product to access it.</p>',
+    '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products. Click on any product to access it.</p>',
     '</div>',
 
     // Items
