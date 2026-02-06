@@ -53,7 +53,7 @@ export const BundleSection = () => {
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-semibold text-foreground">
-                      €{bundle.price.toFixed(2)}
+                      From €{bundle.price.toFixed(2)}
                     </span>
                     <Button 
                       variant="outline"
