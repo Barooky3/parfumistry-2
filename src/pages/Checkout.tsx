@@ -193,7 +193,7 @@ const Checkout = () => {
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   
   // Address autocomplete state
-  const [addressSuggestions, setAddressSuggestions] = useState<{ street: string; city: string; postcode?: string; display: string }[]>([]);
+  const [addressSuggestions, setAddressSuggestions] = useState<{ id?: string; street: string; city: string; postcode?: string; display: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const addressInputRef = useRef<HTMLDivElement>(null);
   
@@ -239,7 +239,8 @@ const Checkout = () => {
           const data = await response.json();
           
           if (data.response?.docs) {
-            const suggestions = data.response.docs.map((doc: PDOKSuggestion) => ({
+            const suggestions = data.response.docs.map((doc: PDOKSuggestion & { id: string }) => ({
+              id: doc.id,
               street: doc.straatnaam && doc.huisnummer 
                 ? `${doc.straatnaam} ${doc.huisnummer}` 
                 : doc.straatnaam || doc.weergavenaam,
@@ -307,14 +308,39 @@ const Checkout = () => {
     }
   };
 
-  const selectAddressSuggestion = (suggestion: { street: string; city: string; postcode?: string }) => {
+  const selectAddressSuggestion = async (suggestion: { id?: string; street: string; city: string; postcode?: string }) => {
+    setShowSuggestions(false);
+    
+    // If postcode or city missing and we have an id, fetch full details from PDOK
+    if (suggestion.id && (!suggestion.postcode || !suggestion.city) && formData.country === 'Netherlands') {
+      try {
+        const response = await fetch(
+          `https://api.pdok.nl/bzk/locatieserver/search/v3_1/lookup?id=${encodeURIComponent(suggestion.id)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const doc = data.response?.docs?.[0];
+          if (doc) {
+            setFormData(prev => ({
+              ...prev,
+              streetAddress: doc.straatnaam && doc.huisnummer ? `${doc.straatnaam} ${doc.huisnummer}` : suggestion.street,
+              city: doc.woonplaatsnaam || suggestion.city,
+              postalCode: doc.postcode || suggestion.postcode || prev.postalCode,
+            }));
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('PDOK lookup failed:', error);
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       streetAddress: suggestion.street,
       city: suggestion.city,
       postalCode: suggestion.postcode || prev.postalCode,
     }));
-    setShowSuggestions(false);
   };
 
   // Handle Stripe success/cancel redirects
