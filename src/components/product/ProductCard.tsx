@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +15,7 @@ interface ProductCardProps {
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
     const { addItem, toggleCart } = useCart();
+    const { formatPrice } = useCurrency();
     const navigate = useNavigate();
     const [showButtons, setShowButtons] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
@@ -22,13 +24,6 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     const discountPercent = hasDiscount
       ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
       : 0;
-
-    const formatPrice = (price: number) => {
-      return new Intl.NumberFormat('nl-NL', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(price);
-    };
 
     const handleAddToCart = (e: React.MouseEvent) => {
       e.preventDefault();

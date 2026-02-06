@@ -4,6 +4,7 @@ import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, StarHal
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual, DeliveryInfo } from '@/components/product';
 import { getProductReviews } from '@/data/productReviews';
@@ -11,6 +12,7 @@ import { getProductReviews } from '@/data/productReviews';
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
   const { addItem, toggleCart } = useCart();
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const [quantity] = useState(1);
 
@@ -36,7 +38,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
     );
   }
 
-  const formatPrice = (price: number) => new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(price);
   const hasDiscount = displayOriginalPrice && displayOriginalPrice > displayPrice;
 
   const handleAddToCart = () => {
