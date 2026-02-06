@@ -55,36 +55,59 @@ serve(async (req) => {
       throw new Error("Customer email is required");
     }
 
-    // Calculate total before discount code to figure out proportional free-item reduction
-    const rawTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const safeFreeDiscount = Math.min(freeItemDiscount || 0, rawTotal);
+    // Expand all cart items into individual units sorted by price (cheapest first)
+    // to determine which specific units are free
+    const expandedUnits: { itemIndex: number; price: number }[] = [];
+    items.forEach((item, idx) => {
+      for (let i = 0; i < item.quantity; i++) {
+        expandedUnits.push({ itemIndex: idx, price: item.price });
+      }
+    });
+    expandedUnits.sort((a, b) => a.price - b.price);
 
-    // Build line_items with price_data
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
-      items.map((item) => {
-        let unitPrice = item.price;
+    const totalUnits = expandedUnits.length;
+    const freeCount = Math.floor(totalUnits / 3);
 
-        // Distribute freeItemDiscount proportionally across items
-        if (safeFreeDiscount > 0 && rawTotal > 0) {
-          const itemShare = (item.price / rawTotal) * safeFreeDiscount;
-          unitPrice = item.price - itemShare / item.quantity;
-        }
+    // Track how many free units each cart item gets
+    const freePerItem: number[] = new Array(items.length).fill(0);
+    for (let i = 0; i < freeCount; i++) {
+      freePerItem[expandedUnits[i].itemIndex]++;
+    }
 
-        // Apply discount code multiplier, then convert to cents
-        const unitAmountCents = Math.round(unitPrice * 100 * multiplier);
+    // Build line_items: split items into paid and free portions
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
-        return {
+    items.forEach((item, idx) => {
+      const freeQty = freePerItem[idx];
+      const paidQty = item.quantity - freeQty;
+      const label = `${item.brand} - ${item.name}${item.selectedMl ? ` (${item.selectedMl}ml)` : ""}`;
+      const images = item.image.startsWith("http") ? [item.image] : [];
+
+      // Add paid units
+      if (paidQty > 0) {
+        const unitAmountCents = Math.round(item.price * 100 * multiplier);
+        line_items.push({
           price_data: {
             currency: "eur",
-            product_data: {
-              name: `${item.brand} - ${item.name}${item.selectedMl ? ` (${item.selectedMl}ml)` : ""}`,
-              images: item.image.startsWith("http") ? [item.image] : [],
-            },
+            product_data: { name: label, images },
             unit_amount: Math.max(unitAmountCents, 0),
           },
-          quantity: item.quantity,
-        };
-      });
+          quantity: paidQty,
+        });
+      }
+
+      // Add free units as €0
+      if (freeQty > 0) {
+        line_items.push({
+          price_data: {
+            currency: "eur",
+            product_data: { name: `${label} (FREE)`, images },
+            unit_amount: 0,
+          },
+          quantity: freeQty,
+        });
+      }
+    });
 
     const origin = req.headers.get("origin") || "https://profparfums.lovable.app";
 
