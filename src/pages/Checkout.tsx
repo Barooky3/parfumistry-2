@@ -379,8 +379,12 @@ const Checkout = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const isFormValid = () => {
-    return formData.email && formData.firstName && formData.lastName && 
+    return formData.email && isValidEmail(formData.email) && formData.firstName && formData.lastName && 
            formData.country && formData.streetAddress && formData.postalCode && formData.city;
   };
 
@@ -398,9 +402,10 @@ const Checkout = () => {
 
   const handlePayment = async () => {
     if (!isFormValid()) {
+      const emailIssue = formData.email && !isValidEmail(formData.email);
       toast({ 
-        title: 'Missing information', 
-        description: 'Please fill in all required fields.',
+        title: emailIssue ? 'Invalid email' : 'Missing information', 
+        description: emailIssue ? 'Please enter a valid email address.' : 'Please fill in all required fields.',
         variant: 'destructive'
       });
       return;
