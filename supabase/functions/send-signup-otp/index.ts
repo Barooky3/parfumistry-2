@@ -1,0 +1,92 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { Resend } from "npm:resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { email, name } = await req.json();
+
+    if (!email || !name) {
+      throw new Error("Email and name are required");
+    }
+
+    // Generate 6-digit code
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+
+    // Store in database
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Delete any existing unused OTPs for this email
+    await supabase
+      .from("email_otps")
+      .delete()
+      .eq("email", email)
+      .eq("used", false);
+
+    // Insert new OTP
+    const { error: insertError } = await supabase
+      .from("email_otps")
+      .insert({ email, code });
+
+    if (insertError) throw new Error("Failed to store verification code");
+
+    // Send email via Resend
+    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+    await resend.emails.send({
+      from: "ProfParfums <orders@profparfum.com>",
+      to: [email],
+      subject: "Your Verification Code - ProfParfums",
+      html: [
+        '<!DOCTYPE html><html><head><meta charset="utf-8"></head>',
+        '<body style="margin:0;padding:0;background-color:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">',
+        '<div style="max-width:600px;margin:0 auto;background-color:#ffffff;">',
+
+        '<div style="background-color:#1a1a1a;padding:36px 32px;text-align:center;">',
+        '<h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>',
+        '</div>',
+
+        '<div style="padding:40px 32px;text-align:center;">',
+        '<h2 style="color:#1a1a1a;font-size:22px;font-weight:400;margin:0 0 16px 0;">Welcome, ' + name + '!</h2>',
+        '<p style="color:#666;font-size:14px;margin:0 0 32px 0;line-height:1.6;">Enter this code on the website to verify your account:</p>',
+        '<div style="background-color:#f8f7f4;border:2px solid #c9a96e;border-radius:8px;padding:24px;display:inline-block;">',
+        '<span style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1a1a;">' + code + '</span>',
+        '</div>',
+        '<p style="color:#999;font-size:12px;margin:24px 0 0 0;">This code expires in 10 minutes.</p>',
+        '</div>',
+
+        '<div style="background-color:#1a1a1a;padding:24px 32px;text-align:center;">',
+        '<p style="color:#666;font-size:11px;margin:0;">&copy; ' + new Date().getFullYear() + ' ProfParfums</p>',
+        '</div>',
+
+        '</div></body></html>',
+      ].join("\n"),
+    });
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      }
+    );
+  }
+});

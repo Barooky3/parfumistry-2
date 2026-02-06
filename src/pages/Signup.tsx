@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const PASSWORD_RULES = [
   { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
@@ -16,7 +17,7 @@ const PASSWORD_RULES = [
 
 const Signup = () => {
   const { toast } = useToast();
-  const { signUp, verifyOtp } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,26 +39,66 @@ const Signup = () => {
       return;
     }
     setIsSubmitting(true);
-    const { error } = await signUp(email, password, name);
-    setIsSubmitting(false);
-    if (error) {
-      toast({ title: 'Registration failed', description: error, variant: 'destructive' });
-    } else {
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-signup-otp', {
+        body: { email, name },
+      });
+
+      if (error || data?.error) {
+        throw new Error(data?.error || error?.message || 'Failed to send code');
+      }
+
       setShowOtp(true);
-      toast({ title: 'Verification code sent!', description: 'Check your email for the code.' });
+      toast({ title: 'Verification code sent!', description: 'Check your email for the 6-digit code.' });
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setVerifying(true);
-    const { error } = await verifyOtp(email, otpCode);
-    setVerifying(false);
-    if (error) {
-      toast({ title: 'Invalid code', description: error, variant: 'destructive' });
-    } else {
-      toast({ title: 'Account verified! 🎉' });
-      navigate('/');
+
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-signup-otp', {
+        body: { email, code: otpCode, password, name },
+      });
+
+      if (error || data?.error) {
+        throw new Error(data?.error || error?.message || 'Verification failed');
+      }
+
+      // Auto sign in after successful verification
+      const { error: signInError } = await signIn(email, password);
+      if (signInError) {
+        toast({ title: 'Account created!', description: 'Please sign in with your credentials.' });
+        navigate('/login');
+      } else {
+        toast({ title: 'Account verified! 🎉' });
+        navigate('/');
+      }
+    } catch (err: any) {
+      toast({ title: 'Invalid code', description: err.message, variant: 'destructive' });
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-signup-otp', {
+        body: { email, name },
+      });
+      if (error || data?.error) throw new Error(data?.error || error?.message);
+      toast({ title: 'New code sent!', description: 'Check your email.' });
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -69,7 +110,7 @@ const Signup = () => {
             <div className="text-center mb-12">
               <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Verify Email</h1>
               <p className="text-muted-foreground">
-                We sent a code to <strong>{email}</strong>
+                We sent a 6-digit code to <strong>{email}</strong>
               </p>
             </div>
             <form onSubmit={handleVerify} className="border border-border p-8">
@@ -84,9 +125,10 @@ const Signup = () => {
                     placeholder="123456"
                     required
                     value={otpCode}
-                    onChange={e => setOtpCode(e.target.value)}
+                    onChange={e => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     className="h-12 bg-background border-border rounded-none focus:border-foreground text-center text-lg tracking-[0.3em]"
                     maxLength={6}
+                    inputMode="numeric"
                   />
                 </div>
                 <Button
@@ -97,6 +139,14 @@ const Signup = () => {
                 >
                   {verifying ? 'Verifying...' : 'Verify Account'}
                 </Button>
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  disabled={isSubmitting}
+                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {isSubmitting ? 'Sending...' : "Didn't receive a code? Resend"}
+                </button>
               </div>
             </form>
           </div>
@@ -178,7 +228,6 @@ const Signup = () => {
                   </button>
                 </div>
 
-                {/* Password strength indicators */}
                 {password.length > 0 && (
                   <div className="space-y-1.5 pt-2">
                     {PASSWORD_RULES.map((rule, i) => {
@@ -204,7 +253,7 @@ const Signup = () => {
                 className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
                 disabled={isSubmitting || !allRulesPass}
               >
-                {isSubmitting ? 'Creating account...' : 'Create Account'}
+                {isSubmitting ? 'Sending code...' : 'Create Account'}
               </Button>
             </div>
           </form>
