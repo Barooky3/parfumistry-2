@@ -28,12 +28,16 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     isBundle: true,
+    variants: [
+      { ml: 50, price: 26.99, inStock: true },
+      { ml: 100, price: 32.99, inStock: true },
+    ],
   },
   {
     id: 'young-playboy-bundle',
     name: 'Fragrance Bundle "Young Playboy"',
     brand: 'Profparfums',
-    price: 25.99,
+    price: 27.99,
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800',
@@ -41,18 +45,26 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     isBundle: true,
+    variants: [
+      { ml: 50, price: 27.99, inStock: true },
+      { ml: 100, price: 32.99, inStock: true },
+    ],
   },
   {
     id: 'sleek-and-clean-bundle',
     name: 'Fragrance Bundle "Sleek and Clean"',
     brand: 'Profparfums',
-    price: 26.99,
+    price: 25.99,
     category: 'bundle',
     description: 'Looking for fragrances that work anytime, anywhere? This set is your daily go-to – fresh, masculine, and clean.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-sleek-and-clean-3751514.png?v=1768068487&width=800',
     affiliateUrl: 'https://profparfums.store/products/fragrance-bundle-sleek-and-clean',
     inStock: true,
     isBundle: true,
+    variants: [
+      { ml: 50, price: 25.99, inStock: true },
+      { ml: 100, price: 31.99, inStock: true },
+    ],
   },
 
   // ===== FRAGRANCES =====

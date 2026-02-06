@@ -127,7 +127,9 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                           : 'border-border bg-muted text-muted-foreground cursor-not-allowed line-through'
                       }`}
                     >
-                      {variant.ml}ml
+                      {product.isBundle
+                        ? `${variant.ml}ml (${variant.ml === 50 ? '75' : '125'}ml for JPG)`
+                        : `${variant.ml}ml`}
                     </button>
                   ))}
                 </div>
