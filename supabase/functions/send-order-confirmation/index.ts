@@ -108,7 +108,7 @@ serve(async (req) => {
     const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
     const emailResponse = await resend.emails.send({
-      from: "ProfParfums <onboarding@resend.dev>",
+      from: "ProfParfums <orders@profparfums.com>",
       to: [customerEmail],
       subject: `Order Confirmed ✓ — ProfParfums`,
       html: `
