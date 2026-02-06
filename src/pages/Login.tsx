@@ -1,40 +1,43 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const { toast } = useToast();
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast({
-      title: 'Coming soon!',
-      description: 'Account functionality will be available soon.',
-    });
+    const { error } = await signIn(email, password);
     setIsSubmitting(false);
+    if (error) {
+      toast({ title: 'Login mislukt', description: error, variant: 'destructive' });
+    } else {
+      toast({ title: 'Welkom terug! 🎉' });
+      navigate('/');
+    }
   };
 
   return (
     <div className="min-h-screen py-20 md:py-28 bg-background">
       <div className="container">
         <div className="max-w-md mx-auto">
-          {/* Header */}
           <div className="text-center mb-12">
             <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Welcome Back</h1>
-            <p className="text-muted-foreground">
-              Sign in to access your account
-            </p>
+            <p className="text-muted-foreground">Sign in to access your account</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="border border-border p-8">
             <div className="space-y-6">
               <div className="space-y-2">
@@ -48,6 +51,8 @@ const Login = () => {
                     type="email"
                     placeholder="your@email.com"
                     required
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                 </div>
@@ -64,6 +69,8 @@ const Login = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     required
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                     className="pl-11 pr-11 h-12 bg-background border-border rounded-none focus:border-foreground"
                   />
                   <button
