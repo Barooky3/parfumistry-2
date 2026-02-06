@@ -18,6 +18,7 @@ const PRODUCT_LINKS: Record<string, string> = {
   "xerjoff": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7662173327&affcode=c5v3b",
   "eros": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7665241752&affcode=c5v3b",
   "dior": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661870378&affcode=c5v3b",
+  "parfums-de-marly": "https://m.orientdig.com/pages/product/product?id=857200052892&shoptype=ALI_1688&ref=100144636",
 };
 
 function getProductLink(name: string, brand: string): string {
@@ -30,6 +31,7 @@ function getProductLink(name: string, brand: string): string {
   if (b.includes("xerjoff")) return PRODUCT_LINKS["xerjoff"];
   if (n.includes("eros")) return PRODUCT_LINKS["eros"];
   if (b.includes("dior")) return PRODUCT_LINKS["dior"];
+  if (b.includes("parfums de marly")) return PRODUCT_LINKS["parfums-de-marly"];
   return DEFAULT_SELLER_LINK;
 }
 
