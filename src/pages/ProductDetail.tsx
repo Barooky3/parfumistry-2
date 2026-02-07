@@ -1,6 +1,6 @@
 import { useState, forwardRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, StarHalf } from 'lucide-react';
+import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, StarHalf, Info } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
@@ -292,6 +292,16 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </motion.section>
         )}
+
+        {/* Digital Product Disclaimer */}
+        <div className="border border-border rounded-lg p-4 md:p-5 mt-8 mb-4">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Sticky Bottom Bar - Mobile Only */}
