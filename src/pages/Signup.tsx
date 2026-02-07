@@ -67,7 +67,7 @@ const Signup = () => {
       }
 
       setShowOtp(true);
-      setResendCooldown(30);
+      setResendCooldown(600);
       toast({ title: 'Verification code sent!', description: 'Check your email for the 6-digit code.' });
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
@@ -113,7 +113,7 @@ const Signup = () => {
         body: { email, name },
       });
       if (error || data?.error) throw new Error(data?.error || error?.message);
-      setResendCooldown(30);
+      setResendCooldown(600);
       toast({ title: 'New code sent!', description: 'Check your email.' });
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
@@ -165,7 +165,7 @@ const Signup = () => {
                   disabled={isSubmitting || resendCooldown > 0}
                   className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Sending...' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Didn't receive a code? Resend"}
+                  {isSubmitting ? 'Sending...' : resendCooldown > 0 ? `Resend in ${Math.floor(resendCooldown / 60)}:${(resendCooldown % 60).toString().padStart(2, '0')}` : "Didn't receive a code? Resend"}
                 </button>
               </div>
             </form>
