@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -36,9 +35,8 @@ serve(async (req) => {
   }
 
   try {
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
-    });
+    const squareAccessToken = Deno.env.get("SQUARE_ACCESS_TOKEN") || "";
+    if (!squareAccessToken) throw new Error("Square access token not configured");
 
     const { items, customerEmail, customerName, shippingAddress, discountPercent, freeItemDiscount } =
       (await req.json()) as CheckoutRequest;
@@ -47,16 +45,10 @@ serve(async (req) => {
     const discount = validDiscounts.includes(discountPercent || 0) ? (discountPercent || 0) : 0;
     const multiplier = 1 - discount / 100;
 
-    if (!items || items.length === 0) {
-      throw new Error("No items in cart");
-    }
-
-    if (!customerEmail) {
-      throw new Error("Customer email is required");
-    }
+    if (!items || items.length === 0) throw new Error("No items in cart");
+    if (!customerEmail) throw new Error("Customer email is required");
 
     // Expand all cart items into individual units sorted by price (cheapest first)
-    // to determine which specific units are free
     const expandedUnits: { itemIndex: number; price: number }[] = [];
     items.forEach((item, idx) => {
       for (let i = 0; i < item.quantity; i++) {
@@ -68,65 +60,85 @@ serve(async (req) => {
     const totalUnits = expandedUnits.length;
     const freeCount = Math.floor(totalUnits / 3);
 
-    // Track how many free units each cart item gets
     const freePerItem: number[] = new Array(items.length).fill(0);
     for (let i = 0; i < freeCount; i++) {
       freePerItem[expandedUnits[i].itemIndex]++;
     }
 
-    // Build line_items: split items into paid and free portions
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+    // Build Square order line items
+    const lineItems: any[] = [];
 
     items.forEach((item, idx) => {
       const freeQty = freePerItem[idx];
       const paidQty = item.quantity - freeQty;
       const label = `${item.brand} - ${item.name}${item.selectedMl ? ` (${item.selectedMl}ml)` : ""}`;
-      const images = item.image.startsWith("http") ? [item.image] : [];
 
-      // Add paid units
       if (paidQty > 0) {
-        const unitAmountCents = Math.round(item.price * 100 * multiplier);
-        line_items.push({
-          price_data: {
-            currency: "eur",
-            product_data: { name: label, images },
-            unit_amount: Math.max(unitAmountCents, 0),
+        const unitAmountCents = Math.max(Math.round(item.price * 100 * multiplier), 0);
+        lineItems.push({
+          name: label,
+          quantity: String(paidQty),
+          base_price_money: {
+            amount: unitAmountCents,
+            currency: "EUR",
           },
-          quantity: paidQty,
         });
       }
 
-      // Add free units as €0
       if (freeQty > 0) {
-        line_items.push({
-          price_data: {
-            currency: "eur",
-            product_data: { name: `${label} (FREE)`, images },
-            unit_amount: 0,
+        lineItems.push({
+          name: `${label} (FREE)`,
+          quantity: String(freeQty),
+          base_price_money: {
+            amount: 0,
+            currency: "EUR",
           },
-          quantity: freeQty,
         });
       }
     });
 
     const origin = req.headers.get("origin") || "https://profparfums.lovable.app";
+    const idempotencyKey = crypto.randomUUID();
 
-    const session = await stripe.checkout.sessions.create({
-      customer_email: customerEmail,
-      line_items,
-      mode: "payment",
-      success_url: `${origin}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/checkout?canceled=true`,
-      metadata: {
-        customer_name: customerName,
-        shipping_country: shippingAddress.country,
-        shipping_city: shippingAddress.city,
-        shipping_postal: shippingAddress.postalCode,
-        shipping_line1: shippingAddress.line1,
+    const squareResponse = await fetch("https://connect.squareup.com/v2/online-checkout/payment-links", {
+      method: "POST",
+      headers: {
+        "Square-Version": "2024-11-20",
+        "Authorization": `Bearer ${squareAccessToken}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        idempotency_key: idempotencyKey,
+        order: {
+          location_id: Deno.env.get("SQUARE_LOCATION_ID") || "",
+          line_items: lineItems,
+          metadata: {
+            customer_email: customerEmail,
+            customer_name: customerName,
+            shipping_country: shippingAddress.country,
+            shipping_city: shippingAddress.city,
+            shipping_postal: shippingAddress.postalCode,
+            shipping_line1: shippingAddress.line1,
+          },
+        },
+        checkout_options: {
+          redirect_url: `${origin}/checkout?success=true`,
+        },
+      }),
     });
 
-    return new Response(JSON.stringify({ url: session.url }), {
+    const squareData = await squareResponse.json();
+
+    if (!squareResponse.ok) {
+      console.error("Square API error:", JSON.stringify(squareData));
+      throw new Error(squareData.errors?.[0]?.detail || "Failed to create Square checkout");
+    }
+
+    const checkoutUrl = squareData.payment_link?.long_url || squareData.payment_link?.url;
+
+    if (!checkoutUrl) throw new Error("No checkout URL received from Square");
+
+    return new Response(JSON.stringify({ url: checkoutUrl }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
