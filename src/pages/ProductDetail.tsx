@@ -190,14 +190,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 {product.description}
               </p>
               
-              {/* Digital Product Disclaimer */}
-              <div className="border border-border rounded-lg p-4 mt-4">
-                <div className="flex items-start gap-3">
-                  <Info className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
-                  </p>
-                </div>
+              <div className="flex items-start gap-2 mt-3 opacity-50">
+                <Info className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed font-light">
+                  This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
+                </p>
               </div>
             </div>
           </motion.div>
