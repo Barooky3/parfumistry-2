@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,23 @@ const Signup = () => {
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [verifying, setVerifying] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      cooldownRef.current = setInterval(() => {
+        setResendCooldown(prev => {
+          if (prev <= 1) {
+            if (cooldownRef.current) clearInterval(cooldownRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => { if (cooldownRef.current) clearInterval(cooldownRef.current); };
+  }, [resendCooldown > 0]);
 
   const allRulesPass = PASSWORD_RULES.every(r => r.test(password));
 
@@ -50,6 +67,7 @@ const Signup = () => {
       }
 
       setShowOtp(true);
+      setResendCooldown(30);
       toast({ title: 'Verification code sent!', description: 'Check your email for the 6-digit code.' });
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
@@ -88,12 +106,14 @@ const Signup = () => {
   };
 
   const handleResend = async () => {
+    if (resendCooldown > 0) return;
     setIsSubmitting(true);
     try {
       const { data, error } = await supabase.functions.invoke('send-signup-otp', {
         body: { email, name },
       });
       if (error || data?.error) throw new Error(data?.error || error?.message);
+      setResendCooldown(30);
       toast({ title: 'New code sent!', description: 'Check your email.' });
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
@@ -142,10 +162,10 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={handleResend}
-                  disabled={isSubmitting}
-                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isSubmitting || resendCooldown > 0}
+                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Sending...' : "Didn't receive a code? Resend"}
+                  {isSubmitting ? 'Sending...' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Didn't receive a code? Resend"}
                 </button>
               </div>
             </form>
