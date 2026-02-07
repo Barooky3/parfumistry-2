@@ -350,20 +350,28 @@ const Checkout = () => {
     }));
   };
 
-  // Handle Stripe success/cancel redirects
+  // Handle Square success/cancel redirects
   useEffect(() => {
-    const sessionId = searchParams.get('session_id');
     if (searchParams.get('success') === 'true') {
       setIsCompleted(true);
       
-      // Send order confirmation email with cart items
-      if (sessionId) {
-        const savedItems = localStorage.getItem('profparfums-pending-order');
-        const orderItems = savedItems ? JSON.parse(savedItems) : [];
+      // Send order confirmation email with saved cart data
+      const savedOrder = localStorage.getItem('profparfums-pending-order');
+      const savedMeta = localStorage.getItem('profparfums-pending-order-meta');
+      if (savedOrder) {
+        const orderItems = JSON.parse(savedOrder);
+        const meta = savedMeta ? JSON.parse(savedMeta) : {};
         localStorage.removeItem('profparfums-pending-order');
+        localStorage.removeItem('profparfums-pending-order-meta');
         
         supabase.functions.invoke('send-order-confirmation', {
-          body: { sessionId, orderItems },
+          body: {
+            orderItems,
+            customerEmail: meta.customerEmail || '',
+            customerName: meta.customerName || '',
+            shippingAddress: meta.shippingAddress || {},
+            totalAmount: meta.totalAmount || '',
+          },
         }).then(({ error }) => {
           if (error) console.error('Failed to send confirmation email:', error);
         });
@@ -453,8 +461,19 @@ const Checkout = () => {
 
       if (error) throw error;
       if (data?.url) {
-        // Save cart items for order confirmation email
+        // Save cart items + metadata for order confirmation email after redirect
         localStorage.setItem('profparfums-pending-order', JSON.stringify(cartItems));
+        localStorage.setItem('profparfums-pending-order-meta', JSON.stringify({
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+          shippingAddress: {
+            country: formData.country,
+            city: formData.city,
+            postalCode: formData.postalCode,
+            line1: formData.streetAddress,
+          },
+          totalAmount: (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice).toFixed(2),
+        }));
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL received');
@@ -799,7 +818,7 @@ const Checkout = () => {
                   ) : (
                     <>
                       <Lock className="h-4 w-4 mr-2" />
-                      Pay with Stripe
+                      Pay with Square
                     </>
                   )}
                 </Button>

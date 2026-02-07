@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
 import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
@@ -85,18 +84,15 @@ function buildEmailHtml(
     '<body style="margin: 0; padding: 0; background-color: #f4f3ef; font-family: Helvetica Neue, Arial, sans-serif;">',
     '<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">',
 
-    // Header
     '<div style="background-color: #1a1a1a; padding: 36px 32px; text-align: center;">',
     '<h1 style="color: #c9a96e; font-size: 26px; font-weight: 300; letter-spacing: 5px; margin: 0; text-transform: uppercase;">ProfParfums</h1>',
     '<p style="color: #666; font-size: 12px; letter-spacing: 2px; margin: 8px 0 0 0; text-transform: uppercase;">Premium Fragrances</p>',
     '</div>',
 
-    // Banner
     '<div style="background: linear-gradient(135deg, #c9a96e 0%, #b8944f 100%); padding: 28px 32px; text-align: center;">',
     '<h2 style="color: #ffffff; font-size: 22px; font-weight: 400; margin: 0; letter-spacing: 1px;">Thank You for Your Order! &#127881;</h2>',
     '</div>',
 
-    // Special Offer
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center; border-bottom: 3px solid #c9a96e;">',
     '<h2 style="color: #c9a96e; font-size: 22px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: 1px;">Thank you for your purchase!</h2>',
     '<h2 style="color: #ffffff; font-size: 20px; font-weight: 600; margin: 0 0 14px 0;">&#127873; Special Offer!</h2>',
@@ -104,40 +100,34 @@ function buildEmailHtml(
     '<p style="color: #ccc; font-size: 13px; margin: 8px 0 0 0; line-height: 1.5;">Valid for 24 hours only &#9200;<br><span style="color: #999; font-size: 11px;">(Valid for short time only in order to avoid order hoarding. Code can be used for multiple orders)</span></p>',
     '</div>',
 
-    // Greeting
     '<div style="padding: 32px 32px 0 32px;">',
     '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
     '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products. Click on any product to access it.</p>',
     '</div>',
 
-    // Items
     '<div style="padding: 0 32px;">',
     '<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; padding-bottom: 12px; border-bottom: 2px solid #1a1a1a; margin-bottom: 0;">Your Products</div>',
     '<table style="width: 100%; border-collapse: collapse;"><tbody>',
     itemsHtml,
     '</tbody></table></div>',
 
-    // Total
     '<div style="padding: 20px 32px; margin: 0 32px; border-top: 2px solid #1a1a1a; text-align: right;">',
     '<span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #999;">Total Paid: </span>',
     '<span style="font-size: 22px; font-weight: 600; color: #1a1a1a;">&euro;' + totalAmount + '</span>',
     '</div>',
 
-    // Shipping
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #f8f7f4; padding: 20px 24px; border-radius: 8px;">',
     '<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; margin-bottom: 12px;">&#128230; Delivery Details</div>',
     '<p style="font-size: 14px; color: #333; margin: 0; line-height: 1.7;">' + customerName + '<br>' + shippingAddress.line1 + '<br>' + shippingAddress.postalCode + ' ' + shippingAddress.city + '<br>' + shippingAddress.country + '</p>',
     '</div></div>',
 
-    // Help
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
     '<a href="mailto:support@profparfums.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@profparfums.com</a></p>',
     '</div></div>',
 
-    // Footer
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
     '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">ProfParfums</p>',
     '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' ProfParfums. All rights reserved.<br>',
@@ -154,48 +144,21 @@ serve(async (req) => {
   }
 
   try {
-    const { sessionId, orderItems, testMode, testEmail, testName } = await req.json() as {
-      sessionId: string; orderItems: OrderItem[]; testMode?: boolean; testEmail?: string; testName?: string
+    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount } = await req.json() as {
+      orderItems: OrderItem[];
+      customerEmail: string;
+      customerName: string;
+      shippingAddress: { line1: string; city: string; postalCode: string; country: string };
+      totalAmount: string;
     };
 
-    let customerEmail: string;
-    let customerName: string;
-    let shippingAddress: { line1: string; city: string; postalCode: string; country: string };
-    let totalAmount: string;
+    if (!customerEmail) throw new Error("Customer email is required");
+    if (!orderItems || orderItems.length === 0) throw new Error("No order items");
 
-    if (testMode && testEmail) {
-      customerEmail = testEmail;
-      customerName = testName || "Test Customer";
-      shippingAddress = { line1: "Teststraat 1", city: "Amsterdam", postalCode: "1000 AA", country: "Netherlands" };
-      totalAmount = (orderItems || []).reduce((sum: number, i: OrderItem) => sum + i.price * i.quantity, 0).toFixed(2);
-    } else {
-      if (!sessionId) throw new Error("Session ID is required");
-
-      const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-        apiVersion: "2025-08-27.basil",
-      });
-
-      const session = await stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ["line_items"],
-      });
-
-      if (session.payment_status !== "paid") throw new Error("Payment not completed");
-
-      customerEmail = session.customer_email || session.customer_details?.email || "";
-      if (!customerEmail) throw new Error("Customer email not found");
-
-      customerName = session.metadata?.customer_name || "Valued Customer";
-      shippingAddress = {
-        line1: session.metadata?.shipping_line1 || "",
-        city: session.metadata?.shipping_city || "",
-        postalCode: session.metadata?.shipping_postal || "",
-        country: session.metadata?.shipping_country || "",
-      };
-      totalAmount = ((session.amount_total || 0) / 100).toFixed(2);
-    }
+    const calculatedTotal = totalAmount || orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
     const origin = "https://profparfums.lovable.app";
-    const itemsHtml = (orderItems || []).map((item: OrderItem) => buildItemRow(item, origin)).join("");
+    const itemsHtml = orderItems.map((item: OrderItem) => buildItemRow(item, origin)).join("");
 
     const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -203,7 +166,7 @@ serve(async (req) => {
       from: "ProfParfums <orders@profparfum.com>",
       to: [customerEmail],
       subject: "Order Confirmed - ProfParfums",
-      html: buildEmailHtml(customerName, itemsHtml, totalAmount, shippingAddress),
+      html: buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }),
     });
 
     console.log("Order confirmation email sent:", emailResponse);
