@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
-import { ProductCard, ScentNotesVisual, DeliveryInfo } from '@/components/product';
+import { ProductCard, ScentNotesVisual } from '@/components/product';
 import { getProductReviews } from '@/data/productReviews';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
@@ -148,10 +148,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               )}
             </div>
 
-            {/* Delivery Info */}
-            <div className="mb-6">
-              <DeliveryInfo />
-            </div>
 
             {/* Action Buttons - All Screens */}
             <div className="space-y-3 mb-6 md:mb-8">
