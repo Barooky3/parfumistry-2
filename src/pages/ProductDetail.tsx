@@ -190,6 +190,15 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 {product.description}
               </p>
               
+              {/* Digital Product Disclaimer */}
+              <div className="border border-border rounded-lg p-4 mt-4">
+                <div className="flex items-start gap-3">
+                  <Info className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
+                  </p>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -293,15 +302,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           </motion.section>
         )}
 
-        {/* Digital Product Disclaimer */}
-        <div className="border border-border rounded-lg p-4 md:p-5 mt-8 mb-4">
-          <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              This is a digital product. After purchase, you'll receive access to the seller link. No refunds available.
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* Sticky Bottom Bar - Mobile Only */}
