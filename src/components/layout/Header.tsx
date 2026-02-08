@@ -57,7 +57,10 @@ export const Header = () => {
   return (
     <header 
       className={cn(
-        "fixed left-0 right-0 z-40 bg-background border-b border-border",
+        "fixed left-0 right-0 z-40 border-b transition-all duration-300",
+        isScrolled
+          ? "bg-background/95 backdrop-blur-md border-border"
+          : "bg-transparent border-transparent"
       )}
       style={{
         top: 'var(--promo-banner-height, 0px)',
