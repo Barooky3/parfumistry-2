@@ -56,7 +56,7 @@ export const Header = () => {
 
   return (
     <header 
-      className="fixed left-0 right-0 z-40 bg-background/65 backdrop-blur-md border-b border-border/40"
+      className="fixed left-0 right-0 z-40 bg-background/40 backdrop-blur-md border-b border-border/30"
       style={{
         top: 'var(--promo-banner-height, 0px)',
         transition: 'top 0.3s ease-out'
