@@ -792,7 +792,7 @@ export const products: Product[] = [
     id: 'mon-paris',
     name: 'Mon Paris',
     brand: 'Yves Saint Laurent',
-    price: 17.00,
+    price: 6.99,
     category: 'women',
     description: 'A romantic and passionate fragrance. Sweet strawberry meets white flowers for an irresistible combination.',
     scentNotes: {
@@ -805,9 +805,9 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/yves-saint-laurent-mon-paris',
     inStock: true,
     variants: [
-      { ml: 30, price: 17.00, inStock: true },
-      { ml: 50, price: 24.99, inStock: true },
-      { ml: 90, price: 34.99, inStock: true },
+      { ml: 30, price: 6.99, inStock: true },
+      { ml: 50, price: 9.99, inStock: true },
+      { ml: 90, price: 14.99, inStock: true },
     ],
   },
   {
