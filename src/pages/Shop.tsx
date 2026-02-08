@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -54,7 +55,7 @@ const Shop = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+  const [searchQuery, setSearchQuery] = useState('');
   // Dynamic page title based on filters
   const getPageTitle = () => {
     if (brandFilter && brandDisplayNames[brandFilter]) {
@@ -82,6 +83,15 @@ const Shop = () => {
   const filteredProducts = useMemo(() => {
     let result = [...products];
     
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.brand.toLowerCase().includes(q)
+      );
+    }
+
     // Filter by brand if specified
     if (brandFilter && brandMap[brandFilter]) {
       const brandNames = brandMap[brandFilter];
@@ -112,7 +122,7 @@ const Shop = () => {
       case 'newest': result.reverse(); break;
     }
     return result;
-  }, [category, brandFilter, selectedCategories, priceRange, sortBy]);
+  }, [category, brandFilter, selectedCategories, priceRange, sortBy, searchQuery]);
 
   const handleCategoryChange = (cat: string, checked: boolean) => {
     if (checked) {
@@ -194,7 +204,19 @@ const Shop = () => {
       {/* Main */}
       <section className="py-10 md:py-14">
         <div className="container">
-          {/* Toolbar */}
+          {/* Search + Toolbar */}
+          <div className="mb-8">
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search fragrances..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 rounded-none border-border bg-background"
+              />
+            </div>
+          </div>
           <div className="flex items-center justify-between mb-10 pb-6 border-b border-border">
             <p className="text-sm text-muted-foreground">{filteredProducts.length} products</p>
             <div className="flex items-center gap-3">
