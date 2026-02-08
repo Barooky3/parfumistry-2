@@ -56,12 +56,7 @@ export const Header = () => {
 
   return (
     <header 
-      className={cn(
-        "fixed left-0 right-0 z-40 border-b transition-all duration-300",
-        isScrolled
-          ? "bg-background/95 backdrop-blur-md border-border"
-          : "bg-transparent border-transparent"
-      )}
+      className="fixed left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50"
       style={{
         top: 'var(--promo-banner-height, 0px)',
         transition: 'top 0.3s ease-out'
@@ -71,10 +66,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className={cn(
-              "text-xl font-semibold tracking-[0.15em] uppercase transition-colors duration-300",
-              isScrolled ? "text-foreground" : "text-white"
-            )}>
+            <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
               ProfParfums
             </span>
           </Link>
@@ -86,10 +78,10 @@ export const Header = () => {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  'text-xs font-medium tracking-[0.15em] transition-colors',
-                  isScrolled
-                    ? location.pathname === link.href ? 'text-foreground hover:text-accent' : 'text-muted-foreground hover:text-accent'
-                    : 'text-white/80 hover:text-white'
+                  'text-xs font-medium tracking-[0.15em] transition-colors hover:text-accent',
+                  location.pathname === link.href
+                    ? 'text-foreground'
+                    : 'text-muted-foreground'
                 )}
               >
                 {link.label}
@@ -103,7 +95,7 @@ export const Header = () => {
             <div ref={currencyRef} className="relative hidden md:block mr-1">
               <button
                 onClick={() => setCurrencyOpen(!currencyOpen)}
-                className={cn("flex items-center gap-1.5 px-3 py-1.5 border rounded-sm text-xs font-medium transition-colors", isScrolled ? "border-border text-foreground hover:border-foreground/50" : "border-white/30 text-white hover:border-white/60")}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-sm text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
               >
                 {currency}
                 <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition-transform', currencyOpen && 'rotate-180')} />
@@ -142,7 +134,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className={cn("h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-accent hover:text-accent" : "text-white hover:text-white/80")}
+                className="h-10 w-10 text-accent hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/account" aria-label="My Account">
@@ -153,7 +145,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className={cn("h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-foreground hover:text-accent" : "text-white hover:text-white/80")}
+                className="h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/login" aria-label="Account">
@@ -166,7 +158,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className={cn("relative h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-foreground hover:text-accent" : "text-white hover:text-white/80")}
+              className="relative h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
               onClick={toggleCart}
               aria-label="Open cart"
             >
@@ -182,7 +174,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className={cn("md:hidden h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-foreground hover:text-accent" : "text-white hover:text-white/80")}
+              className="md:hidden h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
