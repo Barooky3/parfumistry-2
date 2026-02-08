@@ -71,7 +71,10 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
+            <span className={cn(
+              "text-xl font-semibold tracking-[0.15em] uppercase transition-colors duration-300",
+              isScrolled ? "text-foreground" : "text-white"
+            )}>
               ProfParfums
             </span>
           </Link>
@@ -83,10 +86,10 @@ export const Header = () => {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  'text-xs font-medium tracking-[0.15em] transition-colors hover:text-accent',
-                  location.pathname === link.href
-                    ? 'text-foreground'
-                    : 'text-muted-foreground'
+                  'text-xs font-medium tracking-[0.15em] transition-colors',
+                  isScrolled
+                    ? location.pathname === link.href ? 'text-foreground hover:text-accent' : 'text-muted-foreground hover:text-accent'
+                    : 'text-white/80 hover:text-white'
                 )}
               >
                 {link.label}
@@ -100,7 +103,7 @@ export const Header = () => {
             <div ref={currencyRef} className="relative hidden md:block mr-1">
               <button
                 onClick={() => setCurrencyOpen(!currencyOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-sm text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
+                className={cn("flex items-center gap-1.5 px-3 py-1.5 border rounded-sm text-xs font-medium transition-colors", isScrolled ? "border-border text-foreground hover:border-foreground/50" : "border-white/30 text-white hover:border-white/60")}
               >
                 {currency}
                 <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition-transform', currencyOpen && 'rotate-180')} />
@@ -139,7 +142,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-accent hover:text-accent hover:bg-transparent"
+                className={cn("h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-accent hover:text-accent" : "text-white hover:text-white/80")}
                 asChild
               >
                 <Link to="/account" aria-label="My Account">
@@ -150,7 +153,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+                className={cn("h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-foreground hover:text-accent" : "text-white hover:text-white/80")}
                 asChild
               >
                 <Link to="/login" aria-label="Account">
@@ -163,7 +166,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="relative h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className={cn("relative h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-foreground hover:text-accent" : "text-white hover:text-white/80")}
               onClick={toggleCart}
               aria-label="Open cart"
             >
@@ -179,7 +182,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className={cn("md:hidden h-10 w-10 hover:bg-transparent transition-colors", isScrolled ? "text-foreground hover:text-accent" : "text-white hover:text-white/80")}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
