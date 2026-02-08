@@ -73,7 +73,7 @@ export const products: Product[] = [
     name: 'Amore Caffé',
     brand: 'Mancera',
     price: 11.99,
-    originalPrice: 169.00,
+    originalPrice: 129.00,
     category: 'unisex',
     description: 'One of my favourite fragrances of all time, Amore Caffè is a sweet coffee gourmand that blends rich espresso, amaretto, vanilla ice cream, brown sugar, and ambergris for a cozy, edible warmth. Literally smells like eating ice cream thats been dipped in coffee.',
     scentNotes: {
@@ -87,8 +87,8 @@ export const products: Product[] = [
     inStock: false,
     featured: true,
     variants: [
-      { ml: 60, price: 11.99, originalPrice: 169.00, inStock: false },
-      { ml: 120, price: 18.99, originalPrice: 239.00, inStock: false },
+      { ml: 60, price: 11.99, originalPrice: 129.00, inStock: false },
+      { ml: 120, price: 18.99, originalPrice: 199.00, inStock: false },
     ],
   },
   {
@@ -96,7 +96,7 @@ export const products: Product[] = [
     name: 'Althair',
     brand: 'Parfums de Marly',
     price: 18.99,
-    originalPrice: 301.00,
+    originalPrice: 261.00,
     category: 'men',
     description: 'Parfums de Marly Althair is a creamy vanilla scent with a spicy, citrusy kick – think kinda like a smooth bourbon vanilla mixed with cinnamon, orange blossom, and soft woods for a warm, slightly boozy feel. One of the absolute best fragrances ever made.',
     scentNotes: {
@@ -110,8 +110,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 75, price: 18.99, originalPrice: 301.00, inStock: true },
-      { ml: 125, price: 24.99, originalPrice: 401.00, inStock: true },
+      { ml: 75, price: 18.99, originalPrice: 261.00, inStock: true },
+      { ml: 125, price: 24.99, originalPrice: 361.00, inStock: true },
     ],
   },
   {
@@ -119,7 +119,7 @@ export const products: Product[] = [
     name: 'Aoud Lemon Mint',
     brand: 'Mancera',
     price: 11.49,
-    originalPrice: 169.00,
+    originalPrice: 129.00,
     category: 'unisex',
     description: 'Fresh and invigorating with a unique blend of citrus and mint balanced by precious oud.',
     scentNotes: {
@@ -132,8 +132,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/mancera-aoud-lemon-mint',
     inStock: true,
     variants: [
-      { ml: 60, price: 11.49, originalPrice: 169.00, inStock: true },
-      { ml: 120, price: 18.49, originalPrice: 239.00, inStock: true },
+      { ml: 60, price: 11.49, originalPrice: 129.00, inStock: true },
+      { ml: 120, price: 18.49, originalPrice: 199.00, inStock: true },
     ],
   },
   {
@@ -141,7 +141,7 @@ export const products: Product[] = [
     name: 'Aoud Vanille',
     brand: 'Mancera',
     price: 12.49,
-    originalPrice: 169.00,
+    originalPrice: 129.00,
     category: 'unisex',
     description: 'This is my personal favourite mancera after xplicit vanilla. Its a harmonious blend of oriental and woody accords with a touch of sweetness. Powerful oud and vanilla combine with warm spices and fresh citrus, creating a warm, powdery scent with depth and an irresistible creamy vanilla trail.',
     scentNotes: {
@@ -154,8 +154,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/mancera-aoud-vanille',
     inStock: true,
     variants: [
-      { ml: 60, price: 12.49, originalPrice: 169.00, inStock: true },
-      { ml: 120, price: 19.49, originalPrice: 239.00, inStock: true },
+      { ml: 60, price: 12.49, originalPrice: 129.00, inStock: true },
+      { ml: 120, price: 19.49, originalPrice: 199.00, inStock: true },
     ],
   },
   {
@@ -163,7 +163,7 @@ export const products: Product[] = [
     name: 'Aventus',
     brand: 'Creed',
     price: 19.99,
-    originalPrice: 410.00,
+    originalPrice: 370.00,
     category: 'men',
     description: 'A legendary fragrance known for its bold and confident character, everyone and their mother has smelt this. Aventus opens with vibrant pineapple and bergamot, delivering an instantly recognizable freshness. Smoky woods and musk develop in the base, creating a powerful and masculine finish. Versatile and iconic, its suitable for both casual and formal wear.',
     scentNotes: {
@@ -177,8 +177,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 19.99, originalPrice: 410.00, inStock: true },
-      { ml: 100, price: 26.99, originalPrice: 520.00, inStock: true },
+      { ml: 50, price: 19.99, originalPrice: 370.00, inStock: true },
+      { ml: 100, price: 26.99, originalPrice: 480.00, inStock: true },
     ],
   },
   {
@@ -186,7 +186,7 @@ export const products: Product[] = [
     name: 'Aventus Absolu',
     brand: 'Creed',
     price: 20.99,
-    originalPrice: 434.00,
+    originalPrice: 394.00,
     category: 'men',
     description: 'The intensified version of the legendary Aventus. Deeper, richer, and even more captivating.',
     scentNotes: {
@@ -199,8 +199,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/creed-aventus-absolu',
     inStock: true,
     variants: [
-      { ml: 50, price: 20.99, originalPrice: 434.00, inStock: true },
-      { ml: 100, price: 27.99, originalPrice: 550.00, inStock: true },
+      { ml: 50, price: 20.99, originalPrice: 394.00, inStock: true },
+      { ml: 100, price: 27.99, originalPrice: 510.00, inStock: true },
     ],
   },
   {
@@ -208,7 +208,7 @@ export const products: Product[] = [
     name: 'Black Orchid',
     brand: 'Tom Ford',
     price: 13.99,
-    originalPrice: 205.00,
+    originalPrice: 165.00,
     category: 'unisex',
     description: 'Dark, mysterious, and sensual. Tom Ford Black Orchid is a luxurious blend of black truffle, orchid, and dark chocolate. A daring and captivating scent that leaves a lasting impression.',
     scentNotes: {
@@ -221,8 +221,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/tom-ford-black-orchid',
     inStock: true,
     variants: [
-      { ml: 50, price: 13.99, originalPrice: 205.00, inStock: true },
-      { ml: 100, price: 19.99, originalPrice: 305.00, inStock: true },
+      { ml: 50, price: 13.99, originalPrice: 165.00, inStock: true },
+      { ml: 100, price: 19.99, originalPrice: 265.00, inStock: true },
     ],
   },
   {
@@ -230,7 +230,7 @@ export const products: Product[] = [
     name: 'Born in Roma',
     brand: 'Valentino',
     price: 11.99,
-    originalPrice: 97.00,
+    originalPrice: 57.00,
     category: 'men',
     description: 'Valentino Uomo Born in Roma smells like a modern, slightly sweet woody scent with fresh violet leaf, sage, and ginger over smoked vetiver. It feels clean, a bit sexy, and easy to wear, sitting somewhere between a fresh everyday fragrance and a clubbing scent.',
     scentNotes: {
@@ -243,8 +243,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/valentino-born-in-roma',
     inStock: true,
     variants: [
-      { ml: 50, price: 11.99, originalPrice: 97.00, inStock: true },
-      { ml: 100, price: 18.99, originalPrice: 145.00, inStock: true },
+      { ml: 50, price: 11.99, originalPrice: 57.00, inStock: true },
+      { ml: 100, price: 18.99, originalPrice: 105.00, inStock: true },
     ],
   },
   {
@@ -252,7 +252,7 @@ export const products: Product[] = [
     name: 'Cedrat Boisé',
     brand: 'Mancera',
     price: 11.49,
-    originalPrice: 169.00,
+    originalPrice: 129.00,
     category: 'men',
     description: 'A crowd-pleaser fragrance. Cedrat Boisé opens with fresh citrus and black currant, developing into spicy leather notes over a deep cedar and white musk base. Versatile and long-lasting.',
     scentNotes: {
@@ -265,8 +265,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/mancera-cedrat-boise',
     inStock: false,
     variants: [
-      { ml: 60, price: 11.49, originalPrice: 169.00, inStock: false },
-      { ml: 120, price: 17.99, originalPrice: 239.00, inStock: false },
+      { ml: 60, price: 11.49, originalPrice: 129.00, inStock: false },
+      { ml: 120, price: 17.99, originalPrice: 199.00, inStock: false },
     ],
   },
   {
@@ -274,7 +274,7 @@ export const products: Product[] = [
     name: 'Delina',
     brand: 'Parfums de Marly',
     price: 15.99,
-    originalPrice: 229.00,
+    originalPrice: 189.00,
     category: 'women',
     description: 'A luxurious floral fragrance with a contemporary twist. Delina opens with fresh rose, lychee, and rhubarb, creating a vibrant and slightly tart introduction. Soft vanilla and musk smooth the composition, adding warmth and longevity. Feminine and confident, its both romantic and modern.',
     scentNotes: {
@@ -288,8 +288,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 30, price: 15.99, originalPrice: 229.00, inStock: true },
-      { ml: 75, price: 22.99, originalPrice: 299.00, inStock: true },
+      { ml: 30, price: 15.99, originalPrice: 189.00, inStock: true },
+      { ml: 75, price: 22.99, originalPrice: 259.00, inStock: true },
     ],
   },
   {
@@ -318,7 +318,7 @@ export const products: Product[] = [
     name: 'Erba Pura',
     brand: 'Xerjoff',
     price: 19.99,
-    originalPrice: 67.00,
+    originalPrice: 27.00,
     category: 'unisex',
     description: 'A clean and addictive fruity fragrance, my favourite xerjoff. It has a strong, long-lasting fruity shampoo feel – zesty citrus and mixed fruits up top that stay sweet and smooth for hours, making it stand out in warm weather or nights out.',
     scentNotes: {
@@ -331,8 +331,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/xerjoff-erba-pura',
     inStock: true,
     variants: [
-      { ml: 50, price: 19.99, originalPrice: 67.00, inStock: true },
-      { ml: 100, price: 28.99, originalPrice: 95.00, inStock: true },
+      { ml: 50, price: 19.99, originalPrice: 27.00, inStock: true },
+      { ml: 100, price: 28.99, originalPrice: 55.00, inStock: true },
     ],
   },
   {
@@ -340,7 +340,7 @@ export const products: Product[] = [
     name: 'Eros Energy',
     brand: 'Versace',
     price: 11.99,
-    originalPrice: 109.00,
+    originalPrice: 69.00,
     category: 'men',
     description: 'Versace Eros Energy takes the OG eros DNA and makes it fresher, with a lot more citrus (lemon, grapefruit, blood orange) on a clean woody base, perfect for warm days and casual wear. My favourite eros, it smells like Creed Aventus.',
     scentNotes: {
@@ -353,8 +353,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/versace-eros-flame',
     inStock: true,
     variants: [
-      { ml: 50, price: 11.99, originalPrice: 109.00, inStock: true },
-      { ml: 100, price: 18.99, originalPrice: 159.00, inStock: true },
+      { ml: 50, price: 11.99, originalPrice: 69.00, inStock: true },
+      { ml: 100, price: 18.99, originalPrice: 119.00, inStock: true },
     ],
   },
   {
@@ -362,7 +362,7 @@ export const products: Product[] = [
     name: 'Eros Flame',
     brand: 'Versace',
     price: 11.99,
-    originalPrice: 127.00,
+    originalPrice: 87.00,
     category: 'men',
     description: 'The fiery counterpart to Eros. Passionate, bold, and irresistible.',
     scentNotes: {
@@ -375,8 +375,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/versace-eros-flame-1',
     inStock: true,
     variants: [
-      { ml: 50, price: 11.99, originalPrice: 127.00, inStock: true },
-      { ml: 100, price: 18.99, originalPrice: 185.00, inStock: true },
+      { ml: 50, price: 11.99, originalPrice: 87.00, inStock: true },
+      { ml: 100, price: 18.99, originalPrice: 145.00, inStock: true },
     ],
   },
   {
@@ -384,7 +384,7 @@ export const products: Product[] = [
     name: 'Eros Parfum',
     brand: 'Versace',
     price: 8.99,
-    originalPrice: 109.00,
+    originalPrice: 69.00,
     category: 'men',
     description: 'One of the most popular fragrances. Smells like cool mint, green apple, and lemon over sweet vanilla and woods – playful, sweet, and a bit loud, great for nights out. Not the best versace but for sure the safest blind buy.',
     scentNotes: {
@@ -397,8 +397,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/versace-eros',
     inStock: false,
     variants: [
-      { ml: 50, price: 8.99, originalPrice: 109.00, inStock: false },
-      { ml: 100, price: 14.99, originalPrice: 159.00, inStock: false },
+      { ml: 50, price: 8.99, originalPrice: 69.00, inStock: false },
+      { ml: 100, price: 14.99, originalPrice: 119.00, inStock: false },
     ],
   },
   {
@@ -406,7 +406,7 @@ export const products: Product[] = [
     name: 'French Riviera',
     brand: 'Mancera',
     price: 12.99,
-    originalPrice: 169.00,
+    originalPrice: 129.00,
     category: 'unisex',
     description: 'A sunny and fresh fragrance that captures the essence of the French Riviera. Elegant and refined.',
     scentNotes: {
@@ -419,8 +419,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/mancera-french-riviera',
     inStock: false,
     variants: [
-      { ml: 60, price: 12.99, originalPrice: 169.00, inStock: false },
-      { ml: 120, price: 19.99, originalPrice: 239.00, inStock: false },
+      { ml: 60, price: 12.99, originalPrice: 129.00, inStock: false },
+      { ml: 120, price: 19.99, originalPrice: 199.00, inStock: false },
     ],
   },
   {
@@ -428,7 +428,7 @@ export const products: Product[] = [
     name: 'Homme Intense',
     brand: 'Dior',
     price: 15.99,
-    originalPrice: 193.00,
+    originalPrice: 153.00,
     category: 'men',
     description: 'A sophisticated and woody fragrance with iris and amber. Perfect for the modern gentleman.',
     scentNotes: {
@@ -441,8 +441,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/dior-homme-intense',
     inStock: true,
     variants: [
-      { ml: 50, price: 15.99, originalPrice: 193.00, inStock: true },
-      { ml: 100, price: 24.99, originalPrice: 275.00, inStock: true },
+      { ml: 50, price: 15.99, originalPrice: 153.00, inStock: true },
+      { ml: 100, price: 24.99, originalPrice: 235.00, inStock: true },
     ],
   },
   {
@@ -450,7 +450,7 @@ export const products: Product[] = [
     name: 'Imagination',
     brand: 'Louis Vuitton',
     price: 23.99,
-    originalPrice: 470.00,
+    originalPrice: 430.00,
     category: 'men',
     description: 'This is probably the MOST talked about fragrance in the world, and the most agreed upon top #1 fragrance. This fragrance is said to be the most versatile fragrance that can be used in any season and anywhere, its a fresh and clean tea scent.',
     scentNotes: {
@@ -464,8 +464,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 100, price: 23.99, originalPrice: 470.00, inStock: true },
-      { ml: 200, price: 29.99, originalPrice: 600.00, inStock: true },
+      { ml: 100, price: 23.99, originalPrice: 430.00, inStock: true },
+      { ml: 200, price: 29.99, originalPrice: 560.00, inStock: true },
     ],
   },
   {
@@ -473,7 +473,7 @@ export const products: Product[] = [
     name: 'Khamrah Parfum',
     brand: 'Lattafa',
     price: 6.99,
-    originalPrice: 61.00,
+    originalPrice: 21.00,
     category: 'unisex',
     description: 'Lattafa Khamrah is a warm, dessert‑like gourmand that smells like spiced cinnamon cake with sweet dates, praline, and creamy vanilla over soft woods and amber, perfect for cozy evenings and cooler weather.',
     scentNotes: {
@@ -487,7 +487,7 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 100, price: 6.99, originalPrice: 89.00, inStock: true },
+      { ml: 100, price: 6.99, originalPrice: 49.00, inStock: true },
     ],
   },
   {
@@ -537,7 +537,7 @@ export const products: Product[] = [
     name: 'Stronger With You Intensely',
     brand: 'Giorgio Armani',
     price: 9.99,
-    originalPrice: 109.00,
+    originalPrice: 69.00,
     category: 'men',
     description: 'One of the best fragrances of all time, pretty much everyone has it, its good for a reason. Its a powerful and modern fragrance built around warmth and spice. It opens with vibrant pink pepper and juniper, the heart reveals sweet vanilla and toffee, settling into a deep amber base.',
     scentNotes: {
@@ -551,9 +551,9 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 9.99, originalPrice: 109.00, inStock: true },
-      { ml: 100, price: 16.99, originalPrice: 159.00, inStock: true },
-      { ml: 150, price: 22.99, originalPrice: 199.00, inStock: true },
+      { ml: 50, price: 9.99, originalPrice: 69.00, inStock: true },
+      { ml: 100, price: 16.99, originalPrice: 119.00, inStock: true },
+      { ml: 150, price: 22.99, originalPrice: 159.00, inStock: true },
     ],
   },
   {
@@ -561,7 +561,7 @@ export const products: Product[] = [
     name: 'Le Beau Le Parfum',
     brand: 'Jean Paul Gaultier',
     price: 7.99,
-    originalPrice: 145.00,
+    originalPrice: 105.00,
     category: 'men',
     description: 'Intense tropical-woody men\'s scent with juicy pineapple, creamy coconut and warm tonka over ambered woods for a powerful, seductive signature. The pineapple disappears in the drydown and it becomes this sweet coconut smell, amazing, best le beau version.',
     scentNotes: {
@@ -575,8 +575,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 75, price: 7.99, originalPrice: 145.00, inStock: true },
-      { ml: 125, price: 13.99, originalPrice: 195.00, inStock: true },
+      { ml: 75, price: 7.99, originalPrice: 105.00, inStock: true },
+      { ml: 125, price: 13.99, originalPrice: 155.00, inStock: true },
     ],
   },
   {
@@ -584,7 +584,7 @@ export const products: Product[] = [
     name: 'Spicebomb Extreme',
     brand: 'Viktor & Rolf',
     price: 11.99,
-    originalPrice: 109.00,
+    originalPrice: 69.00,
     category: 'men',
     description: 'One of the more popular fragrances, and rated one of the most attractive fragrances by women. It opens with sharp, dry spices and quickly settles into a dense mix of tobacco, vanilla, and resinous warmth. It\'s heavy, masculine, and unapologetically intense, with a dark, almost smoky edge that lingers.',
     scentNotes: {
@@ -598,8 +598,8 @@ export const products: Product[] = [
     inStock: false,
     featured: true,
     variants: [
-      { ml: 50, price: 11.99, originalPrice: 109.00, inStock: false },
-      { ml: 90, price: 18.99, originalPrice: 159.00, inStock: false },
+      { ml: 50, price: 11.99, originalPrice: 69.00, inStock: false },
+      { ml: 90, price: 18.99, originalPrice: 119.00, inStock: false },
     ],
   },
   {
@@ -607,7 +607,7 @@ export const products: Product[] = [
     name: 'Born in Roma Coral Fantasy',
     brand: 'Valentino',
     price: 9.99,
-    originalPrice: 133.00,
+    originalPrice: 93.00,
     category: 'men',
     description: 'My personal favourite from the born in roma line. The scent blends fruity and floral elements with warm, deeper notes to create a layered profile that isn\'t overly sweet or sharp — more of a balanced, contemporary aroma with both bright and smooth aspects, it can be used for summer but surprisingly not bad for winter.',
     scentNotes: {
@@ -621,8 +621,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 9.99, originalPrice: 133.00, inStock: true },
-      { ml: 100, price: 16.99, originalPrice: 185.00, inStock: true },
+      { ml: 50, price: 9.99, originalPrice: 93.00, inStock: true },
+      { ml: 100, price: 16.99, originalPrice: 145.00, inStock: true },
     ],
   },
   {
@@ -630,7 +630,7 @@ export const products: Product[] = [
     name: 'Le Male Elixir',
     brand: 'Jean Paul Gaultier',
     price: 11.99,
-    originalPrice: 175.00,
+    originalPrice: 135.00,
     category: 'men',
     description: 'Le Male Elixir is incredibly popular and you must have seen this bottle somewhere before even if you know nothing about fragrances. It has a creamy vanilla and honey wrapped around cool lavender and mint, with a soft tobacco touch in the drydown.',
     scentNotes: {
@@ -644,8 +644,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 75, price: 11.99, originalPrice: 175.00, inStock: true },
-      { ml: 125, price: 17.99, originalPrice: 225.00, inStock: true },
+      { ml: 75, price: 11.99, originalPrice: 135.00, inStock: true },
+      { ml: 125, price: 17.99, originalPrice: 185.00, inStock: true },
     ],
   },
   {
@@ -653,7 +653,7 @@ export const products: Product[] = [
     name: 'The Most Wanted Parfum',
     brand: 'Azzaro',
     price: 10.99,
-    originalPrice: 145.00,
+    originalPrice: 105.00,
     category: 'men',
     description: 'This is an incredibly cozy winter fragrance, it has sweetness thats barely there but you can feel it heavily. Ginger in the opening gives it a slightly fizzy vibe which calms down into a beautiful and cozy vanilla. Theres a reason this fragrance is so popular.',
     scentNotes: {
@@ -667,8 +667,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 10.99, originalPrice: 145.00, inStock: true },
-      { ml: 100, price: 17.99, originalPrice: 195.00, inStock: true },
+      { ml: 50, price: 10.99, originalPrice: 105.00, inStock: true },
+      { ml: 100, price: 17.99, originalPrice: 155.00, inStock: true },
     ],
   },
   {
@@ -676,7 +676,7 @@ export const products: Product[] = [
     name: 'Black Opium',
     brand: 'Yves Saint Laurent',
     price: 7.99,
-    originalPrice: 127.00,
+    originalPrice: 87.00,
     category: 'women',
     description: 'YSL Black Opium smells like sweet coffee with vanilla and white flowers. You get a hit of coffee, pear, and orange blossom at the start, then it settles into a cozy mix of jasmine, vanilla, patchouli, and soft woods, the best womans fragrance for sure.',
     scentNotes: {
@@ -689,9 +689,9 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/ysl-black-opium',
     inStock: true,
     variants: [
-      { ml: 30, price: 7.99, originalPrice: 127.00, inStock: true },
-      { ml: 50, price: 11.99, originalPrice: 165.00, inStock: true },
-      { ml: 90, price: 16.99, originalPrice: 225.00, inStock: true },
+      { ml: 30, price: 7.99, originalPrice: 87.00, inStock: true },
+      { ml: 50, price: 11.99, originalPrice: 125.00, inStock: true },
+      { ml: 90, price: 16.99, originalPrice: 185.00, inStock: true },
     ],
   },
   {
@@ -699,7 +699,7 @@ export const products: Product[] = [
     name: 'Le Male Le Parfum',
     brand: 'Jean Paul Gaultier',
     price: 9.99,
-    originalPrice: 121.00,
+    originalPrice: 81.00,
     category: 'men',
     description: 'Best JPG in my opinion. A complex fragrance with an oriental character. The opening blends warm spices and woods, creating a luxurious and enveloping feel.',
     scentNotes: {
@@ -713,8 +713,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 75, price: 9.99, originalPrice: 155.00, inStock: true },
-      { ml: 125, price: 16.99, originalPrice: 195.00, inStock: true },
+      { ml: 75, price: 9.99, originalPrice: 115.00, inStock: true },
+      { ml: 125, price: 16.99, originalPrice: 155.00, inStock: true },
     ],
   },
   // ===== ADDITIONAL PRODUCTS =====
@@ -723,7 +723,7 @@ export const products: Product[] = [
     name: 'Le Beau EDT',
     brand: 'Jean Paul Gaultier',
     price: 7.99,
-    originalPrice: 133.00,
+    originalPrice: 93.00,
     category: 'men',
     description: 'A fresh and tropical fragrance with coconut and bergamot. Light, airy, and perfect for summer.',
     scentNotes: {
@@ -736,8 +736,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/jpg-le-beau-edt',
     inStock: false,
     variants: [
-      { ml: 75, price: 7.99, originalPrice: 133.00, inStock: false },
-      { ml: 125, price: 13.99, originalPrice: 175.00, inStock: false },
+      { ml: 75, price: 7.99, originalPrice: 93.00, inStock: false },
+      { ml: 125, price: 13.99, originalPrice: 135.00, inStock: false },
     ],
   },
   {
@@ -745,7 +745,7 @@ export const products: Product[] = [
     name: 'Le Male Elixir Absolu',
     brand: 'Jean Paul Gaultier',
     price: 11.49,
-    originalPrice: 157.00,
+    originalPrice: 117.00,
     category: 'men',
     description: 'The ultimate expression of Le Male. An opulent and addictive fragrance with honey, lavender, and vanilla.',
     scentNotes: {
@@ -758,8 +758,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/jpg-le-male-elixir-absolu',
     inStock: true,
     variants: [
-      { ml: 75, price: 11.49, originalPrice: 157.00, inStock: true },
-      { ml: 125, price: 17.49, originalPrice: 210.00, inStock: true },
+      { ml: 75, price: 11.49, originalPrice: 117.00, inStock: true },
+      { ml: 125, price: 17.49, originalPrice: 170.00, inStock: true },
     ],
   },
   {
@@ -767,7 +767,7 @@ export const products: Product[] = [
     name: 'LIBRE',
     brand: 'Yves Saint Laurent',
     price: 7.99,
-    originalPrice: 133.00,
+    originalPrice: 93.00,
     category: 'women',
     description: 'A bold and daring floral with lavender and orange blossom. Free-spirited and absolutely captivating.',
     scentNotes: {
@@ -781,9 +781,9 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 30, price: 7.99, originalPrice: 133.00, inStock: true },
-      { ml: 50, price: 11.99, originalPrice: 175.00, inStock: true },
-      { ml: 90, price: 16.99, originalPrice: 225.00, inStock: true },
+      { ml: 30, price: 7.99, originalPrice: 93.00, inStock: true },
+      { ml: 50, price: 11.99, originalPrice: 135.00, inStock: true },
+      { ml: 90, price: 16.99, originalPrice: 185.00, inStock: true },
     ],
   },
   {
@@ -813,7 +813,7 @@ export const products: Product[] = [
     name: 'Myself EDP',
     brand: 'Yves Saint Laurent',
     price: 7.99,
-    originalPrice: 55.00,
+    originalPrice: 15.00,
     category: 'men',
     description: 'A refined and elegant fragrance that celebrates individuality. Floral and woody with a modern twist.',
     scentNotes: {
@@ -826,9 +826,9 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/ysl-myslf-le-parfum',
     inStock: true,
     variants: [
-      { ml: 40, price: 7.99, originalPrice: 55.00, inStock: true },
-      { ml: 60, price: 9.99, originalPrice: 75.00, inStock: true },
-      { ml: 100, price: 15.99, originalPrice: 95.00, inStock: true },
+      { ml: 40, price: 7.99, originalPrice: 15.00, inStock: true },
+      { ml: 60, price: 9.99, originalPrice: 35.00, inStock: true },
+      { ml: 100, price: 15.99, originalPrice: 55.00, inStock: true },
     ],
   },
   {
@@ -836,7 +836,7 @@ export const products: Product[] = [
     name: 'Naxos',
     brand: 'Xerjoff',
     price: 18.99,
-    originalPrice: 157.00,
+    originalPrice: 117.00,
     category: 'unisex',
     description: 'Naxos smells like a warm, creamy tobacco‑vanilla pastry with a honeyed, slightly boozy sweetness. Think lavender‑laced honey cake with a cigar‑box base – rich, sweet, and undeniably cozy.',
     scentNotes: {
@@ -850,8 +850,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 18.99, originalPrice: 157.00, inStock: true },
-      { ml: 100, price: 27.99, originalPrice: 245.00, inStock: true },
+      { ml: 50, price: 18.99, originalPrice: 117.00, inStock: true },
+      { ml: 100, price: 27.99, originalPrice: 205.00, inStock: true },
     ],
   },
   {
@@ -859,7 +859,7 @@ export const products: Product[] = [
     name: 'Pacific Chill',
     brand: 'Louis Vuitton',
     price: 29.00,
-    originalPrice: 470.00,
+    originalPrice: 430.00,
     category: 'unisex',
     description: 'A refreshing and invigorating scent inspired by the Pacific coast. Citrusy, aquatic, and deeply relaxing.',
     scentNotes: {
@@ -872,8 +872,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/pacific-chill',
     inStock: false,
     variants: [
-      { ml: 50, price: 29.00, originalPrice: 470.00, inStock: false },
-      { ml: 100, price: 49.99, originalPrice: 600.00, inStock: false },
+      { ml: 50, price: 29.00, originalPrice: 430.00, inStock: false },
+      { ml: 100, price: 49.99, originalPrice: 560.00, inStock: false },
     ],
   },
   {
@@ -881,7 +881,7 @@ export const products: Product[] = [
     name: 'Paradigme',
     brand: 'Prada',
     price: 12.99,
-    originalPrice: 157.00,
+    originalPrice: 117.00,
     category: 'men',
     description: 'A sophisticated and modern fragrance. Woody and aromatic with a refined elegance.',
     scentNotes: {
@@ -894,8 +894,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/givenchy-gentleman-reserve-privee',
     inStock: true,
     variants: [
-      { ml: 50, price: 12.99, originalPrice: 157.00, inStock: true },
-      { ml: 100, price: 18.99, originalPrice: 225.00, inStock: true },
+      { ml: 50, price: 12.99, originalPrice: 117.00, inStock: true },
+      { ml: 100, price: 18.99, originalPrice: 185.00, inStock: true },
     ],
   },
   {
@@ -903,7 +903,7 @@ export const products: Product[] = [
     name: 'Red Tobacco',
     brand: 'Mancera',
     price: 12.49,
-    originalPrice: 169.00,
+    originalPrice: 129.00,
     category: 'unisex',
     description: 'A bold and spicy fragrance with tobacco, saffron, and jasmine. Warm, sensual, and unforgettable.',
     scentNotes: {
@@ -916,8 +916,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/mancera-red-tobacco',
     inStock: true,
     variants: [
-      { ml: 60, price: 12.49, originalPrice: 169.00, inStock: true },
-      { ml: 120, price: 19.49, originalPrice: 239.00, inStock: true },
+      { ml: 60, price: 12.49, originalPrice: 129.00, inStock: true },
+      { ml: 120, price: 19.49, originalPrice: 199.00, inStock: true },
     ],
   },
   {
@@ -925,7 +925,7 @@ export const products: Product[] = [
     name: 'Sauvage Parfum',
     brand: 'Dior',
     price: 8.99,
-    originalPrice: 145.00,
+    originalPrice: 105.00,
     category: 'men',
     description: 'Dior Sauvage Parfum smells like a smoother, darker take on the original Sauvage – less sharp, more warm and woody. You get a soft citrus opening of bergamot and mandarin, quickly wrapped in creamy sandalwood, with vanilla, tonka, and a touch of incense in the base that makes it feel more suited to evenings and cooler weather.',
     scentNotes: {
@@ -939,9 +939,9 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 60, price: 8.99, originalPrice: 145.00, inStock: true },
-      { ml: 100, price: 12.99, originalPrice: 195.00, inStock: true },
-      { ml: 200, price: 19.99, originalPrice: 275.00, inStock: true },
+      { ml: 60, price: 8.99, originalPrice: 105.00, inStock: true },
+      { ml: 100, price: 12.99, originalPrice: 155.00, inStock: true },
+      { ml: 200, price: 19.99, originalPrice: 235.00, inStock: true },
     ],
   },
   {
@@ -970,7 +970,7 @@ export const products: Product[] = [
     name: 'Stronger With You Amber',
     brand: 'Giorgio Armani',
     price: 9.99,
-    originalPrice: 127.00,
+    originalPrice: 87.00,
     category: 'men',
     description: 'A warm and enveloping amber fragrance. Sweet, spicy, and incredibly comforting.',
     scentNotes: {
@@ -983,8 +983,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/stronger-with-you-amber',
     inStock: true,
     variants: [
-      { ml: 50, price: 9.99, originalPrice: 127.00, inStock: true },
-      { ml: 100, price: 15.99, originalPrice: 175.00, inStock: true },
+      { ml: 50, price: 9.99, originalPrice: 87.00, inStock: true },
+      { ml: 100, price: 15.99, originalPrice: 135.00, inStock: true },
     ],
   },
   {
@@ -992,7 +992,7 @@ export const products: Product[] = [
     name: 'Stronger With You Absolutely',
     brand: 'Giorgio Armani',
     price: 11.99,
-    originalPrice: 121.00,
+    originalPrice: 81.00,
     category: 'men',
     description: 'The most intense version of Stronger With You. Deep, addictive, and absolutely irresistible.',
     scentNotes: {
@@ -1005,8 +1005,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/stronger-with-you-absolute',
     inStock: true,
     variants: [
-      { ml: 50, price: 11.99, originalPrice: 121.00, inStock: true },
-      { ml: 100, price: 16.99, originalPrice: 165.00, inStock: true },
+      { ml: 50, price: 11.99, originalPrice: 81.00, inStock: true },
+      { ml: 100, price: 16.99, originalPrice: 125.00, inStock: true },
     ],
   },
   {
@@ -1014,7 +1014,7 @@ export const products: Product[] = [
     name: 'Stronger With You Parfum',
     brand: 'Giorgio Armani',
     price: 8.99,
-    originalPrice: 127.00,
+    originalPrice: 87.00,
     category: 'men',
     description: 'The parfum concentration of the beloved Stronger With You. Richer, deeper, and longer-lasting.',
     scentNotes: {
@@ -1027,8 +1027,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/stronger-with-you-parfum',
     inStock: true,
     variants: [
-      { ml: 50, price: 8.99, originalPrice: 127.00, inStock: true },
-      { ml: 100, price: 14.99, originalPrice: 175.00, inStock: true },
+      { ml: 50, price: 8.99, originalPrice: 87.00, inStock: true },
+      { ml: 100, price: 14.99, originalPrice: 135.00, inStock: true },
     ],
   },
   {
@@ -1036,7 +1036,7 @@ export const products: Product[] = [
     name: 'Symphony',
     brand: 'Louis Vuitton',
     price: 31.99,
-    originalPrice: 711.00,
+    originalPrice: 671.00,
     category: 'unisex',
     description: 'A harmonious and luxurious composition. Floral, fruity, and utterly refined.',
     scentNotes: {
@@ -1049,7 +1049,7 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/symphony',
     inStock: true,
     variants: [
-      { ml: 100, price: 31.99, originalPrice: 850.00, inStock: true },
+      { ml: 100, price: 31.99, originalPrice: 810.00, inStock: true },
     ],
   },
   {
@@ -1057,7 +1057,7 @@ export const products: Product[] = [
     name: 'The Most Wanted EDP Intense',
     brand: 'Azzaro',
     price: 11.00,
-    originalPrice: 145.00,
+    originalPrice: 105.00,
     category: 'men',
     description: 'An intense and seductive fragrance. Warm spices meet sweet notes for an addictive combination.',
     scentNotes: {
@@ -1070,8 +1070,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/azzaro-the-most-wanted-edp-intense',
     inStock: true,
     variants: [
-      { ml: 50, price: 11.00, originalPrice: 145.00, inStock: true },
-      { ml: 100, price: 18.99, originalPrice: 195.00, inStock: true },
+      { ml: 50, price: 11.00, originalPrice: 105.00, inStock: true },
+      { ml: 100, price: 18.99, originalPrice: 155.00, inStock: true },
     ],
   },
 ];
