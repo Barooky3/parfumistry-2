@@ -382,7 +382,7 @@ const Checkout = () => {
     if (searchParams.get('canceled') === 'true') {
       toast({ title: 'Payment canceled', description: 'Your payment was canceled. You can try again.' });
     }
-  }, [searchParams]);
+  }, [searchParams, clearCart]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
