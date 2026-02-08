@@ -16,28 +16,43 @@ const brands = [
 export const BrandNavigation = () => {
   return (
     <motion.section 
-      className="py-4 bg-secondary border-b border-border"
+      className="py-6 md:py-8 bg-primary border-b border-border"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
       <div className="container">
-        <div className="flex items-center justify-center gap-4 md:gap-6 lg:gap-8 flex-wrap">
-          {brands.map((brand) => (
-            <Link
+        <p className="text-[9px] md:text-[10px] tracking-[0.35em] text-primary-foreground/40 font-medium uppercase text-center mb-4">
+          Shop by Brand
+        </p>
+        <div className="flex items-center justify-center gap-5 md:gap-8 lg:gap-10 flex-wrap">
+          {brands.map((brand, i) => (
+            <motion.div
               key={brand.slug}
-              to={`/shop?brand=${brand.slug}`}
-              className="text-[10px] md:text-xs tracking-[0.15em] font-medium text-foreground/70 hover:text-accent uppercase transition-colors duration-200"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
             >
-              {brand.name}
-            </Link>
+              <Link
+                to={`/shop?brand=${brand.slug}`}
+                className="text-xs md:text-sm tracking-[0.18em] font-semibold text-primary-foreground/80 hover:text-accent uppercase transition-colors duration-200 link-underline"
+              >
+                {brand.name}
+              </Link>
+            </motion.div>
           ))}
-          <Link
-            to="/shop"
-            className="text-[10px] md:text-xs tracking-[0.15em] font-medium text-accent hover:text-accent/80 uppercase transition-colors duration-200"
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: brands.length * 0.04 }}
           >
-            See all fragrances
-          </Link>
+            <Link
+              to="/shop"
+              className="text-xs md:text-sm tracking-[0.18em] font-semibold text-accent hover:text-accent/80 uppercase transition-colors duration-200"
+            >
+              See all →
+            </Link>
+          </motion.div>
         </div>
       </div>
     </motion.section>
