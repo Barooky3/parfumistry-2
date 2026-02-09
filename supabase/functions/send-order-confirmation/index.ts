@@ -146,8 +146,9 @@ serve(async (req) => {
   }
 
   try {
-    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount } = await req.json() as {
-      orderItems: OrderItem[];
+    const body = await req.json();
+    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount } = body as {
+      orderItems: (OrderItem | { product: { name: string; brand: string; image: string; price: number }; quantity: number; selectedMl?: number; selectedPrice?: number })[];
       customerEmail: string;
       customerName: string;
       shippingAddress: { line1: string; city: string; postalCode: string; country: string };
@@ -157,10 +158,25 @@ serve(async (req) => {
     if (!customerEmail) throw new Error("Customer email is required");
     if (!orderItems || orderItems.length === 0) throw new Error("No order items");
 
-    const calculatedTotal = totalAmount || orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
+    // Normalize cart items: support both { product: {...}, quantity } and flat { name, brand, image, ... } formats
+    const normalizedItems: OrderItem[] = orderItems.map((item: any) => {
+      if (item.product) {
+        return {
+          name: item.product.name,
+          brand: item.product.brand,
+          image: item.product.image,
+          price: item.selectedPrice || item.product.price,
+          quantity: item.quantity,
+          selectedMl: item.selectedMl,
+        };
+      }
+      return item as OrderItem;
+    });
+
+    const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
     const origin = "https://profparfums.lovable.app";
-    const itemsHtml = orderItems.map((item: OrderItem) => buildItemRow(item, origin)).join("");
+    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin)).join("");
 
     const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
