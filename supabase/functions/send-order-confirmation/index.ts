@@ -10,8 +10,8 @@ const corsHeaders = {
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
 const PRODUCT_LINKS: Record<string, string> = {
-  "stronger-with-you-absolutely": "https://orientdig.com/product?id=993578833339&platform=ALI_1688",
-  "stronger-with-you": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661840944&affcode=c5v3b",
+  "stronger-with-you-absolutely": "https://litbuy.shop/lit/nOAwjxV0",
+  "stronger-with-you": "https://litbuy.shop/lit/nOAwjxV0",
   "aventus": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661817242&affcode=c5v3b",
   "valentino": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661811226&affcode=c5v3b",
   "louis-vuitton": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661789506&affcode=c5v3b",
