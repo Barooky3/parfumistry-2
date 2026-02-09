@@ -10,6 +10,7 @@ const corsHeaders = {
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
 const PRODUCT_LINKS: Record<string, string> = {
+  "stronger-with-you-absolutely": "https://orientdig.com/product?id=993578833339&platform=ALI_1688",
   "stronger-with-you": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661840944&affcode=c5v3b",
   "aventus": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661817242&affcode=c5v3b",
   "valentino": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661811226&affcode=c5v3b",
@@ -25,6 +26,7 @@ const PRODUCT_LINKS: Record<string, string> = {
 function getProductLink(name: string, brand: string): string {
   const n = name.toLowerCase();
   const b = brand.toLowerCase();
+  if (n.includes("stronger with you absolutely")) return PRODUCT_LINKS["stronger-with-you-absolutely"];
   if (n.includes("stronger with you")) return PRODUCT_LINKS["stronger-with-you"];
   if (n.includes("aventus")) return PRODUCT_LINKS["aventus"];
   if (b.includes("valentino")) return PRODUCT_LINKS["valentino"];
