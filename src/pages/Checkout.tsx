@@ -509,16 +509,53 @@ const Checkout = () => {
   // Order completed state
   if (isCompleted) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-16 bg-background">
-        <div className="text-center max-w-md px-4">
-          <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="h-10 w-10 text-accent" strokeWidth={1.5} />
+      <div className="min-h-screen flex items-center justify-center py-16 bg-muted/30">
+        <div className="bg-background rounded-2xl shadow-lg max-w-md w-full mx-4 p-8 md:p-10">
+          {/* Step Indicators */}
+          <div className="flex items-center justify-between mb-10 px-2">
+            {/* Step 1 - Information */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                <CheckCircle className="h-5 w-5 text-accent-foreground" strokeWidth={2} />
+              </div>
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">Information</span>
+            </div>
+            <div className="flex-1 h-[2px] bg-accent mx-2 mt-[-20px]" />
+            {/* Step 2 - Payment */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                <CheckCircle className="h-5 w-5 text-accent-foreground" strokeWidth={2} />
+              </div>
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">Payment</span>
+            </div>
+            <div className="flex-1 h-[2px] bg-accent mx-2 mt-[-20px]" />
+            {/* Step 3 - Confirmation */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                <span className="text-sm font-bold text-primary-foreground">3</span>
+              </div>
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-foreground">Confirmation</span>
+            </div>
           </div>
-          <h1 className="font-display text-3xl text-foreground mb-4">Order Confirmed</h1>
-          <p className="text-muted-foreground mb-10">
-            Thank you for your purchase. You have been redirected to the seller to complete payment.
+
+          {/* Checkmark Icon */}
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 rounded-full bg-accent/15 flex items-center justify-center">
+              <CheckCircle className="h-10 w-10 text-accent" strokeWidth={1.5} />
+            </div>
+          </div>
+
+          {/* Thank You Text */}
+          <h1 className="font-display text-3xl text-foreground text-center mb-4">Thank You!</h1>
+          <p className="text-muted-foreground text-center mb-2">
+            Your purchase is complete. You will receive an email with your order details and seller links.
           </p>
-          <Button asChild className="rounded-none h-12 px-8 text-xs tracking-[0.1em] uppercase">
+          <p className="text-sm text-muted-foreground text-center mb-10">
+            Please check your spam folder if you don't see it within a few minutes.
+          </p>
+
+          {/* Continue Shopping Button */}
+          <Button asChild className="w-full rounded-md h-12 text-xs tracking-[0.15em] uppercase font-semibold">
             <Link to="/shop">Continue Shopping</Link>
           </Button>
         </div>
