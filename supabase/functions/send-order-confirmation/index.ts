@@ -21,6 +21,7 @@ const PRODUCT_LINKS: Record<string, string> = {
   "parfums-de-marly": "https://m.orientdig.com/pages/product/product?id=857200052892&shoptype=ALI_1688&ref=100144636",
   "jean-paul-gaultier": "https://litbuy.shop/lit/JeaFpAPH",
   "lattafa": "https://litbuy.shop/lit/XVWEmSku",
+  "azzaro": "https://litbuy.shop/lit/hVExk1tS",
 };
 
 function getProductLink(name: string, brand: string): string {
@@ -37,6 +38,7 @@ function getProductLink(name: string, brand: string): string {
   if (b.includes("parfums de marly")) return PRODUCT_LINKS["parfums-de-marly"];
   if (b.includes("jean paul gaultier")) return PRODUCT_LINKS["jean-paul-gaultier"];
   if (b.includes("lattafa")) return PRODUCT_LINKS["lattafa"];
+  if (b.includes("azzaro")) return PRODUCT_LINKS["azzaro"];
   return DEFAULT_SELLER_LINK;
 }
 
