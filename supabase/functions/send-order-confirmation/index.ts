@@ -118,11 +118,6 @@ function buildEmailHtml(
     '<span style="font-size: 22px; font-weight: 600; color: #1a1a1a;">&euro;' + totalAmount + '</span>',
     '</div>',
 
-    '<div style="padding: 0 32px 32px 32px;">',
-    '<div style="background-color: #f8f7f4; padding: 20px 24px; border-radius: 8px;">',
-    '<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; margin-bottom: 12px;">&#128230; Delivery Details</div>',
-    '<p style="font-size: 14px; color: #333; margin: 0; line-height: 1.7;">' + customerName + '<br>' + shippingAddress.line1 + '<br>' + shippingAddress.postalCode + ' ' + shippingAddress.city + '<br>' + shippingAddress.country + '</p>',
-    '</div></div>',
 
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
