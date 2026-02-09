@@ -22,6 +22,7 @@ const PRODUCT_LINKS: Record<string, string> = {
   "jean-paul-gaultier": "https://litbuy.shop/lit/JeaFpAPH",
   "lattafa": "https://litbuy.shop/lit/XVWEmSku",
   "azzaro": "https://litbuy.shop/lit/hVExk1tS",
+  "mancera": "https://litbuy.shop/lit/qYJ4Tj6g",
 };
 
 function getProductLink(name: string, brand: string): string {
@@ -39,6 +40,7 @@ function getProductLink(name: string, brand: string): string {
   if (b.includes("jean paul gaultier")) return PRODUCT_LINKS["jean-paul-gaultier"];
   if (b.includes("lattafa")) return PRODUCT_LINKS["lattafa"];
   if (b.includes("azzaro")) return PRODUCT_LINKS["azzaro"];
+  if (b.includes("mancera")) return PRODUCT_LINKS["mancera"];
   return DEFAULT_SELLER_LINK;
 }
 
