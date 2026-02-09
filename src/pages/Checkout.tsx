@@ -562,6 +562,7 @@ const Checkout = () => {
                     className="pl-12 h-12 bg-background border-border rounded-md"
                   />
                 </div>
+                <p className="text-xs text-muted-foreground mt-1">Please make sure your email is correct — your order confirmation and product links will be sent here.</p>
               </div>
 
               {/* Name Fields */}
