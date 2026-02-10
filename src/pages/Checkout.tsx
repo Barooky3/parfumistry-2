@@ -856,7 +856,7 @@ const Checkout = () => {
                   ) : (
                     <>
                       <Lock className="h-4 w-4 mr-2" />
-                      Pay with Square
+                      Pay with PayPal
                     </>
                   )}
                 </Button>
