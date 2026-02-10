@@ -376,25 +376,23 @@ const Checkout = () => {
     }, 600);
   };
 
-  // Load PayPal JS SDK and render buttons
+  // Store latest form data in a ref so PayPal callbacks always see current values
+  const formDataRef = useRef(formData);
+  formDataRef.current = formData;
+  const appliedDiscountRef = useRef(appliedDiscount);
+  appliedDiscountRef.current = appliedDiscount;
+  const isFormValidRef = useRef(isFormValid());
+  isFormValidRef.current = isFormValid();
+
+  // Load PayPal JS SDK and render buttons (once, regardless of form state)
   useEffect(() => {
-    if (!isFormValid() || items.length === 0 || isCompleted) {
-      // Clear container when form is invalid
-      if (paypalContainerRef.current) paypalContainerRef.current.innerHTML = '';
-      paypalButtonsRendered.current = false;
-      return;
-    }
+    if (items.length === 0 || isCompleted) return;
     
     const container = paypalContainerRef.current;
-    if (!container) return;
-
-    // Prevent re-rendering if already rendered with same config
-    paypalButtonsRendered.current = false;
-    container.innerHTML = '';
+    if (!container || paypalButtonsRendered.current) return;
 
     const loadAndRender = async () => {
       try {
-        // Fetch PayPal client ID from edge function
         const { data: configData, error: configError } = await supabase.functions.invoke('get-paypal-client-id');
         if (configError || !configData?.clientId) {
           console.error('Failed to get PayPal client ID');
@@ -402,7 +400,6 @@ const Checkout = () => {
         }
         const clientId = configData.clientId;
 
-        // Load PayPal SDK script
         const existingScript = document.querySelector('script[src*="paypal.com/sdk/js"]');
         
         const renderButtons = () => {
@@ -422,7 +419,19 @@ const Checkout = () => {
               shape: 'rect',
               label: 'paypal',
             },
+            onClick: (_data: any, actions: any) => {
+              if (!isFormValidRef.current) {
+                toast({
+                  title: 'Please fill in all fields',
+                  description: 'Complete your shipping information before paying.',
+                  variant: 'destructive',
+                });
+                return actions.reject();
+              }
+              return actions.resolve();
+            },
             createOrder: async () => {
+              const fd = formDataRef.current;
               const cartItems = items.map(item => ({
                 name: item.product.name,
                 brand: item.product.brand,
@@ -435,15 +444,15 @@ const Checkout = () => {
               const { data, error } = await supabase.functions.invoke('create-checkout', {
                 body: {
                   items: cartItems,
-                  customerEmail: formData.email,
-                  customerName: `${formData.firstName} ${formData.lastName}`,
+                  customerEmail: fd.email,
+                  customerName: `${fd.firstName} ${fd.lastName}`,
                   shippingAddress: {
-                    country: formData.country,
-                    city: formData.city,
-                    postalCode: formData.postalCode,
-                    line1: formData.streetAddress,
+                    country: fd.country,
+                    city: fd.city,
+                    postalCode: fd.postalCode,
+                    line1: fd.streetAddress,
                   },
-                  discountPercent: appliedDiscount?.percent || 0,
+                  discountPercent: appliedDiscountRef.current?.percent || 0,
                   freeItemDiscount: freeItemDiscount,
                 },
               });
@@ -461,6 +470,7 @@ const Checkout = () => {
 
                 if (error) throw error;
                 if (captureData?.status === 'COMPLETED') {
+                  const fd = formDataRef.current;
                   const cartItems = items.map(item => ({
                     name: item.product.name,
                     brand: item.product.brand,
@@ -473,15 +483,15 @@ const Checkout = () => {
                   supabase.functions.invoke('send-order-confirmation', {
                     body: {
                       orderItems: cartItems,
-                      customerEmail: formData.email,
-                      customerName: `${formData.firstName} ${formData.lastName}`,
+                      customerEmail: fd.email,
+                      customerName: `${fd.firstName} ${fd.lastName}`,
                       shippingAddress: {
-                        country: formData.country,
-                        city: formData.city,
-                        postalCode: formData.postalCode,
-                        line1: formData.streetAddress,
+                        country: fd.country,
+                        city: fd.city,
+                        postalCode: fd.postalCode,
+                        line1: fd.streetAddress,
                       },
-                      totalAmount: (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice).toFixed(2),
+                      totalAmount: (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2),
                     },
                   });
 
@@ -526,7 +536,7 @@ const Checkout = () => {
     };
 
     loadAndRender();
-  }, [items, appliedDiscount, formData, isCompleted]);
+  }, [items.length, isCompleted]);
 
   // Empty cart state
   if (items.length === 0 && !isCompleted) {
