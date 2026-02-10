@@ -35,8 +35,9 @@ serve(async (req) => {
   }
 
   try {
-    const squareAccessToken = Deno.env.get("SQUARE_ACCESS_TOKEN") || "";
-    if (!squareAccessToken) throw new Error("Square access token not configured");
+    const clientId = Deno.env.get("PAYPAL_CLIENT_ID") || "";
+    const clientSecret = Deno.env.get("PAYPAL_SECRET") || "";
+    if (!clientId || !clientSecret) throw new Error("PayPal credentials not configured");
 
     const { items, customerEmail, customerName, shippingAddress, discountPercent, freeItemDiscount } =
       (await req.json()) as CheckoutRequest;
@@ -65,8 +66,9 @@ serve(async (req) => {
       freePerItem[expandedUnits[i].itemIndex]++;
     }
 
-    // Build Square order line items
-    const lineItems: any[] = [];
+    // Build PayPal order items & calculate total
+    const paypalItems: any[] = [];
+    let orderTotal = 0;
 
     items.forEach((item, idx) => {
       const freeQty = freePerItem[idx];
@@ -74,69 +76,99 @@ serve(async (req) => {
       const label = `${item.brand} - ${item.name}${item.selectedMl ? ` (${item.selectedMl}ml)` : ""}`;
 
       if (paidQty > 0) {
-        const unitAmountCents = Math.max(Math.round(item.price * 100 * multiplier), 0);
-        lineItems.push({
-          name: label,
+        const unitPrice = Math.max(Math.round(item.price * 100 * multiplier) / 100, 0);
+        const lineTotal = Math.round(unitPrice * paidQty * 100) / 100;
+        orderTotal += lineTotal;
+        paypalItems.push({
+          name: label.substring(0, 127),
           quantity: String(paidQty),
-          base_price_money: {
-            amount: unitAmountCents,
-            currency: "EUR",
+          unit_amount: {
+            currency_code: "EUR",
+            value: unitPrice.toFixed(2),
           },
         });
       }
 
       if (freeQty > 0) {
-        lineItems.push({
-          name: `${label} (FREE)`,
+        paypalItems.push({
+          name: `${label} (FREE)`.substring(0, 127),
           quantity: String(freeQty),
-          base_price_money: {
-            amount: 0,
-            currency: "EUR",
+          unit_amount: {
+            currency_code: "EUR",
+            value: "0.00",
           },
         });
       }
     });
 
-    const origin = req.headers.get("origin") || "https://profparfums.lovable.app";
-    const idempotencyKey = crypto.randomUUID();
+    orderTotal = Math.round(orderTotal * 100) / 100;
 
-    const squareResponse = await fetch("https://connect.squareup.com/v2/online-checkout/payment-links", {
+    const origin = req.headers.get("origin") || "https://profparfums.lovable.app";
+
+    // Get PayPal access token
+    const tokenRes = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
       method: "POST",
       headers: {
-        "Square-Version": "2024-11-20",
-        "Authorization": `Bearer ${squareAccessToken}`,
+        "Authorization": `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "grant_type=client_credentials",
+    });
+
+    const tokenData = await tokenRes.json();
+    if (!tokenRes.ok) {
+      console.error("PayPal token error:", JSON.stringify(tokenData));
+      throw new Error("Failed to authenticate with PayPal");
+    }
+
+    const accessToken = tokenData.access_token;
+
+    // Create PayPal order
+    const orderRes = await fetch("https://api-m.paypal.com/v2/checkout/orders", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idempotency_key: idempotencyKey,
-        order: {
-          location_id: Deno.env.get("SQUARE_LOCATION_ID") || "",
-          line_items: lineItems,
-          metadata: {
-            customer_email: customerEmail,
-            customer_name: customerName,
-            shipping_country: shippingAddress.country,
-            shipping_city: shippingAddress.city,
-            shipping_postal: shippingAddress.postalCode,
-            shipping_line1: shippingAddress.line1,
+        intent: "CAPTURE",
+        purchase_units: [
+          {
+            amount: {
+              currency_code: "EUR",
+              value: orderTotal.toFixed(2),
+              breakdown: {
+                item_total: {
+                  currency_code: "EUR",
+                  value: orderTotal.toFixed(2),
+                },
+              },
+            },
+            items: paypalItems,
+            description: `Prof Parfums Order`,
           },
-        },
-        checkout_options: {
-          redirect_url: `${origin}/checkout?success=true`,
+        ],
+        application_context: {
+          brand_name: "Prof Parfums",
+          landing_page: "NO_PREFERENCE",
+          user_action: "PAY_NOW",
+          return_url: `${origin}/checkout?success=true`,
+          cancel_url: `${origin}/checkout?canceled=true`,
         },
       }),
     });
 
-    const squareData = await squareResponse.json();
+    const orderData = await orderRes.json();
 
-    if (!squareResponse.ok) {
-      console.error("Square API error:", JSON.stringify(squareData));
-      throw new Error(squareData.errors?.[0]?.detail || "Failed to create Square checkout");
+    if (!orderRes.ok) {
+      console.error("PayPal order error:", JSON.stringify(orderData));
+      throw new Error(orderData.details?.[0]?.description || "Failed to create PayPal order");
     }
 
-    const checkoutUrl = squareData.payment_link?.long_url || squareData.payment_link?.url;
+    const approveLink = orderData.links?.find((l: any) => l.rel === "approve");
+    const checkoutUrl = approveLink?.href;
 
-    if (!checkoutUrl) throw new Error("No checkout URL received from Square");
+    if (!checkoutUrl) throw new Error("No checkout URL received from PayPal");
 
     return new Response(JSON.stringify({ url: checkoutUrl }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
