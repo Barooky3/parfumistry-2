@@ -10,7 +10,7 @@ interface CartLineItem {
   name: string;
   brand: string;
   image: string;
-  price: number; // in EUR
+  price: number;
   quantity: number;
   selectedMl?: number;
 }
@@ -27,6 +27,23 @@ interface CheckoutRequest {
   };
   discountPercent?: number;
   freeItemDiscount?: number;
+}
+
+async function getAccessToken(clientId: string, clientSecret: string) {
+  const tokenRes = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
+    method: "POST",
+    headers: {
+      "Authorization": `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "grant_type=client_credentials",
+  });
+  const tokenData = await tokenRes.json();
+  if (!tokenRes.ok) {
+    console.error("PayPal token error:", JSON.stringify(tokenData));
+    throw new Error("Failed to authenticate with PayPal");
+  }
+  return tokenData.access_token;
 }
 
 serve(async (req) => {
@@ -47,7 +64,6 @@ serve(async (req) => {
     const multiplier = 1 - discount / 100;
 
     if (!items || items.length === 0) throw new Error("No items in cart");
-    if (!customerEmail) throw new Error("Customer email is required");
 
     // Expand all cart items into individual units sorted by price (cheapest first)
     const expandedUnits: { itemIndex: number; price: number }[] = [];
@@ -66,7 +82,6 @@ serve(async (req) => {
       freePerItem[expandedUnits[i].itemIndex]++;
     }
 
-    // Build PayPal order items & calculate total
     const paypalItems: any[] = [];
     let orderTotal = 0;
 
@@ -82,10 +97,7 @@ serve(async (req) => {
         paypalItems.push({
           name: label.substring(0, 127),
           quantity: String(paidQty),
-          unit_amount: {
-            currency_code: "EUR",
-            value: unitPrice.toFixed(2),
-          },
+          unit_amount: { currency_code: "EUR", value: unitPrice.toFixed(2) },
         });
       }
 
@@ -93,37 +105,16 @@ serve(async (req) => {
         paypalItems.push({
           name: `${label} (FREE)`.substring(0, 127),
           quantity: String(freeQty),
-          unit_amount: {
-            currency_code: "EUR",
-            value: "0.00",
-          },
+          unit_amount: { currency_code: "EUR", value: "0.00" },
         });
       }
     });
 
     orderTotal = Math.round(orderTotal * 100) / 100;
 
-    const origin = req.headers.get("origin") || "https://profparfums.lovable.app";
+    const accessToken = await getAccessToken(clientId, clientSecret);
 
-    // Get PayPal access token
-    const tokenRes = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
-      method: "POST",
-      headers: {
-        "Authorization": `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: "grant_type=client_credentials",
-    });
-
-    const tokenData = await tokenRes.json();
-    if (!tokenRes.ok) {
-      console.error("PayPal token error:", JSON.stringify(tokenData));
-      throw new Error("Failed to authenticate with PayPal");
-    }
-
-    const accessToken = tokenData.access_token;
-
-    // Create PayPal order
+    // Create PayPal order — NO redirect URLs needed for JS SDK flow
     const orderRes = await fetch("https://api-m.paypal.com/v2/checkout/orders", {
       method: "POST",
       headers: {
@@ -138,23 +129,13 @@ serve(async (req) => {
               currency_code: "EUR",
               value: orderTotal.toFixed(2),
               breakdown: {
-                item_total: {
-                  currency_code: "EUR",
-                  value: orderTotal.toFixed(2),
-                },
+                item_total: { currency_code: "EUR", value: orderTotal.toFixed(2) },
               },
             },
             items: paypalItems,
-            description: `Prof Parfums Order`,
+            description: "Prof Parfums Order",
           },
         ],
-        application_context: {
-          brand_name: "Prof Parfums",
-          landing_page: "NO_PREFERENCE",
-          user_action: "PAY_NOW",
-          return_url: `${origin}/checkout?success=true`,
-          cancel_url: `${origin}/checkout?canceled=true`,
-        },
       }),
     });
 
@@ -165,12 +146,8 @@ serve(async (req) => {
       throw new Error(orderData.details?.[0]?.description || "Failed to create PayPal order");
     }
 
-    const approveLink = orderData.links?.find((l: any) => l.rel === "approve");
-    const checkoutUrl = approveLink?.href;
-
-    if (!checkoutUrl) throw new Error("No checkout URL received from PayPal");
-
-    return new Response(JSON.stringify({ url: checkoutUrl }), {
+    // Return order ID for JS SDK
+    return new Response(JSON.stringify({ orderID: orderData.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
@@ -178,10 +155,7 @@ serve(async (req) => {
     console.error("Error creating checkout session:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
 });

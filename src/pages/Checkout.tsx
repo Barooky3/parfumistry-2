@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, Lock, User, CheckSquare, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -185,13 +185,14 @@ const Checkout = () => {
   const { items, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount, clearCart } = useCart();
   const { toast } = useToast();
   const { formatPrice } = useCurrency();
-  const [searchParams] = useSearchParams();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
+  const paypalButtonsRendered = useRef(false);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -350,50 +351,6 @@ const Checkout = () => {
     }));
   };
 
-  // Handle Square success/cancel redirects
-  useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      setIsCompleted(true);
-      
-      // Send order confirmation email with saved cart data
-      const savedOrder = localStorage.getItem('profparfums-pending-order');
-      const savedMeta = localStorage.getItem('profparfums-pending-order-meta');
-      if (savedOrder) {
-        const orderItems = JSON.parse(savedOrder);
-        const meta = savedMeta ? JSON.parse(savedMeta) : {};
-        localStorage.removeItem('profparfums-pending-order');
-        localStorage.removeItem('profparfums-pending-order-meta');
-        
-        supabase.functions.invoke('send-order-confirmation', {
-          body: {
-            orderItems,
-            customerEmail: meta.customerEmail || '',
-            customerName: meta.customerName || '',
-            shippingAddress: meta.shippingAddress || {},
-            totalAmount: meta.totalAmount || '',
-          },
-        }).then(({ error }) => {
-          if (error) console.error('Failed to send confirmation email:', error);
-        });
-      }
-      
-      clearCart();
-    }
-    if (searchParams.get('canceled') === 'true') {
-      toast({ title: 'Payment canceled', description: 'Your payment was canceled. You can try again.' });
-    }
-  }, [searchParams, clearCart]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (addressInputRef.current && !addressInputRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   const isValidEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -402,8 +359,6 @@ const Checkout = () => {
     return formData.email && isValidEmail(formData.email) && formData.firstName && formData.lastName && 
            formData.country && formData.streetAddress && formData.postalCode && formData.city;
   };
-
-
 
   const handleApplyDiscount = () => {
     setIsApplyingDiscount(true);
@@ -421,74 +376,157 @@ const Checkout = () => {
     }, 600);
   };
 
-  const handlePayment = async () => {
-    if (!isFormValid()) {
-      const emailIssue = formData.email && !isValidEmail(formData.email);
-      toast({ 
-        title: emailIssue ? 'Invalid email' : 'Missing information', 
-        description: emailIssue ? 'Please enter a valid email address.' : 'Please fill in all required fields.',
-        variant: 'destructive'
-      });
+  // Load PayPal JS SDK and render buttons
+  useEffect(() => {
+    if (!isFormValid() || items.length === 0 || isCompleted) {
+      // Clear container when form is invalid
+      if (paypalContainerRef.current) paypalContainerRef.current.innerHTML = '';
+      paypalButtonsRendered.current = false;
       return;
     }
+    
+    const container = paypalContainerRef.current;
+    if (!container) return;
 
-    setIsProcessing(true);
-    try {
-      const cartItems = items.map(item => ({
-        name: item.product.name,
-        brand: item.product.brand,
-        image: item.product.image,
-        price: item.selectedPrice || item.product.price,
-        quantity: item.quantity,
-        selectedMl: item.selectedMl,
-      }));
+    // Prevent re-rendering if already rendered with same config
+    paypalButtonsRendered.current = false;
+    container.innerHTML = '';
 
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {
-          items: cartItems,
-          customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName}`,
-          shippingAddress: {
-            country: formData.country,
-            city: formData.city,
-            postalCode: formData.postalCode,
-            line1: formData.streetAddress,
-          },
-          discountPercent: appliedDiscount?.percent || 0,
-          freeItemDiscount: freeItemDiscount,
-        },
-      });
+    const loadAndRender = async () => {
+      try {
+        // Fetch PayPal client ID from edge function
+        const { data: configData, error: configError } = await supabase.functions.invoke('get-paypal-client-id');
+        if (configError || !configData?.clientId) {
+          console.error('Failed to get PayPal client ID');
+          return;
+        }
+        const clientId = configData.clientId;
 
-      if (error) throw error;
-      if (data?.url) {
-        // Save cart items + metadata for order confirmation email after redirect
-        localStorage.setItem('profparfums-pending-order', JSON.stringify(cartItems));
-        localStorage.setItem('profparfums-pending-order-meta', JSON.stringify({
-          customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName}`,
-          shippingAddress: {
-            country: formData.country,
-            city: formData.city,
-            postalCode: formData.postalCode,
-            line1: formData.streetAddress,
-          },
-          totalAmount: (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice).toFixed(2),
-        }));
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL received');
+        // Load PayPal SDK script
+        const existingScript = document.querySelector('script[src*="paypal.com/sdk/js"]');
+        
+        const renderButtons = () => {
+          if (paypalButtonsRendered.current) return;
+          if (!paypalContainerRef.current) return;
+          paypalContainerRef.current.innerHTML = '';
+          
+          const paypal = (window as any).paypal;
+          if (!paypal) return;
+          
+          paypalButtonsRendered.current = true;
+          
+          paypal.Buttons({
+            style: {
+              layout: 'vertical',
+              color: 'gold',
+              shape: 'rect',
+              label: 'paypal',
+            },
+            createOrder: async () => {
+              const cartItems = items.map(item => ({
+                name: item.product.name,
+                brand: item.product.brand,
+                image: item.product.image,
+                price: item.selectedPrice || item.product.price,
+                quantity: item.quantity,
+                selectedMl: item.selectedMl,
+              }));
+
+              const { data, error } = await supabase.functions.invoke('create-checkout', {
+                body: {
+                  items: cartItems,
+                  customerEmail: formData.email,
+                  customerName: `${formData.firstName} ${formData.lastName}`,
+                  shippingAddress: {
+                    country: formData.country,
+                    city: formData.city,
+                    postalCode: formData.postalCode,
+                    line1: formData.streetAddress,
+                  },
+                  discountPercent: appliedDiscount?.percent || 0,
+                  freeItemDiscount: freeItemDiscount,
+                },
+              });
+
+              if (error) throw error;
+              if (!data?.orderID) throw new Error('No order ID received');
+              return data.orderID;
+            },
+            onApprove: async (approveData: any) => {
+              setIsProcessing(true);
+              try {
+                const { data: captureData, error } = await supabase.functions.invoke('capture-order', {
+                  body: { orderID: approveData.orderID },
+                });
+
+                if (error) throw error;
+                if (captureData?.status === 'COMPLETED') {
+                  const cartItems = items.map(item => ({
+                    name: item.product.name,
+                    brand: item.product.brand,
+                    image: item.product.image,
+                    price: item.selectedPrice || item.product.price,
+                    quantity: item.quantity,
+                    selectedMl: item.selectedMl,
+                  }));
+                  
+                  supabase.functions.invoke('send-order-confirmation', {
+                    body: {
+                      orderItems: cartItems,
+                      customerEmail: formData.email,
+                      customerName: `${formData.firstName} ${formData.lastName}`,
+                      shippingAddress: {
+                        country: formData.country,
+                        city: formData.city,
+                        postalCode: formData.postalCode,
+                        line1: formData.streetAddress,
+                      },
+                      totalAmount: (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice).toFixed(2),
+                    },
+                  });
+
+                  setIsCompleted(true);
+                  clearCart();
+                } else {
+                  throw new Error('Payment not completed');
+                }
+              } catch (err: any) {
+                console.error('Capture error:', err);
+                toast({
+                  title: 'Payment error',
+                  description: err.message || 'Something went wrong capturing the payment.',
+                  variant: 'destructive',
+                });
+              } finally {
+                setIsProcessing(false);
+              }
+            },
+            onError: (err: any) => {
+              console.error('PayPal error:', err);
+              toast({
+                title: 'Payment error',
+                description: 'Something went wrong with PayPal. Please try again.',
+                variant: 'destructive',
+              });
+            },
+          }).render(paypalContainerRef.current);
+        };
+
+        if (existingScript && (window as any).paypal) {
+          renderButtons();
+        } else if (!existingScript) {
+          const script = document.createElement('script');
+          script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=EUR`;
+          script.addEventListener('load', renderButtons);
+          document.body.appendChild(script);
+        }
+      } catch (err) {
+        console.error('Failed to load PayPal:', err);
       }
-    } catch (error: any) {
-      console.error('Checkout error:', error);
-      toast({
-        title: 'Payment error',
-        description: error.message || 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+    };
+
+    loadAndRender();
+  }, [items, appliedDiscount, formData, isCompleted]);
 
   // Empty cart state
   if (items.length === 0 && !isCompleted) {
@@ -834,32 +872,22 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Form validation message */}
-              {!isFormValid() && (
-                <p className="text-xs text-center text-muted-foreground mb-4">
-                  Fill in all required fields to proceed with payment.
-                </p>
-              )}
-
-              {/* Payment Button */}
+              {/* PayPal Buttons */}
               <div className="space-y-3">
-                <Button 
-                  onClick={handlePayment}
-                  disabled={!isFormValid() || isProcessing}
-                  className="w-full h-12 text-sm font-medium rounded-md disabled:opacity-50"
-                >
-                  {isProcessing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="h-4 w-4 mr-2" />
-                      Pay with PayPal
-                    </>
-                  )}
-                </Button>
+                {isProcessing && (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
+                    <span className="text-sm text-muted-foreground">Processing payment...</span>
+                  </div>
+                )}
+                
+                <div ref={paypalContainerRef} className={isProcessing ? 'opacity-50 pointer-events-none' : ''} />
+                
+                {!isFormValid() && (
+                  <p className="text-xs text-center text-muted-foreground">
+                    Fill in all required fields to see payment options.
+                  </p>
+                )}
 
                 {/* Terms */}
                 <p className="text-xs text-center text-muted-foreground pt-2">
