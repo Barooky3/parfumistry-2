@@ -48,6 +48,16 @@ const COUNTRIES = [
   'Turkey',
   'Russia',
   'Ukraine',
+  'Bosnia and Herzegovina',
+  'Montenegro',
+  'North Macedonia',
+  'Albania',
+  'Moldova',
+  'Cyprus',
+  'Malta',
+  'Monaco',
+  'Liechtenstein',
+  'Andorra',
   // North America
   'United States',
   'Canada',
@@ -58,6 +68,18 @@ const COUNTRIES = [
   'Chile',
   'Colombia',
   'Peru',
+  'Ecuador',
+  'Uruguay',
+  // Middle East
+  'United Arab Emirates',
+  'Saudi Arabia',
+  'Qatar',
+  'Kuwait',
+  'Bahrain',
+  'Oman',
+  'Israel',
+  'Jordan',
+  'Lebanon',
   // Asia
   'Japan',
   'South Korea',
@@ -69,8 +91,10 @@ const COUNTRIES = [
   'Malaysia',
   'Singapore',
   'Philippines',
-  'United Arab Emirates',
-  'Saudi Arabia',
+  'Hong Kong',
+  'Taiwan',
+  'Pakistan',
+  'Bangladesh',
   // Oceania
   'Australia',
   'New Zealand',
@@ -79,7 +103,10 @@ const COUNTRIES = [
   'Egypt',
   'Morocco',
   'Nigeria',
-];
+  'Kenya',
+  'Ghana',
+  'Tunisia',
+].sort();
 
 // Interface for PDOK API response (Netherlands)
 interface PDOKSuggestion {
@@ -139,6 +166,16 @@ const COUNTRY_CODES: Record<string, string> = {
   'Turkey': 'tr',
   'Russia': 'ru',
   'Ukraine': 'ua',
+  'Bosnia and Herzegovina': 'ba',
+  'Montenegro': 'me',
+  'North Macedonia': 'mk',
+  'Albania': 'al',
+  'Moldova': 'md',
+  'Cyprus': 'cy',
+  'Malta': 'mt',
+  'Monaco': 'mc',
+  'Liechtenstein': 'li',
+  'Andorra': 'ad',
   // North America
   'United States': 'us',
   'Canada': 'ca',
@@ -149,6 +186,18 @@ const COUNTRY_CODES: Record<string, string> = {
   'Chile': 'cl',
   'Colombia': 'co',
   'Peru': 'pe',
+  'Ecuador': 'ec',
+  'Uruguay': 'uy',
+  // Middle East
+  'United Arab Emirates': 'ae',
+  'Saudi Arabia': 'sa',
+  'Qatar': 'qa',
+  'Kuwait': 'kw',
+  'Bahrain': 'bh',
+  'Oman': 'om',
+  'Israel': 'il',
+  'Jordan': 'jo',
+  'Lebanon': 'lb',
   // Asia
   'Japan': 'jp',
   'South Korea': 'kr',
@@ -160,8 +209,10 @@ const COUNTRY_CODES: Record<string, string> = {
   'Malaysia': 'my',
   'Singapore': 'sg',
   'Philippines': 'ph',
-  'United Arab Emirates': 'ae',
-  'Saudi Arabia': 'sa',
+  'Hong Kong': 'hk',
+  'Taiwan': 'tw',
+  'Pakistan': 'pk',
+  'Bangladesh': 'bd',
   // Oceania
   'Australia': 'au',
   'New Zealand': 'nz',
@@ -170,6 +221,9 @@ const COUNTRY_CODES: Record<string, string> = {
   'Egypt': 'eg',
   'Morocco': 'ma',
   'Nigeria': 'ng',
+  'Kenya': 'ke',
+  'Ghana': 'gh',
+  'Tunisia': 'tn',
 };
 
 // Debounce function
@@ -573,7 +627,7 @@ const Checkout = () => {
           renderButtons();
         } else if (!existingScript) {
           const script = document.createElement('script');
-          script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=EUR`;
+          script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=EUR&disable-funding=paylater`;
           script.addEventListener('load', renderButtons);
           document.body.appendChild(script);
         }

@@ -46,6 +46,32 @@ async function getAccessToken(clientId: string, clientSecret: string) {
   return tokenData.access_token;
 }
 
+const COUNTRY_CODE_MAP: Record<string, string> = {
+  'Netherlands': 'NL', 'Belgium': 'BE', 'Germany': 'DE', 'France': 'FR', 'United Kingdom': 'GB',
+  'Spain': 'ES', 'Italy': 'IT', 'Austria': 'AT', 'Switzerland': 'CH', 'Portugal': 'PT',
+  'Poland': 'PL', 'Sweden': 'SE', 'Denmark': 'DK', 'Norway': 'NO', 'Finland': 'FI',
+  'Ireland': 'IE', 'Luxembourg': 'LU', 'Czech Republic': 'CZ', 'Greece': 'GR', 'Hungary': 'HU',
+  'Romania': 'RO', 'Bulgaria': 'BG', 'Croatia': 'HR', 'Slovakia': 'SK', 'Slovenia': 'SI',
+  'Serbia': 'RS', 'Estonia': 'EE', 'Latvia': 'LV', 'Lithuania': 'LT', 'Iceland': 'IS',
+  'Turkey': 'TR', 'Russia': 'RU', 'Ukraine': 'UA', 'Bosnia and Herzegovina': 'BA',
+  'Montenegro': 'ME', 'North Macedonia': 'MK', 'Albania': 'AL', 'Moldova': 'MD',
+  'Cyprus': 'CY', 'Malta': 'MT', 'Monaco': 'MC', 'Liechtenstein': 'LI', 'Andorra': 'AD',
+  'United States': 'US', 'Canada': 'CA', 'Mexico': 'MX',
+  'Brazil': 'BR', 'Argentina': 'AR', 'Chile': 'CL', 'Colombia': 'CO', 'Peru': 'PE',
+  'Ecuador': 'EC', 'Uruguay': 'UY',
+  'United Arab Emirates': 'AE', 'Saudi Arabia': 'SA', 'Qatar': 'QA', 'Kuwait': 'KW',
+  'Bahrain': 'BH', 'Oman': 'OM', 'Israel': 'IL', 'Jordan': 'JO', 'Lebanon': 'LB',
+  'Japan': 'JP', 'South Korea': 'KR', 'China': 'CN', 'India': 'IN', 'Thailand': 'TH',
+  'Vietnam': 'VN', 'Indonesia': 'ID', 'Malaysia': 'MY', 'Singapore': 'SG', 'Philippines': 'PH',
+  'Hong Kong': 'HK', 'Taiwan': 'TW', 'Pakistan': 'PK', 'Bangladesh': 'BD',
+  'Australia': 'AU', 'New Zealand': 'NZ',
+  'South Africa': 'ZA', 'Egypt': 'EG', 'Morocco': 'MA', 'Nigeria': 'NG',
+  'Kenya': 'KE', 'Ghana': 'GH', 'Tunisia': 'TN',
+};
+
+function getCountryCode(country: string): string {
+  return COUNTRY_CODE_MAP[country] || 'NL';
+}
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -134,8 +160,20 @@ serve(async (req) => {
             },
             items: paypalItems,
             description: "Prof Parfums Order",
+            shipping: {
+              name: { full_name: customerName },
+              address: {
+                address_line_1: shippingAddress.line1,
+                admin_area_2: shippingAddress.city,
+                postal_code: shippingAddress.postalCode,
+                country_code: getCountryCode(shippingAddress.country),
+              },
+            },
           },
         ],
+        application_context: {
+          shipping_preference: "SET_PROVIDED_ADDRESS",
+        },
       }),
     });
 
