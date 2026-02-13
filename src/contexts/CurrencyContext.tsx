@@ -78,6 +78,7 @@ export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Sweden': 'SEK', 'Denmark': 'DKK', 'Norway': 'NOK', 'Iceland': 'ISK',
   'Poland': 'PLN', 'Czech Republic': 'CZK', 'Hungary': 'HUF',
   'Romania': 'RON', 'Bulgaria': 'BGN',
+  'Serbia': 'EUR',
   'Turkey': 'TRY', 'Russia': 'RUB', 'Ukraine': 'UAH',
   'United States': 'USD', 'Canada': 'CAD', 'Mexico': 'MXN',
   'Brazil': 'BRL', 'Argentina': 'ARS', 'Chile': 'CLP', 'Colombia': 'COP', 'Peru': 'PEN',
