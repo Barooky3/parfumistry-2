@@ -1,11 +1,13 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2 } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useToast } from '@/hooks/use-toast';
@@ -180,6 +182,50 @@ const debounce = <T extends (...args: Parameters<T>) => void>(
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };
+};
+
+// Country Combobox with search
+const CountryCombobox = ({ value, onSelect }: { value: string; onSelect: (value: string) => void }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full h-12 justify-between bg-background border-border rounded-md font-normal"
+        >
+          {value || "Select your country"}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search country..." />
+          <CommandList>
+            <CommandEmpty>No country found.</CommandEmpty>
+            <CommandGroup>
+              {COUNTRIES.map((country) => (
+                <CommandItem
+                  key={country}
+                  value={country}
+                  onSelect={() => {
+                    onSelect(country);
+                    setOpen(false);
+                  }}
+                >
+                  <Check className={cn("mr-2 h-4 w-4", value === country ? "opacity-100" : "opacity-0")} />
+                  {country}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
 };
 
 const Checkout = () => {
@@ -679,23 +725,15 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Country Dropdown */}
+              {/* Country Dropdown with Search */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium tracking-wider text-foreground">
                   COUNTRY <span className="text-accent">*</span>
                 </Label>
-                <Select value={formData.country} onValueChange={(value) => updateFormData('country', value)}>
-                  <SelectTrigger className="h-12 bg-background border-border rounded-md">
-                    <SelectValue placeholder="Select your country" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COUNTRIES.map((country) => (
-                      <SelectItem key={country} value={country}>
-                        {country}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CountryCombobox
+                  value={formData.country}
+                  onSelect={(value) => updateFormData('country', value)}
+                />
               </div>
 
               {/* Street Address */}
