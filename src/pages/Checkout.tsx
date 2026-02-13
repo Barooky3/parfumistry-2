@@ -38,6 +38,7 @@ const COUNTRIES = [
   'Croatia',
   'Slovakia',
   'Slovenia',
+  'Serbia',
   'Estonia',
   'Latvia',
   'Lithuania',
