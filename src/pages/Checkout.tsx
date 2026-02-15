@@ -348,8 +348,8 @@ const Checkout = () => {
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
-  const paypalContainerRef = useRef<HTMLDivElement>(null);
-  const paypalButtonsRendered = useRef(false);
+  const sumupContainerRef = useRef<HTMLDivElement>(null);
+  const sumupMounted = useRef(false);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -533,7 +533,7 @@ const Checkout = () => {
     }, 600);
   };
 
-  // Store latest form data in a ref so PayPal callbacks always see current values
+  // Store latest form data in a ref so callbacks always see current values
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
   const appliedDiscountRef = useRef(appliedDiscount);
@@ -541,171 +541,135 @@ const Checkout = () => {
   const isFormValidRef = useRef(isFormValid());
   isFormValidRef.current = isFormValid();
 
-  // Load PayPal JS SDK and render buttons (once, regardless of form state)
-  useEffect(() => {
-    if (items.length === 0 || isCompleted) return;
-    
-    const container = paypalContainerRef.current;
-    if (!container || paypalButtonsRendered.current) return;
+  // Calculate current total
+  const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
 
-    const loadAndRender = async () => {
-      try {
-        const { data: configData, error: configError } = await supabase.functions.invoke('get-paypal-client-id');
-        if (configError || !configData?.clientId) {
-          console.error('Failed to get PayPal client ID');
-          return;
-        }
-        const clientId = configData.clientId;
+  // Handle SumUp payment
+  const handleSumUpPayment = async () => {
+    if (!isFormValid()) {
+      toast({
+        title: 'Please fill in all fields',
+        description: 'Complete your shipping information before paying.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-        const existingScript = document.querySelector('script[src*="paypal.com/sdk/js"]');
-        
-        const renderButtons = () => {
-          if (paypalButtonsRendered.current) return;
-          if (!paypalContainerRef.current) return;
-          paypalContainerRef.current.innerHTML = '';
-          
-          const paypal = (window as any).paypal;
-          if (!paypal) return;
-          
-          paypalButtonsRendered.current = true;
-          
-          paypal.Buttons({
-            style: {
-              layout: 'vertical',
-              color: 'gold',
-              shape: 'rect',
-              label: 'paypal',
-            },
-            onClick: (_data: any, actions: any) => {
-              if (!isFormValidRef.current) {
-                toast({
-                  title: 'Please fill in all fields',
-                  description: 'Complete your shipping information before paying.',
-                  variant: 'destructive',
-                });
-                return actions.reject();
-              }
-              return actions.resolve();
-            },
-            createOrder: async () => {
-              const fd = formDataRef.current;
-              const cartItems = items.map(item => ({
-                name: item.product.name,
-                brand: item.product.brand,
-                image: item.product.image,
-                price: item.selectedPrice || item.product.price,
-                quantity: item.quantity,
-                selectedMl: item.selectedMl,
-              }));
+    setIsProcessing(true);
 
-              const { data, error } = await supabase.functions.invoke('create-checkout', {
-                body: {
-                  items: cartItems,
-                  customerEmail: fd.email,
-                  customerName: `${fd.firstName} ${fd.lastName}`,
-                  shippingAddress: {
-                    country: fd.country,
-                    city: fd.city,
-                    postalCode: fd.postalCode,
-                    line1: fd.streetAddress,
-                  },
-                  discountPercent: appliedDiscountRef.current?.percent || 0,
-                  freeItemDiscount: freeItemDiscount,
-                },
-              });
+    try {
+      const fd = formDataRef.current;
+      const finalTotal = appliedDiscountRef.current
+        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
+        : totalPrice;
+      const amount = Math.round(finalTotal * 100) / 100;
 
-              if (error) throw error;
-              if (!data?.orderID) throw new Error('No order ID received');
-              return data.orderID;
-            },
-            onApprove: async (approveData: any) => {
-              setIsProcessing(true);
-              try {
-                const { data: captureData, error } = await supabase.functions.invoke('capture-order', {
-                  body: { orderID: approveData.orderID },
-                });
+      const checkoutReference = `PP-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 
-                if (error) throw error;
-                if (captureData?.status === 'COMPLETED') {
-                  const fd = formDataRef.current;
-                  const cartItems = items.map(item => ({
-                    name: item.product.name,
-                    brand: item.product.brand,
-                    image: item.product.image,
-                    price: item.selectedPrice || item.product.price,
-                    quantity: item.quantity,
-                    selectedMl: item.selectedMl,
-                  }));
-                  
-                  const confirmationPayload = {
-                    orderItems: cartItems,
-                    customerEmail: fd.email,
-                    customerName: `${fd.firstName} ${fd.lastName}`,
-                    shippingAddress: {
-                      country: fd.country,
-                      city: fd.city,
-                      postalCode: fd.postalCode,
-                      line1: fd.streetAddress,
-                    },
-                    totalAmount: (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2),
-                  };
-                  console.log('Sending order confirmation:', JSON.stringify(confirmationPayload));
-                  
-                  try {
-                    const { data: emailData, error: emailError } = await supabase.functions.invoke('send-order-confirmation', {
-                      body: confirmationPayload,
-                    });
-                    if (emailError) {
-                      console.error('Order confirmation email error:', emailError);
-                    } else {
-                      console.log('Order confirmation email sent:', emailData);
-                    }
-                  } catch (emailErr) {
-                    console.error('Order confirmation email exception:', emailErr);
-                  }
+      // Create SumUp checkout
+      const { data, error } = await supabase.functions.invoke('create-sumup-checkout', {
+        body: {
+          amount,
+          description: 'Prof Parfums Order',
+          customerEmail: fd.email,
+          checkoutReference,
+        },
+      });
 
-                  setIsCompleted(true);
-                  clearCart();
-                } else {
-                  throw new Error('Payment not completed');
-                }
-              } catch (err: any) {
-                console.error('Capture error:', err);
-                toast({
-                  title: 'Payment error',
-                  description: err.message || 'Something went wrong capturing the payment.',
-                  variant: 'destructive',
-                });
-              } finally {
-                setIsProcessing(false);
-              }
-            },
-            onError: (err: any) => {
-              console.error('PayPal error:', err);
-              toast({
-                title: 'Payment error',
-                description: 'Something went wrong with PayPal. Please try again.',
-                variant: 'destructive',
-              });
-            },
-          }).render(paypalContainerRef.current);
-        };
-
-        if (existingScript && (window as any).paypal) {
-          renderButtons();
-        } else if (!existingScript) {
-          const script = document.createElement('script');
-          script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=EUR&disable-funding=paylater`;
-          script.addEventListener('load', renderButtons);
-          document.body.appendChild(script);
-        }
-      } catch (err) {
-        console.error('Failed to load PayPal:', err);
+      if (error || !data?.checkoutId) {
+        throw new Error(error?.message || data?.error || 'Failed to create checkout');
       }
-    };
 
-    loadAndRender();
-  }, [items.length, isCompleted]);
+      const checkoutId = data.checkoutId;
+
+      // Mount SumUp card widget
+      const container = sumupContainerRef.current;
+      if (!container) throw new Error('Payment container not found');
+      container.innerHTML = '<div id="sumup-card"></div>';
+
+      // Load SumUp SDK if not already loaded
+      if (!(window as any).SumUpCard) {
+        await new Promise<void>((resolve, reject) => {
+          const existingScript = document.querySelector('script[src*="sumup.com/gateway/ecom/card"]');
+          if (existingScript) {
+            // Wait for it to load
+            const check = setInterval(() => {
+              if ((window as any).SumUpCard) { clearInterval(check); resolve(); }
+            }, 100);
+            setTimeout(() => { clearInterval(check); reject(new Error('SumUp SDK timeout')); }, 10000);
+            return;
+          }
+          const script = document.createElement('script');
+          script.src = 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js';
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Failed to load SumUp SDK'));
+          document.head.appendChild(script);
+        });
+      }
+
+      const SumUpCard = (window as any).SumUpCard;
+      SumUpCard.mount({
+        id: 'sumup-card',
+        checkoutId,
+        onResponse: async (type: string, body: any) => {
+          console.log('SumUp response:', type, body);
+
+          if (type === 'success' || body?.status === 'PAID') {
+            // Send order confirmation email
+            const cartItems = items.map(item => ({
+              name: item.product.name,
+              brand: item.product.brand,
+              image: item.product.image,
+              price: item.selectedPrice || item.product.price,
+              quantity: item.quantity,
+              selectedMl: item.selectedMl,
+            }));
+
+            const confirmationPayload = {
+              orderItems: cartItems,
+              customerEmail: fd.email,
+              customerName: `${fd.firstName} ${fd.lastName}`,
+              shippingAddress: {
+                country: fd.country,
+                city: fd.city,
+                postalCode: fd.postalCode,
+                line1: fd.streetAddress,
+              },
+              totalAmount: amount.toFixed(2),
+            };
+
+            try {
+              const { error: emailError } = await supabase.functions.invoke('send-order-confirmation', {
+                body: confirmationPayload,
+              });
+              if (emailError) console.error('Order confirmation email error:', emailError);
+            } catch (emailErr) {
+              console.error('Order confirmation email exception:', emailErr);
+            }
+
+            setIsCompleted(true);
+            clearCart();
+          } else if (type === 'error' || body?.status === 'FAILED') {
+            toast({
+              title: 'Payment failed',
+              description: body?.message || 'Your payment was not completed. Please try again.',
+              variant: 'destructive',
+            });
+          }
+
+          setIsProcessing(false);
+        },
+      });
+    } catch (err: any) {
+      console.error('SumUp payment error:', err);
+      toast({
+        title: 'Payment error',
+        description: err.message || 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+      setIsProcessing(false);
+    }
+  };
 
   // Empty cart state
   if (items.length === 0 && !isCompleted) {
@@ -1043,7 +1007,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* PayPal Buttons */}
+              {/* SumUp Payment */}
               <div className="space-y-3">
                 {isProcessing && (
                   <div className="flex items-center justify-center py-4">
@@ -1052,18 +1016,23 @@ const Checkout = () => {
                   </div>
                 )}
                 
-                <div ref={paypalContainerRef} className={isProcessing ? 'opacity-50 pointer-events-none' : ''} />
+                <div ref={sumupContainerRef} className={isProcessing ? 'min-h-[60px]' : ''} />
+
+                {!isProcessing && (
+                  <Button
+                    onClick={handleSumUpPayment}
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-12 text-xs tracking-[0.15em] uppercase font-semibold rounded-md"
+                  >
+                    Pay {formatPrice(currentTotal)}
+                  </Button>
+                )}
                 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
-                    Fill in all required fields to see payment options.
+                    Fill in all required fields to enable payment.
                   </p>
                 )}
-
-                {/* Terms */}
-                <p className="text-xs text-center text-muted-foreground pt-2">
-                  By completing this purchase, you agree to our terms and conditions.
-                </p>
               </div>
             </div>
           </div>
