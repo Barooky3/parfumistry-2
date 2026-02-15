@@ -566,13 +566,32 @@ const Checkout = () => {
 
       const checkoutReference = `PP-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 
-      // Create SumUp checkout
+      const cartItems = items.map(item => ({
+        name: item.product.name,
+        brand: item.product.brand,
+        image: item.product.image,
+        price: item.selectedPrice || item.product.price,
+        quantity: item.quantity,
+        selectedMl: item.selectedMl,
+      }));
+
+      // Create SumUp checkout (also stores order in database for reliable email delivery)
       const { data, error } = await supabase.functions.invoke('create-sumup-checkout', {
         body: {
           amount,
           description: 'Prof Parfums Order',
           customerEmail: fd.email,
+          customerName: `${fd.firstName} ${fd.lastName}`,
           checkoutReference,
+          orderItems: cartItems,
+          shippingAddress: {
+            country: fd.country,
+            city: fd.city,
+            postalCode: fd.postalCode,
+            line1: fd.streetAddress,
+          },
+          discountCode: appliedDiscountRef.current?.code || undefined,
+          discountPercent: appliedDiscountRef.current?.percent || undefined,
         },
       });
 
@@ -614,34 +633,15 @@ const Checkout = () => {
           console.log('SumUp response:', type, body);
 
           if (type === 'success' || body?.status === 'PAID') {
-            const cartItems = items.map(item => ({
-              name: item.product.name,
-              brand: item.product.brand,
-              image: item.product.image,
-              price: item.selectedPrice || item.product.price,
-              quantity: item.quantity,
-              selectedMl: item.selectedMl,
-            }));
-
-            const confirmationPayload = {
-              orderItems: cartItems,
-              customerEmail: fd.email,
-              customerName: `${fd.firstName} ${fd.lastName}`,
-              shippingAddress: {
-                country: fd.country,
-                city: fd.city,
-                postalCode: fd.postalCode,
-                line1: fd.streetAddress,
-              },
-              totalAmount: amount.toFixed(2),
-            };
-
+            // Verify payment server-side and send email reliably
             try {
-              await supabase.functions.invoke('send-order-confirmation', {
-                body: confirmationPayload,
+              await supabase.functions.invoke('verify-sumup-payment', {
+                body: { checkoutReference },
               });
-            } catch (emailErr) {
-              console.error('Order confirmation email error:', emailErr);
+            } catch (verifyErr) {
+              console.error('Payment verification error:', verifyErr);
+              // Email will still be sent server-side even if this call fails,
+              // since the order is stored in the database
             }
 
             setIsCompleted(true);
