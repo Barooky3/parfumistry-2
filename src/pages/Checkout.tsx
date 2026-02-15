@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -342,14 +343,13 @@ const Checkout = () => {
   const { items, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount, clearCart } = useCart();
   const { toast } = useToast();
   const { formatPrice } = useCurrency();
+  const [searchParams] = useSearchParams();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
-  const sumupContainerRef = useRef<HTMLDivElement>(null);
-  const sumupMounted = useRef(false);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -544,7 +544,7 @@ const Checkout = () => {
   // Calculate current total
   const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
 
-  // Handle SumUp payment
+  // Handle SumUp payment - redirect to hosted checkout
   const handleSumUpPayment = async () => {
     if (!isFormValid()) {
       toast({
@@ -566,6 +566,31 @@ const Checkout = () => {
 
       const checkoutReference = `PP-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 
+      // Store order details for after redirect
+      const cartItems = items.map(item => ({
+        name: item.product.name,
+        brand: item.product.brand,
+        image: item.product.image,
+        price: item.selectedPrice || item.product.price,
+        quantity: item.quantity,
+        selectedMl: item.selectedMl,
+      }));
+
+      localStorage.setItem('pp_pending_order', JSON.stringify({
+        cartItems,
+        customerEmail: fd.email,
+        customerName: `${fd.firstName} ${fd.lastName}`,
+        shippingAddress: {
+          country: fd.country,
+          city: fd.city,
+          postalCode: fd.postalCode,
+          line1: fd.streetAddress,
+        },
+        totalAmount: amount.toFixed(2),
+      }));
+
+      const redirectUrl = `${window.location.origin}/checkout?payment=success`;
+
       // Create SumUp checkout
       const { data, error } = await supabase.functions.invoke('create-sumup-checkout', {
         body: {
@@ -573,6 +598,7 @@ const Checkout = () => {
           description: 'Prof Parfums Order',
           customerEmail: fd.email,
           checkoutReference,
+          redirectUrl,
         },
       });
 
@@ -580,86 +606,8 @@ const Checkout = () => {
         throw new Error(error?.message || data?.error || 'Failed to create checkout');
       }
 
-      const checkoutId = data.checkoutId;
-
-      // Mount SumUp card widget
-      const container = sumupContainerRef.current;
-      if (!container) throw new Error('Payment container not found');
-      container.innerHTML = '<div id="sumup-card"></div>';
-
-      // Load SumUp SDK if not already loaded
-      if (!(window as any).SumUpCard) {
-        await new Promise<void>((resolve, reject) => {
-          const existingScript = document.querySelector('script[src*="sumup.com/gateway/ecom/card"]');
-          if (existingScript) {
-            // Wait for it to load
-            const check = setInterval(() => {
-              if ((window as any).SumUpCard) { clearInterval(check); resolve(); }
-            }, 100);
-            setTimeout(() => { clearInterval(check); reject(new Error('SumUp SDK timeout')); }, 10000);
-            return;
-          }
-          const script = document.createElement('script');
-          script.src = 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js';
-          script.onload = () => resolve();
-          script.onerror = () => reject(new Error('Failed to load SumUp SDK'));
-          document.head.appendChild(script);
-        });
-      }
-
-      const SumUpCard = (window as any).SumUpCard;
-      SumUpCard.mount({
-        id: 'sumup-card',
-        checkoutId,
-        onResponse: async (type: string, body: any) => {
-          console.log('SumUp response:', type, body);
-
-          if (type === 'success' || body?.status === 'PAID') {
-            // Send order confirmation email
-            const cartItems = items.map(item => ({
-              name: item.product.name,
-              brand: item.product.brand,
-              image: item.product.image,
-              price: item.selectedPrice || item.product.price,
-              quantity: item.quantity,
-              selectedMl: item.selectedMl,
-            }));
-
-            const confirmationPayload = {
-              orderItems: cartItems,
-              customerEmail: fd.email,
-              customerName: `${fd.firstName} ${fd.lastName}`,
-              shippingAddress: {
-                country: fd.country,
-                city: fd.city,
-                postalCode: fd.postalCode,
-                line1: fd.streetAddress,
-              },
-              totalAmount: amount.toFixed(2),
-            };
-
-            try {
-              const { error: emailError } = await supabase.functions.invoke('send-order-confirmation', {
-                body: confirmationPayload,
-              });
-              if (emailError) console.error('Order confirmation email error:', emailError);
-            } catch (emailErr) {
-              console.error('Order confirmation email exception:', emailErr);
-            }
-
-            setIsCompleted(true);
-            clearCart();
-          } else if (type === 'error' || body?.status === 'FAILED') {
-            toast({
-              title: 'Payment failed',
-              description: body?.message || 'Your payment was not completed. Please try again.',
-              variant: 'destructive',
-            });
-          }
-
-          setIsProcessing(false);
-        },
-      });
+      // Redirect to SumUp hosted checkout page
+      window.location.href = `https://pay.sumup.com/b2c/v0.1/checkouts/${data.checkoutId}`;
     } catch (err: any) {
       console.error('SumUp payment error:', err);
       toast({
@@ -670,6 +618,32 @@ const Checkout = () => {
       setIsProcessing(false);
     }
   };
+
+  // Handle return from SumUp payment
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment');
+    if (paymentStatus === 'success') {
+      const pendingOrder = localStorage.getItem('pp_pending_order');
+      if (pendingOrder) {
+        const orderData = JSON.parse(pendingOrder);
+        localStorage.removeItem('pp_pending_order');
+
+        // Send order confirmation email
+        supabase.functions.invoke('send-order-confirmation', {
+          body: {
+            orderItems: orderData.cartItems,
+            customerEmail: orderData.customerEmail,
+            customerName: orderData.customerName,
+            shippingAddress: orderData.shippingAddress,
+            totalAmount: orderData.totalAmount,
+          },
+        }).catch(err => console.error('Order confirmation email error:', err));
+
+        setIsCompleted(true);
+        clearCart();
+      }
+    }
+  }, [searchParams, clearCart]);
 
   // Empty cart state
   if (items.length === 0 && !isCompleted) {
@@ -1012,12 +986,10 @@ const Checkout = () => {
                 {isProcessing && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    <span className="text-sm font-medium text-foreground">Setting up secure payment...</span>
-                    <span className="text-xs text-muted-foreground">This may take a moment</span>
+                    <span className="text-sm font-medium text-foreground">Redirecting to secure payment...</span>
+                    <span className="text-xs text-muted-foreground">You'll be taken to SumUp's payment page</span>
                   </div>
                 )}
-                
-                <div ref={sumupContainerRef} className={isProcessing ? 'min-h-[60px]' : ''} />
 
                 {!isProcessing && (
                   <Button

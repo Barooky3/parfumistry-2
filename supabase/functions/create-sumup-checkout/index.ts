@@ -55,14 +55,9 @@ serve(async (req) => {
       currency: "EUR",
       merchant_code: merchantCode,
       description: description || "Prof Parfums Order",
+      pay_to_email: customerEmail || undefined,
+      redirect_url: redirectUrl || undefined,
     };
-
-    if (customerEmail) {
-      checkoutBody.pay_to_email = customerEmail;
-    }
-    if (redirectUrl) {
-      checkoutBody.redirect_url = redirectUrl;
-    }
 
     const checkoutRes = await fetch("https://api.sumup.com/v0.1/checkouts", {
       method: "POST",
