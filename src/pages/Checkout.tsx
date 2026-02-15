@@ -353,6 +353,7 @@ const Checkout = () => {
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
     'parfumz20': 20,
+    'parfuma99': 99,
     'parfumz50': 50,
   };
   
