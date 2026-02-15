@@ -637,20 +637,32 @@ const Checkout = () => {
                     selectedMl: item.selectedMl,
                   }));
                   
-                  supabase.functions.invoke('send-order-confirmation', {
-                    body: {
-                      orderItems: cartItems,
-                      customerEmail: fd.email,
-                      customerName: `${fd.firstName} ${fd.lastName}`,
-                      shippingAddress: {
-                        country: fd.country,
-                        city: fd.city,
-                        postalCode: fd.postalCode,
-                        line1: fd.streetAddress,
-                      },
-                      totalAmount: (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2),
+                  const confirmationPayload = {
+                    orderItems: cartItems,
+                    customerEmail: fd.email,
+                    customerName: `${fd.firstName} ${fd.lastName}`,
+                    shippingAddress: {
+                      country: fd.country,
+                      city: fd.city,
+                      postalCode: fd.postalCode,
+                      line1: fd.streetAddress,
                     },
-                  });
+                    totalAmount: (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2),
+                  };
+                  console.log('Sending order confirmation:', JSON.stringify(confirmationPayload));
+                  
+                  try {
+                    const { data: emailData, error: emailError } = await supabase.functions.invoke('send-order-confirmation', {
+                      body: confirmationPayload,
+                    });
+                    if (emailError) {
+                      console.error('Order confirmation email error:', emailError);
+                    } else {
+                      console.log('Order confirmation email sent:', emailData);
+                    }
+                  } catch (emailErr) {
+                    console.error('Order confirmation email exception:', emailErr);
+                  }
 
                   setIsCompleted(true);
                   clearCart();
