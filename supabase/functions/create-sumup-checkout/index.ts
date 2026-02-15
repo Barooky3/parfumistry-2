@@ -22,27 +22,33 @@ serve(async (req) => {
   try {
     const apiKey = Deno.env.get("SUMUP_API_KEY");
     if (!apiKey) throw new Error("SumUp API key not configured");
+    console.log("Using SumUp key starting with:", apiKey.substring(0, 10) + "...");
 
     // Get merchant code from SumUp profile
     const profileRes = await fetch("https://api.sumup.com/v0.1/me", {
-      headers: { "Authorization": `Bearer ${apiKey}` },
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + apiKey,
+      },
     });
+    const profileBody = await profileRes.text();
+    console.log("SumUp /me status:", profileRes.status, "body:", profileBody);
+
     if (!profileRes.ok) {
-      const profileErr = await profileRes.text();
-      console.error("SumUp profile error:", profileErr);
-      throw new Error("Failed to get SumUp merchant profile");
+      throw new Error("SumUp profile failed (" + profileRes.status + "): " + profileBody);
     }
-    const profile = await profileRes.json();
+
+    const profile = JSON.parse(profileBody);
     const merchantCode = profile.merchant_profile?.merchant_code;
     if (!merchantCode) throw new Error("Could not determine merchant code");
+    console.log("Merchant code:", merchantCode);
 
-    const { amount, description, customerEmail, checkoutReference, redirectUrl } =
-      (await req.json()) as CheckoutRequest;
+    const body = (await req.json()) as CheckoutRequest;
+    const { amount, description, customerEmail, checkoutReference, redirectUrl } = body;
 
     if (!amount || amount <= 0) throw new Error("Invalid amount");
     if (!checkoutReference) throw new Error("Missing checkout reference");
 
-    // Create SumUp checkout
     const checkoutBody: Record<string, unknown> = {
       checkout_reference: checkoutReference,
       amount,
@@ -61,7 +67,7 @@ serve(async (req) => {
     const checkoutRes = await fetch("https://api.sumup.com/v0.1/checkouts", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        "Authorization": "Bearer " + apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(checkoutBody),
@@ -73,6 +79,8 @@ serve(async (req) => {
       console.error("SumUp checkout error:", JSON.stringify(checkoutData));
       throw new Error(checkoutData.message || checkoutData.error_message || "Failed to create SumUp checkout");
     }
+
+    console.log("Checkout created:", checkoutData.id);
 
     return new Response(
       JSON.stringify({ checkoutId: checkoutData.id, amount: checkoutData.amount }),
