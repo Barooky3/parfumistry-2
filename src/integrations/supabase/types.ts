@@ -41,6 +41,57 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          checkout_reference: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          discount_code: string | null
+          discount_percent: number | null
+          email_sent: boolean
+          id: string
+          order_items: Json
+          shipping_address: Json | null
+          status: string
+          sumup_checkout_id: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          checkout_reference: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          discount_code?: string | null
+          discount_percent?: number | null
+          email_sent?: boolean
+          id?: string
+          order_items: Json
+          shipping_address?: Json | null
+          status?: string
+          sumup_checkout_id?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          checkout_reference?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          discount_code?: string | null
+          discount_percent?: number | null
+          email_sent?: boolean
+          id?: string
+          order_items?: Json
+          shipping_address?: Json | null
+          status?: string
+          sumup_checkout_id?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
