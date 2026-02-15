@@ -1008,11 +1008,12 @@ const Checkout = () => {
               </div>
 
               {/* SumUp Payment */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {isProcessing && (
-                  <div className="flex items-center justify-center py-4">
-                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
-                    <span className="text-sm text-muted-foreground">Processing payment...</span>
+                  <div className="flex flex-col items-center justify-center py-6 gap-3">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <span className="text-sm font-medium text-foreground">Setting up secure payment...</span>
+                    <span className="text-xs text-muted-foreground">This may take a moment</span>
                   </div>
                 )}
                 
@@ -1022,9 +1023,9 @@ const Checkout = () => {
                   <Button
                     onClick={handleSumUpPayment}
                     disabled={!isFormValid() || isProcessing}
-                    className="w-full h-12 text-xs tracking-[0.15em] uppercase font-semibold rounded-md"
+                    className="w-full h-14 text-sm tracking-[0.12em] uppercase font-semibold rounded-md shadow-md hover:shadow-lg transition-shadow"
                   >
-                    Pay {formatPrice(currentTotal)}
+                    🔒 Pay {formatPrice(currentTotal)}
                   </Button>
                 )}
                 
@@ -1033,6 +1034,16 @@ const Checkout = () => {
                     Fill in all required fields to enable payment.
                   </p>
                 )}
+
+                {/* Trust badges */}
+                <div className="flex flex-col items-center gap-2 pt-3 border-t border-border/50">
+                  <div className="flex items-center gap-1.5 text-muted-foreground">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span className="text-xs">Secure payment powered by</span>
+                    <span className="text-xs font-bold tracking-wide">SumUp</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/60">256-bit SSL encrypted · PCI DSS compliant</p>
+                </div>
               </div>
             </div>
           </div>
