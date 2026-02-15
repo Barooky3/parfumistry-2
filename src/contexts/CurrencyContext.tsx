@@ -79,15 +79,22 @@ export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Poland': 'PLN', 'Czech Republic': 'CZK', 'Hungary': 'HUF',
   'Romania': 'RON', 'Bulgaria': 'BGN',
   'Serbia': 'EUR',
+  'Kosovo': 'EUR', 'Belarus': 'EUR', 'Georgia': 'EUR', 'Armenia': 'EUR', 'Azerbaijan': 'EUR', 'San Marino': 'EUR',
   'Turkey': 'TRY', 'Russia': 'RUB', 'Ukraine': 'UAH',
   'United States': 'USD', 'Canada': 'CAD', 'Mexico': 'MXN',
   'Brazil': 'BRL', 'Argentina': 'ARS', 'Chile': 'CLP', 'Colombia': 'COP', 'Peru': 'PEN',
+  'Paraguay': 'USD', 'Bolivia': 'USD', 'Venezuela': 'USD',
+  'Dominican Republic': 'USD', 'Jamaica': 'USD', 'Trinidad and Tobago': 'USD', 'Barbados': 'USD',
+  'Curaçao': 'EUR', 'Suriname': 'EUR',
   'Japan': 'JPY', 'South Korea': 'KRW', 'China': 'CNY', 'India': 'INR',
   'Thailand': 'THB', 'Vietnam': 'VND', 'Indonesia': 'IDR', 'Malaysia': 'MYR',
   'Singapore': 'SGD', 'Philippines': 'PHP',
   'United Arab Emirates': 'AED', 'Saudi Arabia': 'SAR',
+  'Sri Lanka': 'USD', 'Nepal': 'USD', 'Cambodia': 'USD', 'Myanmar': 'USD', 'Macao': 'USD',
   'Australia': 'AUD', 'New Zealand': 'NZD',
   'South Africa': 'ZAR', 'Egypt': 'EGP', 'Morocco': 'MAD', 'Nigeria': 'NGN',
+  'Algeria': 'EUR', 'Senegal': 'EUR', 'Ivory Coast': 'EUR', 'Cameroon': 'EUR',
+  'Tanzania': 'USD', 'Ethiopia': 'USD', 'Mauritius': 'USD',
 };
 
 interface CurrencyContextType {

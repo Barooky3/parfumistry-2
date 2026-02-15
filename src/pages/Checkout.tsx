@@ -58,6 +58,12 @@ const COUNTRIES = [
   'Monaco',
   'Liechtenstein',
   'Andorra',
+  'Kosovo',
+  'Belarus',
+  'Georgia',
+  'Armenia',
+  'Azerbaijan',
+  'San Marino',
   // North America
   'United States',
   'Canada',
@@ -70,6 +76,16 @@ const COUNTRIES = [
   'Peru',
   'Ecuador',
   'Uruguay',
+  'Paraguay',
+  'Bolivia',
+  'Venezuela',
+  // Caribbean
+  'Dominican Republic',
+  'Jamaica',
+  'Trinidad and Tobago',
+  'Barbados',
+  'Curaçao',
+  'Suriname',
   // Middle East
   'United Arab Emirates',
   'Saudi Arabia',
@@ -95,6 +111,11 @@ const COUNTRIES = [
   'Taiwan',
   'Pakistan',
   'Bangladesh',
+  'Sri Lanka',
+  'Nepal',
+  'Cambodia',
+  'Myanmar',
+  'Macao',
   // Oceania
   'Australia',
   'New Zealand',
@@ -106,6 +127,13 @@ const COUNTRIES = [
   'Kenya',
   'Ghana',
   'Tunisia',
+  'Algeria',
+  'Senegal',
+  'Ivory Coast',
+  'Cameroon',
+  'Tanzania',
+  'Ethiopia',
+  'Mauritius',
 ].sort();
 
 // Interface for PDOK API response (Netherlands)
@@ -176,6 +204,12 @@ const COUNTRY_CODES: Record<string, string> = {
   'Monaco': 'mc',
   'Liechtenstein': 'li',
   'Andorra': 'ad',
+  'Kosovo': 'xk',
+  'Belarus': 'by',
+  'Georgia': 'ge',
+  'Armenia': 'am',
+  'Azerbaijan': 'az',
+  'San Marino': 'sm',
   // North America
   'United States': 'us',
   'Canada': 'ca',
@@ -188,6 +222,16 @@ const COUNTRY_CODES: Record<string, string> = {
   'Peru': 'pe',
   'Ecuador': 'ec',
   'Uruguay': 'uy',
+  'Paraguay': 'py',
+  'Bolivia': 'bo',
+  'Venezuela': 've',
+  // Caribbean
+  'Dominican Republic': 'do',
+  'Jamaica': 'jm',
+  'Trinidad and Tobago': 'tt',
+  'Barbados': 'bb',
+  'Curaçao': 'cw',
+  'Suriname': 'sr',
   // Middle East
   'United Arab Emirates': 'ae',
   'Saudi Arabia': 'sa',
@@ -213,6 +257,11 @@ const COUNTRY_CODES: Record<string, string> = {
   'Taiwan': 'tw',
   'Pakistan': 'pk',
   'Bangladesh': 'bd',
+  'Sri Lanka': 'lk',
+  'Nepal': 'np',
+  'Cambodia': 'kh',
+  'Myanmar': 'mm',
+  'Macao': 'mo',
   // Oceania
   'Australia': 'au',
   'New Zealand': 'nz',
@@ -224,6 +273,13 @@ const COUNTRY_CODES: Record<string, string> = {
   'Kenya': 'ke',
   'Ghana': 'gh',
   'Tunisia': 'tn',
+  'Algeria': 'dz',
+  'Senegal': 'sn',
+  'Ivory Coast': 'ci',
+  'Cameroon': 'cm',
+  'Tanzania': 'tz',
+  'Ethiopia': 'et',
+  'Mauritius': 'mu',
 };
 
 // Debounce function
