@@ -91,7 +91,7 @@ serve(async (req) => {
     const { items, customerEmail, customerName, shippingAddress, discountPercent, freeItemDiscount } =
       (await req.json()) as CheckoutRequest;
 
-    const validDiscounts = [10, 20, 50, 99];
+    const validDiscounts = [10, 20, 50, 90];
     const discount = validDiscounts.includes(discountPercent || 0) ? (discountPercent || 0) : 0;
     const multiplier = 1 - discount / 100;
 
