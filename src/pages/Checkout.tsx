@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -348,7 +348,9 @@ const Checkout = () => {
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
-  const sumupContainerRef = useRef<HTMLDivElement>(null);
+  const [paypalReady, setPaypalReady] = useState(false);
+  const [paypalLoading, setPaypalLoading] = useState(false);
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -544,129 +546,149 @@ const Checkout = () => {
   // Calculate current total
   const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
 
-  // Handle SumUp payment
-  const handleSumUpPayment = async () => {
-    if (!isFormValid()) {
-      toast({
-        title: 'Please fill in all fields',
-        description: 'Complete your shipping information before paying.',
-        variant: 'destructive',
-      });
-      return;
-    }
+  // Load PayPal SDK
+  useEffect(() => {
+    let cancelled = false;
+    const loadPayPal = async () => {
+      try {
+        setPaypalLoading(true);
+        const { data } = await supabase.functions.invoke('get-paypal-client-id');
+        if (cancelled || !data?.clientId) return;
 
-    setIsProcessing(true);
+        // Remove any existing PayPal script
+        const existing = document.querySelector('script[src*="paypal.com/sdk"]');
+        if (existing) existing.remove();
 
-    try {
-      const fd = formDataRef.current;
-      const finalTotal = appliedDiscountRef.current
-        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
-        : totalPrice;
-      const amount = Math.round(finalTotal * 100) / 100;
-
-      const checkoutReference = `PP-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
-
-      const cartItems = items.map(item => ({
-        name: item.product.name,
-        brand: item.product.brand,
-        image: item.product.image,
-        price: item.selectedPrice || item.product.price,
-        quantity: item.quantity,
-        selectedMl: item.selectedMl,
-      }));
-
-      // Create SumUp checkout (also stores order in database for reliable email delivery)
-      const { data, error } = await supabase.functions.invoke('create-sumup-checkout', {
-        body: {
-          amount,
-          description: 'Prof Parfums Order',
-          customerEmail: fd.email,
-          customerName: `${fd.firstName} ${fd.lastName}`,
-          checkoutReference,
-          orderItems: cartItems,
-          shippingAddress: {
-            country: fd.country,
-            city: fd.city,
-            postalCode: fd.postalCode,
-            line1: fd.streetAddress,
-          },
-          discountCode: appliedDiscountRef.current?.code || undefined,
-          discountPercent: appliedDiscountRef.current?.percent || undefined,
-        },
-      });
-
-      if (error || !data?.checkoutId) {
-        throw new Error(error?.message || data?.error || 'Failed to create checkout');
-      }
-
-      const checkoutId = data.checkoutId;
-
-      // Mount SumUp card widget
-      const container = sumupContainerRef.current;
-      if (!container) throw new Error('Payment container not found');
-      container.innerHTML = '<div id="sumup-card"></div>';
-
-      // Load SumUp SDK if not already loaded
-      if (!(window as any).SumUpCard) {
         await new Promise<void>((resolve, reject) => {
-          const existingScript = document.querySelector('script[src*="sumup.com/gateway/ecom/card"]');
-          if (existingScript) {
-            const check = setInterval(() => {
-              if ((window as any).SumUpCard) { clearInterval(check); resolve(); }
-            }, 100);
-            setTimeout(() => { clearInterval(check); reject(new Error('SumUp SDK timeout')); }, 10000);
-            return;
-          }
           const script = document.createElement('script');
-          script.src = 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js';
+          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR&disable-funding=credit,card`;
           script.onload = () => resolve();
-          script.onerror = () => reject(new Error('Failed to load SumUp SDK'));
+          script.onerror = () => reject(new Error('Failed to load PayPal'));
           document.head.appendChild(script);
         });
+
+        if (!cancelled) setPaypalReady(true);
+      } catch (err) {
+        console.error('PayPal SDK load error:', err);
+      } finally {
+        if (!cancelled) setPaypalLoading(false);
       }
+    };
+    loadPayPal();
+    return () => { cancelled = true; };
+  }, []);
 
-      const SumUpCard = (window as any).SumUpCard;
-      SumUpCard.mount({
-        id: 'sumup-card',
-        checkoutId,
-        onResponse: async (type: string, body: any) => {
-          console.log('SumUp response:', type, body);
+  // Render PayPal buttons when ready and form is valid
+  useEffect(() => {
+    if (!paypalReady || !(window as any).paypal || !paypalContainerRef.current) return;
 
-          if (type === 'success' || body?.status === 'PAID') {
-            // Verify payment server-side and send email reliably
-            try {
-              await supabase.functions.invoke('verify-sumup-payment', {
-                body: { checkoutReference },
-              });
-            } catch (verifyErr) {
-              console.error('Payment verification error:', verifyErr);
-              // Email will still be sent server-side even if this call fails,
-              // since the order is stored in the database
-            }
+    const container = paypalContainerRef.current;
+    container.innerHTML = '';
 
-            setIsCompleted(true);
-            clearCart();
-          } else if (type === 'error' || body?.status === 'FAILED') {
-            toast({
-              title: 'Payment failed',
-              description: body?.message || 'Your payment was not completed. Please try again.',
-              variant: 'destructive',
-            });
-          }
+    (window as any).paypal.Buttons({
+      style: { layout: 'vertical', shape: 'rect', label: 'pay', height: 50 },
+      onClick: (_data: any, actions: any) => {
+        if (!isFormValidRef.current) {
+          toast({
+            title: 'Please fill in all fields',
+            description: 'Complete your shipping information before paying.',
+            variant: 'destructive',
+          });
+          return actions.reject();
+        }
+        return actions.resolve();
+      },
+      createOrder: async () => {
+        const fd = formDataRef.current;
+        const cartItems = items.map(item => ({
+          name: item.product.name,
+          brand: item.product.brand,
+          image: item.product.image,
+          price: item.selectedPrice || item.product.price,
+          quantity: item.quantity,
+          selectedMl: item.selectedMl,
+        }));
 
+        const { data, error } = await supabase.functions.invoke('create-checkout', {
+          body: {
+            items: cartItems,
+            customerEmail: fd.email,
+            customerName: `${fd.firstName} ${fd.lastName}`,
+            shippingAddress: {
+              country: fd.country,
+              city: fd.city,
+              postalCode: fd.postalCode,
+              line1: fd.streetAddress,
+            },
+            discountPercent: appliedDiscountRef.current?.percent || 0,
+            freeItemDiscount,
+          },
+        });
+
+        if (error || !data?.orderID) throw new Error(error?.message || data?.error || 'Failed to create order');
+        return data.orderID;
+      },
+      onApprove: async (data: any) => {
+        setIsProcessing(true);
+        try {
+          const { data: captureData, error } = await supabase.functions.invoke('capture-order', {
+            body: { orderID: data.orderID },
+          });
+
+          if (error || captureData?.error) throw new Error(error?.message || captureData?.error);
+
+          // Send order confirmation email
+          const fd = formDataRef.current;
+          const cartItems = items.map(item => ({
+            name: item.product.name,
+            brand: item.product.brand,
+            image: item.product.image,
+            price: item.selectedPrice || item.product.price,
+            quantity: item.quantity,
+            selectedMl: item.selectedMl,
+          }));
+          const finalTotal = appliedDiscountRef.current
+            ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
+            : totalPrice;
+
+          await supabase.functions.invoke('send-order-confirmation', {
+            body: {
+              orderItems: cartItems,
+              customerEmail: fd.email,
+              customerName: `${fd.firstName} ${fd.lastName}`,
+              shippingAddress: {
+                country: fd.country,
+                city: fd.city,
+                postalCode: fd.postalCode,
+                line1: fd.streetAddress,
+              },
+              totalAmount: finalTotal.toFixed(2),
+            },
+          });
+
+          setIsCompleted(true);
+          clearCart();
+        } catch (err: any) {
+          console.error('Payment capture error:', err);
+          toast({
+            title: 'Payment error',
+            description: err.message || 'Something went wrong. Please try again.',
+            variant: 'destructive',
+          });
+        } finally {
           setIsProcessing(false);
-        },
-      });
-    } catch (err: any) {
-      console.error('SumUp payment error:', err);
-      toast({
-        title: 'Payment error',
-        description: err.message || 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      });
-      setIsProcessing(false);
-    }
-  };
+        }
+      },
+      onError: (err: any) => {
+        console.error('PayPal error:', err);
+        toast({
+          title: 'Payment failed',
+          description: 'Your payment could not be completed. Please try again.',
+          variant: 'destructive',
+        });
+      },
+    }).render(container);
+  }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
 
   // Empty cart state
   if (items.length === 0 && !isCompleted) {
@@ -1004,29 +1026,25 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* SumUp Payment */}
+              {/* PayPal Payment */}
               <div className="space-y-4">
                 {isProcessing && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    <span className="text-sm font-medium text-foreground">Setting up secure payment...</span>
-                    <span className="text-xs text-muted-foreground">This may take a moment</span>
+                    <span className="text-sm font-medium text-foreground">Processing your payment...</span>
+                    <span className="text-xs text-muted-foreground">Please don't close this page</span>
+                  </div>
+                )}
+
+                {paypalLoading && !paypalReady && (
+                  <div className="flex flex-col items-center justify-center py-6 gap-3">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <span className="text-sm text-muted-foreground">Loading payment options...</span>
                   </div>
                 )}
                 
-                <div ref={sumupContainerRef} className={isProcessing ? 'min-h-[60px]' : ''} />
+                <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
 
-                {!isProcessing && (
-                  <Button
-                    onClick={handleSumUpPayment}
-                    disabled={!isFormValid() || isProcessing}
-                    className="w-full h-14 text-sm tracking-[0.12em] uppercase font-semibold rounded-md shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary/95"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    Pay Securely — {formatPrice(currentTotal)}
-                  </Button>
-                )}
-                
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
                     Fill in all required fields to enable payment.
@@ -1036,11 +1054,11 @@ const Checkout = () => {
                 {/* Trust badges */}
                 <div className="flex flex-col items-center gap-2 pt-3 border-t border-border/50">
                   <div className="flex items-center gap-1.5 text-muted-foreground">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <span className="text-xs">Secure payment powered by</span>
-                    <span className="text-xs font-bold tracking-wide">SumUp</span>
+                    <Shield className="h-4 w-4 text-accent" />
+                    <span className="text-xs">Secure checkout powered by</span>
+                    <span className="text-xs font-bold tracking-wide text-foreground">PayPal</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground/60">256-bit SSL encrypted · PCI DSS compliant</p>
+                  <p className="text-[10px] text-muted-foreground/60">256-bit SSL encrypted · Buyer protection included</p>
                 </div>
               </div>
             </div>
