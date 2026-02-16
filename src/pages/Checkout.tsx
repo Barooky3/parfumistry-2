@@ -561,7 +561,7 @@ const Checkout = () => {
 
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR&disable-funding=credit,card`;
+          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR`;
           script.onload = () => resolve();
           script.onerror = () => reject(new Error('Failed to load PayPal'));
           document.head.appendChild(script);
