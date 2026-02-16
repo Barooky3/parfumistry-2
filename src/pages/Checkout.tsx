@@ -351,10 +351,6 @@ const Checkout = () => {
   const [paypalReady, setPaypalReady] = useState(false);
   const [paypalLoading, setPaypalLoading] = useState(false);
   const paypalContainerRef = useRef<HTMLDivElement>(null);
-  const [sumupLoading, setSumupLoading] = useState(false);
-  const [sumupWidgetVisible, setSumupWidgetVisible] = useState(false);
-  const sumupContainerRef = useRef<HTMLDivElement>(null);
-  const sumupWidgetRef = useRef<any>(null);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -694,118 +690,6 @@ const Checkout = () => {
     }).render(container);
   }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
 
-  // Launch SumUp card payment
-  const handleSumupPayment = async () => {
-    if (!isFormValid()) {
-      toast({
-        title: 'Please fill in all fields',
-        description: 'Complete your shipping information before paying.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setSumupLoading(true);
-    try {
-      const fd = formDataRef.current;
-      const cartItems = items.map(item => ({
-        name: item.product.name,
-        brand: item.product.brand,
-        image: item.product.image,
-        price: item.selectedPrice || item.product.price,
-        quantity: item.quantity,
-        selectedMl: item.selectedMl,
-      }));
-
-      const finalTotal = appliedDiscountRef.current
-        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
-        : totalPrice;
-
-      const checkoutRef = `order-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
-
-      const { data, error } = await supabase.functions.invoke('create-sumup-checkout', {
-        body: {
-          amount: Math.round(finalTotal * 100) / 100,
-          description: 'Prof Parfums Order',
-          customerEmail: fd.email,
-          customerName: `${fd.firstName} ${fd.lastName}`,
-          checkoutReference: checkoutRef,
-          orderItems: cartItems,
-          shippingAddress: {
-            country: fd.country,
-            city: fd.city,
-            postalCode: fd.postalCode,
-            line1: fd.streetAddress,
-          },
-          discountCode: appliedDiscountRef.current?.code || undefined,
-          discountPercent: appliedDiscountRef.current?.percent || 0,
-        },
-      });
-
-      if (error || !data?.checkoutId) throw new Error(error?.message || data?.error || 'Failed to create checkout');
-
-      // Load SumUp SDK if not already loaded
-      if (!(window as any).SumUpCard) {
-        await new Promise<void>((resolve, reject) => {
-          const script = document.createElement('script');
-          script.src = 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js';
-          script.onload = () => resolve();
-          script.onerror = () => reject(new Error('Failed to load SumUp SDK'));
-          document.head.appendChild(script);
-        });
-      }
-
-      setSumupWidgetVisible(true);
-
-      // Wait for container to be in DOM
-      await new Promise(r => setTimeout(r, 100));
-
-      if (sumupContainerRef.current) {
-        sumupContainerRef.current.innerHTML = '';
-        const widget = (window as any).SumUpCard.mount({
-          id: 'sumup-card-container',
-          checkoutId: data.checkoutId,
-          onResponse: async (type: string, body: any) => {
-            console.log('SumUp response:', type, body);
-            if (type === 'success' || body?.status === 'PAID') {
-              setIsProcessing(true);
-              try {
-                // Verify payment and send email
-                const { data: verifyData, error: verifyError } = await supabase.functions.invoke('verify-sumup-payment', {
-                  body: { checkoutReference: checkoutRef },
-                });
-                if (verifyError) console.error('Verify error:', verifyError);
-                setIsCompleted(true);
-                clearCart();
-              } catch (err) {
-                console.error('SumUp verification error:', err);
-              } finally {
-                setIsProcessing(false);
-              }
-            } else if (type === 'error') {
-              toast({
-                title: 'Payment failed',
-                description: 'Your card payment could not be completed. Please try again.',
-                variant: 'destructive',
-              });
-              setSumupWidgetVisible(false);
-            }
-          },
-        });
-        sumupWidgetRef.current = widget;
-      }
-    } catch (err: any) {
-      console.error('SumUp checkout error:', err);
-      toast({
-        title: 'Payment error',
-        description: err.message || 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      });
-      setSumupWidgetVisible(false);
-    } finally {
-      setSumupLoading(false);
-    }
-  };
 
   if (items.length === 0 && !isCompleted) {
     return (
@@ -1162,49 +1046,6 @@ const Checkout = () => {
                 {/* PayPal Buttons */}
                 <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
 
-                {/* Divider */}
-                {paypalReady && (
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-muted-foreground font-medium">OR</span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-                )}
-
-                {/* SumUp Card Payment */}
-                {!sumupWidgetVisible ? (
-                  <Button
-                    onClick={handleSumupPayment}
-                    disabled={!isFormValid() || sumupLoading || isProcessing}
-                    className="w-full h-12 rounded-md text-sm font-semibold tracking-wide bg-[#1a1a2e] hover:bg-[#16163a] text-white"
-                  >
-                    {sumupLoading ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    ) : (
-                      <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                        <line x1="1" y1="10" x2="23" y2="10" />
-                      </svg>
-                    )}
-                    {sumupLoading ? 'Setting up...' : 'Pay with Credit / Debit Card'}
-                  </Button>
-                ) : (
-                  <div className="border border-border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-foreground">Card Payment</span>
-                      <button
-                        onClick={() => {
-                          setSumupWidgetVisible(false);
-                          if (sumupWidgetRef.current?.unmount) sumupWidgetRef.current.unmount();
-                        }}
-                        className="text-xs text-muted-foreground hover:text-foreground"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                    <div id="sumup-card-container" ref={sumupContainerRef} />
-                  </div>
-                )}
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
