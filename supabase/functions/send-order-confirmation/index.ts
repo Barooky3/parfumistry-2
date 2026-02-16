@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -124,7 +123,6 @@ function buildEmailHtml(
     '<span style="font-size: 22px; font-weight: 600; color: #1a1a1a;">&euro;' + totalAmount + '</span>',
     '</div>',
 
-
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
@@ -139,6 +137,33 @@ function buildEmailHtml(
 
     '</div></body></html>',
   ].join("\n");
+}
+
+async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
+  const apiKey = Deno.env.get("BREVO_API_KEY");
+  if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: "ProfParfums", email: "orders@profparfum.com" },
+      to: [{ email: to }],
+      subject,
+      htmlContent,
+    }),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error("Brevo API error (" + res.status + "): " + errBody);
+  }
+
+  console.log("Email sent via Brevo to:", to);
 }
 
 serve(async (req) => {
@@ -159,7 +184,6 @@ serve(async (req) => {
     if (!customerEmail) throw new Error("Customer email is required");
     if (!orderItems || orderItems.length === 0) throw new Error("No order items");
 
-    // Normalize cart items: support both { product: {...}, quantity } and flat { name, brand, image, ... } formats
     const normalizedItems: OrderItem[] = orderItems.map((item: any) => {
       if (item.product) {
         return {
@@ -179,16 +203,9 @@ serve(async (req) => {
     const origin = "https://profparfums.lovable.app";
     const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin)).join("");
 
-    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" });
 
-    const emailResponse = await resend.emails.send({
-      from: "ProfParfums <orders@profparfum.com>",
-      to: [customerEmail],
-      subject: "Order Confirmed - ProfParfums",
-      html: buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }),
-    });
-
-    console.log("Order confirmation email sent:", emailResponse);
+    await sendWithBrevo(customerEmail, "Order Confirmed - ProfParfums", html);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
