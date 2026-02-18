@@ -82,17 +82,43 @@ const Index = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
             >
-              {/* Soft glow behind logo */}
-              <div 
-                className="absolute inset-0 blur-3xl opacity-30"
+              {/* Animated pulsing glow behind logo */}
+              <motion.div 
+                className="absolute inset-0 blur-[80px] opacity-40"
                 style={{
-                  background: 'radial-gradient(circle at 50% 50%, hsl(345 60% 32% / 0.6), transparent 70%)'
+                  background: 'radial-gradient(circle at 50% 50%, hsl(345 60% 40% / 0.7), hsl(345 40% 25% / 0.3) 50%, transparent 75%)'
+                }}
+                animate={{ 
+                  opacity: [0.3, 0.55, 0.3],
+                  scale: [0.95, 1.08, 0.95],
+                }}
+                transition={{ 
+                  duration: 4, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+              {/* Secondary outer glow ring */}
+              <motion.div 
+                className="absolute -inset-16 blur-[120px] opacity-20"
+                style={{
+                  background: 'radial-gradient(circle at 50% 50%, hsl(345 50% 50% / 0.5), transparent 60%)'
+                }}
+                animate={{ 
+                  opacity: [0.15, 0.3, 0.15],
+                  scale: [1, 1.12, 1],
+                }}
+                transition={{ 
+                  duration: 5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: 1
                 }}
               />
               <img 
                 src={logo} 
                 alt="ProfParfums" 
-                className="h-72 md:h-[22rem] lg:h-[28rem] w-auto mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
+                className="h-80 md:h-[26rem] lg:h-[32rem] w-auto mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
               />
             </motion.div>
             
