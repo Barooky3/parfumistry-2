@@ -349,9 +349,10 @@ const Checkout = () => {
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
-  const [paypalReady, setPaypalReady] = useState(false);
-  const [paypalLoading, setPaypalLoading] = useState(false);
-  const paypalContainerRef = useRef<HTMLDivElement>(null);
+  // PAYPAL: Uncomment these when re-enabling PayPal
+  // const [paypalReady, setPaypalReady] = useState(false);
+  // const [paypalLoading, setPaypalLoading] = useState(false);
+  // const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -547,6 +548,8 @@ const Checkout = () => {
   // Calculate current total
   const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
 
+  // PAYPAL: Uncomment this entire block when re-enabling PayPal
+  /*
   // Load PayPal SDK
   useEffect(() => {
     let cancelled = false;
@@ -555,11 +558,8 @@ const Checkout = () => {
         setPaypalLoading(true);
         const { data } = await supabase.functions.invoke('get-paypal-client-id');
         if (cancelled || !data?.clientId) return;
-
-        // Remove any existing PayPal script
         const existing = document.querySelector('script[src*="paypal.com/sdk"]');
         if (existing) existing.remove();
-
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement('script');
           script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR`;
@@ -567,7 +567,6 @@ const Checkout = () => {
           script.onerror = () => reject(new Error('Failed to load PayPal'));
           document.head.appendChild(script);
         });
-
         if (!cancelled) setPaypalReady(true);
       } catch (err) {
         console.error('PayPal SDK load error:', err);
@@ -579,117 +578,51 @@ const Checkout = () => {
     return () => { cancelled = true; };
   }, []);
 
-  // Render PayPal buttons when ready and form is valid
   useEffect(() => {
     if (!paypalReady || !(window as any).paypal || !paypalContainerRef.current) return;
-
     const container = paypalContainerRef.current;
     container.innerHTML = '';
-
     (window as any).paypal.Buttons({
       style: { layout: 'vertical', shape: 'rect', label: 'pay', height: 50 },
       onClick: (_data: any, actions: any) => {
         if (!isFormValidRef.current) {
-          toast({
-            title: 'Please fill in all fields',
-            description: 'Complete your shipping information before paying.',
-            variant: 'destructive',
-          });
+          toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
           return actions.reject();
         }
         return actions.resolve();
       },
       createOrder: async () => {
         const fd = formDataRef.current;
-        const cartItems = items.map(item => ({
-          name: item.product.name,
-          brand: item.product.brand,
-          image: item.product.image,
-          price: item.selectedPrice || item.product.price,
-          quantity: item.quantity,
-          selectedMl: item.selectedMl,
-        }));
-
-        const { data, error } = await supabase.functions.invoke('create-checkout', {
-          body: {
-            items: cartItems,
-            customerEmail: fd.email,
-            customerName: `${fd.firstName} ${fd.lastName}`,
-            shippingAddress: {
-              country: fd.country,
-              city: fd.city,
-              postalCode: fd.postalCode,
-              line1: fd.streetAddress,
-            },
-            discountPercent: appliedDiscountRef.current?.percent || 0,
-            freeItemDiscount,
-          },
-        });
-
+        const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+        const { data, error } = await supabase.functions.invoke('create-checkout', { body: { items: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, discountPercent: appliedDiscountRef.current?.percent || 0, freeItemDiscount } });
         if (error || !data?.orderID) throw new Error(error?.message || data?.error || 'Failed to create order');
         return data.orderID;
       },
       onApprove: async (data: any) => {
         setIsProcessing(true);
         try {
-          const { data: captureData, error } = await supabase.functions.invoke('capture-order', {
-            body: { orderID: data.orderID },
-          });
-
+          const { data: captureData, error } = await supabase.functions.invoke('capture-order', { body: { orderID: data.orderID } });
           if (error || captureData?.error) throw new Error(error?.message || captureData?.error);
-
-          // Send order confirmation email
           const fd = formDataRef.current;
-          const cartItems = items.map(item => ({
-            name: item.product.name,
-            brand: item.product.brand,
-            image: item.product.image,
-            price: item.selectedPrice || item.product.price,
-            quantity: item.quantity,
-            selectedMl: item.selectedMl,
-          }));
-          const finalTotal = appliedDiscountRef.current
-            ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
-            : totalPrice;
-
-          await supabase.functions.invoke('send-order-confirmation', {
-            body: {
-              orderItems: cartItems,
-              customerEmail: fd.email,
-              customerName: `${fd.firstName} ${fd.lastName}`,
-              shippingAddress: {
-                country: fd.country,
-                city: fd.city,
-                postalCode: fd.postalCode,
-                line1: fd.streetAddress,
-              },
-              totalAmount: finalTotal.toFixed(2),
-            },
-          });
-
+          const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+          const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+          await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
           setIsCompleted(true);
           clearCart();
         } catch (err: any) {
           console.error('Payment capture error:', err);
-          toast({
-            title: 'Payment error',
-            description: err.message || 'Something went wrong. Please try again.',
-            variant: 'destructive',
-          });
+          toast({ title: 'Payment error', description: err.message || 'Something went wrong. Please try again.', variant: 'destructive' });
         } finally {
           setIsProcessing(false);
         }
       },
       onError: (err: any) => {
         console.error('PayPal error:', err);
-        toast({
-          title: 'Payment failed',
-          description: 'Your payment could not be completed. Please try again.',
-          variant: 'destructive',
-        });
+        toast({ title: 'Payment failed', description: 'Your payment could not be completed. Please try again.', variant: 'destructive' });
       },
     }).render(container);
   }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
+  */
 
 
   if (items.length === 0 && !isCompleted) {
@@ -1037,6 +970,8 @@ const Checkout = () => {
                   </div>
                 )}
 
+                {/* PAYPAL: Uncomment this block when re-enabling PayPal */}
+                {/*
                 {paypalLoading && !paypalReady && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -1044,10 +979,8 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {/* PayPal Buttons */}
                 <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
 
-                {/* Divider */}
                 {paypalReady && (
                   <div className="flex items-center gap-3 my-1">
                     <div className="flex-1 h-px bg-border" />
@@ -1055,6 +988,7 @@ const Checkout = () => {
                     <div className="flex-1 h-px bg-border" />
                   </div>
                 )}
+                */}
 
                 {/* Revolut Pay Button */}
                 <Button
