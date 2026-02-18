@@ -1025,6 +1025,7 @@ const Checkout = () => {
                 </div>
 
                 {revolutLinkOpened && (
+                  <div className="space-y-2">
                     <Button
                       type="button"
                       disabled={isProcessing}
@@ -1083,6 +1084,10 @@ const Checkout = () => {
                         </>
                       )}
                     </Button>
+                    <p className="text-xs text-center text-red-400 font-medium">
+                      Orders confirmed without payment are instantly rejected.
+                    </p>
+                  </div>
                 )}
 
                 {!isFormValid() && (
