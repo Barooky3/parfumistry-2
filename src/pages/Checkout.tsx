@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -344,6 +344,7 @@ const Checkout = () => {
   const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
@@ -1058,9 +1059,9 @@ const Checkout = () => {
                 {/* Revolut Pay Button */}
                 <Button
                   type="button"
-                  disabled={!isFormValid() || isProcessing}
+                  disabled={!isFormValid() || isProcessing || revolutLinkOpened}
                   className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white"
-                  onClick={async () => {
+                  onClick={() => {
                     if (!isFormValid()) {
                       toast({
                         title: 'Please fill in all fields',
@@ -1069,56 +1070,86 @@ const Checkout = () => {
                       });
                       return;
                     }
-                    // Open Revolut payment link
                     window.open('https://revolut.me/mubarak_e', '_blank');
-
-                    // Save order & send confirmation email
-                    setIsProcessing(true);
-                    try {
-                      const fd = formDataRef.current;
-                      const cartItems = items.map(item => ({
-                        name: item.product.name,
-                        brand: item.product.brand,
-                        image: item.product.image,
-                        price: item.selectedPrice || item.product.price,
-                        quantity: item.quantity,
-                        selectedMl: item.selectedMl,
-                      }));
-                      const finalTotal = appliedDiscountRef.current
-                        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
-                        : totalPrice;
-
-                      await supabase.functions.invoke('send-order-confirmation', {
-                        body: {
-                          orderItems: cartItems,
-                          customerEmail: fd.email,
-                          customerName: `${fd.firstName} ${fd.lastName}`,
-                          shippingAddress: {
-                            country: fd.country,
-                            city: fd.city,
-                            postalCode: fd.postalCode,
-                            line1: fd.streetAddress,
-                          },
-                          totalAmount: finalTotal.toFixed(2),
-                        },
-                      });
-
-                      setIsCompleted(true);
-                      clearCart();
-                    } catch (err: any) {
-                      console.error('Revolut order error:', err);
-                      toast({
-                        title: 'Order error',
-                        description: 'Your payment link opened but we couldn\'t save your order. Please contact support.',
-                        variant: 'destructive',
-                      });
-                    } finally {
-                      setIsProcessing(false);
-                    }
+                    setRevolutLinkOpened(true);
                   }}
                 >
                   Pay with Card / Apple Pay / Google Pay
                 </Button>
+
+                {revolutLinkOpened && (
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/30">
+                      <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+                      <p className="text-xs text-amber-200/90">
+                        Enter exactly <strong>€{(() => {
+                          const finalTotal = appliedDiscountRef.current
+                            ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
+                            : totalPrice;
+                          return finalTotal.toFixed(2);
+                        })()}</strong> at the payment link. Orders with incorrect amounts will not be accepted.
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      disabled={isProcessing}
+                      className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
+                      onClick={async () => {
+                        setIsProcessing(true);
+                        try {
+                          const fd = formDataRef.current;
+                          const cartItems = items.map(item => ({
+                            name: item.product.name,
+                            brand: item.product.brand,
+                            image: item.product.image,
+                            price: item.selectedPrice || item.product.price,
+                            quantity: item.quantity,
+                            selectedMl: item.selectedMl,
+                          }));
+                          const finalTotal = appliedDiscountRef.current
+                            ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
+                            : totalPrice;
+
+                          await supabase.functions.invoke('send-order-confirmation', {
+                            body: {
+                              orderItems: cartItems,
+                              customerEmail: fd.email,
+                              customerName: `${fd.firstName} ${fd.lastName}`,
+                              shippingAddress: {
+                                country: fd.country,
+                                city: fd.city,
+                                postalCode: fd.postalCode,
+                                line1: fd.streetAddress,
+                              },
+                              totalAmount: finalTotal.toFixed(2),
+                            },
+                          });
+
+                          setIsCompleted(true);
+                          clearCart();
+                        } catch (err: any) {
+                          console.error('Revolut order error:', err);
+                          toast({
+                            title: 'Order error',
+                            description: 'Could not complete your order. Please contact support.',
+                            variant: 'destructive',
+                          });
+                        } finally {
+                          setIsProcessing(false);
+                        }
+                      }}
+                    >
+                      {isProcessing ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          I've Completed Payment — Confirm Order
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
