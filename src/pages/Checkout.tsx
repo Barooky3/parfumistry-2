@@ -344,7 +344,7 @@ const Checkout = () => {
   const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  // REVOLUT: const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
+  const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
@@ -984,8 +984,6 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {/* REVOLUT: Uncomment this entire block when re-enabling Revolut */}
-                {/*
                 <div className="space-y-2">
                   <Button
                     type="button"
@@ -1044,7 +1042,6 @@ const Checkout = () => {
                     </p>
                   </div>
                 )}
-                */}
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
