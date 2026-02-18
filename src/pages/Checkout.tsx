@@ -344,7 +344,7 @@ const Checkout = () => {
   const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
+  // REVOLUT: const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
@@ -984,7 +984,8 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {/* Revolut Pay Button */}
+                {/* REVOLUT: Uncomment this entire block when re-enabling Revolut */}
+                {/*
                 <div className="space-y-2">
                   <Button
                     type="button"
@@ -992,11 +993,7 @@ const Checkout = () => {
                     className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white shadow-lg shadow-[#0075EB]/20"
                     onClick={() => {
                       if (!isFormValid()) {
-                        toast({
-                          title: 'Please fill in all fields',
-                          description: 'Complete your shipping information before paying.',
-                          variant: 'destructive',
-                        });
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
                       window.open('https://revolut.me/mubarak_e', '_blank');
@@ -1012,14 +1009,11 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {/* Amount warning shown BEFORE clicking */}
                 <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
                   <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
                   <p className="text-xs text-foreground/90">
                     After clicking, you must enter exactly <strong className="text-amber-400">€{(() => {
-                      const finalTotal = appliedDiscountRef.current
-                        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
-                        : totalPrice;
+                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
                       return finalTotal.toFixed(2);
                     })()}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
                   </p>
@@ -1027,69 +1021,30 @@ const Checkout = () => {
 
                 {revolutLinkOpened && (
                   <div className="space-y-2">
-                    <Button
-                      type="button"
-                      disabled={isProcessing}
-                      className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
+                    <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
                       onClick={async () => {
                         setIsProcessing(true);
                         try {
                           const fd = formDataRef.current;
-                          const cartItems = items.map(item => ({
-                            name: item.product.name,
-                            brand: item.product.brand,
-                            image: item.product.image,
-                            price: item.selectedPrice || item.product.price,
-                            quantity: item.quantity,
-                            selectedMl: item.selectedMl,
-                          }));
-                          const finalTotal = appliedDiscountRef.current
-                            ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
-                            : totalPrice;
-
-                          await supabase.functions.invoke('send-order-confirmation', {
-                            body: {
-                              orderItems: cartItems,
-                              customerEmail: fd.email,
-                              customerName: `${fd.firstName} ${fd.lastName}`,
-                              shippingAddress: {
-                                country: fd.country,
-                                city: fd.city,
-                                postalCode: fd.postalCode,
-                                line1: fd.streetAddress,
-                              },
-                              totalAmount: finalTotal.toFixed(2),
-                            },
-                          });
-
+                          const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                          const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                          await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
                           setIsCompleted(true);
                           clearCart();
                         } catch (err: any) {
                           console.error('Revolut order error:', err);
-                          toast({
-                            title: 'Order error',
-                            description: 'Could not complete your order. Please contact support.',
-                            variant: 'destructive',
-                          });
-                        } finally {
-                          setIsProcessing(false);
-                        }
+                          toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
+                        } finally { setIsProcessing(false); }
                       }}
                     >
-                      {isProcessing ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <>
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          I've Completed Payment — Confirm Order
-                        </>
-                      )}
+                      {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I've Completed Payment — Confirm Order</>}
                     </Button>
                     <p className="text-xs text-center text-red-400 font-medium">
                       Orders confirmed without payment are instantly rejected. You will still receive the confirmation email, but the order won't go through.
                     </p>
                   </div>
                 )}
+                */}
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
