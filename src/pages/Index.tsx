@@ -118,7 +118,7 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="ProfParfums" 
-                className="h-auto w-[280px] md:w-[360px] lg:w-[480px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
+                className="h-auto w-[360px] md:w-[480px] lg:w-[640px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
               />
             </motion.div>
             
