@@ -77,7 +77,7 @@ const Index = () => {
           >
             {/* Centered Logo - Main Focus */}
             <motion.div
-              className="relative mb-12"
+              className="relative mb-8"
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
@@ -118,7 +118,7 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="ProfParfums" 
-                className="h-80 md:h-[26rem] lg:h-[32rem] w-auto mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
+                className="h-auto w-[280px] md:w-[360px] lg:w-[480px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
               />
             </motion.div>
             
