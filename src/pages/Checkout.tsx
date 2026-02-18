@@ -1117,7 +1117,7 @@ const Checkout = () => {
                     }
                   }}
                 >
-                  Pay with Revolut
+                  Pay with Card / Apple Pay / Google Pay
                 </Button>
 
                 {!isFormValid() && (
