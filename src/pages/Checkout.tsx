@@ -1116,6 +1116,9 @@ const Checkout = () => {
                     <p className="text-xs text-center text-red-400 font-medium">
                       Orders confirmed without payment are instantly rejected.
                     </p>
+                    <p className="text-xs text-center text-muted-foreground">
+                      You will still receive the confirmation email, but the order won't go through.
+                    </p>
                   </div>
                 )}
 
