@@ -1077,17 +1077,30 @@ const Checkout = () => {
                   Pay with Card / Apple Pay / Google Pay
                 </Button>
 
+                {/* Amount warning shown BEFORE clicking */}
+                <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
+                  <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
+                  <p className="text-xs text-foreground/90">
+                    After clicking, you must enter exactly <strong className="text-amber-400">€{(() => {
+                      const finalTotal = appliedDiscountRef.current
+                        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
+                        : totalPrice;
+                      return finalTotal.toFixed(2);
+                    })()}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
+                  </p>
+                </div>
+
                 {revolutLinkOpened && (
                   <div className="space-y-3">
-                    <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/30">
-                      <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
-                      <p className="text-xs text-amber-200/90">
-                        Enter exactly <strong>€{(() => {
+                    <div className="flex items-start gap-2 p-3 rounded-md bg-red-500/20 border border-red-500/50">
+                      <AlertTriangle className="h-5 w-5 text-red-400 mt-0.5 shrink-0" />
+                      <p className="text-sm font-medium text-foreground">
+                        ⚠️ You must enter exactly <strong className="text-red-400">€{(() => {
                           const finalTotal = appliedDiscountRef.current
                             ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
                             : totalPrice;
                           return finalTotal.toFixed(2);
-                        })()}</strong> at the payment link. Orders with incorrect amounts will not be accepted.
+                        })()}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
                       </p>
                     </div>
                     <Button
