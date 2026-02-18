@@ -350,10 +350,9 @@ const Checkout = () => {
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
-  // PAYPAL: Uncomment these when re-enabling PayPal
-  // const [paypalReady, setPaypalReady] = useState(false);
-  // const [paypalLoading, setPaypalLoading] = useState(false);
-  // const paypalContainerRef = useRef<HTMLDivElement>(null);
+  const [paypalReady, setPaypalReady] = useState(false);
+  const [paypalLoading, setPaypalLoading] = useState(false);
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const VALID_CODES: Record<string, number> = {
     'parfum10': 10,
@@ -549,8 +548,6 @@ const Checkout = () => {
   // Calculate current total
   const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
 
-  // PAYPAL: Uncomment this entire block when re-enabling PayPal
-  /*
   // Load PayPal SDK
   useEffect(() => {
     let cancelled = false;
@@ -623,7 +620,6 @@ const Checkout = () => {
       },
     }).render(container);
   }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
-  */
 
 
   if (items.length === 0 && !isCompleted) {
@@ -971,8 +967,6 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {/* PAYPAL: Uncomment this block when re-enabling PayPal */}
-                {/*
                 {paypalLoading && !paypalReady && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -989,7 +983,6 @@ const Checkout = () => {
                     <div className="flex-1 h-px bg-border" />
                   </div>
                 )}
-                */}
 
                 {/* Revolut Pay Button */}
                 <div className="space-y-2">
