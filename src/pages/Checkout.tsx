@@ -1006,7 +1006,7 @@ const Checkout = () => {
                         });
                         return;
                       }
-                      window.open('https://checkout.revolut.com/pay/0196b91c-e8cd-4b51-a6a2-10bea4c34368', '_blank');
+                      window.open('https://revolut.me/mubarak_e', '_blank');
                       setRevolutLinkOpened(true);
                     }}
                   >
