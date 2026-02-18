@@ -1046,6 +1046,79 @@ const Checkout = () => {
                 {/* PayPal Buttons */}
                 <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
 
+                {/* Divider */}
+                {paypalReady && (
+                  <div className="flex items-center gap-3 my-1">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs text-muted-foreground">or</span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+                )}
+
+                {/* Revolut Pay Button */}
+                <Button
+                  type="button"
+                  disabled={!isFormValid() || isProcessing}
+                  className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white"
+                  onClick={async () => {
+                    if (!isFormValid()) {
+                      toast({
+                        title: 'Please fill in all fields',
+                        description: 'Complete your shipping information before paying.',
+                        variant: 'destructive',
+                      });
+                      return;
+                    }
+                    // Open Revolut payment link
+                    window.open('https://revolut.me/mubarak_e', '_blank');
+
+                    // Save order & send confirmation email
+                    setIsProcessing(true);
+                    try {
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({
+                        name: item.product.name,
+                        brand: item.product.brand,
+                        image: item.product.image,
+                        price: item.selectedPrice || item.product.price,
+                        quantity: item.quantity,
+                        selectedMl: item.selectedMl,
+                      }));
+                      const finalTotal = appliedDiscountRef.current
+                        ? totalPrice * (1 - appliedDiscountRef.current.percent / 100)
+                        : totalPrice;
+
+                      await supabase.functions.invoke('send-order-confirmation', {
+                        body: {
+                          orderItems: cartItems,
+                          customerEmail: fd.email,
+                          customerName: `${fd.firstName} ${fd.lastName}`,
+                          shippingAddress: {
+                            country: fd.country,
+                            city: fd.city,
+                            postalCode: fd.postalCode,
+                            line1: fd.streetAddress,
+                          },
+                          totalAmount: finalTotal.toFixed(2),
+                        },
+                      });
+
+                      setIsCompleted(true);
+                      clearCart();
+                    } catch (err: any) {
+                      console.error('Revolut order error:', err);
+                      toast({
+                        title: 'Order error',
+                        description: 'Your payment link opened but we couldn\'t save your order. Please contact support.',
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setIsProcessing(false);
+                    }
+                  }}
+                >
+                  Pay with Revolut
+                </Button>
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
