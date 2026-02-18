@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -992,25 +992,32 @@ const Checkout = () => {
                 */}
 
                 {/* Revolut Pay Button */}
-                <Button
-                  type="button"
-                  disabled={!isFormValid() || isProcessing || revolutLinkOpened}
-                  className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white"
-                  onClick={() => {
-                    if (!isFormValid()) {
-                      toast({
-                        title: 'Please fill in all fields',
-                        description: 'Complete your shipping information before paying.',
-                        variant: 'destructive',
-                      });
-                      return;
-                    }
-                    window.open('https://revolut.me/mubarak_e', '_blank');
-                    setRevolutLinkOpened(true);
-                  }}
-                >
-                  Pay with Card / Apple Pay / Google Pay
-                </Button>
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    disabled={!isFormValid() || isProcessing || revolutLinkOpened}
+                    className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white shadow-lg shadow-[#0075EB]/20"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({
+                          title: 'Please fill in all fields',
+                          description: 'Complete your shipping information before paying.',
+                          variant: 'destructive',
+                        });
+                        return;
+                      }
+                      window.open('https://revolut.me/mubarak_e', '_blank');
+                      setRevolutLinkOpened(true);
+                    }}
+                  >
+                    <Lock className="h-4 w-4 mr-1" />
+                    Pay with Card / Apple Pay / Google Pay
+                  </Button>
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span className="text-[10px] text-muted-foreground/70">Powered by</span>
+                    <span className="text-[11px] font-semibold text-muted-foreground tracking-wide">Revolut</span>
+                  </div>
+                </div>
 
                 {/* Amount warning shown BEFORE clicking */}
                 <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
