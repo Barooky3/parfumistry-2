@@ -991,54 +991,26 @@ const Checkout = () => {
                 )}
                 */}
 
-                {/* Payment Method Selection */}
-                {!revolutLinkOpened && (
-                  <div className="space-y-3">
-                    <p className="text-xs font-medium tracking-wider text-foreground">SELECT PAYMENT METHOD</p>
-                    <div className="grid grid-cols-1 gap-2">
-                      {[
-                        { id: 'card', label: 'Debit / Credit Card', icon: '💳' },
-                        { id: 'apple-google', label: 'Apple Pay / Google Pay', icon: '📱' },
-                        { id: 'revolut', label: 'Revolut', icon: '🔄' },
-                      ].map((method) => (
-                        <button
-                          key={method.id}
-                          type="button"
-                          onClick={() => setSelectedPaymentMethod(method.id)}
-                          className={cn(
-                            "flex items-center gap-3 w-full p-3.5 rounded-md border text-left transition-all text-sm",
-                            selectedPaymentMethod === method.id
-                              ? "border-primary bg-primary/5 ring-1 ring-primary"
-                              : "border-border hover:border-muted-foreground/40 bg-background"
-                          )}
-                        >
-                          <span className="text-lg">{method.icon}</span>
-                          <span className="font-medium text-foreground">{method.label}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    <Button
-                      type="button"
-                      disabled={!isFormValid() || isProcessing || !selectedPaymentMethod}
-                      className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white"
-                      onClick={() => {
-                        if (!isFormValid()) {
-                          toast({
-                            title: 'Please fill in all fields',
-                            description: 'Complete your shipping information before paying.',
-                            variant: 'destructive',
-                          });
-                          return;
-                        }
-                        window.open('https://revolut.me/mubarak_e', '_blank');
-                        setRevolutLinkOpened(true);
-                      }}
-                    >
-                      Pay Now
-                    </Button>
-                  </div>
-                )}
+                {/* Revolut Pay Button */}
+                <Button
+                  type="button"
+                  disabled={!isFormValid() || isProcessing || revolutLinkOpened}
+                  className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white"
+                  onClick={() => {
+                    if (!isFormValid()) {
+                      toast({
+                        title: 'Please fill in all fields',
+                        description: 'Complete your shipping information before paying.',
+                        variant: 'destructive',
+                      });
+                      return;
+                    }
+                    window.open('https://revolut.me/mubarak_e', '_blank');
+                    setRevolutLinkOpened(true);
+                  }}
+                >
+                  Pay with Card / Apple Pay / Google Pay
+                </Button>
 
                 {/* Amount warning shown BEFORE clicking */}
                 <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
