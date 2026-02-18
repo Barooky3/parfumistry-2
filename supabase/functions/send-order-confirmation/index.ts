@@ -52,6 +52,22 @@ interface OrderItem {
   selectedMl?: number;
 }
 
+const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
+  "evening-sweetheart": [
+    { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["jean-paul-gaultier"] },
+  ],
+  "young-playboy": [
+    { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["jean-paul-gaultier"] },
+  ],
+};
+
+function getBundleBonusLinks(name: string): { label: string; url: string }[] {
+  const n = name.toLowerCase();
+  if (n.includes("evening sweetheart")) return BUNDLE_BONUS_LINKS["evening-sweetheart"];
+  if (n.includes("young playboy")) return BUNDLE_BONUS_LINKS["young-playboy"];
+  return [];
+}
+
 function buildItemRow(item: OrderItem, origin: string): string {
   const imageUrl = item.image.startsWith("http")
     ? item.image
@@ -59,6 +75,11 @@ function buildItemRow(item: OrderItem, origin: string): string {
   const productLink = getProductLink(item.name, item.brand);
   const mlLabel = item.selectedMl ? " \u2014 " + item.selectedMl + "ml" : "";
   const itemTotal = (item.price * item.quantity).toFixed(2);
+
+  const bonusLinks = getBundleBonusLinks(item.name);
+  const bonusHtml = bonusLinks.map((b) =>
+    '<a href="' + b.url + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500; display: inline-block; margin-left: 12px;">&#128279; ' + b.label + '</a>'
+  ).join("");
 
   return [
     '<tr>',
@@ -73,7 +94,7 @@ function buildItemRow(item: OrderItem, origin: string): string {
     '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">' + item.brand + '</div>',
     '<a href="' + productLink + '" style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; display: block; text-decoration: none;">' + item.name + mlLabel + '</a>',
     '<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
-    '<a href="' + productLink + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500;">&#128279; View your seller link</a>',
+    '<a href="' + productLink + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500;">&#128279; View your seller link</a>' + bonusHtml,
     '</td></tr></table>',
     '</td></tr>',
   ].join("\n");
