@@ -75,9 +75,9 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            {/* Centered Logo with glow effect */}
+            {/* Centered Logo - Main Focus */}
             <motion.div
-              className="relative mb-10"
+              className="relative mb-12"
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
@@ -92,30 +92,9 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="ProfParfums" 
-                className="h-44 md:h-56 lg:h-72 w-auto mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
+                className="h-56 md:h-72 lg:h-96 w-auto mx-auto relative z-10 brightness-0 invert drop-shadow-2xl"
               />
             </motion.div>
-            
-            {/* Tagline */}
-            <motion.p 
-              className="text-[11px] md:text-xs tracking-[0.4em] text-white/70 font-light uppercase mb-6"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-            >
-              Premium Fragrance Collection
-            </motion.p>
-            
-            <motion.h1 
-              className="font-display text-3xl md:text-4xl lg:text-5xl text-white mb-4 leading-[1.15]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-            >
-              Discover Your
-              <br />
-              <span className="text-accent italic">Signature Scent</span>
-            </motion.h1>
             
             <motion.p 
               className="text-sm md:text-base text-white/70 mb-10 max-w-md mx-auto leading-relaxed"
