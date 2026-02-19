@@ -1005,31 +1005,47 @@ const Checkout = () => {
                     }}
                   >
                     <span className="flex items-center gap-2.5">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
-                        <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
+                      <svg width="24" height="24" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32.5 0C14.55 0 0 14.55 0 32.5S14.55 65 32.5 65 65 50.45 65 32.5 50.45 0 32.5 0z" fill="white"/>
+                        <path d="M40.8 17.5h-8.3l-2.2 11.7h5.5c3.7 0 5.8 2 5.8 4.8 0 3.8-2.7 6.8-6.5 6.8h-4.5l-3 13.9h3.5l2.5-10.5h2.2c5.3 0 9.3-4.1 9.3-9.5 0-4.4-2.8-7.2-4.3-7.2z" fill="#0075EB"/>
+                        <path d="M22.5 29.5l-2.5 13.9h3.5l2.5-13.9h-3.5z" fill="#0075EB"/>
                       </svg>
-                      <span className="flex flex-col items-start leading-tight">
-                        <span className="text-sm font-bold">Pay with Revolut</span>
-                        <span className="text-[9px] font-normal text-white/40">Powered by Revolut</span>
-                      </span>
+                      <span className="text-sm font-bold">Pay with Revolut</span>
                     </span>
                     <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
                       <Lock className="h-3 w-3" />
                       Secure
                     </span>
                   </Button>
-                  <div className="flex items-center justify-center gap-2 text-[10px] text-muted-foreground/60">
-                    <span className="flex items-center gap-1">
-                      <svg width="20" height="14" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="21" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/><text x="16" y="14" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold" fontFamily="Arial">VISA</text></svg>
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <svg width="20" height="14" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="21" rx="3.5" fill="#252525" stroke="#333"/><circle cx="12" cy="11" r="6" fill="#EB001B"/><circle cx="20" cy="11" r="6" fill="#F79E1B"/><path d="M16 6.8A6 6 0 0 1 18 11a6 6 0 0 1-2 4.2A6 6 0 0 1 14 11a6 6 0 0 1 2-4.2z" fill="#FF5F00"/></svg>
-                    </span>
-                    <span className="text-muted-foreground/50">·</span>
-                    <span>Apple Pay</span>
-                    <span className="text-muted-foreground/50">·</span>
-                    <span>Google Pay</span>
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
+                    Powered by Revolut
+                  </div>
+                  <div className="flex items-center justify-center gap-2.5">
+                    {/* Visa */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
+                    </svg>
+                    {/* Mastercard */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#252525" stroke="#444"/>
+                      <circle cx="18" cy="16" r="9" fill="#EB001B"/>
+                      <circle cx="30" cy="16" r="9" fill="#F79E1B"/>
+                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#FF5F00"/>
+                    </svg>
+                    {/* Maestro */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
+                      <circle cx="18" cy="16" r="9" fill="#0099DF"/>
+                      <circle cx="30" cy="16" r="9" fill="#ED1C24"/>
+                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
+                    </svg>
+                    {/* Apple Pay */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#000" stroke="#333"/>
+                      <path d="M16.2 10.8c-.6.7-1.5 1.2-2.4 1.1-.1-1 .3-2 .9-2.6.6-.7 1.6-1.2 2.3-1.2.1 1-.3 2-.8 2.7zm.8 1.4c-1.3-.1-2.5.8-3.1.8-.6 0-1.6-.7-2.7-.7-1.4 0-2.7.8-3.4 2.1-1.5 2.5-.4 6.3 1 8.4.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.7-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1 2.6-2.1.8-1.2 1.2-2.3 1.2-2.4 0 0-2.3-.9-2.3-3.5 0-2.2 1.8-3.2 1.8-3.2-.9-1.5-2.5-1.6-3-1.6l-.3.1z" fill="white"/>
+                      <path d="M27 11h2.4l3 8.2h.1L35.4 11H37.6l-4.2 11.5h-2.3L27 11zm-2.8 11.5h2.1V11h-2.1v11.5zm9.9 0H36V11h-1.9v11.5z" fill="white"/>
+                    </svg>
                   </div>
                 </div>
 
