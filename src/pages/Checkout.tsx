@@ -1063,7 +1063,7 @@ const Checkout = () => {
                   </p>
                 )}
 
-                <p className="text-[9px] text-muted-foreground/50 text-center">
+                <p className="text-[11px] text-muted-foreground/60 text-center">
                   By completing this purchase you agree to our terms and conditions
                 </p>
 
