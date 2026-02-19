@@ -1040,10 +1040,10 @@ const Checkout = () => {
                       <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
                     </svg>
                     {/* Apple Pay */}
-                    <svg width="48" height="24" viewBox="0 0 165 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="165" height="40" rx="5" fill="black" stroke="#333" strokeWidth="1"/>
-                      <path d="M35.4 13.2c-.2.2-1.6 1-1.6 2.9 0 2.2 1.9 3 2 3-.01.05-.3 1.1-1.1 2.2-.6 1-1.3 1.9-2.3 1.9s-1.3-.6-2.5-.6c-1.2 0-1.6.6-2.5.6s-1.6-.9-2.3-2c-.8-1.3-1.5-3.3-1.5-5.1 0-3 1.9-4.6 3.8-4.6 1 0 1.9.7 2.5.7.6 0 1.5-.7 2.7-.7.4 0 2 .04 3 1.5l-.2.2zm-3.6-1.5c.4-.5.7-1.2.7-1.9 0-.1 0-.2-.01-.3-.7.03-1.4.5-1.9 1-.4.4-.8 1.1-.8 1.9 0 .1.02.2.02.3h.1c.6 0 1.3-.4 1.8-1z" fill="white"/>
-                      <text x="45" y="26" fill="white" fontSize="18" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" letterSpacing="-0.5">Pay</text>
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="black" stroke="#333"/>
+                      <path d="M17.3 11.5c-.15.15-.95.6-.95 1.75 0 1.3 1.15 1.8 1.2 1.8-.01.03-.18.65-.65 1.3-.4.6-.8 1.15-1.4 1.15s-.8-.35-1.5-.35c-.7 0-1 .35-1.55.35s-1-.55-1.4-1.2c-.5-.8-.9-2-.9-3.05 0-1.8 1.15-2.75 2.3-2.75.6 0 1.1.4 1.5.4.35 0 .9-.45 1.6-.45.25 0 1.2.03 1.8.9l-.05.1zm-2.15-.9c.25-.3.42-.7.42-1.15 0-.05 0-.1-.01-.15-.4.02-.85.3-1.15.6-.25.25-.5.65-.5 1.1 0 .06.01.12.01.15h.06c.35 0 .8-.25 1.1-.55z" fill="white"/>
+                      <text x="29" y="20.5" fill="white" textAnchor="middle" fontSize="9" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, sans-serif" letterSpacing="-0.3">Pay</text>
                     </svg>
                   </div>
                 </div>
