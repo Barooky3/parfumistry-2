@@ -1040,10 +1040,10 @@ const Checkout = () => {
                       <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
                     </svg>
                     {/* Apple Pay */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="black" stroke="#333"/>
-                      <path d="M18.8 10.2c-.2.2-1.3.8-1.3 2.4 0 1.8 1.6 2.5 1.65 2.5-.01.04-.25.9-.9 1.8-.5.8-1.1 1.6-1.9 1.6s-1.1-.5-2.1-.5c-1 0-1.35.5-2.1.5s-1.35-.75-1.9-1.65c-.7-1.1-1.25-2.8-1.25-4.3 0-2.5 1.6-3.85 3.2-3.85.85 0 1.55.55 2.1.55.5 0 1.25-.6 2.2-.6.35 0 1.65.04 2.5 1.25l-.2.25zm-3-1.25c.35-.4.6-1 .6-1.6 0-.08 0-.15-.01-.2-.55.02-1.2.4-1.6.85-.3.35-.65.9-.65 1.5 0 .08.01.17.01.2h.08c.5 0 1.1-.35 1.5-.75z" fill="white" transform="translate(3, 0)"/>
-                      <text x="32" y="20.5" fill="white" textAnchor="middle" fontSize="11" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, sans-serif" letterSpacing="-0.3">Pay</text>
+                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="35" height="23" rx="3.5" fill="#fff" stroke="#ddd"/>
+                      <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
+                      <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
                     </svg>
                   </div>
                 </div>
