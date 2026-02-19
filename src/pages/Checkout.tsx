@@ -1019,9 +1019,6 @@ const Checkout = () => {
                   <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground/60">
                     Card · Apple Pay · Google Pay
                   </div>
-                  <p className="text-[9px] text-muted-foreground/50 text-center mt-1">
-                    By completing this purchase you agree to our terms and conditions
-                  </p>
                 </div>
 
                 <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
@@ -1065,6 +1062,10 @@ const Checkout = () => {
                     Fill in all required fields to enable payment.
                   </p>
                 )}
+
+                <p className="text-[9px] text-muted-foreground/50 text-center">
+                  By completing this purchase you agree to our terms and conditions
+                </p>
 
                 {/* Trust badges */}
                 <div className="flex flex-col items-center gap-2 pt-3 border-t border-border/50">
