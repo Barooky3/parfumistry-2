@@ -1016,9 +1016,6 @@ const Checkout = () => {
                       Secure
                     </span>
                   </Button>
-                  <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
-                    Powered by Revolut
-                  </div>
                   <div className="flex items-center justify-center gap-2.5">
                     {/* Visa */}
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
