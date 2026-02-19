@@ -990,11 +990,11 @@ const Checkout = () => {
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Button
                     type="button"
                     disabled={!isFormValid() || isProcessing || revolutLinkOpened}
-                    className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-[#0075EB] hover:bg-[#0066CC] text-white shadow-lg shadow-[#0075EB]/20"
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2A2D31] text-white shadow-lg border border-white/10 relative overflow-hidden"
                     onClick={() => {
                       if (!isFormValid()) {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
@@ -1004,12 +1004,20 @@ const Checkout = () => {
                       setRevolutLinkOpened(true);
                     }}
                   >
-                    <Lock className="h-4 w-4 mr-1" />
-                    Pay with Card / Apple Pay / Google Pay
+                    <span className="flex items-center gap-2">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
+                        <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
+                      </svg>
+                      <span>Pay with Revolut</span>
+                    </span>
+                    <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
+                      <Lock className="h-3 w-3" />
+                      Secure
+                    </span>
                   </Button>
-                  <div className="flex items-center justify-center gap-1.5">
-                    <span className="text-[10px] text-muted-foreground/70">Powered by</span>
-                    <span className="text-[11px] font-semibold text-muted-foreground tracking-wide">Revolut</span>
+                  <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground/60">
+                    Card · Apple Pay · Google Pay
                   </div>
                 </div>
 
