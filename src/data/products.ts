@@ -274,7 +274,7 @@ export const products: Product[] = [
     name: 'Delina',
     brand: 'Parfums de Marly',
     price: 15.99,
-    originalPrice: 94.50,
+    originalPrice: 47.97,
     category: 'women',
     description: 'A luxurious floral fragrance with a contemporary twist. Delina opens with fresh rose, lychee, and rhubarb, creating a vibrant and slightly tart introduction. Soft vanilla and musk smooth the composition, adding warmth and longevity. Feminine and confident, its both romantic and modern.',
     scentNotes: {
@@ -288,8 +288,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 30, price: 15.99, originalPrice: 94.50, inStock: true },
-      { ml: 75, price: 22.99, originalPrice: 129.50, inStock: true },
+      { ml: 30, price: 15.99, originalPrice: 47.97, inStock: true },
+      { ml: 75, price: 22.99, originalPrice: 68.97, inStock: true },
     ],
   },
   {
@@ -297,6 +297,7 @@ export const products: Product[] = [
     name: 'Erba Gold',
     brand: 'Xerjoff',
     price: 17.99,
+    originalPrice: 53.97,
     category: 'unisex',
     description: 'Erba Gold smells like a bright citrus and tropical fruit mix over warm vanilla, amber, and soft musk. It opens with lemon, bergamot, orange, and ginger, then brings in green apple, melon, and pear with a touch of cardamom and cinnamon, drying down to a smooth, slightly creamy base that feels sunny and playful.',
     scentNotes: {
@@ -309,8 +310,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/xerjoff-erba-gold',
     inStock: true,
     variants: [
-      { ml: 50, price: 17.99, inStock: true },
-      { ml: 100, price: 26.99, inStock: true },
+      { ml: 50, price: 17.99, originalPrice: 53.97, inStock: true },
+      { ml: 100, price: 26.99, originalPrice: 80.97, inStock: true },
     ],
   },
   {
@@ -318,7 +319,7 @@ export const products: Product[] = [
     name: 'Erba Pura',
     brand: 'Xerjoff',
     price: 19.99,
-    originalPrice: 13.50,
+    originalPrice: 59.97,
     category: 'unisex',
     description: 'A clean and addictive fruity fragrance, my favourite xerjoff. It has a strong, long-lasting fruity shampoo feel – zesty citrus and mixed fruits up top that stay sweet and smooth for hours, making it stand out in warm weather or nights out.',
     scentNotes: {
@@ -331,8 +332,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/xerjoff-erba-pura',
     inStock: true,
     variants: [
-      { ml: 50, price: 19.99, originalPrice: 13.50, inStock: true },
-      { ml: 100, price: 28.99, originalPrice: 27.50, inStock: true },
+      { ml: 50, price: 19.99, originalPrice: 59.97, inStock: true },
+      { ml: 100, price: 28.99, originalPrice: 86.97, inStock: true },
     ],
   },
   {
@@ -473,7 +474,7 @@ export const products: Product[] = [
     name: 'Khamrah Parfum',
     brand: 'Lattafa',
     price: 6.99,
-    originalPrice: 10.50,
+    originalPrice: 50.50,
     category: 'unisex',
     description: 'Lattafa Khamrah is a warm, dessert‑like gourmand that smells like spiced cinnamon cake with sweet dates, praline, and creamy vanilla over soft woods and amber, perfect for cozy evenings and cooler weather.',
     scentNotes: {
@@ -487,7 +488,7 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 100, price: 6.99, originalPrice: 24.50, inStock: true },
+      { ml: 100, price: 6.99, originalPrice: 64.50, inStock: true },
     ],
   },
   {
@@ -495,6 +496,7 @@ export const products: Product[] = [
     name: 'Khamrah Qahwa',
     brand: 'Lattafa',
     price: 18.99,
+    originalPrice: 56.97,
     category: 'unisex',
     description: 'A coffee-inspired fragrance with rich, warm, and addictive notes. Perfect for coffee lovers.',
     scentNotes: {
@@ -506,7 +508,7 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/lattafa-khamrah-qahwa',
     inStock: false,
     variants: [
-      { ml: 100, price: 18.99, inStock: false },
+      { ml: 100, price: 18.99, originalPrice: 56.97, inStock: false },
     ],
   },
   {
