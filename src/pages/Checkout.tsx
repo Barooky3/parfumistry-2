@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -347,6 +348,7 @@ const Checkout = () => {
   const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
@@ -993,7 +995,7 @@ const Checkout = () => {
                 <div className="space-y-1.5">
                   <Button
                     type="button"
-                    disabled={!isFormValid() || isProcessing || revolutLinkOpened}
+                    disabled={!isFormValid() || isProcessing}
                     className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2A2D31] text-white shadow-lg border border-white/10 relative overflow-hidden"
                     onClick={() => {
                       if (!isFormValid()) {
@@ -1061,26 +1063,52 @@ const Checkout = () => {
                 {revolutLinkOpened && (
                   <div className="space-y-2">
                     <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
-                      onClick={async () => {
-                        setIsProcessing(true);
-                        try {
-                          const fd = formDataRef.current;
-                          const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                          const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                          await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
-                          setIsCompleted(true);
-                          clearCart();
-                        } catch (err: any) {
-                          console.error('Revolut order error:', err);
-                          toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
-                        } finally { setIsProcessing(false); }
-                      }}
+                      onClick={() => setShowConfirmDialog(true)}
                     >
                       {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I've Completed Payment — Confirm Order</>}
                     </Button>
                     <p className="text-xs text-center text-red-400 font-medium">
                       Orders confirmed without payment are instantly rejected. You will still receive the confirmation email, but the order won't go through.
                     </p>
+
+                    <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertTriangle className="h-5 w-5 text-red-500" />
+                            Payment Confirmation
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-sm leading-relaxed">
+                            <span className="font-semibold text-red-500 block mb-2">
+                              Orders confirmed without payment are instantly rejected.
+                            </span>
+                            You will still receive the confirmation email, but the order won't go through if payment has not been completed. Are you sure you have completed the payment?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Go Back</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={async () => {
+                              setIsProcessing(true);
+                              try {
+                                const fd = formDataRef.current;
+                                const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                                const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                                await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
+                                setIsCompleted(true);
+                                clearCart();
+                              } catch (err: any) {
+                                console.error('Revolut order error:', err);
+                                toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
+                              } finally { setIsProcessing(false); }
+                            }}
+                          >
+                            Yes, I've Paid
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 )}
 
