@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -345,10 +344,8 @@ const Checkout = () => {
   const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
@@ -562,7 +559,7 @@ const Checkout = () => {
         if (existing) existing.remove();
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR&disable-funding=card`;
+          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR`;
           script.onload = () => resolve();
           script.onerror = () => reject(new Error('Failed to load PayPal'));
           document.head.appendChild(script);
@@ -984,133 +981,34 @@ const Checkout = () => {
 
                 <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
 
-                {paypalReady && (
-                  <div className="flex items-center gap-3 my-1">
-                    <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-muted-foreground">or</span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-                )}
-
-                <div className="space-y-1.5">
-                  <Button
-                    type="button"
-                    disabled={!isFormValid() || isProcessing}
-                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2A2D31] text-white shadow-lg border border-white/10 relative overflow-hidden"
-                    onClick={() => {
-                      if (!isFormValid()) {
-                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
-                        return;
-                      }
-                      window.open('https://revolut.me/mubarak_e', '_blank');
-                      setRevolutLinkOpened(true);
-                    }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
-                        <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
-                      </svg>
-                      <span>Pay with Card/Apple Pay</span>
-                    </span>
-                    <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
-                      <Lock className="h-3 w-3" />
-                      Secure
-                    </span>
-                  </Button>
-                  <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
-                    Powered by Revolut
-                  </div>
-                  <div className="flex items-center justify-center gap-2.5">
-                    {/* Visa */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
-                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
-                    </svg>
-                    {/* Mastercard */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#252525" stroke="#444"/>
-                      <circle cx="18" cy="16" r="9" fill="#EB001B"/>
-                      <circle cx="30" cy="16" r="9" fill="#F79E1B"/>
-                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#FF5F00"/>
-                    </svg>
-                    {/* Maestro */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <circle cx="18" cy="16" r="9" fill="#0099DF"/>
-                      <circle cx="30" cy="16" r="9" fill="#ED1C24"/>
-                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
-                    </svg>
-                    {/* Apple Pay */}
-                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="35" height="23" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
-                      <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
-                    </svg>
-                  </div>
+                {/* Card logos */}
+                <div className="flex items-center justify-center gap-2.5 mt-3">
+                  {/* Visa */}
+                  <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
+                    <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
+                  </svg>
+                  {/* Mastercard */}
+                  <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#252525" stroke="#444"/>
+                    <circle cx="18" cy="16" r="9" fill="#EB001B"/>
+                    <circle cx="30" cy="16" r="9" fill="#F79E1B"/>
+                    <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#FF5F00"/>
+                  </svg>
+                  {/* Maestro */}
+                  <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
+                    <circle cx="18" cy="16" r="9" fill="#0099DF"/>
+                    <circle cx="30" cy="16" r="9" fill="#ED1C24"/>
+                    <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
+                  </svg>
+                  {/* Apple Pay */}
+                  <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="35" height="23" rx="3.5" fill="#fff" stroke="#ddd"/>
+                    <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
+                    <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
+                  </svg>
                 </div>
-
-                <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
-                  <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
-                  <p className="text-xs text-foreground/90">
-                    After clicking, you must enter exactly <strong className="text-amber-400">€{(() => {
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                      return finalTotal.toFixed(2);
-                    })()}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
-                  </p>
-                </div>
-
-                {revolutLinkOpened && (
-                  <div className="space-y-2">
-                    <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => setShowConfirmDialog(true)}
-                    >
-                      {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I've Completed Payment — Confirm Order</>}
-                    </Button>
-                    <p className="text-xs text-center text-red-400 font-medium">
-                      Orders confirmed without payment are instantly rejected. You will still receive the confirmation email, but the order won't go through.
-                    </p>
-
-                    <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 text-red-500" />
-                            Payment Confirmation
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="text-sm leading-relaxed">
-                            <span className="font-semibold text-red-500 block mb-2">
-                              Orders confirmed without payment are instantly rejected.
-                            </span>
-                            You will still receive the confirmation email, but the order won't go through if payment has not been completed. Are you sure you have completed the payment?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Go Back</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="bg-green-600 hover:bg-green-700"
-                            onClick={async () => {
-                              setIsProcessing(true);
-                              try {
-                                const fd = formDataRef.current;
-                                const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                                const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                                await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
-                                setIsCompleted(true);
-                                clearCart();
-                              } catch (err: any) {
-                                console.error('Revolut order error:', err);
-                                toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
-                              } finally { setIsProcessing(false); }
-                            }}
-                          >
-                            Yes, I've Paid
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                )}
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
