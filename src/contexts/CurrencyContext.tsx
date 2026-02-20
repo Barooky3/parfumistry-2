@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
 export type Currency = 
   | 'EUR' | 'GBP' | 'USD' | 'CHF' | 'SEK' | 'DKK' | 'NOK' | 'ISK'
@@ -66,6 +66,31 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: 'NGN', symbol: '₦', rate: 1650, locale: 'en-NG' },
 ];
 
+// Map country codes (ISO 3166-1 alpha-2) to currency codes for geolocation
+const COUNTRY_CODE_CURRENCY_MAP: Record<string, Currency> = {
+  // Europe - EUR
+  NL: 'EUR', BE: 'EUR', DE: 'EUR', FR: 'EUR', ES: 'EUR', IT: 'EUR',
+  AT: 'EUR', PT: 'EUR', FI: 'EUR', IE: 'EUR', LU: 'EUR', GR: 'EUR',
+  SK: 'EUR', SI: 'EUR', EE: 'EUR', LV: 'EUR', LT: 'EUR', HR: 'EUR',
+  RS: 'EUR', XK: 'EUR', ME: 'EUR', BA: 'EUR', AD: 'EUR', MC: 'EUR', SM: 'EUR',
+  // Europe - other currencies
+  GB: 'GBP', CH: 'CHF', SE: 'SEK', DK: 'DKK', NO: 'NOK', IS: 'ISK',
+  PL: 'PLN', CZ: 'CZK', HU: 'HUF', RO: 'RON', BG: 'BGN',
+  TR: 'TRY', RU: 'RUB', UA: 'UAH',
+  // North America
+  US: 'USD', CA: 'CAD', MX: 'MXN',
+  // South America
+  BR: 'BRL', AR: 'ARS', CL: 'CLP', CO: 'COP', PE: 'PEN',
+  // Asia
+  JP: 'JPY', KR: 'KRW', CN: 'CNY', IN: 'INR', TH: 'THB',
+  VN: 'VND', ID: 'IDR', MY: 'MYR', SG: 'SGD', PH: 'PHP',
+  AE: 'AED', SA: 'SAR',
+  // Oceania
+  AU: 'AUD', NZ: 'NZD',
+  // Africa
+  ZA: 'ZAR', EG: 'EGP', MA: 'MAD', NG: 'NGN',
+};
+
 // Map country names to their currency codes
 export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Netherlands': 'EUR', 'Belgium': 'EUR', 'Germany': 'EUR', 'France': 'EUR',
@@ -110,6 +135,30 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     const stored = localStorage.getItem('profparfums-currency');
     return (stored as Currency) || 'EUR';
   });
+
+  // Auto-detect currency based on user's location (only on first visit)
+  useEffect(() => {
+    const stored = localStorage.getItem('profparfums-currency');
+    if (stored) return; // User already has a preference
+
+    const detectCurrency = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) });
+        if (!response.ok) return;
+        const data = await response.json();
+        const countryCode = data.country_code as string;
+        if (countryCode && COUNTRY_CODE_CURRENCY_MAP[countryCode]) {
+          const detected = COUNTRY_CODE_CURRENCY_MAP[countryCode];
+          setCurrencyState(detected);
+          localStorage.setItem('profparfums-currency', detected);
+        }
+      } catch {
+        // Silently fail - keep EUR default
+      }
+    };
+
+    detectCurrency();
+  }, []);
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c);
