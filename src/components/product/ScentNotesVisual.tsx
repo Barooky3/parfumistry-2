@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const SCENT_NOTES_VERSION = 'v22';
+const SCENT_NOTES_VERSION = 'v23';
 
 interface ScentNotesVisualProps {
   scentNotes: {
@@ -51,7 +51,11 @@ function processImage(img: HTMLImageElement, canvas: HTMLCanvasElement) {
     bgB = Math.round(bgB / bgCount);
   }
 
-  // Step 2: Process every pixel
+  // Step 2: Determine if bg is light (white-ish)
+  const bgBrightness = bgR * 0.299 + bgG * 0.587 + bgB * 0.114;
+  const isLightBg = bgBrightness > 180;
+
+  // Step 3: Process every pixel
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
     if (a === 0) continue;
@@ -59,55 +63,38 @@ function processImage(img: HTMLImageElement, canvas: HTMLCanvasElement) {
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     const chroma = max - min;
+    const brightness = r * 0.299 + g * 0.587 + b * 0.114;
 
     // Distance to detected background color
     const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
 
-    // Close to background color → remove
-    if (dist < 50) {
-      if (dist < 30) {
+    // Only remove pixels very close to the background color AND very neutral
+    if (dist < 35 && chroma < 15) {
+      if (dist < 18) {
         data[i + 3] = 0;
       } else {
-        data[i + 3] = Math.round(a * ((dist - 30) / 20));
+        data[i + 3] = Math.round(a * ((dist - 18) / 17));
       }
       continue;
     }
 
-    // Also catch any neutral light pixels not near sampled bg
-    const brightness = r * 0.299 + g * 0.587 + b * 0.114;
-    if (brightness > 200 && chroma < 20) {
+    // Pure white/near-white neutral pixels only (the actual flat background)
+    if (isLightBg && brightness > 235 && chroma < 10) {
       data[i + 3] = 0;
       continue;
     }
 
-    // Checkered pattern (uniform neutral grey blocks)
-    if (chroma < 6 && brightness > 120 && brightness < 220) {
-      data[i + 3] = 0;
-      continue;
-    }
-
-    // --- DARK PIXEL LIGHTENING (dark illustrations & text → light for dark theme) ---
-    if (brightness < 60 && chroma < 40) {
-      // Very dark, low-chroma pixels: make white (text and dark outlines)
-      const lightness = brightness / 60; // 0 to 1
-      const target = 220 + (1 - lightness) * 35; // 220-255
+    // --- DARK PIXEL LIGHTENING (text → white for dark theme) ---
+    // Only target very dark, very low-chroma pixels (text/lines, not dark ingredients)
+    if (brightness < 50 && chroma < 20) {
+      const target = 230 + ((50 - brightness) / 50) * 25;
       data[i] = target; data[i + 1] = target; data[i + 2] = target;
       continue;
     }
-    if (brightness < 100 && chroma < 30) {
-      // Medium-dark low-saturation: lighten significantly
-      const factor = 2.2;
-      data[i] = Math.min(255, Math.round(r * factor));
-      data[i + 1] = Math.min(255, Math.round(g * factor));
-      data[i + 2] = Math.min(255, Math.round(b * factor));
-      continue;
-    }
-    if (brightness < 140 && chroma < 25) {
-      // Mid-tone greys: lighten moderately
-      const factor = 1.6;
-      data[i] = Math.min(255, Math.round(r * factor));
-      data[i + 1] = Math.min(255, Math.round(g * factor));
-      data[i + 2] = Math.min(255, Math.round(b * factor));
+    // Grey text
+    if (brightness < 120 && chroma < 12) {
+      const target = 200 + ((120 - brightness) / 120) * 55;
+      data[i] = target; data[i + 1] = target; data[i + 2] = target;
       continue;
     }
   }
