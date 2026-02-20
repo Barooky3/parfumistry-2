@@ -175,7 +175,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
             {/* Scent Notes Visual */}
             {product.scentNotes && (
-              <div className="py-6 border-t border-border">
+              <div className="py-6">
                 <ScentNotesVisual 
                   scentNotes={product.scentNotes} 
                   scentNotesImage={product.scentNotesImage}

@@ -27,14 +27,12 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="py-4"
       >
         <img 
           src={`${scentNotesImage}?${SCENT_NOTES_VERSION}`} 
           alt="Fragrance Notes" 
-          className="w-full max-w-md mx-auto opacity-90 mix-blend-lighten"
+          className="w-full max-w-md mx-auto"
           loading="lazy"
-          style={{ filter: 'brightness(1.1)' }}
         />
       </motion.div>
     );
