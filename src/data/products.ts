@@ -793,6 +793,7 @@ export const products: Product[] = [
     name: 'Mon Paris',
     brand: 'Yves Saint Laurent',
     price: 6.99,
+    originalPrice: 27.96,
     category: 'women',
     description: 'A romantic and passionate fragrance. Sweet strawberry meets white flowers for an irresistible combination.',
     scentNotes: {
@@ -805,9 +806,9 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/yves-saint-laurent-mon-paris',
     inStock: true,
     variants: [
-      { ml: 30, price: 6.99, inStock: true },
-      { ml: 50, price: 9.99, inStock: true },
-      { ml: 90, price: 14.99, inStock: true },
+      { ml: 30, price: 6.99, originalPrice: 27.96, inStock: true },
+      { ml: 50, price: 9.99, originalPrice: 39.96, inStock: true },
+      { ml: 90, price: 14.99, originalPrice: 59.96, inStock: true },
     ],
   },
   {
@@ -815,7 +816,7 @@ export const products: Product[] = [
     name: 'Myself EDP',
     brand: 'Yves Saint Laurent',
     price: 7.99,
-    originalPrice: 7.50,
+    originalPrice: 31.96,
     category: 'men',
     description: 'A refined and elegant fragrance that celebrates individuality. Floral and woody with a modern twist.',
     scentNotes: {
@@ -828,9 +829,9 @@ export const products: Product[] = [
     affiliateUrl: 'https://profparfums.store/products/ysl-myslf-le-parfum',
     inStock: true,
     variants: [
-      { ml: 40, price: 7.99, originalPrice: 7.50, inStock: true },
-      { ml: 60, price: 9.99, originalPrice: 17.50, inStock: true },
-      { ml: 100, price: 15.99, originalPrice: 27.50, inStock: true },
+      { ml: 40, price: 7.99, originalPrice: 31.96, inStock: true },
+      { ml: 60, price: 9.99, originalPrice: 39.96, inStock: true },
+      { ml: 100, price: 15.99, originalPrice: 63.96, inStock: true },
     ],
   },
   {
