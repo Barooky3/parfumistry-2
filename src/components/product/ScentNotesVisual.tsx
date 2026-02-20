@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const SCENT_NOTES_VERSION = 'v21';
+const SCENT_NOTES_VERSION = 'v22';
 
 interface ScentNotesVisualProps {
   scentNotes: {
@@ -86,17 +86,28 @@ function processImage(img: HTMLImageElement, canvas: HTMLCanvasElement) {
       continue;
     }
 
-    // --- TEXT CONVERSION (dark text → white) ---
-    if (max < 50 && chroma < 20) {
-      data[i] = 255; data[i + 1] = 255; data[i + 2] = 255;
+    // --- DARK PIXEL LIGHTENING (dark illustrations & text → light for dark theme) ---
+    if (brightness < 60 && chroma < 40) {
+      // Very dark, low-chroma pixels: make white (text and dark outlines)
+      const lightness = brightness / 60; // 0 to 1
+      const target = 220 + (1 - lightness) * 35; // 220-255
+      data[i] = target; data[i + 1] = target; data[i + 2] = target;
       continue;
     }
-    if (max < 100 && chroma < 15) {
-      data[i] = 220; data[i + 1] = 220; data[i + 2] = 220;
+    if (brightness < 100 && chroma < 30) {
+      // Medium-dark low-saturation: lighten significantly
+      const factor = 2.2;
+      data[i] = Math.min(255, Math.round(r * factor));
+      data[i + 1] = Math.min(255, Math.round(g * factor));
+      data[i + 2] = Math.min(255, Math.round(b * factor));
       continue;
     }
-    if (max < 140 && chroma < 12) {
-      data[i] = 200; data[i + 1] = 200; data[i + 2] = 200;
+    if (brightness < 140 && chroma < 25) {
+      // Mid-tone greys: lighten moderately
+      const factor = 1.6;
+      data[i] = Math.min(255, Math.round(r * factor));
+      data[i + 1] = Math.min(255, Math.round(g * factor));
+      data[i + 2] = Math.min(255, Math.round(b * factor));
       continue;
     }
   }
