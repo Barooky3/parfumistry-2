@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, Lock } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, Lock, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -351,6 +351,8 @@ const Checkout = () => {
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
   const [paypalReady, setPaypalReady] = useState(false);
   const [paypalLoading, setPaypalLoading] = useState(false);
+  const [showRevolutConfirm, setShowRevolutConfirm] = useState(false);
+  const [revolutLinkClicked, setRevolutLinkClicked] = useState(false);
   const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const VALID_CODES: Record<string, number> = {
@@ -559,7 +561,7 @@ const Checkout = () => {
         if (existing) existing.remove();
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR`;
+          script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=EUR&disable-funding=card`;
           script.onload = () => resolve();
           script.onerror = () => reject(new Error('Failed to load PayPal'));
           document.head.appendChild(script);
@@ -619,6 +621,52 @@ const Checkout = () => {
       },
     }).render(container);
   }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
+  const handleRevolutClick = () => {
+    if (!isFormValid()) {
+      toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+      return;
+    }
+    setShowRevolutConfirm(true);
+  };
+
+  const handleRevolutConfirm = async () => {
+    setShowRevolutConfirm(false);
+    // Open Revolut link
+    window.open('https://revolut.me/malik_ll_dkwy', '_blank');
+    setRevolutLinkClicked(true);
+  };
+
+  const handleRevolutOrderComplete = async () => {
+    setIsProcessing(true);
+    try {
+      const fd = formDataRef.current;
+      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+      
+      // Save order to database
+      const orderRef = `REV-${Date.now()}`;
+      await supabase.from('orders').insert({
+        checkout_reference: orderRef,
+        customer_email: fd.email,
+        customer_name: `${fd.firstName} ${fd.lastName}`,
+        order_items: cartItems as any,
+        total_amount: finalTotal,
+        status: 'pending_verification',
+        shipping_address: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress } as any,
+        discount_code: appliedDiscountRef.current?.code || null,
+        discount_percent: appliedDiscountRef.current?.percent || null,
+      });
+
+      await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
+      setIsCompleted(true);
+      clearCart();
+    } catch (err: any) {
+      console.error('Order submission error:', err);
+      toast({ title: 'Error', description: 'Could not submit your order. Please try again.', variant: 'destructive' });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
 
   if (items.length === 0 && !isCompleted) {
@@ -961,7 +1009,7 @@ const Checkout = () => {
                 {isProcessing && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    <span className="text-sm font-medium text-foreground">Processing your payment...</span>
+                    <span className="text-sm font-medium text-foreground">Processing your order...</span>
                     <span className="text-xs text-muted-foreground">Please don't close this page</span>
                   </div>
                 )}
@@ -973,42 +1021,108 @@ const Checkout = () => {
                   </div>
                 )}
 
+                {/* Revolut Payment Button */}
+                <div className="space-y-3">
+                  {/* Exact total instruction */}
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-md">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-amber-600 dark:text-amber-400">
+                        <strong>Important:</strong> Please pay the exact total of{' '}
+                        <strong>{formatPrice(currentTotal)}</strong> via the Revolut link.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleRevolutClick}
+                    disabled={isProcessing}
+                    className="w-full h-[50px] rounded-md flex items-center justify-center gap-3 transition-all hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: '#191C1F' }}
+                  >
+                    {/* Revolut R logo */}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M17.56 6.84h-4.65L10.14 12h2.73l-3.33 6h1.08l7.04-8.4h-4.1l3.99-2.76Z" fill="white"/>
+                    </svg>
+                    <span className="text-white text-sm font-semibold tracking-wide">Pay with Card / Apple Pay</span>
+                  </button>
+                  <div className="flex items-center justify-center gap-1">
+                    <span className="text-[10px] text-muted-foreground/50">Powered by</span>
+                    <span className="text-[10px] text-muted-foreground/70 font-semibold">Revolut</span>
+                  </div>
+
+                  {/* Red disclaimer */}
+                  <div className="p-2.5 bg-destructive/10 border border-destructive/20 rounded-md">
+                    <p className="text-[11px] text-destructive text-center">
+                      ⚠️ Orders without matching payment will be rejected. Please ensure you pay the exact amount shown.
+                    </p>
+                  </div>
+
+                  {/* Revolut card logos */}
+                  <div className="flex items-center justify-center gap-2.5 mt-1">
+                    {/* Visa */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
+                    </svg>
+                    {/* Mastercard */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#252525" stroke="#444"/>
+                      <circle cx="18" cy="16" r="9" fill="#EB001B"/>
+                      <circle cx="30" cy="16" r="9" fill="#F79E1B"/>
+                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#FF5F00"/>
+                    </svg>
+                    {/* Maestro */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
+                      <circle cx="18" cy="16" r="9" fill="#0099DF"/>
+                      <circle cx="30" cy="16" r="9" fill="#ED1C24"/>
+                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
+                    </svg>
+                    {/* Apple Pay */}
+                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="35" height="23" rx="3.5" fill="#fff" stroke="#ddd"/>
+                      <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
+                      <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Revolut confirmation sent - show complete order button */}
+                {revolutLinkClicked && (
+                  <div className="space-y-3 pt-2">
+                    <Button
+                      onClick={() => window.open('https://revolut.me/malik_ll_dkwy', '_blank')}
+                      variant="outline"
+                      className="w-full h-11 text-xs tracking-wider"
+                    >
+                      Reopen Payment Link
+                    </Button>
+                    <Button
+                      onClick={handleRevolutOrderComplete}
+                      disabled={isProcessing}
+                      className="w-full h-12 text-xs tracking-[0.15em] uppercase font-semibold"
+                    >
+                      {isProcessing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                      I've Completed Payment
+                    </Button>
+                  </div>
+                )}
+
+                {/* Divider */}
+                <div className="flex items-center gap-3 py-2">
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-xs text-muted-foreground">or pay with</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+
+                <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
+
                 <p className="text-xs text-center text-muted-foreground mb-2">
                   If you're looking for other payment methods, simply hit us up on{' '}
                   <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
                   and we'll help you out!
                 </p>
-
-                <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
-
-                {/* Card logos */}
-                <div className="flex items-center justify-center gap-2.5 mt-3">
-                  {/* Visa */}
-                  <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
-                    <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
-                  </svg>
-                  {/* Mastercard */}
-                  <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#252525" stroke="#444"/>
-                    <circle cx="18" cy="16" r="9" fill="#EB001B"/>
-                    <circle cx="30" cy="16" r="9" fill="#F79E1B"/>
-                    <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#FF5F00"/>
-                  </svg>
-                  {/* Maestro */}
-                  <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-                    <circle cx="18" cy="16" r="9" fill="#0099DF"/>
-                    <circle cx="30" cy="16" r="9" fill="#ED1C24"/>
-                    <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
-                  </svg>
-                  {/* Apple Pay */}
-                  <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="35" height="23" rx="3.5" fill="#fff" stroke="#ddd"/>
-                    <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
-                    <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
-                  </svg>
-                </div>
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
@@ -1029,6 +1143,33 @@ const Checkout = () => {
                   <p className="text-[10px] text-muted-foreground/60">256-bit SSL encrypted · Buyer protection included</p>
                 </div>
               </div>
+
+              {/* Revolut Confirmation Popup */}
+              {showRevolutConfirm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                  <div className="bg-background rounded-lg shadow-xl max-w-sm w-full p-6 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <AlertTriangle className="h-6 w-6 text-amber-500" />
+                      <h3 className="font-display text-lg text-foreground">Confirm Payment</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      You'll be redirected to Revolut to pay <strong>{formatPrice(currentTotal)}</strong>. 
+                      Please ensure you send the <strong>exact amount</strong>.
+                    </p>
+                    <p className="text-xs text-destructive">
+                      Orders without matching payment will be rejected.
+                    </p>
+                    <div className="flex gap-3 pt-2">
+                      <Button variant="outline" onClick={() => setShowRevolutConfirm(false)} className="flex-1">
+                        Cancel
+                      </Button>
+                      <Button onClick={handleRevolutConfirm} className="flex-1">
+                        Continue to Pay
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
