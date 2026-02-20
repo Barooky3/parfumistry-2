@@ -1009,13 +1009,16 @@ const Checkout = () => {
                         <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
                         <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
                       </svg>
-                      <span>Pay with Revolut</span>
+                      <span>Pay with Card/Apple Pay</span>
                     </span>
                     <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
                       <Lock className="h-3 w-3" />
                       Secure
                     </span>
                   </Button>
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
+                    Powered by Revolut
+                  </div>
                   <div className="flex items-center justify-center gap-2.5">
                     {/* Visa */}
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
