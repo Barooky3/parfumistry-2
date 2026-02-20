@@ -134,11 +134,10 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
       >
-        <img
-          src={scentNotesImage}
-          alt="Scent notes"
+        <canvas
+          ref={canvasRef}
           className="w-full max-w-md mx-auto"
-          loading="lazy"
+          style={{ opacity: isProcessed ? 1 : 0, transition: 'opacity 0.3s ease' }}
         />
       </motion.div>
     );
