@@ -31,8 +31,9 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
         <img 
           src={`${scentNotesImage}?${SCENT_NOTES_VERSION}`} 
           alt="Fragrance Notes" 
-          className="w-full max-w-md mx-auto"
+          className="w-full max-w-md mx-auto mix-blend-screen"
           loading="lazy"
+          style={{ filter: 'invert(1) hue-rotate(180deg)' }}
         />
       </motion.div>
     );
