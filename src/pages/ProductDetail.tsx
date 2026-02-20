@@ -184,9 +184,9 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             )}
 
             {/* Description */}
-            <div className="space-y-3 py-6 border-t border-border">
-              <h3 className="text-sm font-semibold text-foreground">About This Fragrance</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+            <div className="space-y-4 py-8 border-t border-border">
+              <h3 className="text-lg md:text-xl font-semibold text-foreground">About This Fragrance</h3>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 {product.description}
               </p>
               
