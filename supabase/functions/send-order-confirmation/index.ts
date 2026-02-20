@@ -30,7 +30,7 @@ const PRODUCT_IMAGES: Record<string, string> = {
   "khamrah-parfum": "https://profparfums.store/cdn/shop/files/lattafa-khamrah-parfum-4792990.png?v=1768068486&width=800",
   "imagination": "https://profparfums.store/cdn/shop/files/louis-vuitton-imagination-1427694.png?v=1768068489&width=800",
   "layton": "https://profparfums.store/cdn/shop/files/parfums-de-marly-layton-3974734.png?v=1768068548&width=800",
-  "le-beau-le-parfum": "https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-beau-le-parfum-6270263.png?v=1768068486&width=800",
+  "le-beau-le-parfum": "https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800",
   "le-male-le-parfum": "https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800",
   "le-male-elixir": "https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-elixir-8714266.png?v=1768068486&width=800",
   "libre": "https://profparfums.store/cdn/shop/files/yves-saint-laurent-libre-3780610.png?v=1768068487&width=800",
