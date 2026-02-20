@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, Lock, AlertTriangle } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -344,15 +345,15 @@ const Checkout = () => {
   const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
   const [paypalReady, setPaypalReady] = useState(false);
   const [paypalLoading, setPaypalLoading] = useState(false);
-  const [showRevolutConfirm, setShowRevolutConfirm] = useState(false);
-  const [revolutLinkClicked, setRevolutLinkClicked] = useState(false);
   const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const VALID_CODES: Record<string, number> = {
@@ -621,52 +622,6 @@ const Checkout = () => {
       },
     }).render(container);
   }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
-  const handleRevolutClick = () => {
-    if (!isFormValid()) {
-      toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
-      return;
-    }
-    setShowRevolutConfirm(true);
-  };
-
-  const handleRevolutConfirm = async () => {
-    setShowRevolutConfirm(false);
-    // Open Revolut link
-    window.open('https://revolut.me/malik_ll_dkwy', '_blank');
-    setRevolutLinkClicked(true);
-  };
-
-  const handleRevolutOrderComplete = async () => {
-    setIsProcessing(true);
-    try {
-      const fd = formDataRef.current;
-      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-      
-      // Save order to database
-      const orderRef = `REV-${Date.now()}`;
-      await supabase.from('orders').insert({
-        checkout_reference: orderRef,
-        customer_email: fd.email,
-        customer_name: `${fd.firstName} ${fd.lastName}`,
-        order_items: cartItems as any,
-        total_amount: finalTotal,
-        status: 'pending_verification',
-        shipping_address: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress } as any,
-        discount_code: appliedDiscountRef.current?.code || null,
-        discount_percent: appliedDiscountRef.current?.percent || null,
-      });
-
-      await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
-      setIsCompleted(true);
-      clearCart();
-    } catch (err: any) {
-      console.error('Order submission error:', err);
-      toast({ title: 'Error', description: 'Could not submit your order. Please try again.', variant: 'destructive' });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
 
   if (items.length === 0 && !isCompleted) {
@@ -1009,7 +964,7 @@ const Checkout = () => {
                 {isProcessing && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    <span className="text-sm font-medium text-foreground">Processing your order...</span>
+                    <span className="text-sm font-medium text-foreground">Processing your payment...</span>
                     <span className="text-xs text-muted-foreground">Please don't close this page</span>
                   </div>
                 )}
@@ -1021,45 +976,52 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {/* Revolut Payment Button */}
-                <div className="space-y-3">
-                  {/* Exact total instruction */}
-                  <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-md">
-                    <div className="flex items-start gap-2">
-                      <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-amber-600 dark:text-amber-400">
-                        <strong>Important:</strong> Please pay the exact total of{' '}
-                        <strong>{formatPrice(currentTotal)}</strong> via the Revolut link.
-                      </p>
-                    </div>
-                  </div>
+                <p className="text-xs text-center text-muted-foreground mb-2">
+                  If you're looking for other payment methods, simply hit us up on{' '}
+                  <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
+                  and we'll help you out!
+                </p>
 
-                  <button
-                    onClick={handleRevolutClick}
-                    disabled={isProcessing}
-                    className="w-full h-[50px] rounded-md flex items-center justify-center gap-3 transition-all hover:opacity-90 disabled:opacity-50"
-                    style={{ backgroundColor: '#191C1F' }}
+                <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
+
+                {paypalReady && (
+                  <div className="flex items-center gap-3 my-1">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs text-muted-foreground">or</span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+                )}
+
+                <div className="space-y-1.5">
+                  <Button
+                    type="button"
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2A2D31] text-white shadow-lg border border-white/10 relative overflow-hidden"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      window.open('https://revolut.me/mubarak_e', '_blank');
+                      setRevolutLinkOpened(true);
+                    }}
                   >
-                    {/* Revolut R logo */}
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M17.56 6.84h-4.65L10.14 12h2.73l-3.33 6h1.08l7.04-8.4h-4.1l3.99-2.76Z" fill="white"/>
-                    </svg>
-                    <span className="text-white text-sm font-semibold tracking-wide">Pay with Card / Apple Pay</span>
-                  </button>
-                  <div className="flex items-center justify-center gap-1">
-                    <span className="text-[10px] text-muted-foreground/50">Powered by</span>
-                    <span className="text-[10px] text-muted-foreground/70 font-semibold">Revolut</span>
+                    <span className="flex items-center gap-2">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
+                        <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
+                      </svg>
+                      <span>Pay with Card/Apple Pay</span>
+                    </span>
+                    <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
+                      <Lock className="h-3 w-3" />
+                      Secure
+                    </span>
+                  </Button>
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
+                    Powered by Revolut
                   </div>
-
-                  {/* Red disclaimer */}
-                  <div className="p-2.5 bg-destructive/10 border border-destructive/20 rounded-md">
-                    <p className="text-[11px] text-destructive text-center">
-                      ⚠️ Orders without matching payment will be rejected. Please ensure you pay the exact amount shown.
-                    </p>
-                  </div>
-
-                  {/* Revolut card logos */}
-                  <div className="flex items-center justify-center gap-2.5 mt-1">
+                  <div className="flex items-center justify-center gap-2.5">
                     {/* Visa */}
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
@@ -1088,41 +1050,67 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {/* Revolut confirmation sent - show complete order button */}
-                {revolutLinkClicked && (
-                  <div className="space-y-3 pt-2">
-                    <Button
-                      onClick={() => window.open('https://revolut.me/malik_ll_dkwy', '_blank')}
-                      variant="outline"
-                      className="w-full h-11 text-xs tracking-wider"
-                    >
-                      Reopen Payment Link
-                    </Button>
-                    <Button
-                      onClick={handleRevolutOrderComplete}
-                      disabled={isProcessing}
-                      className="w-full h-12 text-xs tracking-[0.15em] uppercase font-semibold"
-                    >
-                      {isProcessing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                      I've Completed Payment
-                    </Button>
-                  </div>
-                )}
-
-                {/* Divider */}
-                <div className="flex items-center gap-3 py-2">
-                  <div className="flex-1 h-px bg-border" />
-                  <span className="text-xs text-muted-foreground">or pay with</span>
-                  <div className="flex-1 h-px bg-border" />
+                <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
+                  <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
+                  <p className="text-xs text-foreground/90">
+                    After clicking, you must enter exactly <strong className="text-amber-400">€{(() => {
+                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      return finalTotal.toFixed(2);
+                    })()}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
+                  </p>
                 </div>
 
-                <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
+                {revolutLinkOpened && (
+                  <div className="space-y-2">
+                    <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => setShowConfirmDialog(true)}
+                    >
+                      {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I've Completed Payment — Confirm Order</>}
+                    </Button>
+                    <p className="text-xs text-center text-red-400 font-medium">
+                      Orders confirmed without payment are instantly rejected. You will still receive the confirmation email, but the order won't go through.
+                    </p>
 
-                <p className="text-xs text-center text-muted-foreground mb-2">
-                  If you're looking for other payment methods, simply hit us up on{' '}
-                  <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
-                  and we'll help you out!
-                </p>
+                    <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertTriangle className="h-5 w-5 text-red-500" />
+                            Payment Confirmation
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-sm leading-relaxed">
+                            <span className="font-semibold text-red-500 block mb-2">
+                              Orders confirmed without payment are instantly rejected.
+                            </span>
+                            You will still receive the confirmation email, but the order won't go through if payment has not been completed. Are you sure you have completed the payment?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Go Back</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={async () => {
+                              setIsProcessing(true);
+                              try {
+                                const fd = formDataRef.current;
+                                const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                                const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                                await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
+                                setIsCompleted(true);
+                                clearCart();
+                              } catch (err: any) {
+                                console.error('Revolut order error:', err);
+                                toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
+                              } finally { setIsProcessing(false); }
+                            }}
+                          >
+                            Yes, I've Paid
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">
@@ -1143,33 +1131,6 @@ const Checkout = () => {
                   <p className="text-[10px] text-muted-foreground/60">256-bit SSL encrypted · Buyer protection included</p>
                 </div>
               </div>
-
-              {/* Revolut Confirmation Popup */}
-              {showRevolutConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                  <div className="bg-background rounded-lg shadow-xl max-w-sm w-full p-6 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <AlertTriangle className="h-6 w-6 text-amber-500" />
-                      <h3 className="font-display text-lg text-foreground">Confirm Payment</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      You'll be redirected to Revolut to pay <strong>{formatPrice(currentTotal)}</strong>. 
-                      Please ensure you send the <strong>exact amount</strong>.
-                    </p>
-                    <p className="text-xs text-destructive">
-                      Orders without matching payment will be rejected.
-                    </p>
-                    <div className="flex gap-3 pt-2">
-                      <Button variant="outline" onClick={() => setShowRevolutConfirm(false)} className="flex-1">
-                        Cancel
-                      </Button>
-                      <Button onClick={handleRevolutConfirm} className="flex-1">
-                        Continue to Pay
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

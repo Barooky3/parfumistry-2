@@ -153,7 +153,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             <div className="space-y-3 mb-6 md:mb-8">
               <Button 
                 size="lg" 
-                className="w-full h-12 md:h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99] transition-all" 
+                className="w-full h-12 md:h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.99] transition-all" 
                 onClick={handleAddToCart} 
                 disabled={!isInStock}
               >
@@ -175,7 +175,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
             {/* Scent Notes Visual */}
             {product.scentNotes && (
-              <div className="py-6">
+              <div className="py-6 border-t border-border">
                 <ScentNotesVisual 
                   scentNotes={product.scentNotes} 
                   scentNotesImage={product.scentNotesImage}
@@ -184,9 +184,9 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             )}
 
             {/* Description */}
-            <div className="space-y-4 py-8 border-t border-border">
-              <h3 className="text-lg md:text-xl font-semibold text-foreground">About This Fragrance</h3>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+            <div className="space-y-3 py-6 border-t border-border">
+              <h3 className="text-sm font-semibold text-foreground">About This Fragrance</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {product.description}
               </p>
               
@@ -215,7 +215,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
       {/* Sticky Bottom Bar - Mobile Only */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 flex gap-3 md:hidden z-30">
         <Button 
-          className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-all" 
+          className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all" 
           onClick={handleAddToCart} 
           disabled={!isInStock}
         >

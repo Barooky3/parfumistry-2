@@ -31,7 +31,7 @@ const socialLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="bg-[hsl(0,0%,8%)] text-[hsl(0,0%,85%)]">
+    <footer className="bg-primary text-primary-foreground">
       <div className="container py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
@@ -39,7 +39,7 @@ export const Footer = () => {
             <Link to="/" className="inline-block mb-6">
               <img src={logo} alt="ProfParfums" className="h-14 w-auto brightness-0 invert" />
             </Link>
-            <p className="text-sm text-[hsl(0,0%,55%)] leading-relaxed mb-6">
+            <p className="text-sm text-primary-foreground/70 leading-relaxed mb-6">
               Discover exclusive fragrance seller links. Premium quality, instant digital delivery.
             </p>
             {/* Social Icons */}
@@ -50,7 +50,7 @@ export const Footer = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border border-[hsl(0,0%,25%)] flex items-center justify-center hover:bg-[hsl(0,0%,15%)] transition-colors"
+                  className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/10 transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="h-4 w-4" />
@@ -69,7 +69,7 @@ export const Footer = () => {
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-[hsl(0,0%,55%)] hover:text-[hsl(0,0%,85%)] transition-colors"
+                    className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -88,7 +88,7 @@ export const Footer = () => {
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-[hsl(0,0%,55%)] hover:text-[hsl(0,0%,85%)] transition-colors"
+                    className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -102,14 +102,14 @@ export const Footer = () => {
             <h4 className="text-xs font-semibold tracking-[0.15em] uppercase mb-5 text-accent">
               Stay Updated
             </h4>
-            <p className="text-sm text-[hsl(0,0%,55%)] mb-4">
+            <p className="text-sm text-primary-foreground/70 mb-4">
               Subscribe for exclusive offers and new arrivals.
             </p>
             <form className="flex">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 h-12 px-4 bg-transparent border border-[hsl(0,0%,25%)] text-sm text-[hsl(0,0%,85%)] placeholder:text-[hsl(0,0%,40%)] focus:outline-none focus:border-accent"
+                className="flex-1 h-12 px-4 bg-transparent border border-primary-foreground/20 text-sm text-primary-foreground placeholder:text-primary-foreground/40 focus:outline-none focus:border-accent"
               />
               <Button 
                 type="submit" 
@@ -122,21 +122,21 @@ export const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-[hsl(0,0%,15%)] mt-14 pt-8">
+        <div className="border-t border-primary-foreground/10 mt-14 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-[hsl(0,0%,40%)]">
+            <p className="text-xs text-primary-foreground/50">
               © {new Date().getFullYear()} ProfParfums. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
-              <span className="text-xs text-[hsl(0,0%,35%)]">Secure Checkout</span>
+              <span className="text-xs text-primary-foreground/40">Secure Checkout</span>
               <div className="flex items-center gap-2">
-                <div className="bg-[hsl(0,0%,15%)] px-2 py-1 rounded text-[10px] font-medium">
+                <div className="bg-primary-foreground/10 px-2 py-1 rounded text-[10px] font-medium">
                   PayPal
                 </div>
-                <div className="bg-[hsl(0,0%,15%)] px-2 py-1 rounded text-[10px] font-medium">
+                <div className="bg-primary-foreground/10 px-2 py-1 rounded text-[10px] font-medium">
                   Visa
                 </div>
-                <div className="bg-[hsl(0,0%,15%)] px-2 py-1 rounded text-[10px] font-medium">
+                <div className="bg-primary-foreground/10 px-2 py-1 rounded text-[10px] font-medium">
                   MC
                 </div>
               </div>

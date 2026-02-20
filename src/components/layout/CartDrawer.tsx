@@ -40,7 +40,7 @@ export const CartDrawer = () => {
             </p>
             <Button
               onClick={closeCart}
-              className="h-12 px-8 text-xs font-medium tracking-[0.1em] uppercase bg-foreground text-background hover:bg-foreground/90 rounded-none"
+              className="h-12 px-8 text-xs font-medium tracking-[0.1em] uppercase bg-primary text-primary-foreground hover:bg-primary/90 rounded-none"
               asChild
             >
               <Link to="/shop">Start Shopping</Link>
@@ -165,7 +165,7 @@ export const CartDrawer = () => {
               </div>
 
               <Button
-                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase bg-foreground text-background hover:bg-foreground/90 rounded-none"
+                className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase bg-primary text-primary-foreground hover:bg-primary/90 rounded-none"
                 onClick={closeCart}
                 asChild
               >

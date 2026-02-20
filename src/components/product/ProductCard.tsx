@@ -144,9 +144,9 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           <div className="absolute bottom-2 left-2 right-2 flex gap-1.5">
             {/* Desktop - hover only */}
             <div className="hidden md:flex gap-1.5 w-full pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                <Button
-                  onClick={handleAddToCart}
-                  className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-foreground/90 text-background hover:bg-foreground active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
+              <Button
+                onClick={handleAddToCart}
+                className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
                 disabled={!product.inStock}
               >
                 Add
@@ -169,9 +169,9 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                   : "opacity-0 translate-y-2 pointer-events-none"
               )}
             >
-                <Button
-                  onClick={handleAddToCart}
-                  className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-foreground/90 text-background hover:bg-foreground active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
+              <Button
+                onClick={handleAddToCart}
+                className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
                 disabled={!product.inStock}
               >
                 Add
