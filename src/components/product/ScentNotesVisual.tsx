@@ -32,8 +32,9 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
         <img 
           src={`${scentNotesImage}?${SCENT_NOTES_VERSION}`} 
           alt="Fragrance Notes" 
-          className="w-full max-w-md mx-auto"
+          className="w-full max-w-md mx-auto opacity-90 mix-blend-lighten"
           loading="lazy"
+          style={{ filter: 'brightness(1.1)' }}
         />
       </motion.div>
     );
