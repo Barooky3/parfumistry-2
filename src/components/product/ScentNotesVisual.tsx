@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const SCENT_NOTES_VERSION = 'v17';
+const SCENT_NOTES_VERSION = 'v18';
 
 interface ScentNotesVisualProps {
   scentNotes: {
@@ -13,10 +13,10 @@ interface ScentNotesVisualProps {
 }
 
 /**
- * Removes white/near-white background from an image using canvas pixel manipulation.
- * Similar to remove.bg but runs client-side.
+ * Removes white/grey/light backgrounds and checkered artifacts from images.
+ * Also lightens dark text for readability on dark backgrounds.
  */
-function removeWhiteBackground(img: HTMLImageElement, canvas: HTMLCanvasElement, threshold = 235) {
+function removeWhiteBackground(img: HTMLImageElement, canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
@@ -26,21 +26,60 @@ function removeWhiteBackground(img: HTMLImageElement, canvas: HTMLCanvasElement,
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const data = imageData.data;
+  const w = canvas.width;
+
+  // Sample edges to detect background color
+  const edgeRows = Math.min(15, Math.floor(canvas.height * 0.04));
+  let bgR = 0, bgG = 0, bgB = 0, bgCount = 0;
+  for (let y = 0; y < edgeRows; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      if (data[idx + 3] > 200) { bgR += data[idx]; bgG += data[idx+1]; bgB += data[idx+2]; bgCount++; }
+    }
+  }
+  for (let y = canvas.height - edgeRows; y < canvas.height; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      if (data[idx + 3] > 200) { bgR += data[idx]; bgG += data[idx+1]; bgB += data[idx+2]; bgCount++; }
+    }
+  }
+  if (bgCount > 0) { bgR = Math.round(bgR/bgCount); bgG = Math.round(bgG/bgCount); bgB = Math.round(bgB/bgCount); }
 
   for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
+    const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+    if (a === 0) continue;
 
-    // If the pixel is near-white, make it transparent
-    if (r > threshold && g > threshold && b > threshold) {
-      data[i + 3] = 0; // Set alpha to 0
+    const brightness = r * 0.299 + g * 0.587 + b * 0.114;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const saturation = max === 0 ? 0 : (max - min) / max;
+
+    // Distance to detected background
+    const distBg = Math.sqrt((r-bgR)**2 + (g-bgG)**2 + (b-bgB)**2);
+
+    // Remove pixels close to background color
+    if (distBg < 40 && saturation < 0.2) {
+      data[i+3] = 0;
     }
-    // Feather semi-white pixels for smoother edges
-    else if (r > threshold - 30 && g > threshold - 30 && b > threshold - 30) {
-      const avgDist = ((threshold - r) + (threshold - g) + (threshold - b)) / 3;
-      const alpha = Math.min(255, Math.round((avgDist / 30) * 255));
-      data[i + 3] = Math.min(data[i + 3], alpha);
+    // Feather near-background
+    else if (distBg < 65 && saturation < 0.15) {
+      data[i+3] = Math.round(a * ((distBg - 40) / 25));
+    }
+    // Catch-all: any neutral light pixel
+    else if (brightness > 190 && saturation < 0.15) {
+      data[i+3] = 0;
+    }
+    // Grey checkered pattern (~140-210 brightness, near-zero saturation)
+    else if (Math.abs(r-g) < 8 && Math.abs(g-b) < 8 && brightness > 140 && saturation < 0.06) {
+      data[i+3] = 0;
+    }
+    // Feather medium greys
+    else if (brightness > 160 && saturation < 0.1) {
+      const fade = (brightness - 160) / 30;
+      data[i+3] = Math.round(a * Math.max(0, 1 - fade));
+    }
+    // Lighten dark text
+    else if (brightness < 80 && saturation < 0.2) {
+      data[i] = 230; data[i+1] = 230; data[i+2] = 230;
     }
   }
 
@@ -56,6 +95,7 @@ export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisu
 
   useEffect(() => {
     if (!scentNotesImage || !canvasRef.current) return;
+    setIsProcessed(false);
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
