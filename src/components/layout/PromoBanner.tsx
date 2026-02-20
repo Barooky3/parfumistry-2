@@ -74,10 +74,10 @@ export const PromoBanner = () => {
 
   const TimerBlock = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
-      <span className="bg-secondary text-secondary-foreground text-base sm:text-lg md:text-2xl font-bold w-10 sm:w-12 md:w-14 py-1.5 sm:py-2 rounded text-center tabular-nums">
+      <span className="bg-[hsl(0,0%,22%)] text-foreground text-base sm:text-lg md:text-2xl font-bold w-10 sm:w-12 md:w-14 py-1.5 sm:py-2 rounded text-center tabular-nums">
         {formatNumber(value)}
       </span>
-      <span className="text-[9px] sm:text-[10px] md:text-xs text-primary-foreground/60 mt-1 uppercase tracking-wide">
+      <span className="text-[9px] sm:text-[10px] md:text-xs text-foreground/60 mt-1 uppercase tracking-wide">
         {label}
       </span>
     </div>
@@ -91,7 +91,7 @@ export const PromoBanner = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-primary text-primary-foreground py-3 sm:py-4 md:py-5 fixed top-0 left-0 right-0 z-50"
+          className="bg-[hsl(0,0%,8%)] text-foreground py-3 sm:py-4 md:py-5 fixed top-0 left-0 right-0 z-50"
         >
           <div className="container relative px-4">
             <button
@@ -106,18 +106,18 @@ export const PromoBanner = () => {
               <h3 className="text-xs sm:text-sm md:text-base font-bold tracking-wide uppercase mb-0.5 sm:mb-1 pr-6 sm:pr-0">
                 Buy 2 Fragrances, Get 1 Free
               </h3>
-              <p className="text-[10px] sm:text-xs md:text-sm text-primary-foreground/70 mb-3 sm:mb-4 leading-relaxed pr-6 sm:pr-0">
+              <p className="text-[10px] sm:text-xs md:text-sm text-foreground/70 mb-3 sm:mb-4 leading-relaxed pr-6 sm:pr-0">
                 Add 3 fragrances to your cart and one becomes free!
               </p>
 
               {/* Countdown Timer */}
               <div className="flex items-start justify-center gap-1.5 sm:gap-2 md:gap-3">
                 <TimerBlock value={timeLeft.days} label="days" />
-                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-primary-foreground/40">:</span>
+                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-foreground/40">:</span>
                 <TimerBlock value={timeLeft.hours} label="hours" />
-                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-primary-foreground/40">:</span>
+                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-foreground/40">:</span>
                 <TimerBlock value={timeLeft.mins} label="mins" />
-                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-primary-foreground/40">:</span>
+                <span className="text-base sm:text-lg md:text-xl font-bold mt-1.5 sm:mt-2 text-foreground/40">:</span>
                 <TimerBlock value={timeLeft.secs} label="secs" />
               </div>
             </div>
