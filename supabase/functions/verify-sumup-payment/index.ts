@@ -63,11 +63,17 @@ serve(async (req) => {
       });
     }
 
-    // Payment verified! Send order confirmation email
-    await supabase.from("orders").update({ status: "paid" }).eq("id", order.id);
+    // Payment verified! Request admin approval instead of sending customer email directly
+    await supabase.from("orders").update({ status: "pending_approval" }).eq("id", order.id);
 
-    // Call the existing send-order-confirmation function
-    const { error: emailError } = await supabase.functions.invoke("send-order-confirmation", {
+    // Generate approval token
+    const arr = new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    const token = Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
+    await supabase.from("orders").update({ approval_token: token }).eq("id", order.id);
+
+    // Send approval request to admin via the request-order-approval-like flow
+    const { error: approvalError } = await supabase.functions.invoke("request-order-approval", {
       body: {
         orderItems: order.order_items,
         customerEmail: order.customer_email,
@@ -77,14 +83,12 @@ serve(async (req) => {
       },
     });
 
-    if (emailError) {
-      console.error("Failed to send email:", emailError);
-      throw new Error("Failed to send order confirmation email");
+    if (approvalError) {
+      console.error("Failed to send approval email:", approvalError);
+      throw new Error("Failed to send order approval email");
     }
 
-    // Mark email as sent
-    await supabase.from("orders").update({ email_sent: true }).eq("id", order.id);
-    console.log("Order confirmed and email sent for:", checkoutReference);
+    console.log("Order pending approval for:", checkoutReference);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
