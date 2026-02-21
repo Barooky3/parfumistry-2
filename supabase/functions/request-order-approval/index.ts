@@ -33,6 +33,8 @@ function buildApprovalEmailHtml(
   totalAmount: string,
   shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
   baseUrl: string,
+  paymentMethod?: string,
+  giftCardCode?: string,
 ): string {
   const approveUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=approve`;
   const rejectUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject`;
@@ -67,6 +69,11 @@ function buildApprovalEmailHtml(
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Order Items</div>
       <table style="width:100%;">${itemRows}</table>
     </div>
+    ${paymentMethod === "rewarble" && giftCardCode ? `<div style="background:#fef3c7;border:2px solid #f59e0b;padding:16px 20px;border-radius:8px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:6px;font-weight:600;">🎁 Rewarble Gift Card Code</div>
+      <div style="font-size:20px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
+      <p style="font-size:12px;color:#a16207;margin:8px 0 0;">Please verify this gift card code before approving.</p>
+    </div>` : ""}
     <div style="text-align:center;padding:20px 0;">
       <a href="${approveUrl}" style="display:inline-block;padding:14px 40px;background:#16a34a;color:#fff;text-decoration:none;border-radius:6px;font-size:16px;font-weight:600;margin-right:12px;">✅ APPROVE</a>
       <a href="${rejectUrl}" style="display:inline-block;padding:14px 40px;background:#dc2626;color:#fff;text-decoration:none;border-radius:6px;font-size:16px;font-weight:600;">❌ REJECT</a>
@@ -108,7 +115,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount } = body;
+    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode } = body;
 
     if (!customerEmail) throw new Error("Customer email is required");
     if (!orderItems || orderItems.length === 0) throw new Error("No order items");
@@ -136,8 +143,9 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    const refPrefix = paymentMethod === "rewarble" ? "rewarble" : "revolut";
     const { data: order, error: dbError } = await supabase.from("orders").insert({
-      checkout_reference: "revolut-" + Date.now(),
+      checkout_reference: refPrefix + "-" + Date.now(),
       customer_email: customerEmail,
       customer_name: customerName || "Valued Customer",
       shipping_address: shippingAddress || {},
@@ -163,9 +171,12 @@ serve(async (req) => {
       calculatedTotal,
       shippingAddress || {},
       supabaseUrl,
+      paymentMethod,
+      giftCardCode,
     );
 
-    await sendWithBrevo(ADMIN_EMAIL, `🔔 Order Approval: ${customerName || customerEmail} — €${calculatedTotal}`, html);
+    const emailPrefix = paymentMethod === "rewarble" ? "🎁 Gift Card Order" : "🔔 Order Approval";
+    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html);
     console.log("Approval email sent to admin for order:", order.id);
 
     return new Response(JSON.stringify({ success: true, orderId: order.id }), {
