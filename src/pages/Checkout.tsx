@@ -480,10 +480,7 @@ const Checkout = () => {
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // Trigger address suggestions when typing street address
-    if (field === 'streetAddress') {
-      fetchAddressSuggestions(value);
-    }
+    // Address autocomplete disabled - users enter manually
   };
 
   const selectAddressSuggestion = async (suggestion: { id?: string; street: string; city: string; postcode?: string }) => {
@@ -557,7 +554,9 @@ const Checkout = () => {
   // Calculate current total
   const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
 
-  // Load PayPal SDK
+  // PayPal SDK - TEMPORARILY DISABLED
+  // To re-enable: uncomment the useEffect below and the PayPal UI sections
+  /*
   useEffect(() => {
     let cancelled = false;
     const loadPayPal = async () => {
@@ -584,7 +583,10 @@ const Checkout = () => {
     loadPayPal();
     return () => { cancelled = true; };
   }, []);
+  */
 
+  // PayPal Buttons render - TEMPORARILY DISABLED
+  /*
   useEffect(() => {
     if (!paypalReady || !(window as any).paypal || !paypalContainerRef.current) return;
     const container = paypalContainerRef.current;
@@ -630,6 +632,7 @@ const Checkout = () => {
       },
     }).render(container);
   }, [paypalReady, items, totalPrice, freeItemDiscount, toast, clearCart]);
+  */
 
 
   if (items.length === 0 && !isCompleted) {
@@ -802,42 +805,12 @@ const Checkout = () => {
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Start typing your address..."
+                    placeholder="Enter your street address"
                     value={formData.streetAddress}
                     onChange={(e) => updateFormData('streetAddress', e.target.value)}
-                    onFocus={() => formData.streetAddress.length >= 2 && addressSuggestions.length > 0 && setShowSuggestions(true)}
                     className="pl-12 h-12 bg-background border-border rounded-md"
                   />
                 </div>
-                
-                {/* Address Suggestions */}
-                {(showSuggestions || isLoadingAddress) && (
-                  <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-64 overflow-auto">
-                    {isLoadingAddress ? (
-                      <div className="px-4 py-3 flex items-center gap-3 text-muted-foreground">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm">Searching addresses...</span>
-                      </div>
-                    ) : addressSuggestions.length > 0 ? (
-                      addressSuggestions.map((suggestion, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => selectAddressSuggestion(suggestion)}
-                          className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center gap-3 border-b border-border last:border-0"
-                        >
-                          <MapPin className="h-4 w-4 text-accent flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-foreground truncate">{suggestion.display || suggestion.street}</p>
-                            {suggestion.city && (
-                              <p className="text-xs text-muted-foreground">{suggestion.postcode} {suggestion.city}</p>
-                            )}
-                          </div>
-                        </button>
-                      ))
-                    ) : null}
-                  </div>
-                )}
               </div>
 
               {/* Postal Code & City */}
@@ -988,18 +961,13 @@ const Checkout = () => {
                   </div>
                 )}
 
+                {/* PayPal UI - TEMPORARILY DISABLED
                 {paypalLoading && !paypalReady && (
                   <div className="flex flex-col items-center justify-center py-6 gap-3">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     <span className="text-sm text-muted-foreground">Loading payment options...</span>
                   </div>
                 )}
-
-                <p className="text-xs text-center text-muted-foreground mb-2">
-                  If you're looking for other payment methods, simply hit us up on{' '}
-                  <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
-                  and we'll help you out!
-                </p>
 
                 <div ref={paypalContainerRef} className={!isFormValid() ? 'opacity-50 pointer-events-none' : ''} />
 
@@ -1010,6 +978,13 @@ const Checkout = () => {
                     <div className="flex-1 h-px bg-border" />
                   </div>
                 )}
+                END PayPal UI */}
+
+                <p className="text-xs text-center text-muted-foreground mb-2">
+                  If you're looking for other payment methods, simply hit us up on{' '}
+                  <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
+                  and we'll help you out!
+                </p>
 
                 <div className="space-y-1.5">
                   <Button
