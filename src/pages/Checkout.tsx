@@ -1073,15 +1073,16 @@ const Checkout = () => {
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2">
                         <AlertTriangle className="h-5 w-5 text-amber-500" />
-                        Important Payment Instructions
+                        {t('checkout.revolutPopupTitle')}
                       </AlertDialogTitle>
                       <AlertDialogDescription className="text-sm leading-relaxed">
-                        You must enter exactly <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
-                        <span className="block mt-2">After completing your payment, please come back to this window to confirm your payment.</span>
+                        {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong>{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
+                        <span className="block mt-3 font-semibold text-foreground">⚠️ {t('checkout.revolutPopupOrderNote')}</span>
+                        <span className="block mt-2">{t('checkout.revolutPopupText5')}</span>
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel>{t('checkout.revolutPopupCancel')}</AlertDialogCancel>
                       <AlertDialogAction
                         className="bg-[#191C1F] hover:bg-[#2A2D31]"
                         onClick={() => {
@@ -1089,7 +1090,7 @@ const Checkout = () => {
                           setRevolutLinkOpened(true);
                         }}
                       >
-                        I Understand, Proceed to Payment
+                        {t('checkout.revolutPopupAccept')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
