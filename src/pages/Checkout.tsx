@@ -1068,7 +1068,7 @@ const Checkout = () => {
                       {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I've Completed Payment — Confirm Order</>}
                     </Button>
                     <p className="text-xs text-center text-red-400 font-medium">
-                      Orders confirmed without payment are instantly rejected. You will still receive the confirmation email, but the order won't go through.
+                      Orders confirmed without payment will be rejected upon review.
                     </p>
 
                     <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
@@ -1080,9 +1080,9 @@ const Checkout = () => {
                           </AlertDialogTitle>
                           <AlertDialogDescription className="text-sm leading-relaxed">
                             <span className="font-semibold text-red-500 block mb-2">
-                              Orders confirmed without payment are instantly rejected.
+                              Orders confirmed without payment will be rejected upon review.
                             </span>
-                            You will still receive the confirmation email, but the order won't go through if payment has not been completed. Are you sure you have completed the payment?
+                            Your order will be reviewed before a confirmation email is sent. If payment has not been completed, your order will be rejected. Are you sure you have completed the payment?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
