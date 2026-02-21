@@ -43,6 +43,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          approval_token: string | null
           checkout_reference: string
           created_at: string
           customer_email: string
@@ -59,6 +60,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          approval_token?: string | null
           checkout_reference: string
           created_at?: string
           customer_email: string
@@ -75,6 +77,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          approval_token?: string | null
           checkout_reference?: string
           created_at?: string
           customer_email?: string
