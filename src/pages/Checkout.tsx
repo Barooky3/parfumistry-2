@@ -344,6 +344,7 @@ const Checkout = () => {
   const { toast } = useToast();
   const { formatPrice } = useCurrency();
   const [isCompleted, setIsCompleted] = useState(false);
+  const [completedPaymentMethod, setCompletedPaymentMethod] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
@@ -610,6 +611,7 @@ const Checkout = () => {
           const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
           const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
           await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
+          setCompletedPaymentMethod('paypal');
           setIsCompleted(true);
           clearCart();
         } catch (err: any) {
@@ -684,11 +686,22 @@ const Checkout = () => {
           {/* Thank You Text */}
           <h1 className="font-display text-3xl text-foreground text-center mb-4">Thank You!</h1>
           <p className="text-muted-foreground text-center mb-2">
-            Your purchase is complete. You will receive an email with your order details.
+            {completedPaymentMethod === 'revolut'
+              ? 'Your order has been received. You will get the order confirmation email as soon as payment is verified.'
+              : completedPaymentMethod === 'rewarble'
+              ? 'Your order has been received. You will receive the order confirmation email as soon as the code is verified.'
+              : 'Your purchase is complete. You will receive an email with your order details.'}
           </p>
-          <p className="text-sm text-muted-foreground text-center mb-10">
-            Please check your spam folder if you don't see it within a few minutes.
-          </p>
+          {completedPaymentMethod === 'paypal' && (
+            <p className="text-sm text-muted-foreground text-center mb-10">
+              Please check your spam folder if you don't see it within a few minutes.
+            </p>
+          )}
+          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble') && (
+            <p className="text-sm text-muted-foreground text-center mb-10">
+              This usually takes a short while. Thank you for your patience.
+            </p>
+          )}
 
           {/* Continue Shopping Button */}
           <Button asChild className="w-full rounded-md h-12 text-xs tracking-[0.15em] uppercase font-semibold">
@@ -1096,6 +1109,7 @@ const Checkout = () => {
                                 const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
                                 const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
                                 await supabase.functions.invoke('request-order-approval', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
+                                setCompletedPaymentMethod('revolut');
                                 setIsCompleted(true);
                                 clearCart();
                               } catch (err: any) {
@@ -1210,6 +1224,7 @@ const Checkout = () => {
                                   const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
                                   const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
                                   await supabase.functions.invoke('request-order-approval', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2), paymentMethod: 'rewarble', giftCardCode: rewarbleCode.trim() } });
+                                  setCompletedPaymentMethod('rewarble');
                                   setIsCompleted(true);
                                   clearCart();
                                 } catch (err: any) {
