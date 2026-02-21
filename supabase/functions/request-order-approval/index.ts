@@ -103,7 +103,7 @@ function buildAdminInvoiceHtml(
     const lineTotal = (item.price * item.quantity).toFixed(2);
     const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
     return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <span style="color:#c9a96e;font-weight:500;">(link)</span></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
@@ -192,11 +192,16 @@ function buildAdminInvoiceHtml(
     </table>
   </div>
 
-  <!-- Notes -->
+  <!-- Delivery Details -->
   <div style="padding:0 40px 28px;">
     <div style="background:#faf9f6;border-left:3px solid #c9a96e;padding:16px 20px;">
-      <p style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin:0 0 6px;font-weight:600;">Delivery &amp; Terms</p>
-      <p style="font-size:12px;color:#666;margin:0;line-height:1.7;">All items were delivered digitally. This invoice serves as an itemized record and proof of service fulfillment. Customer agreed to terms of service at checkout.</p>
+      <p style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin:0 0 6px;font-weight:600;">Delivery Details</p>
+      <table style="width:100%;font-size:12px;color:#666;line-height:1.7;">
+        <tr><td style="padding:2px 0;color:#999;width:110px;">Method:</td><td style="padding:2px 0;">Digital delivery (link)</td></tr>
+        <tr><td style="padding:2px 0;color:#999;">Delivered to:</td><td style="padding:2px 0;">${customerEmail}</td></tr>
+        <tr><td style="padding:2px 0;color:#999;">Delivered on:</td><td style="padding:2px 0;">${orderDate}</td></tr>
+      </table>
+      <p style="font-size:11px;color:#999;margin:8px 0 0;line-height:1.5;">This invoice serves as an itemized record and proof of service fulfillment. Customer agreed to terms of service at checkout.</p>
     </div>
   </div>
 
