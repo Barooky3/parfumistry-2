@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 
 const COUNTRIES = [
@@ -343,6 +344,7 @@ const Checkout = () => {
   const { items, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount, clearCart } = useCart();
   const { toast } = useToast();
   const { formatPrice } = useCurrency();
+  const { t } = useLanguage();
   const [isCompleted, setIsCompleted] = useState(false);
   const [completedPaymentMethod, setCompletedPaymentMethod] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -635,10 +637,10 @@ const Checkout = () => {
       <div className="min-h-screen flex items-center justify-center py-16 bg-background">
         <div className="text-center">
           <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mx-auto mb-6" strokeWidth={1} />
-          <h1 className="font-display text-2xl text-foreground mb-3">Your cart is empty</h1>
-          <p className="text-sm text-muted-foreground mb-8">Add some fragrances to checkout</p>
+          <h1 className="font-display text-2xl text-foreground mb-3">{t('checkout.emptyCart')}</h1>
+          <p className="text-sm text-muted-foreground mb-8">{t('checkout.emptyCartDesc')}</p>
           <Button asChild className="rounded-none h-12 px-8 text-xs tracking-[0.1em] uppercase">
-            <Link to="/shop">Browse Products</Link>
+            <Link to="/shop">{t('checkout.continueShopping')}</Link>
           </Button>
         </div>
       </div>
@@ -657,7 +659,7 @@ const Checkout = () => {
               <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
                 <CheckCircle className="h-5 w-5 text-accent-foreground" strokeWidth={2} />
               </div>
-              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">Information</span>
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">{t('general.information')}</span>
             </div>
             <div className="flex-1 h-[2px] bg-accent mx-2 mt-[-20px]" />
             {/* Step 2 - Payment */}
@@ -665,7 +667,7 @@ const Checkout = () => {
               <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
                 <CheckCircle className="h-5 w-5 text-accent-foreground" strokeWidth={2} />
               </div>
-              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">Payment</span>
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">{t('checkout.payment')}</span>
             </div>
             <div className="flex-1 h-[2px] bg-accent mx-2 mt-[-20px]" />
             {/* Step 3 - Confirmation */}
@@ -673,7 +675,7 @@ const Checkout = () => {
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
                 <span className="text-sm font-bold text-primary-foreground">3</span>
               </div>
-              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-foreground">Confirmation</span>
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-foreground">{t('general.confirmation')}</span>
             </div>
           </div>
 
@@ -685,28 +687,28 @@ const Checkout = () => {
           </div>
 
           {/* Thank You Text */}
-          <h1 className="font-display text-3xl text-foreground text-center mb-4">Thank You!</h1>
+          <h1 className="font-display text-3xl text-foreground text-center mb-4">{t('checkout.thankYou')}</h1>
           <p className="text-muted-foreground text-center mb-2">
             {completedPaymentMethod === 'revolut'
-              ? 'Your order has been received. You will get the order confirmation email as soon as payment is verified.'
+              ? t('checkout.thankYouRevolut')
               : completedPaymentMethod === 'rewarble'
-              ? 'Your order has been received. You will receive the order confirmation email as soon as the code is verified.'
-              : 'Your purchase is complete. You will receive an email with your order details.'}
+              ? t('checkout.thankYouGiftCard')
+              : t('checkout.thankYouPaypal')}
           </p>
           {completedPaymentMethod === 'paypal' && (
             <p className="text-sm text-muted-foreground text-center mb-10">
-              Please check your spam folder if you don't see it within a few minutes.
+              {t('checkout.thankYouSpam')}
             </p>
           )}
           {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble') && (
             <p className="text-sm text-muted-foreground text-center mb-10">
-              This usually takes a short while. Thank you for your patience.
+              {t('checkout.thankYouPatience')}
             </p>
           )}
 
           {/* Continue Shopping Button */}
           <Button asChild className="w-full rounded-md h-12 text-xs tracking-[0.15em] uppercase font-semibold">
-            <Link to="/shop">Continue Shopping</Link>
+            <Link to="/shop">{t('checkout.continueShopping')}</Link>
           </Button>
         </div>
       </div>
@@ -717,8 +719,8 @@ const Checkout = () => {
     <div className="min-h-screen bg-background">
       {/* Header Section */}
       <div className="py-8 md:py-10 text-center">
-        <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">Checkout</h1>
-        <p className="text-muted-foreground">Complete your purchase</p>
+        <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">{t('checkout.title')}</h1>
+        <p className="text-muted-foreground">{t('checkout.subtitle')}</p>
       </div>
 
       {/* Main Content */}
@@ -730,26 +732,26 @@ const Checkout = () => {
             {/* Section Header */}
             <div className="flex items-center gap-3 mb-6">
               <User className="h-5 w-5 text-accent" strokeWidth={1.5} />
-              <h2 className="font-display text-xl text-foreground">Your Information</h2>
+              <h2 className="font-display text-xl text-foreground">{t('checkout.yourInfo')}</h2>
             </div>
 
             <div className="space-y-5">
               {/* Email Field */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium tracking-wider text-foreground">
-                  EMAIL ADDRESS <span className="text-accent">*</span>
+                  {t('checkout.email')} <span className="text-accent">*</span>
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
-                    placeholder="your@email.com"
+                    placeholder={t('checkout.emailPlaceholder')}
                     value={formData.email}
                     onChange={(e) => updateFormData('email', e.target.value)}
                     className="pl-12 h-12 bg-background border-border rounded-md"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Please make sure your email is correct to ensure you get the order confirmation email correctly.</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('checkout.emailHelper')}</p>
               </div>
 
               {/* Name Fields */}

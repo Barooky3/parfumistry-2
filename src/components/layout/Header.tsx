@@ -1,18 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User, ChevronDown, LogOut } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown, LogOut, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency, CURRENCIES, Currency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage, LANGUAGES, Language } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const navLinks = [
-  { href: '/shop/men', label: 'MEN' },
-  { href: '/shop/women', label: 'WOMEN' },
-  { href: '/shop', label: 'SHOP ALL' },
-  { href: '/contact', label: 'CONTACT' },
+// Nav links use translation keys
+const navLinkKeys = [
+  { href: '/shop/men', key: 'nav.men' },
+  { href: '/shop/women', key: 'nav.women' },
+  { href: '/shop', key: 'nav.shopAll' },
+  { href: '/contact', key: 'nav.contact' },
 ];
 
 export const Header = () => {
@@ -22,11 +24,14 @@ export const Header = () => {
   const { toggleCart, totalItems } = useCart();
   const { currency, setCurrency } = useCurrency();
   const { user, signOut } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [currencyOpen, setCurrencyOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const currencyRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   // Close currency dropdown on outside click
   useEffect(() => {
@@ -36,6 +41,9 @@ export const Header = () => {
       }
       if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
         setAccountOpen(false);
+      }
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClick);
@@ -73,7 +81,7 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-10">
-            {navLinks.map((link) => (
+            {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
@@ -84,7 +92,7 @@ export const Header = () => {
                     : 'text-muted-foreground'
                 )}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
           </nav>
@@ -122,6 +130,44 @@ export const Header = () => {
                       >
                         <span>{c.symbol}</span>
                         <span>{c.code}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Language Dropdown */}
+            <div ref={langRef} className="relative hidden md:block mr-1">
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-sm text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
+              >
+                {LANGUAGES.find(l => l.code === language)?.flag} {language}
+                <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition-transform', langOpen && 'rotate-180')} />
+              </button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 4 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-1 bg-background border border-border rounded-sm shadow-lg z-50 max-h-64 overflow-y-auto min-w-[120px]"
+                  >
+                    {LANGUAGES.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => { setLanguage(l.code); setLangOpen(false); }}
+                        className={cn(
+                          'w-full text-left px-3 py-2 text-xs font-medium transition-colors flex items-center gap-2',
+                          language === l.code
+                            ? 'bg-secondary text-foreground'
+                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                        )}
+                      >
+                        <span>{l.flag}</span>
+                        <span>{l.label}</span>
                       </button>
                     ))}
                   </motion.div>
@@ -199,7 +245,7 @@ export const Header = () => {
             className="md:hidden absolute left-0 right-0 top-full bg-background border-b border-border overflow-hidden z-40"
           >
             <nav className="container py-6 flex flex-col gap-1">
-              {navLinks.map((link, index) => (
+              {navLinkKeys.map((link, index) => (
                 <motion.div
                   key={link.href}
                   initial={{ opacity: 0, x: -20 }}
@@ -215,36 +261,57 @@ export const Header = () => {
                         : 'text-muted-foreground hover:text-foreground'
                     )}
                   >
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 </motion.div>
               ))}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: navLinks.length * 0.05, duration: 0.3 }}
+                transition={{ delay: navLinkKeys.length * 0.05, duration: 0.3 }}
               >
                 {user ? (
                   <Link
                     to="/account"
                     className="text-sm font-medium tracking-[0.1em] py-3 text-muted-foreground hover:text-foreground block"
                   >
-                    MY ACCOUNT
+                    {t('nav.myAccount')}
                   </Link>
                 ) : (
                   <Link
                     to="/login"
                     className="text-sm font-medium tracking-[0.1em] py-3 text-muted-foreground hover:text-foreground block"
                   >
-                    ACCOUNT
+                    {t('nav.account')}
                   </Link>
                 )}
+              </motion.div>
+              {/* Mobile Language Selector */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (navLinkKeys.length + 1) * 0.05, duration: 0.3 }}
+              >
+                <div className="py-3">
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value as Language)}
+                    className="bg-background border border-border text-foreground text-sm font-medium px-3 py-2 pr-8 appearance-none"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
+                  >
+                    {LANGUAGES.map((l) => (
+                      <option key={l.code} value={l.code}>
+                        {l.flag} {l.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </motion.div>
               {/* Mobile Currency Selector */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: (navLinks.length + 1) * 0.05, duration: 0.3 }}
+                transition={{ delay: (navLinkKeys.length + 2) * 0.05, duration: 0.3 }}
               >
                 <div className="py-3">
                   <select
