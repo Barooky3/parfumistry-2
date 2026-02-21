@@ -230,64 +230,114 @@ function buildAdminInvoiceHtml(
   customerEmail: string,
   items: OrderItem[],
   totalAmount: string,
-  shippingAddress: { line1: string; city: string; postalCode: string; country: string },
+  billingAddress: { line1: string; city: string; postalCode: string; country: string },
   paymentMethod: string,
 ): string {
   const year = new Date().getFullYear();
-  const orderDate = new Date().toLocaleString("en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Amsterdam" });
-  const addressText = [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ") || "N/A";
+  const now = new Date();
+  const orderDate = now.toLocaleString("en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Amsterdam" });
+  const invoiceNo = "INV-" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "-" + String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0") + String(now.getSeconds()).padStart(2, "0");
+  const addressText = [billingAddress.line1, billingAddress.city, billingAddress.postalCode, billingAddress.country].filter(Boolean).join(", ") || "N/A";
 
-  const itemRows = items.map((item) => {
+  const itemRows = items.map((item, i) => {
     const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
-    return `<tr>
-      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;">${item.brand} — ${item.name}${mlLabel}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:center;">${item.quantity}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${item.price.toFixed(2)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${lineTotal}</td>
+    const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
+    return `<tr style="background:${bg};">
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
     </tr>`;
   }).join("");
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:20px;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
-<div style="max-width:650px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
-  <div style="background:#1a1a1a;padding:24px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:22px;margin:0;letter-spacing:3px;">ORDER INVOICE / RECEIPT</h1>
+<div style="max-width:680px;margin:0 auto;background:#fff;border-radius:0;overflow:hidden;border:1px solid #e8e5df;">
+
+  <!-- Header -->
+  <div style="background:#1a1a1a;padding:32px 40px;display:flex;justify-content:space-between;">
+    <table style="width:100%;"><tr>
+      <td style="vertical-align:top;">
+        <h1 style="color:#c9a96e;font-size:24px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+        <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Premium Fragrances</p>
+      </td>
+      <td style="vertical-align:top;text-align:right;">
+        <p style="color:#c9a96e;font-size:20px;font-weight:300;letter-spacing:3px;margin:0;text-transform:uppercase;">Invoice</p>
+      </td>
+    </tr></table>
   </div>
-  <div style="padding:24px 32px;">
-    <table style="width:100%;margin-bottom:20px;font-size:14px;">
-      <tr><td style="padding:4px 0;color:#999;width:140px;">Date:</td><td style="padding:4px 0;"><strong>${orderDate}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;"><a href="mailto:${customerEmail}" style="color:#c9a96e;text-decoration:none;">${customerEmail}</a></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Shipping Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Payment Method:</td><td style="padding:4px 0;"><strong>${paymentMethod}</strong></td></tr>
+
+  <!-- Invoice Meta -->
+  <div style="padding:28px 40px 0;border-bottom:1px solid #f0ede8;">
+    <table style="width:100%;margin-bottom:24px;">
+      <tr>
+        <td style="vertical-align:top;width:50%;">
+          <p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#999;margin:0 0 6px;">Bill To</p>
+          <p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;">${customerName}</p>
+          <p style="font-size:13px;color:#666;margin:0 0 2px;">${customerEmail}</p>
+          <p style="font-size:13px;color:#666;margin:0;">${addressText}</p>
+        </td>
+        <td style="vertical-align:top;text-align:right;">
+          <table style="margin-left:auto;">
+            <tr><td style="padding:2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;padding-right:12px;">Invoice No.</td><td style="padding:2px 0;font-size:13px;color:#1a1a1a;font-weight:500;">${invoiceNo}</td></tr>
+            <tr><td style="padding:2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;padding-right:12px;">Date</td><td style="padding:2px 0;font-size:13px;color:#1a1a1a;">${orderDate}</td></tr>
+            <tr><td style="padding:2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;padding-right:12px;">Payment</td><td style="padding:2px 0;font-size:13px;color:#1a1a1a;font-weight:500;">${paymentMethod}</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Items Table -->
+  <div style="padding:24px 40px;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="background:#1a1a1a;">
+          <th style="padding:10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Description</th>
+          <th style="padding:10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Qty</th>
+          <th style="padding:10px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Unit Price</th>
+          <th style="padding:10px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>${itemRows}</tbody>
     </table>
 
-    <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:8px;">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Order Items</div>
-      <table style="width:100%;border-collapse:collapse;">
-        <thead><tr style="background:#f9f9f9;">
-          <th style="padding:8px;text-align:left;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Item</th>
-          <th style="padding:8px;text-align:center;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Qty</th>
-          <th style="padding:8px;text-align:right;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Unit Price</th>
-          <th style="padding:8px;text-align:right;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Total</th>
-        </tr></thead>
-        <tbody>${itemRows}</tbody>
-        <tfoot><tr>
-          <td colspan="3" style="padding:12px 8px;text-align:right;font-weight:700;font-size:15px;border-top:2px solid #1a1a1a;">Total:</td>
-          <td style="padding:12px 8px;text-align:right;font-weight:700;font-size:18px;color:#1a1a1a;border-top:2px solid #1a1a1a;">€${totalAmount}</td>
-        </tr></tfoot>
-      </table>
-    </div>
+    <!-- Totals -->
+    <table style="width:100%;margin-top:0;">
+      <tr>
+        <td style="width:60%;"></td>
+        <td style="padding:16px 10px 6px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Subtotal</td>
+        <td style="padding:16px 10px 6px;text-align:right;font-size:14px;color:#333;">€${totalAmount}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="padding:6px 10px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Tax (0%)</td>
+        <td style="padding:6px 10px;text-align:right;font-size:14px;color:#333;">€0.00</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="padding:12px 10px;text-align:right;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:#1a1a1a;font-weight:700;border-top:2px solid #1a1a1a;">Total Due</td>
+        <td style="padding:12px 10px;text-align:right;font-size:20px;color:#1a1a1a;font-weight:700;border-top:2px solid #1a1a1a;">€${totalAmount}</td>
+      </tr>
+    </table>
+  </div>
 
-    <div style="background:#faf9f6;border:1px solid #eee;padding:16px 20px;border-radius:8px;margin-top:20px;">
-      <p style="font-size:12px;color:#999;margin:0;line-height:1.6;"><strong>Dispute Reference:</strong> This invoice serves as proof of transaction for order dispute purposes. Customer agreed to terms at checkout. Order timestamp and details are logged server-side.</p>
+  <!-- Notes -->
+  <div style="padding:0 40px 28px;">
+    <div style="background:#faf9f6;border-left:3px solid #c9a96e;padding:16px 20px;">
+      <p style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin:0 0 6px;font-weight:600;">Notes & Terms</p>
+      <p style="font-size:12px;color:#666;margin:0;line-height:1.7;">Digital product — no physical shipment. This invoice serves as proof of transaction for dispute purposes. Customer agreed to terms of service at checkout. All order timestamps and details are logged server-side.</p>
     </div>
   </div>
-  <div style="background:#1a1a1a;padding:20px 32px;text-align:center;">
-    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 4px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;">© ${year} ProfParfums. All rights reserved.</p>
+
+  <!-- Footer -->
+  <div style="background:#1a1a1a;padding:24px 40px;text-align:center;">
+    <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">ProfParfums</p>
+    <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} ProfParfums. All rights reserved.<br>
+    <a href="mailto:support@profparfums.com" style="color:#888;text-decoration:none;">support@profparfums.com</a></p>
   </div>
+
 </div>
 </body></html>`;
 }
