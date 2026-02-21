@@ -1043,33 +1043,29 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                <AlertDialog open={showRevolutPaymentPopup} onOpenChange={setShowRevolutPaymentPopup}>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 text-amber-500" />
-                        {t('checkout.revolutPopupTitle')}
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className="text-sm leading-relaxed">
-                        {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong>{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
-                        <span className="block mt-3 font-semibold text-foreground">⚠️ {t('checkout.revolutPopupOrderNote')}</span>
-                        <span className="block mt-2">{t('checkout.revolutPopupText5')}</span>
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>{t('checkout.revolutPopupCancel')}</AlertDialogCancel>
-                      <AlertDialogAction
-                        className="bg-[#191C1F] hover:bg-[#2A2D31]"
-                        onClick={() => {
-                          window.open('https://revolut.me/malik_ll_dkwy', '_blank');
-                          setRevolutLinkOpened(true);
-                        }}
-                      >
-                        {t('checkout.revolutPopupAccept')}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                {showRevolutPaymentPopup && (
+                  <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 space-y-3 text-sm">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+                      <div className="space-y-2 text-muted-foreground leading-relaxed">
+                        <p>
+                          {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong className="text-foreground">{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
+                        </p>
+                        <p className="font-semibold text-foreground">⚠️ {t('checkout.revolutPopupOrderNote')}</p>
+                        <p>{t('checkout.revolutPopupText5')}</p>
+                      </div>
+                    </div>
+                    <Button
+                      className="w-full h-11 bg-[#191C1F] hover:bg-[#2A2D31] text-white font-semibold"
+                      onClick={() => {
+                        window.open('https://revolut.me/malik_ll_dkwy', '_blank');
+                        setRevolutLinkOpened(true);
+                      }}
+                    >
+                      {t('checkout.revolutPopupAccept')}
+                    </Button>
+                  </div>
+                )}
 
                 {revolutLinkOpened && (
                   <div className="space-y-2">
