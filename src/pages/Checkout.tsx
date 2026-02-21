@@ -1182,7 +1182,7 @@ const Checkout = () => {
                       <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
                         onClick={() => setShowRewarbleConfirmDialog(true)}
                       >
-                        {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />pay with gift card</>}
+                        {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />Confirm Payment</>}
                       </Button>
 
                       <AlertDialog open={showRewarbleConfirmDialog} onOpenChange={setShowRewarbleConfirmDialog}>
