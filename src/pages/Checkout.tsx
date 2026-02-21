@@ -1134,7 +1134,7 @@ const Checkout = () => {
                   >
                     <span className="flex items-center gap-2">
                       🎁
-                      <span>Pay with Rewarble Gift Card</span>
+                      <span>Pay with gift card</span>
                     </span>
                   </Button>
 
