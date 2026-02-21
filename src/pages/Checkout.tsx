@@ -349,6 +349,9 @@ const Checkout = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showRewarblePopup, setShowRewarblePopup] = useState(false);
+  const [rewarbleCode, setRewarbleCode] = useState('');
+  const [showRewarbleConfirmDialog, setShowRewarbleConfirmDialog] = useState(false);
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
@@ -1108,6 +1111,121 @@ const Checkout = () => {
                     </AlertDialog>
                   </div>
                 )}
+
+                {/* Rewarble Gift Card Section */}
+                <div className="space-y-2 mt-2">
+                  <div className="flex items-center gap-3 my-1">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs text-muted-foreground">If the other payment methods don't work for you</span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+
+                  <Button
+                    type="button"
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-lg border border-white/10 relative overflow-hidden"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      setShowRewarblePopup(true);
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      🎁
+                      <span>Pay with Rewarble Gift Card</span>
+                    </span>
+                  </Button>
+
+                  {/* Rewarble Info Popup */}
+                  <AlertDialog open={showRewarblePopup} onOpenChange={setShowRewarblePopup}>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          🎁 Rewarble Gift Card Payment
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-sm leading-relaxed">
+                          If the other payment options do not work for you, purchase a gift card from the link below that is closest to your order amount, and once you're done, come back to the site. There will be a space for you to enter the code you purchased. Once it's been pasted then click confirm payment and your order will be processed.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-[#7C3AED] hover:bg-[#6D28D9]"
+                          onClick={() => {
+                            window.open('https://skine.com/en-us/rewarble?utm_source=rewarble.com', '_blank');
+                          }}
+                        >
+                          Go to Rewarble
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  {/* Code Input - always visible after button */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium tracking-wider text-foreground">
+                      GIFT CARD CODE
+                    </Label>
+                    <Input
+                      type="text"
+                      placeholder="Paste your Rewarble gift card code here..."
+                      value={rewarbleCode}
+                      onChange={(e) => setRewarbleCode(e.target.value)}
+                      className="h-12 bg-background border-border rounded-md"
+                    />
+                  </div>
+
+                  {rewarbleCode.trim() && (
+                    <div className="space-y-2">
+                      <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
+                        onClick={() => setShowRewarbleConfirmDialog(true)}
+                      >
+                        {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />Confirm Payment</>}
+                      </Button>
+
+                      <AlertDialog open={showRewarbleConfirmDialog} onOpenChange={setShowRewarbleConfirmDialog}>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2">
+                              <AlertTriangle className="h-5 w-5 text-red-500" />
+                              Payment Confirmation
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-sm leading-relaxed">
+                              <span className="font-semibold text-red-500 block mb-2">
+                                Orders confirmed with invalid gift card codes are instantly rejected.
+                              </span>
+                              Your gift card code will be verified. If the code is invalid, your order will be rejected and you will be notified. Are you sure you want to proceed?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Go Back</AlertDialogCancel>
+                            <AlertDialogAction
+                              className="bg-green-600 hover:bg-green-700"
+                              onClick={async () => {
+                                setIsProcessing(true);
+                                try {
+                                  const fd = formDataRef.current;
+                                  const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                                  const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                                  await supabase.functions.invoke('request-order-approval', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2), paymentMethod: 'rewarble', giftCardCode: rewarbleCode.trim() } });
+                                  setIsCompleted(true);
+                                  clearCart();
+                                } catch (err: any) {
+                                  console.error('Rewarble order error:', err);
+                                  toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
+                                } finally { setIsProcessing(false); }
+                              }}
+                            >
+                              Yes, Confirm Order
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  )}
+                </div>
 
                 {!isFormValid() && (
                   <p className="text-xs text-center text-muted-foreground">

@@ -21,8 +21,11 @@ function buildResultPage(title: string, message: string, success: boolean): stri
 </body></html>`;
 }
 
-function buildRejectionEmailHtml(customerName: string): string {
+function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = false): string {
   const year = new Date().getFullYear();
+  const reason = isGiftCard
+    ? "Unfortunately, the gift card code you provided for your recent order could not be verified and is invalid. Your order has been cancelled."
+    : "Unfortunately, we were unable to verify the payment for your recent order and it has been cancelled.";
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
@@ -33,7 +36,7 @@ function buildRejectionEmailHtml(customerName: string): string {
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Order Update</h2>
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
-    <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">Unfortunately, we were unable to verify the payment for your recent order and it has been cancelled.</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">If you believe this is an error, please contact us and we'll be happy to assist you.</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
@@ -159,8 +162,9 @@ serve(async (req) => {
       // Reject
       await supabase.from("orders").update({ status: "rejected", approval_token: null }).eq("id", orderId);
 
-      // Send rejection email to customer
-      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer");
+      // Send rejection email to customer - check if it's a gift card order
+      const isGiftCard = order.checkout_reference?.startsWith("rewarble");
+      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard);
       await sendWithBrevo(order.customer_email, "Order Update - ProfParfums", rejectionHtml);
 
       console.log("Order rejected and customer notified:", orderId);
