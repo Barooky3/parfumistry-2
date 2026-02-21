@@ -350,6 +350,7 @@ const Checkout = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [discountCode, setDiscountCode] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showRevolutPaymentPopup, setShowRevolutPaymentPopup] = useState(false);
   const [showRewarblePopup, setShowRewarblePopup] = useState(false);
   const [rewarbleCode, setRewarbleCode] = useState('');
   const [showRewarbleConfirmDialog, setShowRewarbleConfirmDialog] = useState(false);
@@ -1018,8 +1019,7 @@ const Checkout = () => {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
-                      window.open('https://revolut.me/malik_ll_dkwy', '_blank');
-                      setRevolutLinkOpened(true);
+                      setShowRevolutPaymentPopup(true);
                     }}
                   >
                     <span className="flex items-center gap-2">
@@ -1066,12 +1066,32 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
-                  <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
-                  <p className="text-xs text-foreground/90">
-                    After clicking, you must enter exactly <strong className="text-amber-400">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
-                  </p>
-                </div>
+                <AlertDialog open={showRevolutPaymentPopup} onOpenChange={setShowRevolutPaymentPopup}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5 text-amber-500" />
+                        Important Payment Instructions
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-sm leading-relaxed">
+                        You must enter exactly <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
+                        <span className="block mt-2">After completing your payment, please come back to this window to confirm your payment.</span>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-[#191C1F] hover:bg-[#2A2D31]"
+                        onClick={() => {
+                          window.open('https://revolut.me/malik_ll_dkwy', '_blank');
+                          setRevolutLinkOpened(true);
+                        }}
+                      >
+                        I Understand, Proceed to Payment
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
 
                 {revolutLinkOpened && (
                   <div className="space-y-2">
