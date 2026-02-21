@@ -25,7 +25,10 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   const year = new Date().getFullYear();
   const reason = isGiftCard
     ? "Unfortunately, the gift card code you provided for your recent order could not be verified and is invalid. Your order has been cancelled."
-    : "Unfortunately, we were unable to verify the payment for your recent order and it has been cancelled.";
+    : "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
+  const nextStep = isGiftCard
+    ? "If you believe this is an error, please contact us and we'll be happy to assist you."
+    : "Please try again and ensure the payment is completed successfully before confirming your order. If the issue persists, feel free to reach out to us for assistance.";
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
@@ -34,10 +37,10 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Premium Fragrances</p>
   </div>
   <div style="padding:32px;">
-    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Order Update</h2>
+    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
-    <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">If you believe this is an error, please contact us and we'll be happy to assist you.</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
       <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
