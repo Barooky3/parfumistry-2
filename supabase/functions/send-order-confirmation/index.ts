@@ -223,6 +223,75 @@ function buildEmailHtml(
   ].join("\n");
 }
 
+const ADMIN_EMAIL = "ewhz3384@gmail.com";
+
+function buildAdminInvoiceHtml(
+  customerName: string,
+  customerEmail: string,
+  items: OrderItem[],
+  totalAmount: string,
+  shippingAddress: { line1: string; city: string; postalCode: string; country: string },
+  paymentMethod: string,
+): string {
+  const year = new Date().getFullYear();
+  const orderDate = new Date().toLocaleString("en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Amsterdam" });
+  const addressText = [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ") || "N/A";
+
+  const itemRows = items.map((item) => {
+    const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
+    const lineTotal = (item.price * item.quantity).toFixed(2);
+    return `<tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;">${item.brand} — ${item.name}${mlLabel}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:center;">${item.quantity}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${item.price.toFixed(2)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${lineTotal}</td>
+    </tr>`;
+  }).join("");
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:20px;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
+<div style="max-width:650px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
+  <div style="background:#1a1a1a;padding:24px 32px;text-align:center;">
+    <h1 style="color:#c9a96e;font-size:22px;margin:0;letter-spacing:3px;">ORDER INVOICE / RECEIPT</h1>
+  </div>
+  <div style="padding:24px 32px;">
+    <table style="width:100%;margin-bottom:20px;font-size:14px;">
+      <tr><td style="padding:4px 0;color:#999;width:140px;">Date:</td><td style="padding:4px 0;"><strong>${orderDate}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;"><a href="mailto:${customerEmail}" style="color:#c9a96e;text-decoration:none;">${customerEmail}</a></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Shipping Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Payment Method:</td><td style="padding:4px 0;"><strong>${paymentMethod}</strong></td></tr>
+    </table>
+
+    <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:8px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Order Items</div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#f9f9f9;">
+          <th style="padding:8px;text-align:left;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Item</th>
+          <th style="padding:8px;text-align:center;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Qty</th>
+          <th style="padding:8px;text-align:right;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Unit Price</th>
+          <th style="padding:8px;text-align:right;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #ddd;">Total</th>
+        </tr></thead>
+        <tbody>${itemRows}</tbody>
+        <tfoot><tr>
+          <td colspan="3" style="padding:12px 8px;text-align:right;font-weight:700;font-size:15px;border-top:2px solid #1a1a1a;">Total:</td>
+          <td style="padding:12px 8px;text-align:right;font-weight:700;font-size:18px;color:#1a1a1a;border-top:2px solid #1a1a1a;">€${totalAmount}</td>
+        </tr></tfoot>
+      </table>
+    </div>
+
+    <div style="background:#faf9f6;border:1px solid #eee;padding:16px 20px;border-radius:8px;margin-top:20px;">
+      <p style="font-size:12px;color:#999;margin:0;line-height:1.6;"><strong>Dispute Reference:</strong> This invoice serves as proof of transaction for order dispute purposes. Customer agreed to terms at checkout. Order timestamp and details are logged server-side.</p>
+    </div>
+  </div>
+  <div style="background:#1a1a1a;padding:20px 32px;text-align:center;">
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 4px;text-transform:uppercase;">ProfParfums</p>
+    <p style="color:#666;font-size:11px;margin:0;">© ${year} ProfParfums. All rights reserved.</p>
+  </div>
+</div>
+</body></html>`;
+}
+
 async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
   if (!apiKey) throw new Error("BREVO_API_KEY not configured");
@@ -290,6 +359,17 @@ serve(async (req) => {
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" });
 
     await sendWithBrevo(customerEmail, "Order Confirmed - ProfParfums", html);
+
+    // Send admin invoice/receipt
+    const invoiceHtml = buildAdminInvoiceHtml(
+      customerName || "Valued Customer",
+      customerEmail,
+      normalizedItems,
+      calculatedTotal,
+      shippingAddress || { line1: "", city: "", postalCode: "", country: "" },
+      "PayPal (Auto-verified)",
+    );
+    await sendWithBrevo(ADMIN_EMAIL, `📋 Invoice: ${customerName || customerEmail} — €${calculatedTotal}`, invoiceHtml);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
