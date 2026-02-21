@@ -1053,10 +1053,7 @@ const Checkout = () => {
                 <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/20 border border-amber-500/50">
                   <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
                   <p className="text-xs text-foreground/90">
-                    After clicking, you must enter exactly <strong className="text-amber-400">€{(() => {
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                      return finalTotal.toFixed(2);
-                    })()}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
+                    After clicking, you must enter exactly <strong className="text-amber-400">{formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}</strong> at the payment link. Orders with incorrect amounts will <strong>not</strong> be accepted.
                   </p>
                 </div>
 
