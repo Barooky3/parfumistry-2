@@ -986,18 +986,6 @@ const Checkout = () => {
                   and we'll help you out!
                 </p>
 
-                <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 space-y-3 text-sm">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
-                    <div className="space-y-2 text-muted-foreground leading-relaxed">
-                      <p>
-                        {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong className="text-foreground">{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
-                      </p>
-                      <p className="font-semibold text-foreground">⚠️ {t('checkout.revolutPopupOrderNote')}</p>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="space-y-1.5">
                   <Button
                     type="button"
@@ -1053,6 +1041,16 @@ const Checkout = () => {
                       <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
                       <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
                     </svg>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs">
+                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500 mt-0.5 shrink-0" />
+                  <div className="text-muted-foreground leading-relaxed">
+                    <p>
+                      {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong className="text-foreground">{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
+                    </p>
+                    <p className="font-semibold text-foreground mt-1.5">⚠️ Please list the items and your name when you are ordering.</p>
                   </div>
                 </div>
 
