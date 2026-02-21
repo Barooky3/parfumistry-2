@@ -681,7 +681,7 @@ const Checkout = () => {
           {/* Thank You Text */}
           <h1 className="font-display text-3xl text-foreground text-center mb-4">Thank You!</h1>
           <p className="text-muted-foreground text-center mb-2">
-            Your purchase is complete. You will receive an email with your order details and seller links.
+            Your purchase is complete. You will receive an email with your order details.
           </p>
           <p className="text-sm text-muted-foreground text-center mb-10">
             Please check your spam folder if you don't see it within a few minutes.
