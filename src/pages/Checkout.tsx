@@ -842,14 +842,6 @@ const Checkout = () => {
               </div>
             </div>
 
-              {!isFormValid() && (
-                <div className="flex items-center gap-2.5 rounded-lg border border-accent/30 bg-accent/10 px-4 py-3 mt-5">
-                  <AlertTriangle className="h-4 w-4 text-accent shrink-0" />
-                  <p className="text-sm font-medium text-foreground">
-                    Fill in all required fields above to enable payment.
-                  </p>
-                </div>
-              )}
           </div>
 
           {/* Right Column - Order Summary */}
@@ -959,6 +951,15 @@ const Checkout = () => {
                   <p className="text-xs text-muted-foreground">Taxes included</p>
                 </div>
               </div>
+
+              {!isFormValid() && (
+                <div className="flex items-center gap-2.5 rounded-lg border border-accent/30 bg-accent/10 px-4 py-3 mb-5">
+                  <AlertTriangle className="h-4 w-4 text-accent shrink-0" />
+                  <p className="text-sm font-medium text-foreground">
+                    Fill in all required fields above to enable payment.
+                  </p>
+                </div>
+              )}
 
               {/* Payment Options */}
               <div className="space-y-4">
