@@ -20,7 +20,8 @@ export interface Product {
     heart: string[];
     base: string[];
   };
-  scentNotesImage?: string; // URL to combined scent notes image
+  scentNotesImage?: string;
+  accentColor?: string; // HSL color matching the bottle/juice
   image: string;
   affiliateUrl: string;
   inStock: boolean;
