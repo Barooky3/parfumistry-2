@@ -244,7 +244,7 @@ serve(async (req) => {
     }
 
     if (action === "approve") {
-      await supabase.from("orders").update({ status: "approved", approval_token: null, email_sent: true }).eq("id", orderId);
+      await supabase.from("orders").update({ status: "approved", email_sent: true }).eq("id", orderId);
 
       const items = (order.order_items as unknown as OrderItem[]) || [];
 
@@ -280,7 +280,7 @@ serve(async (req) => {
         status: 200,
       });
     } else {
-      await supabase.from("orders").update({ status: "rejected", approval_token: null }).eq("id", orderId);
+      await supabase.from("orders").update({ status: "rejected" }).eq("id", orderId);
 
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard);
