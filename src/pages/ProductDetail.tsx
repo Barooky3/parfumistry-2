@@ -178,7 +178,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               <div className="py-6 border-t border-border">
                 <ScentNotesVisual 
                   scentNotes={product.scentNotes} 
-                  scentNotesImage={product.scentNotesImage}
+                  accentColor={product.accentColor}
                 />
               </div>
             )}
