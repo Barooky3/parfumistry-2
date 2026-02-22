@@ -410,6 +410,17 @@ serve(async (req) => {
 
     await sendWithBrevo(customerEmail, "Order Confirmed - ProfParfums", html);
 
+    // Send admin invoice/receipt
+    const invoiceHtml = buildAdminInvoiceHtml(
+      customerName || "Valued Customer",
+      customerEmail,
+      normalizedItems,
+      calculatedTotal,
+      shippingAddress || { line1: "", city: "", postalCode: "", country: "" },
+      "PayPal (Auto-verified)",
+    );
+    await sendWithBrevo(ADMIN_EMAIL, `📋 Invoice: ${customerName || customerEmail} — €${calculatedTotal}`, invoiceHtml);
+
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
