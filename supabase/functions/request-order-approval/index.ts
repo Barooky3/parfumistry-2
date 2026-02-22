@@ -311,20 +311,7 @@ serve(async (req) => {
     const emailPrefix = paymentMethod === "rewarble" ? "🎁 Gift Card Order" : "🔔 Order Approval";
     await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html);
 
-    // Send admin invoice/receipt
-    const pmLabel = paymentMethod === "rewarble" ? "Gift Card (Pending Verification)" : "Revolut Transfer (Pending Verification)";
-    const invoiceHtml = buildAdminInvoiceHtml(
-      customerName || "Valued Customer",
-      customerEmail,
-      normalizedItems,
-      calculatedTotal,
-      shippingAddress || {},
-      pmLabel,
-      giftCardCode,
-    );
-    await sendWithBrevo(ADMIN_EMAIL, `📋 Invoice: ${customerName || customerEmail} — €${calculatedTotal}`, invoiceHtml);
-
-    console.log("Approval + invoice emails sent to admin for order:", order.id);
+    console.log("Approval email sent to admin for order:", order.id);
 
     return new Response(JSON.stringify({ success: true, orderId: order.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
