@@ -20,7 +20,7 @@ interface OrderItem {
 
 function buildResultPage(title: string, message: string, success: boolean): string {
   const color = success ? "#16a34a" : "#dc2626";
-  const icon = success ? "✅" : "❌";
+  const icon = success ? "V" : "X";
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title></head>
 <body style="margin:0;padding:40px;background:#f4f3ef;font-family:Arial,sans-serif;text-align:center;">
@@ -81,20 +81,207 @@ function buildAdminInvoiceHtml(
   const addressText = [billingAddress.line1, billingAddress.city, billingAddress.postalCode, billingAddress.country].filter(Boolean).join(", ") || "N/A";
 
   const itemRows = items.map((item, i) => {
-    const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
+    const mlLabel = item.selectedMl ? ` - ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
     const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
     return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <span style="color:#c9a96e;font-weight:500;">(link)</span></td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} - ${item.name}${mlLabel} <span style="color:#c9a96e;font-weight:500;">(link)</span></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">EUR${item.price.toFixed(2)}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">EUR${lineTotal}</td>
     </tr>`;
   }).join("");
 
   const giftCardSection = giftCardCode ? `<div style="background:#fef3c7;border:2px solid #f59e0b;padding:12px 16px;border-radius:8px;margin-bottom:20px;">
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:4px;font-weight:600;">🎁 Rewarble Code</div>
-...
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:4px;font-weight:600;">Rewarble Code</div>
+    <div style="font-size:18px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
+  </div>` : "";
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
+<div style="max-width:600px;margin:0 auto;background:#fff;">
+  <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+    <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Admin Invoice</p>
+  </div>
+  <div style="padding:32px;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:4px;">Invoice No</div>
+        <div style="font-size:14px;font-weight:600;color:#333;">${invoiceNo}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:4px;">Date</div>
+        <div style="font-size:14px;color:#333;">${orderDate}</div>
+      </div>
+    </div>
+    <table style="width:100%;margin-bottom:16px;font-size:13px;">
+      <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${customerEmail}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Payment:</td><td style="padding:4px 0;">${paymentMethod}</td></tr>
+    </table>
+    ${giftCardSection}
+    <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Order Items</div>
+      <table style="width:100%;">
+        <thead><tr style="background:#f4f3ef;">
+          <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Item</th>
+          <th style="padding:8px 10px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Qty</th>
+          <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Price</th>
+          <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Total</th>
+        </tr></thead>
+        <tbody>${itemRows}</tbody>
+      </table>
+    </div>
+    <div style="text-align:right;padding-top:12px;border-top:2px solid #1a1a1a;">
+      <span style="font-size:14px;color:#999;">Total:</span>
+      <span style="font-size:20px;font-weight:700;color:#1a1a1a;margin-left:8px;">EUR${totalAmount}</span>
+    </div>
+    <div style="background:#f4f3ef;padding:16px;border-radius:8px;margin-top:20px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:6px;">Delivery Details</div>
+      <table style="width:100%;font-size:13px;">
+        <tr><td style="padding:2px 0;color:#999;width:80px;">Method:</td><td style="padding:2px 0;color:#333;">Digital</td></tr>
+        <tr><td style="padding:2px 0;color:#999;">To:</td><td style="padding:2px 0;color:#333;">${customerEmail}</td></tr>
+        <tr><td style="padding:2px 0;color:#999;">Time:</td><td style="padding:2px 0;color:#333;">${orderDate}</td></tr>
+      </table>
+    </div>
+  </div>
+  <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
+  </div>
+</div>
+</body></html>`;
+}
+
+async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
+  const apiKey = Deno.env.get("BREVO_API_KEY");
+  if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
+      to: [{ email: to }],
+      subject,
+      htmlContent,
+    }),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error("Brevo API error (" + res.status + "): " + errBody);
+  }
+}
+
+async function sendConfirmationEmail(
+  customerEmail: string,
+  customerName: string,
+  items: OrderItem[],
+  totalAmount: string,
+  shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
+): Promise<void> {
+  const year = new Date().getFullYear();
+  const addressText = [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ") || "N/A";
+
+  const itemRows = items.map((item) => {
+    const mlLabel = item.selectedMl ? ` - ${item.selectedMl}ml` : "";
+    return `<tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-family:Arial,sans-serif;">
+      <strong>${item.brand}</strong> - ${item.name}${mlLabel}<br/>
+      <span style="color:#666;">Qty: ${item.quantity} - EUR${(item.price * item.quantity).toFixed(2)}</span>
+    </td></tr>`;
+  }).join("");
+
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
+<div style="max-width:600px;margin:0 auto;background:#fff;">
+  <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+    <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Premium Fragrances</p>
+  </div>
+  <div style="padding:32px;">
+    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Order Confirmed</h2>
+    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">Thank you for your order! Your payment has been verified and your order is confirmed.</p>
+    <table style="width:100%;margin-bottom:16px;">
+      <tr><td style="padding:4px 0;color:#999;font-size:13px;width:100px;">Shipping to:</td><td style="padding:4px 0;font-size:13px;">${addressText}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;font-size:13px;">Total:</td><td style="padding:4px 0;font-size:13px;"><strong>EUR${totalAmount}</strong></td></tr>
+    </table>
+    <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Your Items</div>
+      <table style="width:100%;">${itemRows}</table>
+    </div>
+    <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
+      <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Questions? Contact us at<br>
+      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
+    </div>
+  </div>
+  <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
+  </div>
+</div>
+</body></html>`;
+
+  await sendWithBrevo(customerEmail, "Order Confirmed - ProfParfums", html);
+}
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const url = new URL(req.url);
+    const orderId = url.searchParams.get("id");
+    const token = url.searchParams.get("token");
+    const action = url.searchParams.get("action");
+
+    if (!orderId || !token || !action) {
+      return new Response(buildResultPage("Invalid Link", "Missing required parameters.", false), {
+        headers: { "Content-Type": "text/html" }, status: 400,
+      });
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { data: order, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderId)
+      .eq("approval_token", token)
+      .single();
+
+    if (error || !order) {
+      return new Response(buildResultPage("Invalid Link", "This link is invalid or has already been used.", false), {
+        headers: { "Content-Type": "text/html" }, status: 404,
+      });
+    }
+
+    if (action === "approve") {
+      await supabase.from("orders").update({ status: "approved", approval_token: null, email_sent: true }).eq("id", orderId);
+
+      const items = (order.order_items as unknown as OrderItem[]) || [];
+
+      // Send confirmation to customer
+      await sendConfirmationEmail(
+        order.customer_email,
+        order.customer_name || "Valued Customer",
+        items,
+        order.total_amount.toString(),
+        (order.shipping_address as any) || {},
+      );
+
+      // Send admin invoice
+      const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
       const giftCardCode = isGiftCard ? order.checkout_reference?.replace("rewarble-", "") : undefined;
       const invoiceHtml = buildAdminInvoiceHtml(
@@ -106,11 +293,11 @@ function buildAdminInvoiceHtml(
         pmLabel,
         giftCardCode,
       );
-      await sendWithBrevo(ADMIN_EMAIL, `📋 Invoice: ${order.customer_name || order.customer_email} — €${order.total_amount}`, invoiceHtml);
+      await sendWithBrevo(ADMIN_EMAIL, "Invoice: " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount, invoiceHtml);
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 
-      return new Response(buildResultPage("Order Approved ✅", `The confirmation email has been sent to ${order.customer_email}.`, true), {
+      return new Response(buildResultPage("Order Approved", "The confirmation email has been sent to " + order.customer_email + ".", true), {
         headers: { "Content-Type": "text/html" },
         status: 200,
       });
@@ -123,7 +310,7 @@ function buildAdminInvoiceHtml(
 
       console.log("Order rejected and customer notified:", orderId);
 
-      return new Response(buildResultPage("Order Rejected", `A rejection notification has been sent to ${order.customer_email}.`, false), {
+      return new Response(buildResultPage("Order Rejected", "A rejection notification has been sent to " + order.customer_email + ".", false), {
         headers: { "Content-Type": "text/html" },
         status: 200,
       });

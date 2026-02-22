@@ -183,8 +183,8 @@ serve(async (req) => {
       giftCardCode,
     );
 
-    const emailPrefix = paymentMethod === "rewarble" ? "🎁 Rewarble Order" : "🔔 Order Approval";
-    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html);
+    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
+    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);
 
