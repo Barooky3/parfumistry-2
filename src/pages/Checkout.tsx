@@ -1060,7 +1060,7 @@ const Checkout = () => {
                     <p>
                       {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong className="text-foreground">{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
                     </p>
-                    <p className="font-semibold text-foreground mt-1.5">⚠️ Please list the items and your name when you are ordering.</p>
+                    <p className="font-semibold text-foreground mt-1.5">⚠️ Please list the items and your name in the "note" when you pay.</p>
                   </div>
                 </div>
 
@@ -1134,7 +1134,7 @@ const Checkout = () => {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
-                      setShowRewarblePopup(true);
+                      window.open('https://skine.com/en-us/rewarble?utm_source=rewarble.com', '_blank');
                     }}
                   >
                     <span className="flex items-center gap-2">
@@ -1143,30 +1143,9 @@ const Checkout = () => {
                     </span>
                   </Button>
 
-                  {/* Rewarble Info Popup */}
-                  <AlertDialog open={showRewarblePopup} onOpenChange={setShowRewarblePopup}>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                          🎁 Rewarble Gift Card Payment
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-sm leading-relaxed">
-                          If the other payment options do not work for you, purchase a gift card from the link below that is closest to your order amount, and once you're done, come back to the site. There will be a space for you to enter the code you purchased. Once it's been pasted then click confirm payment and your order will be processed.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-[#7C3AED] hover:bg-[#6D28D9]"
-                          onClick={() => {
-                            window.open('https://skine.com/en-us/rewarble?utm_source=rewarble.com', '_blank');
-                          }}
-                        >
-                          Go to Rewarble
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <div className="text-xs text-muted-foreground leading-relaxed bg-muted/30 rounded-md px-3 py-2.5 border border-border/50">
+                    <p>Purchase a <a href="https://skine.com/en-us/rewarble?utm_source=rewarble.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Rewarble gift card</a> closest to your order amount, then paste the code below and confirm.</p>
+                  </div>
 
                   {/* Code Input - always visible after button */}
                   <div className="space-y-2">
