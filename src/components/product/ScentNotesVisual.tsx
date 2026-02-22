@@ -1,8 +1,5 @@
 import { motion } from 'framer-motion';
 
-// Cache bust version - increment when updating images
-const SCENT_NOTES_VERSION = 'v16';
-
 interface ScentNotesVisualProps {
   scentNotes: {
     top: string[];
@@ -12,99 +9,55 @@ interface ScentNotesVisualProps {
   scentNotesImage?: string;
 }
 
-export const ScentNotesVisual = ({ scentNotes, scentNotesImage }: ScentNotesVisualProps) => {
-  const hasTop = scentNotes.top && scentNotes.top.length > 0;
-  const hasHeart = scentNotes.heart && scentNotes.heart.length > 0;
-  const hasBase = scentNotes.base && scentNotes.base.length > 0;
+const NoteSection = ({ 
+  label, 
+  notes, 
+  delay 
+}: { 
+  label: string; 
+  notes: string[]; 
+  delay: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 8 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.35, delay }}
+    className="space-y-2.5"
+  >
+    <p className="text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
+      {label}
+    </p>
+    <div className="flex flex-wrap gap-1.5 md:gap-2">
+      {notes.map((note) => (
+        <span
+          key={note}
+          className="px-3 py-1.5 md:px-4 md:py-2 text-[11px] md:text-xs font-medium tracking-wide text-foreground border border-border/60 bg-background/50 rounded-full transition-colors hover:border-primary/40"
+        >
+          {note}
+        </span>
+      ))}
+    </div>
+  </motion.div>
+);
+
+export const ScentNotesVisual = ({ scentNotes }: ScentNotesVisualProps) => {
+  const hasTop = scentNotes.top?.length > 0;
+  const hasHeart = scentNotes.heart?.length > 0;
+  const hasBase = scentNotes.base?.length > 0;
 
   if (!hasTop && !hasHeart && !hasBase) return null;
 
-  // If we have a combined scent notes image, show that
-  if (scentNotesImage) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4 }}
-        className="py-4"
-      >
-        <img 
-          src={`${scentNotesImage}?${SCENT_NOTES_VERSION}`} 
-          alt="Fragrance Notes" 
-          className="w-full max-w-md mx-auto"
-          loading="lazy"
-        />
-      </motion.div>
-    );
-  }
-
-  // Fallback to text-based display
   return (
-    <div className="py-6 space-y-6">
-      {hasTop && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0 }}
-          className="text-center"
-        >
-          <h4 className="text-sm md:text-base font-medium text-foreground mb-4">Top Notes</h4>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            {scentNotes.top.map((note) => (
-              <span 
-                key={note} 
-                className="px-3 py-1.5 md:px-4 md:py-2 border border-border bg-background text-xs md:text-sm text-foreground rounded-full"
-              >
-                {note}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-      )}
-      {hasHeart && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-center"
-        >
-          <h4 className="text-sm md:text-base font-medium text-foreground mb-4">Middle Notes</h4>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            {scentNotes.heart.map((note) => (
-              <span 
-                key={note} 
-                className="px-3 py-1.5 md:px-4 md:py-2 border border-border bg-background text-xs md:text-sm text-foreground rounded-full"
-              >
-                {note}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-      )}
-      {hasBase && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="text-center"
-        >
-          <h4 className="text-sm md:text-base font-medium text-foreground mb-4">Base Notes</h4>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            {scentNotes.base.map((note) => (
-              <span 
-                key={note} 
-                className="px-3 py-1.5 md:px-4 md:py-2 border border-border bg-background text-xs md:text-sm text-foreground rounded-full"
-              >
-                {note}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-      )}
+    <div className="space-y-5">
+      <h3 className="text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-foreground">
+        Fragrance Notes
+      </h3>
+      <div className="space-y-4">
+        {hasTop && <NoteSection label="Top" notes={scentNotes.top} delay={0} />}
+        {hasHeart && <NoteSection label="Heart" notes={scentNotes.heart} delay={0.08} />}
+        {hasBase && <NoteSection label="Base" notes={scentNotes.base} delay={0.16} />}
+      </div>
     </div>
   );
 };
