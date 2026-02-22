@@ -1006,7 +1006,7 @@ const Checkout = () => {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
-                      window.open('https://revolut.me/malik_ll_dkwy', '_blank');
+                      window.open('https://revolut.me/mubarak_e', '_blank');
                       setRevolutLinkOpened(true);
                     }}
                   >
