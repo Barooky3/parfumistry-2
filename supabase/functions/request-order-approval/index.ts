@@ -177,9 +177,19 @@ function buildApprovalEmailHtml(
 </body></html>`;
 }
 
-async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
+async function sendWithBrevo(to: string, subject: string, htmlContent: string, replyTo?: string): Promise<void> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
   if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+
+  const emailPayload: any = {
+    sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
+    to: [{ email: to }],
+    subject,
+    htmlContent,
+  };
+  if (replyTo) {
+    emailPayload.replyTo = { email: replyTo };
+  }
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -188,12 +198,7 @@ async function sendWithBrevo(to: string, subject: string, htmlContent: string): 
       "Content-Type": "application/json",
       "Accept": "application/json",
     },
-    body: JSON.stringify({
-      sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
-      to: [{ email: to }],
-      subject,
-      htmlContent,
-    }),
+    body: JSON.stringify(emailPayload),
   });
 
   if (!res.ok) {
@@ -270,7 +275,7 @@ serve(async (req) => {
     );
 
     const emailPrefix = paymentMethod === "rewarble" ? "🎁 Rewarble Order" : "🔔 Order Approval";
-    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html);
+    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html, customerEmail);
 
     console.log("Approval email sent to admin for order:", order.id);
 
