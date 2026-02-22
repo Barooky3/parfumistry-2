@@ -71,108 +71,13 @@ function buildApprovalEmailHtml(
     </div>
     ${paymentMethod === "rewarble" && giftCardCode ? `<div style="background:#fef3c7;border:2px solid #f59e0b;padding:16px 20px;border-radius:8px;margin-bottom:16px;">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:6px;font-weight:600;">🎁 Rewarble Code</div>
-...
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:4px;font-weight:600;">🎁 Rewarble Code</div>
-    <div style="font-size:18px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
-  </div>` : "";
-
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:20px;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
-<div style="max-width:680px;margin:0 auto;background:#fff;border-radius:0;overflow:hidden;border:1px solid #e8e5df;">
-
-  <!-- Header -->
-  <div style="background:#1a1a1a;padding:32px 40px;">
-    <table style="width:100%;"><tr>
-      <td style="vertical-align:top;">
-        <h1 style="color:#c9a96e;font-size:24px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
-        <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Premium Fragrances</p>
-      </td>
-      <td style="vertical-align:top;text-align:right;">
-        <p style="color:#c9a96e;font-size:20px;font-weight:300;letter-spacing:3px;margin:0;text-transform:uppercase;">Invoice</p>
-      </td>
-    </tr></table>
-  </div>
-
-  <!-- Invoice Meta -->
-  <div style="padding:28px 40px 0;border-bottom:1px solid #f0ede8;">
-    <table style="width:100%;margin-bottom:24px;">
-      <tr>
-        <td style="vertical-align:top;width:50%;">
-          <p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#999;margin:0 0 6px;">Bill To</p>
-          <p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;">${customerName}</p>
-          <p style="font-size:13px;color:#666;margin:0 0 2px;">${customerEmail}</p>
-          <p style="font-size:13px;color:#666;margin:0;">${addressText}</p>
-        </td>
-        <td style="vertical-align:top;text-align:right;">
-          <table style="margin-left:auto;">
-            <tr><td style="padding:2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;padding-right:12px;">Invoice No.</td><td style="padding:2px 0;font-size:13px;color:#1a1a1a;font-weight:500;">${invoiceNo}</td></tr>
-            <tr><td style="padding:2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;padding-right:12px;">Date</td><td style="padding:2px 0;font-size:13px;color:#1a1a1a;">${orderDate}</td></tr>
-            <tr><td style="padding:2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;padding-right:12px;">Payment</td><td style="padding:2px 0;font-size:13px;color:#1a1a1a;font-weight:500;">${paymentMethod}</td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- Gift Card Code if applicable -->
-  <div style="padding:${giftCardCode ? '20px 40px 0' : '0'};">
-    ${giftCardSection}
-  </div>
-
-  <!-- Items Table -->
-  <div style="padding:24px 40px;">
-    <table style="width:100%;border-collapse:collapse;">
-      <thead>
-        <tr style="background:#1a1a1a;">
-          <th style="padding:10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Description</th>
-          <th style="padding:10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Qty</th>
-          <th style="padding:10px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Unit Price</th>
-          <th style="padding:10px;text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:500;">Amount</th>
-        </tr>
-      </thead>
-      <tbody>${itemRows}</tbody>
-    </table>
-
-    <!-- Totals -->
-    <table style="width:100%;margin-top:0;">
-      <tr>
-        <td style="width:60%;"></td>
-        <td style="padding:16px 10px 6px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Subtotal</td>
-        <td style="padding:16px 10px 6px;text-align:right;font-size:14px;color:#333;">€${totalAmount}</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td style="padding:6px 10px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Tax (0%)</td>
-        <td style="padding:6px 10px;text-align:right;font-size:14px;color:#333;">€0.00</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td style="padding:12px 10px;text-align:right;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:#1a1a1a;font-weight:700;border-top:2px solid #1a1a1a;">Total Due</td>
-        <td style="padding:12px 10px;text-align:right;font-size:20px;color:#1a1a1a;font-weight:700;border-top:2px solid #1a1a1a;">€${totalAmount}</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- Delivery Details -->
-  <div style="padding:0 40px 28px;">
-    <div style="background:#faf9f6;border-left:3px solid #c9a96e;padding:16px 20px;">
-      <p style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin:0 0 6px;font-weight:600;">Delivery Details</p>
-      <table style="width:100%;font-size:12px;color:#666;line-height:1.7;">
-        <tr><td style="padding:2px 0;color:#999;width:110px;">Method:</td><td style="padding:2px 0;">Digital delivery (link)</td></tr>
-        <tr><td style="padding:2px 0;color:#999;">Delivered to:</td><td style="padding:2px 0;">${customerEmail}</td></tr>
-        <tr><td style="padding:2px 0;color:#999;">Delivered on:</td><td style="padding:2px 0;">${orderDate}</td></tr>
-      </table>
-      <p style="font-size:11px;color:#999;margin:8px 0 0;line-height:1.5;">This invoice serves as an itemized record and proof of service fulfillment. Customer agreed to terms of service at checkout.</p>
+      <div style="font-size:18px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
+    </div>` : ""}
+    <div style="text-align:center;margin-top:24px;">
+      <a href="${approveUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;margin-right:12px;">✅ Approve</a>
+      <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;">❌ Reject</a>
     </div>
   </div>
-
-  <!-- Footer -->
-  <div style="background:#1a1a1a;padding:24px 40px;text-align:center;">
-    <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} ProfParfums. All rights reserved.<br>
-    <a href="mailto:support@profparfums.com" style="color:#888;text-decoration:none;">support@profparfums.com</a></p>
-  </div>
-
 </div>
 </body></html>`;
 }
