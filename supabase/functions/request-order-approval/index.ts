@@ -38,6 +38,7 @@ function buildApprovalEmailHtml(
 ): string {
   const approveUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=approve`;
   const rejectUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject`;
+  const proofUrl = `${baseUrl}/functions/v1/request-proof-of-payment?id=${orderId}&token=${token}`;
 
   const itemRows = items.map((item) => {
     const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
@@ -76,6 +77,9 @@ function buildApprovalEmailHtml(
     <div style="text-align:center;margin-top:24px;">
       <a href="${approveUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;margin-right:12px;">✅ Approve</a>
       <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;">❌ Reject</a>
+    </div>
+    <div style="text-align:center;margin-top:12px;">
+      <a href="${proofUrl}" style="display:inline-block;background:#2563eb;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:500;font-size:13px;">📸 Request Proof of Payment</a>
     </div>
   </div>
 </div>
@@ -180,7 +184,7 @@ serve(async (req) => {
     );
 
     const emailPrefix = paymentMethod === "rewarble" ? "🎁 Rewarble Order" : "🔔 Order Approval";
-    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html, customerEmail);
+    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);
 

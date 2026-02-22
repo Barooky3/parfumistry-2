@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.request-order-approval]
 verify_jwt = false
+
+[functions.request-proof-of-payment]
+verify_jwt = false
