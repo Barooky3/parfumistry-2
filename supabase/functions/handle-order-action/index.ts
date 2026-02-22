@@ -180,56 +180,33 @@ async function sendWithBrevo(to: string, subject: string, htmlContent: string): 
   }
 }
 
-async function sendConfirmationEmail(
+async function sendConfirmationViaFunction(
+  supabaseUrl: string,
   customerEmail: string,
   customerName: string,
   items: OrderItem[],
   totalAmount: string,
   shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
 ): Promise<void> {
-  const year = new Date().getFullYear();
-  const addressText = [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ") || "N/A";
-
-  const itemRows = items.map((item) => {
-    const mlLabel = item.selectedMl ? ` - ${item.selectedMl}ml` : "";
-    return `<tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-family:Arial,sans-serif;">
-      <strong>${item.brand}</strong> - ${item.name}${mlLabel}<br/>
-      <span style="color:#666;">Qty: ${item.quantity} - EUR${(item.price * item.quantity).toFixed(2)}</span>
-    </td></tr>`;
-  }).join("");
-
-  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
-<div style="max-width:600px;margin:0 auto;background:#fff;">
-  <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
-    <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Premium Fragrances</p>
-  </div>
-  <div style="padding:32px;">
-    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Order Confirmed</h2>
-    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
-    <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">Thank you for your order! Your payment has been verified and your order is confirmed.</p>
-    <table style="width:100%;margin-bottom:16px;">
-      <tr><td style="padding:4px 0;color:#999;font-size:13px;width:100px;">Shipping to:</td><td style="padding:4px 0;font-size:13px;">${addressText}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;font-size:13px;">Total:</td><td style="padding:4px 0;font-size:13px;"><strong>EUR${totalAmount}</strong></td></tr>
-    </table>
-    <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:16px;">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Your Items</div>
-      <table style="width:100%;">${itemRows}</table>
-    </div>
-    <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
-      <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Questions? Contact us at<br>
-      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
-    </div>
-  </div>
-  <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
-  </div>
-</div>
-</body></html>`;
-
-  await sendWithBrevo(customerEmail, "Order Confirmed - ProfParfums", html);
+  const url = supabaseUrl + "/functions/v1/send-order-confirmation";
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + Deno.env.get("SUPABASE_ANON_KEY")!,
+    },
+    body: JSON.stringify({
+      orderItems: items,
+      customerEmail,
+      customerName,
+      shippingAddress,
+      totalAmount,
+    }),
+  });
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error("send-order-confirmation error: " + errBody);
+  }
 }
 
 serve(async (req) => {
@@ -272,7 +249,8 @@ serve(async (req) => {
       const items = (order.order_items as unknown as OrderItem[]) || [];
 
       // Send confirmation to customer
-      await sendConfirmationEmail(
+      await sendConfirmationViaFunction(
+        supabaseUrl,
         order.customer_email,
         order.customer_name || "Valued Customer",
         items,
