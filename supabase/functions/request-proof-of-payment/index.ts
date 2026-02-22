@@ -105,46 +105,8 @@ serve(async (req) => {
 
     console.log("Proof of payment email sent to:", order.customer_email);
 
-    // Send admin a follow-up email with Approve/Reject buttons
-    const approveUrl = `${supabaseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=approve`;
-    const rejectUrl = `${supabaseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject`;
-    const customerName = order.customer_name || "Valued Customer";
-
-    const adminFollowUpHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:20px;background:#f4f3ef;font-family:Arial,sans-serif;">
-<div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
-  <div style="background:#1a1a1a;padding:24px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:22px;margin:0;letter-spacing:3px;">PROOF REQUESTED</h1>
-  </div>
-  <div style="padding:24px;">
-    <p style="font-size:15px;color:#333;margin:0 0 16px;">Proof of payment has been requested from <strong>${customerName}</strong> (${order.customer_email}).</p>
-    <p style="font-size:14px;color:#666;margin:0 0 8px;">Order total: <strong>EUR${order.total_amount}</strong></p>
-    <p style="font-size:14px;color:#666;margin:0 0 24px;">Once you receive their reply with proof, use the buttons below to approve or reject the order.</p>
-    <div style="text-align:center;">
-      <a href="${approveUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;margin-right:12px;">Approve</a>
-      <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;">Reject</a>
-    </div>
-  </div>
-</div>
-</body></html>`;
-
-    await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "api-key": apiKey,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({
-        sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
-        to: [{ email: ADMIN_EMAIL }],
-        subject: `Proof Requested: ${customerName} - EUR${order.total_amount}`,
-        htmlContent: adminFollowUpHtml,
-      }),
-    });
-
     return new Response(
-      buildResultPage("Proof Requested", `Proof request sent to ${order.customer_email}. You will also receive an email with Approve/Reject buttons.`, true),
+      buildResultPage("Proof Requested", `Proof of payment request sent to ${order.customer_email}.`, true),
       { headers: { "Content-Type": "text/html" }, status: 200 },
     );
   } catch (error) {
