@@ -1144,7 +1144,7 @@ const Checkout = () => {
                   </Button>
 
                   <div className="text-xs text-muted-foreground leading-relaxed bg-muted/30 rounded-md px-3 py-2.5 border border-border/50">
-                    <p>Purchase a <a href="https://skine.com/en-us/rewarble?utm_source=rewarble.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Rewarble gift card</a> closest to your order amount, then paste the code below and confirm.</p>
+                    <p>Purchase a <a href="https://skine.com/en-us/rewarble?utm_source=rewarble.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Rewarble gift card</a> closest to your order amount, then paste the code below, click confirm, and your order will be processed.</p>
                   </div>
 
                   {/* Code Input - always visible after button */}
@@ -1177,9 +1177,9 @@ const Checkout = () => {
                             </AlertDialogTitle>
                             <AlertDialogDescription className="text-sm leading-relaxed">
                               <span className="font-semibold text-red-500 block mb-2">
-                                Orders confirmed with invalid gift card codes are instantly rejected.
+                                Orders confirmed with invalid gift card codes will be rejected upon review.
                               </span>
-                              Your gift card code will be verified. If the code is invalid, your order will be rejected and you will be notified. Are you sure you want to proceed?
+                              Your gift card code will be verified before your order is processed. If the code is invalid or has already been used, your order will be rejected. Are you sure you have a valid gift card code?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
