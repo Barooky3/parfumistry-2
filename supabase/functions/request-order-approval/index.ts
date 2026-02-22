@@ -70,48 +70,9 @@ function buildApprovalEmailHtml(
       <table style="width:100%;">${itemRows}</table>
     </div>
     ${paymentMethod === "rewarble" && giftCardCode ? `<div style="background:#fef3c7;border:2px solid #f59e0b;padding:16px 20px;border-radius:8px;margin-bottom:16px;">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:6px;font-weight:600;">🎁 Rewarble Gift Card Code</div>
-      <div style="font-size:20px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
-      <p style="font-size:12px;color:#a16207;margin:8px 0 0;">Please verify this gift card code before approving.</p>
-    </div>` : ""}
-    <div style="text-align:center;padding:20px 0;">
-      <a href="${approveUrl}" style="display:inline-block;padding:14px 40px;background:#16a34a;color:#fff;text-decoration:none;border-radius:6px;font-size:16px;font-weight:600;margin-right:12px;">✅ APPROVE</a>
-      <a href="${rejectUrl}" style="display:inline-block;padding:14px 40px;background:#dc2626;color:#fff;text-decoration:none;border-radius:6px;font-size:16px;font-weight:600;">❌ REJECT</a>
-    </div>
-  </div>
-</div>
-</body></html>`;
-}
-
-function buildAdminInvoiceHtml(
-  customerName: string,
-  customerEmail: string,
-  items: OrderItem[],
-  totalAmount: string,
-  billingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
-  paymentMethod: string,
-  giftCardCode?: string,
-): string {
-  const year = new Date().getFullYear();
-  const now = new Date();
-  const orderDate = now.toLocaleString("en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Amsterdam" });
-  const invoiceNo = "INV-" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "-" + String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0") + String(now.getSeconds()).padStart(2, "0");
-  const addressText = [billingAddress.line1, billingAddress.city, billingAddress.postalCode, billingAddress.country].filter(Boolean).join(", ") || "N/A";
-
-  const itemRows = items.map((item, i) => {
-    const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
-    const lineTotal = (item.price * item.quantity).toFixed(2);
-    const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
-    return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <span style="color:#c9a96e;font-weight:500;">(link)</span></td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
-    </tr>`;
-  }).join("");
-
-  const giftCardSection = giftCardCode ? `<div style="background:#fef3c7;border:2px solid #f59e0b;padding:12px 16px;border-radius:8px;margin-bottom:20px;">
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:4px;font-weight:600;">🎁 Gift Card Code</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:6px;font-weight:600;">🎁 Rewarble Code</div>
+...
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:4px;font-weight:600;">🎁 Rewarble Code</div>
     <div style="font-size:18px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
   </div>` : "";
 
@@ -308,7 +269,7 @@ serve(async (req) => {
       giftCardCode,
     );
 
-    const emailPrefix = paymentMethod === "rewarble" ? "🎁 Gift Card Order" : "🔔 Order Approval";
+    const emailPrefix = paymentMethod === "rewarble" ? "🎁 Rewarble Order" : "🔔 Order Approval";
     await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} — €${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);

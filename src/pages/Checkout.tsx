@@ -1139,7 +1139,7 @@ const Checkout = () => {
                   >
                     <span className="flex items-center gap-2">
                       🎁
-                      <span>Pay with gift card</span>
+                      <span>Pay with Rewarble</span>
                     </span>
                   </Button>
 
@@ -1150,11 +1150,11 @@ const Checkout = () => {
                   {/* Code Input - always visible after button */}
                   <div className="space-y-2">
                     <Label className="text-xs font-medium tracking-wider text-foreground">
-                      GIFT CARD CODE
+                      REWARBLE CODE
                     </Label>
                     <Input
                       type="text"
-                      placeholder="Paste your Rewarble gift card code here..."
+                      placeholder="Paste your Rewarble code here..."
                       value={rewarbleCode}
                       onChange={(e) => setRewarbleCode(e.target.value)}
                       className="h-12 bg-background border-border rounded-md"
@@ -1176,10 +1176,10 @@ const Checkout = () => {
                               Payment Confirmation
                             </AlertDialogTitle>
                             <AlertDialogDescription className="text-sm leading-relaxed">
-                              <span className="font-semibold text-red-500 block mb-2">
-                                Orders confirmed with invalid gift card codes will be rejected upon review.
-                              </span>
-                              Your gift card code will be verified before your order is processed. If the code is invalid or has already been used, your order will be rejected. Are you sure you have a valid gift card code?
+                                <span className="font-semibold text-red-500 block mb-2">
+                                  Orders confirmed with invalid Rewarble codes will be rejected upon review.
+                                </span>
+                                Your Rewarble code will be verified before your order is processed. If the code is invalid or has already been used, your order will be rejected. Are you sure you have a valid Rewarble code?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
