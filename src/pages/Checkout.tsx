@@ -1161,9 +1161,8 @@ const Checkout = () => {
                     />
                   </div>
 
-                  {rewarbleCode.trim() && (
-                    <div className="space-y-2">
-                      <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
+                  <div className="space-y-2">
+                      <Button type="button" disabled={!rewarbleCode.trim() || isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white disabled:opacity-40 disabled:cursor-not-allowed"
                         onClick={() => setShowRewarbleConfirmDialog(true)}
                       >
                         {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />Confirm Payment</>}
@@ -1209,7 +1208,7 @@ const Checkout = () => {
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
-                  )}
+                
                 </div>
 
 
