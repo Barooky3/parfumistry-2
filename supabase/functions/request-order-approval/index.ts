@@ -191,7 +191,7 @@ serve(async (req) => {
     );
 
     const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "S Revolut Order Approval";
+    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
     await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);

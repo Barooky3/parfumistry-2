@@ -1006,7 +1006,7 @@ const Checkout = () => {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
-                      window.open('https://revolut.me/stalidi', '_blank');
+                      window.open('https://revolut.me/khalidwd1w', '_blank');
                       setRevolutLinkOpened(true);
                     }}
                   >
@@ -1023,7 +1023,7 @@ const Checkout = () => {
                     </span>
                   </Button>
                   <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
-                    {t('general.poweredBy')}
+                    Powered by Revolut
                   </div>
                   <div className="flex items-center justify-center gap-2.5">
                     {/* Visa */}
