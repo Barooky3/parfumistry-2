@@ -200,7 +200,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.logout': 'Sign Out',
 
     // General
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Secure',
     'general.or': 'or',
     'general.information': 'Information',
@@ -346,7 +346,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Inloggen',
     'auth.signup': 'Registreren',
     'auth.logout': 'Uitloggen',
-    'general.poweredBy': 'Mogelijk gemaakt door Revolut',
+    'general.poweredBy': 'Mogelijk gemaakt door S Revolut',
     'general.secure': 'Beveiligd',
     'general.or': 'of',
     'general.information': 'Informatie',
@@ -492,7 +492,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Anmelden',
     'auth.signup': 'Registrieren',
     'auth.logout': 'Abmelden',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Sicher',
     'general.or': 'oder',
     'general.information': 'Information',
@@ -638,7 +638,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Connexion',
     'auth.signup': 'Inscription',
     'auth.logout': 'Déconnexion',
-    'general.poweredBy': 'Propulsé par Revolut',
+    'general.poweredBy': 'Propulsé par S Revolut',
     'general.secure': 'Sécurisé',
     'general.or': 'ou',
     'general.information': 'Information',
@@ -784,7 +784,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Iniciar Sesión',
     'auth.signup': 'Registrarse',
     'auth.logout': 'Cerrar Sesión',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Seguro',
     'general.or': 'o',
     'general.information': 'Información',
@@ -930,7 +930,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Accedi',
     'auth.signup': 'Registrati',
     'auth.logout': 'Esci',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Sicuro',
     'general.or': 'o',
     'general.information': 'Informazione',
@@ -1076,7 +1076,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Přihlásit se',
     'auth.signup': 'Registrovat se',
     'auth.logout': 'Odhlásit se',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Zabezpečeno',
     'general.or': 'nebo',
     'general.information': 'Informace',
@@ -1222,7 +1222,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Zaloguj się',
     'auth.signup': 'Zarejestruj się',
     'auth.logout': 'Wyloguj się',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Bezpieczne',
     'general.or': 'lub',
     'general.information': 'Informacje',
@@ -1368,7 +1368,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Iniciar Sessão',
     'auth.signup': 'Registar',
     'auth.logout': 'Terminar Sessão',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Seguro',
     'general.or': 'ou',
     'general.information': 'Informação',
@@ -1514,7 +1514,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Logga In',
     'auth.signup': 'Registrera',
     'auth.logout': 'Logga Ut',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Säker',
     'general.or': 'eller',
     'general.information': 'Information',
@@ -1660,7 +1660,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Log Ind',
     'auth.signup': 'Opret Konto',
     'auth.logout': 'Log Ud',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Sikker',
     'general.or': 'eller',
     'general.information': 'Information',
@@ -1806,7 +1806,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.login': 'Conectare',
     'auth.signup': 'Înregistrare',
     'auth.logout': 'Deconectare',
-    'general.poweredBy': 'Powered by Revolut',
+    'general.poweredBy': 'Powered by S Revolut',
     'general.secure': 'Securizat',
     'general.or': 'sau',
     'general.information': 'Informație',
@@ -1832,7 +1832,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Koku Notaları', 'productDetail.reviews': 'Değerlendirmeler', 'productDetail.delivery': 'Teslimat',
     'cart.title': 'Sepetiniz', 'cart.empty': 'Sepetiniz boş', 'cart.checkout': 'Ödeme', 'cart.remove': 'Kaldır',
     'auth.login': 'Giriş Yap', 'auth.signup': 'Kayıt Ol', 'auth.logout': 'Çıkış Yap',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Güvenli', 'general.or': 'veya', 'general.information': 'Bilgi', 'general.confirmation': 'Onay', 'general.step': 'Adım',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Güvenli', 'general.or': 'veya', 'general.information': 'Bilgi', 'general.confirmation': 'Onay', 'general.step': 'Adım',
   },
 
   RU: {
@@ -1853,7 +1853,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Ноты Аромата', 'productDetail.reviews': 'Отзывы', 'productDetail.delivery': 'Доставка',
     'cart.title': 'Корзина', 'cart.empty': 'Корзина пуста', 'cart.checkout': 'Оплата', 'cart.remove': 'Удалить',
     'auth.login': 'Войти', 'auth.signup': 'Регистрация', 'auth.logout': 'Выйти',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Безопасно', 'general.or': 'или', 'general.information': 'Информация', 'general.confirmation': 'Подтверждение', 'general.step': 'Шаг',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Безопасно', 'general.or': 'или', 'general.information': 'Информация', 'general.confirmation': 'Подтверждение', 'general.step': 'Шаг',
   },
 
   NO: {
@@ -1873,7 +1873,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Duftnoter', 'productDetail.reviews': 'Anmeldelser', 'productDetail.delivery': 'Levering',
     'cart.title': 'Din Handlekurv', 'cart.empty': 'Handlekurven er tom', 'cart.checkout': 'Betaling', 'cart.remove': 'Fjern',
     'auth.login': 'Logg Inn', 'auth.signup': 'Registrer', 'auth.logout': 'Logg Ut',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Sikker', 'general.or': 'eller', 'general.information': 'Informasjon', 'general.confirmation': 'Bekreftelse', 'general.step': 'Steg',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Sikker', 'general.or': 'eller', 'general.information': 'Informasjon', 'general.confirmation': 'Bekreftelse', 'general.step': 'Steg',
   },
 
   HU: {
@@ -1893,7 +1893,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Illatjegyek', 'productDetail.reviews': 'Értékelések', 'productDetail.delivery': 'Szállítás',
     'cart.title': 'Kosár', 'cart.empty': 'A kosár üres', 'cart.checkout': 'Fizetés', 'cart.remove': 'Eltávolítás',
     'auth.login': 'Bejelentkezés', 'auth.signup': 'Regisztráció', 'auth.logout': 'Kijelentkezés',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Biztonságos', 'general.or': 'vagy', 'general.information': 'Információ', 'general.confirmation': 'Megerősítés', 'general.step': 'Lépés',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Biztonságos', 'general.or': 'vagy', 'general.information': 'Információ', 'general.confirmation': 'Megerősítés', 'general.step': 'Lépés',
   },
 
   EL: {
@@ -1913,7 +1913,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Νότες Αρώματος', 'productDetail.reviews': 'Κριτικές', 'productDetail.delivery': 'Παράδοση',
     'cart.title': 'Το Καλάθι Σας', 'cart.empty': 'Το καλάθι είναι άδειο', 'cart.checkout': 'Πληρωμή', 'cart.remove': 'Αφαίρεση',
     'auth.login': 'Σύνδεση', 'auth.signup': 'Εγγραφή', 'auth.logout': 'Αποσύνδεση',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Ασφαλές', 'general.or': 'ή', 'general.information': 'Πληροφορίες', 'general.confirmation': 'Επιβεβαίωση', 'general.step': 'Βήμα',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Ασφαλές', 'general.or': 'ή', 'general.information': 'Πληροφορίες', 'general.confirmation': 'Επιβεβαίωση', 'general.step': 'Βήμα',
   },
 
   BG: {
@@ -1933,7 +1933,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Ароматни Ноти', 'productDetail.reviews': 'Отзиви', 'productDetail.delivery': 'Доставка',
     'cart.title': 'Вашата Кошница', 'cart.empty': 'Кошницата е празна', 'cart.checkout': 'Плащане', 'cart.remove': 'Премахни',
     'auth.login': 'Вход', 'auth.signup': 'Регистрация', 'auth.logout': 'Изход',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Сигурно', 'general.or': 'или', 'general.information': 'Информация', 'general.confirmation': 'Потвърждение', 'general.step': 'Стъпка',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Сигурно', 'general.or': 'или', 'general.information': 'Информация', 'general.confirmation': 'Потвърждение', 'general.step': 'Стъпка',
   },
 
   HR: {
@@ -1947,7 +1947,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Mirisne Note', 'productDetail.reviews': 'Recenzije', 'productDetail.delivery': 'Dostava',
     'cart.title': 'Vaša Košarica', 'cart.empty': 'Košarica je prazna', 'cart.checkout': 'Plaćanje', 'cart.remove': 'Ukloni',
     'auth.login': 'Prijava', 'auth.signup': 'Registracija', 'auth.logout': 'Odjava',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Sigurno', 'general.or': 'ili', 'general.information': 'Informacije', 'general.confirmation': 'Potvrda', 'general.step': 'Korak',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Sigurno', 'general.or': 'ili', 'general.information': 'Informacije', 'general.confirmation': 'Potvrda', 'general.step': 'Korak',
   },
 
   SK: {
@@ -1961,7 +1961,7 @@ const translations: Record<Language, Record<string, string>> = {
     'productDetail.scentNotes': 'Vôňové Nóty', 'productDetail.reviews': 'Recenzie', 'productDetail.delivery': 'Doručenie',
     'cart.title': 'Váš Košík', 'cart.empty': 'Košík je prázdny', 'cart.checkout': 'Platba', 'cart.remove': 'Odstrániť',
     'auth.login': 'Prihlásenie', 'auth.signup': 'Registrácia', 'auth.logout': 'Odhlásenie',
-    'general.poweredBy': 'Powered by Revolut', 'general.secure': 'Bezpečné', 'general.or': 'alebo', 'general.information': 'Informácie', 'general.confirmation': 'Potvrdenie', 'general.step': 'Krok',
+    'general.poweredBy': 'Powered by S Revolut', 'general.secure': 'Bezpečné', 'general.or': 'alebo', 'general.information': 'Informácie', 'general.confirmation': 'Potvrdenie', 'general.step': 'Krok',
   },
 };
 
