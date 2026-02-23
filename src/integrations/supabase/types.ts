@@ -53,6 +53,7 @@ export type Database = {
           email_sent: boolean
           id: string
           order_items: Json
+          order_number: number | null
           shipping_address: Json | null
           status: string
           sumup_checkout_id: string | null
@@ -70,6 +71,7 @@ export type Database = {
           email_sent?: boolean
           id?: string
           order_items: Json
+          order_number?: number | null
           shipping_address?: Json | null
           status?: string
           sumup_checkout_id?: string | null
@@ -87,6 +89,7 @@ export type Database = {
           email_sent?: boolean
           id?: string
           order_items?: Json
+          order_number?: number | null
           shipping_address?: Json | null
           status?: string
           sumup_checkout_id?: string | null

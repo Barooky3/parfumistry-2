@@ -27,6 +27,7 @@ interface Order {
   shipping_address: any;
   checkout_reference: string;
   created_at: string;
+  order_number: number | null;
 }
 
 export default function AdminOrders() {
@@ -159,6 +160,7 @@ export default function AdminOrders() {
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
+                        <span className="text-xs font-mono bg-muted px-2 py-0.5 rounded">#{order.order_number || '—'}</span>
                         <h3 className="font-semibold text-base">{order.customer_name}</h3>
                         <Badge className={statusColors[order.status] || "bg-gray-100 text-gray-800"}>
                           {order.status.replace("_", " ")}
