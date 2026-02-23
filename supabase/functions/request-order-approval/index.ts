@@ -35,6 +35,7 @@ function buildApprovalEmailHtml(
   baseUrl: string,
   paymentMethod?: string,
   giftCardCode?: string,
+  orderNumber?: number | null,
 ): string {
   const approveUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=approve`;
   const rejectUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject`;
@@ -52,6 +53,10 @@ function buildApprovalEmailHtml(
     ? [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ")
     : "N/A";
 
+  const orderNumRow = orderNumber
+    ? `<tr><td style="padding:4px 0;color:#999;width:120px;">Order #:</td><td style="padding:4px 0;"><strong>#${orderNumber}</strong></td></tr>`
+    : "";
+
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:20px;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
@@ -61,11 +66,19 @@ function buildApprovalEmailHtml(
   <div style="padding:24px;">
     <p style="font-size:15px;color:#333;margin:0 0 16px;">A new order needs your approval before the confirmation email is sent to the customer.</p>
     <table style="width:100%;margin-bottom:16px;font-size:14px;">
+      ${orderNumRow}
       <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
       <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${customerEmail}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Total:</td><td style="padding:4px 0;"><strong>€${totalAmount}</strong></td></tr>
     </table>
+    <div style="text-align:center;margin-top:24px;margin-bottom:16px;">
+      <a href="${approveUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;margin-right:12px;">Approve</a>
+      <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;">Reject</a>
+    </div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <a href="${proofUrl}" style="display:inline-block;background:#2563eb;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:500;font-size:13px;">Request Proof of Payment</a>
+    </div>
     <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:16px;">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Order Items</div>
       <table style="width:100%;">${itemRows}</table>
@@ -74,13 +87,6 @@ function buildApprovalEmailHtml(
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#92400e;margin-bottom:6px;font-weight:600;">Rewarble Code</div>
       <div style="font-size:18px;font-weight:700;color:#92400e;letter-spacing:2px;font-family:monospace;">${giftCardCode}</div>
     </div>` : ""}
-    <div style="text-align:center;margin-top:24px;">
-      <a href="${approveUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;margin-right:12px;">Approve</a>
-      <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:16px;">Reject</a>
-    </div>
-    <div style="text-align:center;margin-top:12px;">
-      <a href="${proofUrl}" style="display:inline-block;background:#2563eb;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:500;font-size:13px;">Request Proof of Payment</a>
-    </div>
   </div>
 </div>
 </body></html>`;
@@ -162,7 +168,7 @@ serve(async (req) => {
       status: "pending_approval",
       approval_token: token,
       email_sent: false,
-    }).select("id").single();
+    }).select("id, order_number").single();
 
     if (dbError || !order) {
       console.error("Failed to store order:", dbError);
@@ -181,10 +187,12 @@ serve(async (req) => {
       supabaseUrl,
       paymentMethod,
       giftCardCode,
+      order.order_number,
     );
 
+    const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
     const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
-    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);
 

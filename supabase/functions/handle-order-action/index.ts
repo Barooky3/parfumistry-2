@@ -32,7 +32,7 @@ function buildResultPage(title: string, message: string, success: boolean): stri
 </body></html>`;
 }
 
-function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = false): string {
+function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = false, orderNumber?: number | null): string {
   const year = new Date().getFullYear();
   const reason = isGiftCard
     ? "Unfortunately, the Rewarble code you provided for your recent order could not be verified and is invalid. Your order has been cancelled."
@@ -40,6 +40,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   const nextStep = isGiftCard
     ? "If you believe this is an error, please contact us and we'll be happy to assist you."
     : "Please try again and ensure the payment is completed successfully before confirming your order. If the issue persists, feel free to reach out to us for assistance.";
+  const orderNumText = orderNumber ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${orderNumber}</strong></p>` : "";
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
@@ -49,12 +50,13 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   </div>
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
+    ${orderNumText}
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
-      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
+      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a>${orderNumber ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : ''}</p>
     </div>
   </div>
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
@@ -187,6 +189,7 @@ async function sendConfirmationViaFunction(
   items: OrderItem[],
   totalAmount: string,
   shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
+  orderNumber?: number | null,
 ): Promise<void> {
   const url = supabaseUrl + "/functions/v1/send-order-confirmation";
   const res = await fetch(url, {
@@ -201,6 +204,7 @@ async function sendConfirmationViaFunction(
       customerName,
       shippingAddress,
       totalAmount,
+      orderNumber,
     }),
   });
   if (!res.ok) {
@@ -256,6 +260,7 @@ serve(async (req) => {
         items,
         order.total_amount.toString(),
         (order.shipping_address as any) || {},
+        order.order_number,
       );
 
       // Send admin invoice
@@ -271,7 +276,8 @@ serve(async (req) => {
         pmLabel,
         giftCardCode,
       );
-      await sendWithBrevo(ADMIN_EMAIL, "Invoice: " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount, invoiceHtml);
+      const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
+      await sendWithBrevo(ADMIN_EMAIL, "Invoice" + orderNumLabel + ": " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount, invoiceHtml);
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 
@@ -283,8 +289,9 @@ serve(async (req) => {
       await supabase.from("orders").update({ status: "rejected" }).eq("id", orderId);
 
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard);
-      await sendWithBrevo(order.customer_email, "Order Update - ProfParfums", rejectionHtml);
+      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number);
+      const rejSubject = order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums";
+      await sendWithBrevo(order.customer_email, rejSubject, rejectionHtml);
 
       console.log("Order rejected and customer notified:", orderId);
 

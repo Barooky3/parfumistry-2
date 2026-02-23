@@ -153,7 +153,7 @@ serve(async (req) => {
             body: JSON.stringify({
               sender: { name: "ProfParfums", email: "orders@profparfum.com" },
               to: [{ email: order.customer_email }],
-              subject: "Order Update - ProfParfums",
+              subject: order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums",
               htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
@@ -161,9 +161,10 @@ serve(async (req) => {
   </div>
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
+    ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
     <p style="font-size:15px;color:#333;">Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
     <p style="font-size:14px;color:#666;">${reason}</p>
-    <p style="font-size:14px;color:#666;">Please try again or contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>.</p>
+    <p style="font-size:14px;color:#666;">Please try again or contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>${order.order_number ? `. Please reference order <strong>#${order.order_number}</strong>.` : ""}</p>
   </div>
 </div></body></html>`,
             }),
