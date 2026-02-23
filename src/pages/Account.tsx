@@ -22,6 +22,8 @@ interface Order {
   order_number: number | null;
 }
 
+const ADMIN_EMAIL = 'ewhz3384@gmail.com';
+
 const Account = () => {
   const { user, loading, signOut } = useAuth();
   const { formatPrice } = useCurrency();
@@ -83,6 +85,18 @@ const Account = () => {
           <div className="flex-1 min-w-0">
             <h1 className="font-display text-2xl md:text-3xl text-foreground">{displayName}</h1>
             <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+            {user.email === ADMIN_EMAIL && (
+              <Button
+                variant="link"
+                className="p-0 h-auto text-accent text-xs mt-1 flex items-center gap-1"
+                asChild
+              >
+                <Link to="/admin/orders">
+                  <ExternalLink className="h-3 w-3" />
+                  Admin Orders Dashboard
+                </Link>
+              </Button>
+            )}
           </div>
           <Button
             variant="outline"
