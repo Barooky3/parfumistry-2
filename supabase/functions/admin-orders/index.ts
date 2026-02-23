@@ -103,6 +103,7 @@ serve(async (req) => {
             customerName: order.customer_name,
             shippingAddress: order.shipping_address,
             totalAmount: order.total_amount.toString(),
+            orderNumber: order.order_number,
           }),
         });
         if (!confRes.ok) {
@@ -116,7 +117,8 @@ serve(async (req) => {
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
           const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
-          const invoiceSubject = "Invoice: " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
+          const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
+          const invoiceSubject = "Invoice: Order" + orderNumLabel + " - " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
           // Use minimal invoice notification
           await fetch("https://api.brevo.com/v3/smtp/email", {
             method: "POST",

@@ -168,8 +168,13 @@ function buildEmailHtml(
   itemsHtml: string,
   totalAmount: string,
   shippingAddress: { line1: string; city: string; postalCode: string; country: string },
+  orderNumber?: number | null,
 ): string {
   const year = new Date().getFullYear();
+  const orderNumDisplay = orderNumber ? `#${orderNumber}` : "";
+  const orderNumSection = orderNumber
+    ? `<p style="font-size: 13px; color: #999; margin: 0 0 8px 0;">Order Number: <strong style="color: #1a1a1a; font-size: 15px;">#${orderNumber}</strong></p>`
+    : "";
   return [
     '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>',
     '<body style="margin: 0; padding: 0; background-color: #f4f3ef; font-family: Helvetica Neue, Arial, sans-serif;">',
@@ -192,6 +197,7 @@ function buildEmailHtml(
     '</div>',
 
     '<div style="padding: 32px 32px 0 32px;">',
+    orderNumSection,
     '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
     '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products. Click on any product to access it.</p>',
     '</div>',
@@ -210,7 +216,7 @@ function buildEmailHtml(
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
-    '<a href="mailto:support@profparfums.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@profparfums.com</a></p>',
+    '<a href="mailto:support@profparfums.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@profparfums.com</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
     '</div></div>',
 
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
@@ -376,12 +382,13 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount } = body as {
+    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount, orderNumber } = body as {
       orderItems: (OrderItem | { product: { name: string; brand: string; image: string; price: number }; quantity: number; selectedMl?: number; selectedPrice?: number })[];
       customerEmail: string;
       customerName: string;
       shippingAddress: { line1: string; city: string; postalCode: string; country: string };
       totalAmount: string;
+      orderNumber?: number | null;
     };
 
     if (!customerEmail) throw new Error("Customer email is required");
@@ -406,9 +413,10 @@ serve(async (req) => {
     const origin = "https://profparfums.lovable.app";
     const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin)).join("");
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" });
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber);
 
-    await sendWithBrevo(customerEmail, "Order Confirmed - ProfParfums", html);
+    const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
+    await sendWithBrevo(customerEmail, emailSubject, html);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -31,7 +31,8 @@ const Contact = () => {
             <p className="text-xs tracking-[0.3em] text-muted-foreground font-medium mb-4 uppercase">Get in Touch</p>
             <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Contact Us</h1>
             <p className="text-muted-foreground">
-              Have a question or need assistance? We're here to help.
+              Have a question or need assistance? We're here to help.<br />
+              <span className="text-sm">If your enquiry is about an order, please include your order number (e.g. #1002) in your message.</span>
             </p>
           </div>
 

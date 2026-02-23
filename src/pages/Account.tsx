@@ -19,6 +19,7 @@ interface Order {
   total_amount: number;
   order_items: OrderItem[];
   created_at: string;
+  order_number: number | null;
 }
 
 const Account = () => {
@@ -120,8 +121,8 @@ const Account = () => {
                   <div key={order.id} className="border border-border bg-background p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <p className="text-xs text-muted-foreground font-mono">
-                          #{order.checkout_reference}
+                        <p className="text-xs text-foreground font-mono font-semibold">
+                          Order #{order.order_number || '—'}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(order.created_at).toLocaleDateString('en-GB', {
