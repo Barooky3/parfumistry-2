@@ -3,8 +3,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const ADMIN_EMAIL = "ewhz3384@gmail.com";
 
-function buildProofRequestEmailHtml(customerName: string, totalAmount: string): string {
+function buildProofRequestEmailHtml(customerName: string, totalAmount: string, orderNumber?: number | null): string {
   const year = new Date().getFullYear();
+  const orderNumText = orderNumber ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${orderNumber}</strong></p>` : "";
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
@@ -14,13 +15,14 @@ function buildProofRequestEmailHtml(customerName: string, totalAmount: string): 
   </div>
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Proof of Payment Required</h2>
+    ${orderNumText}
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">Thank you for your order of <strong>€${totalAmount}</strong>. To process your order, we need to verify your payment.</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">Please <strong>reply to this email</strong> with a screenshot or photo of your payment confirmation (e.g. bank transfer receipt, transaction confirmation).</p>
     <div style="background:#eff6ff;border:2px solid #2563eb;padding:16px 20px;border-radius:8px;margin-bottom:24px;">
       <p style="font-size:13px;color:#1e40af;margin:0;line-height:1.6;">📸 <strong>How to send proof:</strong><br/>Simply reply to this email and attach a screenshot or photo of your payment. You can use your phone's camera or take a screenshot of your banking app.</p>
     </div>
-    <p style="font-size:13px;color:#999;line-height:1.6;margin:0;">Once verified, we'll confirm your order and send you a confirmation email with all the details.</p>
+    <p style="font-size:13px;color:#999;line-height:1.6;margin:0;">Once verified, we'll confirm your order and send you a confirmation email with all the details.${orderNumber ? ' Please reference order <strong>#' + orderNumber + '</strong> in your reply.' : ''}</p>
   </div>
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
     <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
@@ -77,6 +79,7 @@ serve(async (req) => {
     const html = buildProofRequestEmailHtml(
       order.customer_name || "Valued Customer",
       order.total_amount.toString(),
+      order.order_number,
     );
 
     const apiKey = Deno.env.get("BREVO_API_KEY");
@@ -93,7 +96,7 @@ serve(async (req) => {
         sender: { name: "ProfParfums", email: "orders@profparfum.com" },
         to: [{ email: order.customer_email }],
         replyTo: { email: ADMIN_EMAIL },
-        subject: "Proof of Payment Required — ProfParfums",
+        subject: order.order_number ? `Proof of Payment Required — Order #${order.order_number} — ProfParfums` : "Proof of Payment Required — ProfParfums",
         htmlContent: html,
       }),
     });
