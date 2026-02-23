@@ -1142,6 +1142,23 @@ const Checkout = () => {
                       <span>Pay with Rewarble</span>
                     </span>
                   </Button>
+                  <div className="flex items-center justify-center gap-2.5">
+                    {/* Visa */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
+                    </svg>
+                    {/* iDEAL */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
+                      <text x="24" y="20" textAnchor="middle" fill="#CC0066" fontSize="10" fontWeight="bold" fontFamily="Arial, sans-serif">iDEAL</text>
+                    </svg>
+                    {/* Revolut */}
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#191C1F" stroke="#333"/>
+                      <path d="M28.25 8H20.77L20.27 10.69H25.7C27.89 10.69 29.1 11.82 29.1 13.67C29.1 15.86 27.51 17.71 25.32 17.71H22.08L18.5 28H21.33L23.83 19.53H25.56C29.46 19.53 32.06 16.82 32.06 13.33C32.06 10.11 30.18 8 28.25 8Z" fill="white" transform="scale(0.7) translate(6, 2)"/>
+                    </svg>
+                  </div>
 
                   <div className="text-xs text-muted-foreground leading-relaxed bg-muted/30 rounded-md px-3 py-2.5 border border-border/50">
                     <p>Purchase a <a href="https://skine.com/en-us/rewarble?utm_source=rewarble.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Rewarble gift card</a> closest to your order amount, then paste the code below, click confirm, and your order will be processed.</p>
