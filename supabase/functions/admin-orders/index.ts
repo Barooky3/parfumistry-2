@@ -116,7 +116,7 @@ serve(async (req) => {
         const apiKey = Deno.env.get("BREVO_API_KEY");
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-          const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
+          const pmLabel = isGiftCard ? "Rewarble (Verified)" : "S Revolut Transfer (Verified)";
           const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
           const invoiceSubject = "Invoice: Order" + orderNumLabel + " - " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
           // Use minimal invoice notification

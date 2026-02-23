@@ -265,7 +265,7 @@ serve(async (req) => {
 
       // Send admin invoice
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-      const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
+      const pmLabel = isGiftCard ? "Rewarble (Verified)" : "S Revolut Transfer (Verified)";
       const giftCardCode = isGiftCard ? order.checkout_reference?.replace("rewarble-", "") : undefined;
       const invoiceHtml = buildAdminInvoiceHtml(
         order.customer_name || "Valued Customer",
