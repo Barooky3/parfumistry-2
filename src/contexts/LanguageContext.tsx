@@ -1975,17 +1975,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 const SUPPORTED_LANGS: Language[] = ['EN', 'NL', 'DE', 'FR', 'ES', 'IT', 'CS', 'PL', 'PT', 'SV', 'DA', 'RO', 'TR', 'RU', 'NO', 'HU', 'EL', 'BG', 'HR', 'SK'];
 
-function detectBrowserLanguage(): Language {
-  const browserLang = navigator.language?.substring(0, 2).toUpperCase();
-  if (SUPPORTED_LANGS.includes(browserLang as Language)) return browserLang as Language;
-  return 'EN';
-}
-
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('preferred-language');
     if (saved && SUPPORTED_LANGS.includes(saved as Language)) return saved as Language;
-    return detectBrowserLanguage();
+    return 'EN';
   });
 
   const setLanguage = (lang: Language) => {
