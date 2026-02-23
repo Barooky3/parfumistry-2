@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User, ChevronDown, LogOut, Globe } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency, CURRENCIES, Currency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage, LANGUAGES, Language } from '@/contexts/LanguageContext';
+import { useLanguage, Language } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/layout/LanguageSelector';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -28,10 +29,8 @@ export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [currencyOpen, setCurrencyOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
   const currencyRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
-  const langRef = useRef<HTMLDivElement>(null);
 
   // Close currency dropdown on outside click
   useEffect(() => {
@@ -41,9 +40,6 @@ export const Header = () => {
       }
       if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
         setAccountOpen(false);
-      }
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClick);
@@ -138,42 +134,7 @@ export const Header = () => {
             </div>
 
             {/* Language Dropdown */}
-            <div ref={langRef} className="relative hidden md:block mr-1">
-              <button
-                onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-sm text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
-              >
-                {LANGUAGES.find(l => l.code === language)?.flag} {language}
-                <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition-transform', langOpen && 'rotate-180')} />
-              </button>
-              <AnimatePresence>
-                {langOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-1 bg-background border border-border rounded-sm shadow-lg z-50 max-h-64 overflow-y-auto min-w-[120px]"
-                  >
-                    {LANGUAGES.map((l) => (
-                      <button
-                        key={l.code}
-                        onClick={() => { setLanguage(l.code); setLangOpen(false); }}
-                        className={cn(
-                          'w-full text-left px-3 py-2 text-xs font-medium transition-colors flex items-center gap-2',
-                          language === l.code
-                            ? 'bg-secondary text-foreground'
-                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                        )}
-                      >
-                        <span>{l.flag}</span>
-                        <span>{l.label}</span>
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <LanguageSelector />
 
             {/* Account */}
             {user ? (
@@ -292,20 +253,7 @@ export const Header = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: (navLinkKeys.length + 1) * 0.05, duration: 0.3 }}
               >
-                <div className="py-3">
-                  <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value as Language)}
-                    className="bg-background border border-border text-foreground text-sm font-medium px-3 py-2 pr-8 appearance-none"
-                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
-                  >
-                    {LANGUAGES.map((l) => (
-                      <option key={l.code} value={l.code}>
-                        {l.flag} {l.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <LanguageSelector mobile />
               </motion.div>
               {/* Mobile Currency Selector */}
               <motion.div
