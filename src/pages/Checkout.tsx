@@ -1023,7 +1023,7 @@ const Checkout = () => {
                     </span>
                   </Button>
                   <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
-                    {t('general.poweredBy')}
+                    Powered by Revolut
                   </div>
                   <div className="flex items-center justify-center gap-2.5">
                     {/* Visa */}
