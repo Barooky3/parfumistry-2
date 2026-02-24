@@ -850,13 +850,13 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
-    imagePadding: 'p-16',
+    imagePadding: 'p-20',
     affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
       { ml: 40, price: 7.99, originalPrice: 31.96, inStock: true },
       { ml: 60, price: 9.99, originalPrice: 39.96, inStock: true },
-      { ml: 100, price: 15.99, originalPrice: 63.96, inStock: true },
+      { ml: 100, price: 13.99, originalPrice: 63.96, inStock: true },
     ],
   },
   {
