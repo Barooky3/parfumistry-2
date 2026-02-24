@@ -52,9 +52,16 @@ export const BundleSection = () => {
                     {bundle.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold text-foreground">
-                      From €{bundle.price.toFixed(2)}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-semibold text-foreground">
+                        From €{bundle.price.toFixed(2)}
+                      </span>
+                      {bundle.originalPrice && (
+                        <span className="text-sm text-muted-foreground line-through">
+                          €{bundle.originalPrice.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
                     <Button 
                       variant="outline"
                       size="sm"
