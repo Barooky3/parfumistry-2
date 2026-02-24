@@ -116,7 +116,9 @@ serve(async (req) => {
         const apiKey = Deno.env.get("RESEND_API_KEY");
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-          const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
+          const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
+          const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
+          const pmLabel = isGiftCard ? "Rewarble (Verified)" : isRevolutApp ? "Revolut App (Verified)" : isBankTransfer ? "Bank Transfer (Verified)" : "Revolut Transfer (Verified)";
           const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
           const invoiceSubject = "Invoice: Order" + orderNumLabel + " - " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
           await fetch("https://api.resend.com/emails", {
@@ -142,8 +144,14 @@ serve(async (req) => {
         const apiKey = Deno.env.get("RESEND_API_KEY");
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
+          const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
+          const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
           const reason = isGiftCard
             ? "Unfortunately, the Rewarble code you provided could not be verified. Your order has been cancelled."
+            : isRevolutApp
+            ? "Unfortunately, your Revolut payment could not be verified. Your order has been cancelled."
+            : isBankTransfer
+            ? "Unfortunately, your bank transfer could not be verified. Your order has been cancelled."
             : "Unfortunately, your payment could not be verified. No money has been taken from your account.";
 
           await fetch("https://api.resend.com/emails", {
