@@ -78,10 +78,7 @@ const BankTransfer = () => {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
             <Building2 className="h-7 w-7 text-primary" />
           </div>
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">Bank Transfer</h1>
-          <p className="text-sm text-muted-foreground">
-            Transfer the exact amount to our account using the details below.
-          </p>
+          <h1 className="font-display text-2xl font-semibold text-foreground">Bank Transfer</h1>
         </div>
 
         {/* Order total if available */}

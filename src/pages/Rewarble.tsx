@@ -74,10 +74,7 @@ const Rewarble = () => {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#7C3AED]/10 mb-4">
             <Gift className="h-7 w-7 text-[#7C3AED]" />
           </div>
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">Pay with Rewarble</h1>
-          <p className="text-sm text-muted-foreground">
-            Purchase a Rewarble gift card and paste the code below to complete your order.
-          </p>
+          <h1 className="font-display text-2xl font-semibold text-foreground">Pay with Rewarble</h1>
         </div>
 
         {/* Order total */}

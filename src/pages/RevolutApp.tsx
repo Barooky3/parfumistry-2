@@ -72,10 +72,7 @@ const RevolutApp = () => {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#191C1F]/10 mb-4">
             <Smartphone className="h-7 w-7 text-[#191C1F] dark:text-white" />
           </div>
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">Pay with Revolut</h1>
-          <p className="text-sm text-muted-foreground">
-            Send money directly through your Revolut app using our Revtag.
-          </p>
+          <h1 className="font-display text-2xl font-semibold text-foreground">Pay with Revolut</h1>
         </div>
 
         {/* Order total */}
