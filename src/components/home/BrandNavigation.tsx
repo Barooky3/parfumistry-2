@@ -5,6 +5,7 @@ const brands = [
   { name: 'Versace', slug: 'versace' },
   { name: 'JPG', slug: 'jpg' },
   { name: 'YSL', slug: 'ysl' },
+  { name: 'Valentino', slug: 'valentino' },
   { name: 'Azzaro', slug: 'azzaro' },
   { name: 'Armani', slug: 'armani' },
   { name: 'LouisV', slug: 'lv' },
