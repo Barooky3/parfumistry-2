@@ -850,8 +850,8 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
-    imagePadding: 'p-10',
-    affiliateUrl: 'https://profparfums.store/products/ysl-y-edp',
+    imagePadding: 'p-16',
+    affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
       { ml: 40, price: 7.99, originalPrice: 31.96, inStock: true },
