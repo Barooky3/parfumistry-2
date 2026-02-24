@@ -1018,19 +1018,12 @@ const Checkout = () => {
                   and we'll help you out!
                 </p>
 
+                {/* Revolut - TEMPORARILY DOWN */}
                 <div className="space-y-1.5">
                   <Button
                     type="button"
-                    disabled={!isFormValid() || isProcessing}
-                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2A2D31] text-white shadow-lg border border-white/10 relative overflow-hidden"
-                    onClick={() => {
-                      if (!isFormValid()) {
-                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
-                        return;
-                      }
-                      window.open('https://revolut.me/stalidi', '_blank');
-                      setRevolutLinkOpened(true);
-                    }}
+                    disabled={true}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] text-white shadow-lg border border-white/10 relative overflow-hidden opacity-50 cursor-not-allowed"
                   >
                     <span className="flex items-center gap-2">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1044,106 +1037,18 @@ const Checkout = () => {
                       Secure
                     </span>
                   </Button>
-                  <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground/50 mb-0.5">
-                    Powered by Revolut
-                  </div>
-                  <div className="flex items-center justify-center gap-2.5">
-                    {/* Visa */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
-                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
-                    </svg>
-                    {/* Mastercard */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#252525" stroke="#444"/>
-                      <circle cx="18" cy="16" r="9" fill="#EB001B"/>
-                      <circle cx="30" cy="16" r="9" fill="#F79E1B"/>
-                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#FF5F00"/>
-                    </svg>
-                    {/* Maestro */}
-                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <circle cx="18" cy="16" r="9" fill="#0099DF"/>
-                      <circle cx="30" cy="16" r="9" fill="#ED1C24"/>
-                      <path d="M24 9.2A9 9 0 0 1 27 16a9 9 0 0 1-3 6.8A9 9 0 0 1 21 16a9 9 0 0 1 3-6.8z" fill="#7375CF"/>
-                    </svg>
-                    {/* Apple Pay */}
-                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="35" height="23" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <path d="M12.43 7.94c-.34.4-.88.72-1.42.67-.07-.54.2-1.11.5-1.46.34-.4.93-.7 1.41-.72.06.56-.16 1.12-.49 1.51zm.49.77c-.78-.05-1.45.45-1.82.45-.37 0-.94-.42-1.56-.41-.8.01-1.54.47-1.95 1.19-.84 1.45-.22 3.6.59 4.78.4.58.87 1.22 1.49 1.2.6-.02.82-.39 1.54-.39.72 0 .92.39 1.55.38.64-.01 1.05-.59 1.44-1.17.45-.67.64-1.32.65-1.35-.01-.01-1.25-.49-1.26-1.93-.01-1.2.98-1.78 1.02-1.81-.56-.82-1.42-.91-1.73-.93l.04-.01z" fill="black"/>
-                      <text x="23.5" y="15.8" fill="black" textAnchor="middle" fontSize="8.5" fontWeight="600" fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" letterSpacing="-0.2">Pay</text>
-                    </svg>
-                  </div>
+                  <p className="text-xs text-center text-red-400 font-medium mt-1">
+                    ⚠️ Revolut payments are temporarily unavailable. Please use Rewarble below.
+                  </p>
                 </div>
 
-                <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm">
-                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500 mt-0.5 shrink-0" />
-                  <div className="text-muted-foreground leading-relaxed">
-                    <p>
-                      {t('checkout.revolutPopupText1')} <strong className="text-amber-500">€{(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice).toFixed(2)}</strong> (Your cart total: {formatPrice(appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice)}) {t('checkout.revolutPopupText2')} <strong className="text-foreground">{t('checkout.revolutPopupText3')}</strong> {t('checkout.revolutPopupText4')}
-                    </p>
-                    <p className="font-semibold text-foreground mt-1.5">⚠️ Please list the items and your name in the "note" when you pay.</p>
-                  </div>
-                </div>
 
-                {revolutLinkOpened && (
-                  <div className="space-y-2">
-                    <Button type="button" disabled={isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => setShowConfirmDialog(true)}
-                    >
-                      {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I've Completed Payment — Confirm Order</>}
-                    </Button>
-                    <p className="text-xs text-center text-red-400 font-medium">
-                      Orders confirmed without payment will be rejected upon review.
-                    </p>
-
-                    <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 text-red-500" />
-                            Payment Confirmation
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="text-sm leading-relaxed">
-                            <span className="font-semibold text-red-500 block mb-2">
-                              Orders confirmed without payment will be rejected upon review.
-                            </span>
-                            Your order will be reviewed before a confirmation email is sent. If payment has not been completed, your order will be rejected. Are you sure you have completed the payment?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Go Back</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="bg-green-600 hover:bg-green-700"
-                            onClick={async () => {
-                              setIsProcessing(true);
-                              try {
-                                const fd = formDataRef.current;
-                                const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                                const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                                await supabase.functions.invoke('request-order-approval', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
-                                setCompletedPaymentMethod('revolut');
-                                setIsCompleted(true);
-                                clearCart();
-                              } catch (err: any) {
-                                console.error('Revolut order error:', err);
-                                toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
-                              } finally { setIsProcessing(false); }
-                            }}
-                          >
-                            Yes, I've Paid
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                )}
 
                 {/* Rewarble Gift Card Section */}
                 <div className="space-y-2 mt-2">
                   <div className="flex items-center gap-3 my-1">
                     <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-muted-foreground">If the other payment methods don't work for you</span>
+                    <span className="text-xs text-muted-foreground">Available payment method</span>
                     <div className="flex-1 h-px bg-border" />
                   </div>
 
