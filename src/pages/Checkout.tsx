@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
@@ -353,10 +353,7 @@ const Checkout = () => {
   const [discountCode, setDiscountCode] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showRevolutPaymentPopup, setShowRevolutPaymentPopup] = useState(false);
-  const [showRewarblePopup, setShowRewarblePopup] = useState(false);
-  const [rewarbleCode, setRewarbleCode] = useState('');
-  const [showRewarbleConfirmDialog, setShowRewarbleConfirmDialog] = useState(false);
-  const [showBankTransferConfirmDialog, setShowBankTransferConfirmDialog] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
@@ -377,17 +374,37 @@ const Checkout = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const addressInputRef = useRef<HTMLDivElement>(null);
   
-  // Form state
-  const [formData, setFormData] = useState({
-    email: '',
-    confirmEmail: '',
-    firstName: '',
-    lastName: '',
-    country: '',
-    streetAddress: '',
-    postalCode: '',
-    city: '',
+  // Form state - load from sessionStorage
+  const [formData, setFormData] = useState(() => {
+    const saved = sessionStorage.getItem('checkoutFormData');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return {
+      email: '',
+      confirmEmail: '',
+      firstName: '',
+      lastName: '',
+      country: '',
+      streetAddress: '',
+      postalCode: '',
+      city: '',
+    };
   });
+
+  // Persist form data to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('checkoutFormData', JSON.stringify(formData));
+  }, [formData]);
+
+  // Handle completed payment redirect from BankTransfer/Rewarble pages
+  useEffect(() => {
+    const completed = searchParams.get('completed');
+    if (completed) {
+      setCompletedPaymentMethod(completed);
+      setIsCompleted(true);
+    }
+  }, [searchParams]);
 
   
 
@@ -700,6 +717,8 @@ const Checkout = () => {
               ? t('checkout.thankYouRevolut')
               : completedPaymentMethod === 'rewarble'
               ? t('checkout.thankYouGiftCard')
+              : completedPaymentMethod === 'bank_transfer'
+              ? 'Your order has been placed and is pending bank transfer verification.'
               : t('checkout.thankYouPaypal')}
           </p>
           {completedPaymentMethod === 'paypal' && (
@@ -707,7 +726,7 @@ const Checkout = () => {
               {t('checkout.thankYouSpam')}
             </p>
           )}
-          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble') && (
+          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble' || completedPaymentMethod === 'bank_transfer') && (
             <p className="text-sm text-muted-foreground text-center mb-10">
               {t('checkout.thankYouPatience')}
             </p>
@@ -1046,7 +1065,7 @@ const Checkout = () => {
 
 
 
-                {/* Rewarble Gift Card Section */}
+                {/* Rewarble Section */}
                 <div className="space-y-2 mt-2">
                   <div className="flex items-center gap-3 my-1">
                     <div className="flex-1 h-px bg-border" />
@@ -1063,7 +1082,18 @@ const Checkout = () => {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
-                      window.open('https://skine.com/en-us/rewarble?utm_source=rewarble.com', '_blank');
+                      // Save order context to sessionStorage
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+                        cartItems,
+                        email: fd.email,
+                        customerName: `${fd.firstName} ${fd.lastName}`,
+                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
+                        totalAmount: finalTotal.toFixed(2),
+                      }));
+                      navigate(`/rewarble?total=${finalTotal.toFixed(2)}`);
                     }}
                   >
                     <span className="flex items-center gap-2">
@@ -1072,90 +1102,19 @@ const Checkout = () => {
                     </span>
                   </Button>
                   <div className="flex items-center justify-center gap-2.5">
-                    {/* Visa */}
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
                       <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
                     </svg>
-                    {/* iDEAL */}
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
                       <text x="24" y="20" textAnchor="middle" fill="#CC0066" fontSize="10" fontWeight="bold" fontFamily="Arial, sans-serif">iDEAL</text>
                     </svg>
-                    {/* Revolut */}
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#191C1F" stroke="#333"/>
                       <path d="M28.25 8H20.77L20.27 10.69H25.7C27.89 10.69 29.1 11.82 29.1 13.67C29.1 15.86 27.51 17.71 25.32 17.71H22.08L18.5 28H21.33L23.83 19.53H25.56C29.46 19.53 32.06 16.82 32.06 13.33C32.06 10.11 30.18 8 28.25 8Z" fill="white" transform="scale(0.7) translate(6, 2)"/>
                     </svg>
                   </div>
-
-                  <div className="text-xs text-muted-foreground leading-relaxed bg-muted/30 rounded-md px-3 py-2.5 border border-border/50">
-                    <p>Purchase a <a href="https://skine.com/en-us/rewarble?utm_source=rewarble.com" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Rewarble gift card</a> closest to your order amount, then paste the code below, click confirm, and your order will be processed.</p>
-                    <p className="mt-1.5">If you need to use multiple codes, simply repeat the process — your orders will be joined as long as the details (name, email, address) are the same.</p>
-                  </div>
-
-                  {/* Code Input - always visible after button */}
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium tracking-wider text-foreground">
-                      REWARBLE CODE
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="Paste your Rewarble code here..."
-                      value={rewarbleCode}
-                      onChange={(e) => setRewarbleCode(e.target.value)}
-                      className="h-12 bg-background border-border rounded-md"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                      <Button type="button" disabled={!rewarbleCode.trim() || isProcessing} className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                        onClick={() => setShowRewarbleConfirmDialog(true)}
-                      >
-                        {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />Confirm Payment</>}
-                      </Button>
-
-                      <AlertDialog open={showRewarbleConfirmDialog} onOpenChange={setShowRewarbleConfirmDialog}>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center gap-2">
-                              <AlertTriangle className="h-5 w-5 text-red-500" />
-                              Payment Confirmation
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="text-sm leading-relaxed">
-                                <span className="font-semibold text-red-500 block mb-2">
-                                  Orders confirmed with invalid Rewarble codes will be rejected upon review.
-                                </span>
-                                Your Rewarble code will be verified before your order is processed. If the code is invalid or has already been used, your order will be rejected. Are you sure you have a valid Rewarble code?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Go Back</AlertDialogCancel>
-                            <AlertDialogAction
-                              className="bg-green-600 hover:bg-green-700"
-                              onClick={async () => {
-                                setIsProcessing(true);
-                                try {
-                                  const fd = formDataRef.current;
-                                  const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                                  const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                                  await supabase.functions.invoke('request-order-approval', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2), paymentMethod: 'rewarble', giftCardCode: rewarbleCode.trim() } });
-                                  setCompletedPaymentMethod('rewarble');
-                                  setIsCompleted(true);
-                                  clearCart();
-                                } catch (err: any) {
-                                  console.error('Rewarble order error:', err);
-                                  toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
-                                } finally { setIsProcessing(false); }
-                              }}
-                            >
-                              Yes, Confirm Order
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                
                 </div>
 
                 {/* Bank Transfer Section */}
@@ -1171,76 +1130,33 @@ const Checkout = () => {
                     disabled={!isFormValid() || isProcessing}
                     className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#0A2540] hover:bg-[#0D3158] text-white shadow-lg border border-white/10 relative overflow-hidden"
                     onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      // Save order context to sessionStorage
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
                       const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                      window.open(`/bank-transfer?total=${finalTotal.toFixed(2)}`, '_blank');
+                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+                        cartItems,
+                        email: fd.email,
+                        customerName: `${fd.firstName} ${fd.lastName}`,
+                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
+                        totalAmount: finalTotal.toFixed(2),
+                      }));
+                      navigate(`/bank-transfer?total=${finalTotal.toFixed(2)}`);
                     }}
                   >
                     <span className="flex items-center gap-2">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                      <span>View Bank Details</span>
+                      <span>Pay by Bank Transfer</span>
                     </span>
                     <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
                       SEPA
                     </span>
                   </Button>
-
-                  <p className="text-xs text-center text-muted-foreground mt-1">
-                    Opens in a new tab — come back here to confirm once you've sent the transfer.
-                  </p>
-
-                  <Button
-                    type="button"
-                    disabled={!isFormValid() || isProcessing}
-                    className="w-full h-[50px] rounded-md text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                    onClick={() => setShowBankTransferConfirmDialog(true)}
-                  >
-                    {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />Confirm Transfer Sent</>}
-                  </Button>
-
-                  <AlertDialog open={showBankTransferConfirmDialog} onOpenChange={setShowBankTransferConfirmDialog}>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                          <AlertTriangle className="h-5 w-5 text-amber-500" />
-                          Confirm Bank Transfer
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-sm leading-relaxed">
-                          <span className="font-semibold text-foreground block mb-2">
-                            Please confirm that you have initiated a bank transfer for the correct amount.
-                          </span>
-                          Your order will be placed as pending and processed once we verify the payment has been received. This typically takes 1 business day for SEPA transfers.
-                          <span className="font-semibold text-red-500 block mt-2">
-                            Orders confirmed without a valid bank transfer will be rejected.
-                          </span>
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Go Back</AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-green-600 hover:bg-green-700"
-                          onClick={async () => {
-                            setIsProcessing(true);
-                            try {
-                              const fd = formDataRef.current;
-                              const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                              const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                              await supabase.functions.invoke('request-order-approval', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2), paymentMethod: 'bank_transfer' } });
-                              setCompletedPaymentMethod('bank_transfer');
-                              setIsCompleted(true);
-                              clearCart();
-                            } catch (err: any) {
-                              console.error('Bank transfer order error:', err);
-                              toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
-                            } finally { setIsProcessing(false); }
-                          }}
-                        >
-                          Yes, I've Sent the Transfer
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
                 </div>
-
 
                 <p className="text-[11px] text-muted-foreground/60 text-center">
                   By completing this purchase you agree to our terms and conditions
