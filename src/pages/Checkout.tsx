@@ -1176,7 +1176,7 @@ const Checkout = () => {
                     <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0">
                       <img src="/images/banks/deutsche-bank.png" alt="Deutsche Bank" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
+                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0">
                       <img src="/images/banks/bnp-paribas.png" alt="BNP Paribas" className="max-h-full max-w-full object-contain" />
                     </div>
                     <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
