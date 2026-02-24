@@ -1081,7 +1081,7 @@ const Checkout = () => {
                       <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
                     </svg>
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#EB001B" stroke="#EB001B"/>
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
                       <circle cx="19" cy="16" r="8" fill="#EB001B"/><circle cx="29" cy="16" r="8" fill="#F79E1B"/><path d="M24 10a8 8 0 010 12 8 8 0 010-12z" fill="#FF5F00"/>
                     </svg>
                     <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1093,11 +1093,11 @@ const Checkout = () => {
 
 
 
-                {/* Rewarble Section */}
-                <div className="space-y-2 mt-2">
+                {/* Alternative Methods Divider */}
+                <div className="space-y-2 mt-4">
                   <div className="flex items-center gap-3 my-1">
                     <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-muted-foreground">Available payment method</span>
+                    <span className="text-xs text-muted-foreground">If other payment methods don't work for you</span>
                     <div className="flex-1 h-px bg-border" />
                   </div>
 
@@ -1147,12 +1147,6 @@ const Checkout = () => {
 
                 {/* Bank Transfer Section */}
                 <div className="space-y-2 mt-2">
-                  <div className="flex items-center gap-3 my-1">
-                    <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-muted-foreground">or pay by bank transfer</span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-
                   <Button
                     type="button"
                     disabled={!isFormValid() || isProcessing}
@@ -1162,7 +1156,6 @@ const Checkout = () => {
                         toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
                         return;
                       }
-                      // Save order context to sessionStorage
                       const fd = formDataRef.current;
                       const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
                       const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
@@ -1184,6 +1177,29 @@ const Checkout = () => {
                       SEPA
                     </span>
                   </Button>
+                  {/* European bank logos */}
+                  <div className="flex items-center justify-center gap-2">
+                    {/* ING */}
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#FF6200]">
+                      <span className="text-[8px] font-bold text-white">ING</span>
+                    </div>
+                    {/* Deutsche Bank */}
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#0018A8]">
+                      <span className="text-[8px] font-bold text-white">DB</span>
+                    </div>
+                    {/* BNP Paribas */}
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#009A44]">
+                      <span className="text-[8px] font-bold text-white">BNP</span>
+                    </div>
+                    {/* HSBC */}
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#DB0011]">
+                      <span className="text-[8px] font-bold text-white">HSBC</span>
+                    </div>
+                    {/* More */}
+                    <div className="flex items-center justify-center w-6 h-6 rounded border border-border bg-muted">
+                      <span className="text-[10px] font-bold text-muted-foreground">+</span>
+                    </div>
+                  </div>
                 </div>
 
                 <p className="text-[11px] text-muted-foreground/60 text-center">
