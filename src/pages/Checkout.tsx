@@ -904,8 +904,8 @@ const Checkout = () => {
                   const displayPrice = item.selectedPrice || item.product.price;
                   return (
                     <div key={cartKey} className="flex gap-4 items-start">
-                      <div className="w-14 h-16 bg-secondary/50 overflow-hidden flex-shrink-0 rounded border border-border">
-                        <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                      <div className={cn("w-14 h-16 bg-secondary/50 overflow-hidden flex-shrink-0 rounded border border-border", item.product.imagePadding && "p-1")}>
+                        <img src={item.product.image} alt={item.product.name} className={cn("w-full h-full", item.product.imagePadding ? "object-contain" : "object-cover")} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-medium text-foreground">{item.product.name}</h4>

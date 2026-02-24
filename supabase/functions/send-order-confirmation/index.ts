@@ -73,8 +73,11 @@ const PRODUCT_LINKS: Record<string, string> = {
   "stronger-with-you-absolutely": "https://litbuy.shop/lit/nOAwjxV0",
   "stronger-with-you": "https://litbuy.shop/lit/nOAwjxV0",
   "aventus": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661817242&affcode=c5v3b",
-  "born-in-roma-intense": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661811226&affcode=c5v3b",
-  "valentino": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661811226&affcode=c5v3b",
+  "born-in-roma-intense": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "born-in-roma-green-stravaganza": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "born-in-roma-coral-fantasy": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "born-in-roma": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "valentino": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
   "louis-vuitton": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661789506&affcode=c5v3b",
   "xerjoff": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7662173327&affcode=c5v3b",
   "eros": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7665241752&affcode=c5v3b",
@@ -93,6 +96,9 @@ function getProductLink(name: string, brand: string): string {
   if (n.includes("stronger with you")) return PRODUCT_LINKS["stronger-with-you"];
   if (n.includes("aventus")) return PRODUCT_LINKS["aventus"];
   if (n.includes("born in roma intense")) return PRODUCT_LINKS["born-in-roma-intense"];
+  if (n.includes("born in roma green stravaganza")) return PRODUCT_LINKS["born-in-roma-green-stravaganza"];
+  if (n.includes("born in roma coral fantasy")) return PRODUCT_LINKS["born-in-roma-coral-fantasy"];
+  if (n.includes("born in roma")) return PRODUCT_LINKS["born-in-roma"];
   if (b.includes("valentino")) return PRODUCT_LINKS["valentino"];
   if (b.includes("louis vuitton")) return PRODUCT_LINKS["louis-vuitton"];
   if (b.includes("xerjoff")) return PRODUCT_LINKS["xerjoff"];

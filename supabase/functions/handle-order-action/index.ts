@@ -247,22 +247,35 @@ serve(async (req) => {
     }
 
     if (action === "approve") {
+      // Prevent duplicate invoice: only process if not already approved
+      if (order.status === "approved" && order.email_sent === true) {
+        return new Response(buildResultPage("Already Approved", "This order has already been approved and the confirmation email was sent.", true), {
+          headers: { "Content-Type": "text/html" }, status: 200,
+        });
+      }
+
       await supabase.from("orders").update({ status: "approved", email_sent: true }).eq("id", orderId);
 
       const items = (order.order_items as unknown as OrderItem[]) || [];
 
-      // Send confirmation to customer
-      await sendConfirmationViaFunction(
-        supabaseUrl,
-        order.customer_email,
-        order.customer_name || "Valued Customer",
-        items,
-        order.total_amount.toString(),
-        (order.shipping_address as any) || {},
-        order.order_number,
-      );
+      // Check email validity via Resend before sending
+      let emailWarning = "";
+      try {
+        await sendConfirmationViaFunction(
+          supabaseUrl,
+          order.customer_email,
+          order.customer_name || "Valued Customer",
+          items,
+          order.total_amount.toString(),
+          (order.shipping_address as any) || {},
+          order.order_number,
+        );
+      } catch (emailErr: any) {
+        console.error("Failed to send customer email:", emailErr);
+        emailWarning = `⚠️ WARNING: The customer email (${order.customer_email}) may be invalid or unreachable. The confirmation email could not be delivered. Error: ${emailErr.message}`;
+      }
 
-      // Send admin invoice
+      // Send admin invoice (only once — this block only runs on first approval)
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
       const giftCardCode = isGiftCard ? order.checkout_reference?.replace("rewarble-", "") : undefined;
@@ -276,25 +289,59 @@ serve(async (req) => {
         giftCardCode,
       );
       const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-      await sendEmail(ADMIN_EMAIL, "Invoice" + orderNumLabel + ": " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount, invoiceHtml);
+      const invoiceSubject = (emailWarning ? "⚠️ EMAIL ISSUE — " : "") + "Invoice" + orderNumLabel + ": " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
+      
+      // If there was an email warning, prepend it to the invoice HTML
+      let finalInvoiceHtml = invoiceHtml;
+      if (emailWarning) {
+        const warningBanner = `<div style="background:#fef2f2;border:2px solid #dc2626;padding:16px 20px;margin:16px 40px;border-radius:8px;">
+          <p style="color:#dc2626;font-size:14px;font-weight:600;margin:0 0 6px;">⚠️ Email Delivery Issue</p>
+          <p style="color:#991b1b;font-size:13px;margin:0;">The customer email <strong>${order.customer_email}</strong> appears to be invalid or unreachable. The confirmation email may not have been delivered. Please contact the customer directly.</p>
+        </div>`;
+        finalInvoiceHtml = invoiceHtml.replace('<!-- Invoice Meta -->', warningBanner + '\n  <!-- Invoice Meta -->');
+        // Fallback if comment not found
+        if (!finalInvoiceHtml.includes('Email Delivery Issue')) {
+          finalInvoiceHtml = invoiceHtml.replace('<div style="padding:28px 40px 0', warningBanner + '<div style="padding:28px 40px 0');
+        }
+      }
+      
+      await sendEmail(ADMIN_EMAIL, invoiceSubject, finalInvoiceHtml);
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 
-      return new Response(buildResultPage("Order Approved", "The confirmation email has been sent to " + order.customer_email + ".", true), {
+      const resultMsg = emailWarning
+        ? "Order approved. ⚠️ However, the customer email (" + order.customer_email + ") may be invalid — the confirmation email might not have been delivered."
+        : "The confirmation email has been sent to " + order.customer_email + ".";
+
+      return new Response(buildResultPage("Order Approved", resultMsg, true), {
         headers: { "Content-Type": "text/html" },
         status: 200,
       });
     } else {
+      // Prevent duplicate rejection
+      if (order.status === "rejected") {
+        return new Response(buildResultPage("Already Rejected", "This order has already been rejected.", false), {
+          headers: { "Content-Type": "text/html" }, status: 200,
+        });
+      }
+
       await supabase.from("orders").update({ status: "rejected" }).eq("id", orderId);
 
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number);
       const rejSubject = order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums";
-      await sendEmail(order.customer_email, rejSubject, rejectionHtml);
+      
+      let rejEmailWarning = "";
+      try {
+        await sendEmail(order.customer_email, rejSubject, rejectionHtml);
+      } catch (emailErr: any) {
+        console.error("Failed to send rejection email:", emailErr);
+        rejEmailWarning = ` ⚠️ Note: The rejection email to ${order.customer_email} may not have been delivered (email might be invalid).`;
+      }
 
       console.log("Order rejected and customer notified:", orderId);
 
-      return new Response(buildResultPage("Order Rejected", "A rejection notification has been sent to " + order.customer_email + ".", false), {
+      return new Response(buildResultPage("Order Rejected", "A rejection notification has been sent to " + order.customer_email + "." + rejEmailWarning, false), {
         headers: { "Content-Type": "text/html" },
         status: 200,
       });

@@ -100,15 +100,21 @@ serve(async (req) => {
       }),
     });
 
+    let emailWarning = "";
     if (!res.ok) {
       const errBody = await res.text();
-      throw new Error("Resend error: " + errBody);
+      console.error("Resend error sending proof request:", errBody);
+      emailWarning = `⚠️ The proof-of-payment email to ${order.customer_email} could not be delivered. The email address may be invalid or mistyped. Error: ${errBody}`;
+    } else {
+      console.log("Proof of payment email sent to:", order.customer_email);
     }
 
-    console.log("Proof of payment email sent to:", order.customer_email);
+    const resultMsg = emailWarning
+      ? `⚠️ Warning: The email to ${order.customer_email} may not have been delivered. The address could be invalid or mistyped.`
+      : `Proof of payment request sent to ${order.customer_email}.`;
 
     return new Response(
-      buildResultPage("Proof Requested", `Proof of payment request sent to ${order.customer_email}.`, true),
+      buildResultPage(emailWarning ? "Email Issue" : "Proof Requested", resultMsg, !emailWarning),
       { headers: { "Content-Type": "text/html" }, status: 200 },
     );
   } catch (error) {

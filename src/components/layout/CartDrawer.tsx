@@ -4,6 +4,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 export const CartDrawer = () => {
   const { isOpen, closeCart, items, removeItem, updateQuantity, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount } = useCart();
@@ -58,12 +59,12 @@ export const CartDrawer = () => {
                       <Link
                         to={`/product/${item.product.id}`}
                         onClick={closeCart}
-                        className="w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden"
+                        className={cn("w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden", item.product.imagePadding && "p-1")}
                       >
                         <img
                           src={item.product.image}
                           alt={item.product.name}
-                          className="w-full h-full object-cover"
+                          className={cn("w-full h-full", item.product.imagePadding ? "object-contain" : "object-cover")}
                         />
                       </Link>
 
