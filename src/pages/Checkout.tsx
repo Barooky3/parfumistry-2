@@ -1039,28 +1039,56 @@ const Checkout = () => {
                   and we'll help you out!
                 </p>
 
-                {/* Revolut - TEMPORARILY DOWN */}
-                <div className="space-y-1.5">
+                {/* Revolut App Payment */}
+                <div className="space-y-2">
                   <Button
                     type="button"
-                    disabled={true}
-                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] text-white shadow-lg border border-white/10 relative overflow-hidden opacity-50 cursor-not-allowed"
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2a2f35] text-white shadow-lg border border-white/10 relative overflow-hidden"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+                        cartItems,
+                        email: fd.email,
+                        customerName: `${fd.firstName} ${fd.lastName}`,
+                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
+                        totalAmount: finalTotal.toFixed(2),
+                      }));
+                      navigate(`/revolut?total=${finalTotal.toFixed(2)}`);
+                    }}
                   >
                     <span className="flex items-center gap-2">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
                         <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
                       </svg>
-                      <span>Pay with Card/Apple Pay</span>
+                      <span>Pay with Revolut</span>
                     </span>
                     <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
-                      <Lock className="h-3 w-3" />
-                      Secure
+                      Instant
                     </span>
                   </Button>
-                  <p className="text-xs text-center text-red-400 font-medium mt-1">
-                    ⚠️ Revolut payments are temporarily unavailable. Please use Rewarble below.
-                  </p>
+                  {/* Trust icons */}
+                  <div className="flex items-center justify-center gap-2.5">
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
+                    </svg>
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#EB001B" stroke="#EB001B"/>
+                      <circle cx="19" cy="16" r="8" fill="#EB001B"/><circle cx="29" cy="16" r="8" fill="#F79E1B"/><path d="M24 10a8 8 0 010 12 8 8 0 010-12z" fill="#FF5F00"/>
+                    </svg>
+                    <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#000" stroke="#333"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" fontFamily="Arial, sans-serif"> Pay</text>
+                    </svg>
+                  </div>
                 </div>
 
 

@@ -156,7 +156,7 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const refPrefix = paymentMethod === "rewarble" ? "rewarble" : "revolut";
+    const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
     const { data: order, error: dbError } = await supabase.from("orders").insert({
       checkout_reference: refPrefix + "-" + Date.now(),
       customer_email: customerEmail,
@@ -190,7 +190,7 @@ serve(async (req) => {
     );
 
     const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
+    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : paymentMethod === "bank_transfer" ? "Bank Transfer Order" : paymentMethod === "revolut_app" ? "Revolut App Order" : "Order Approval";
     await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);
