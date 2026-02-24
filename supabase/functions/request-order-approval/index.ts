@@ -92,33 +92,32 @@ function buildApprovalEmailHtml(
 </body></html>`;
 }
 
-async function sendWithBrevo(to: string, subject: string, htmlContent: string, replyTo?: string): Promise<void> {
-  const apiKey = Deno.env.get("BREVO_API_KEY");
-  if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+async function sendEmail(to: string, subject: string, htmlContent: string, replyTo?: string): Promise<void> {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
   const emailPayload: any = {
-    sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
-    to: [{ email: to }],
+    from: "ProfParfums Orders <orders@profparfum.com>",
+    to: [to],
     subject,
-    htmlContent,
+    html: htmlContent,
   };
   if (replyTo) {
-    emailPayload.replyTo = { email: replyTo };
+    emailPayload.reply_to = replyTo;
   }
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "api-key": apiKey,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "Accept": "application/json",
     },
     body: JSON.stringify(emailPayload),
   });
 
   if (!res.ok) {
     const errBody = await res.text();
-    throw new Error("Brevo API error (" + res.status + "): " + errBody);
+    throw new Error("Resend API error (" + res.status + "): " + errBody);
   }
 }
 
@@ -192,7 +191,7 @@ serve(async (req) => {
 
     const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
     const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
-    await sendWithBrevo(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+    await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
 
     console.log("Approval email sent to admin for order:", order.id);
 
