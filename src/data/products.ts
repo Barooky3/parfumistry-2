@@ -6,7 +6,7 @@ export const bestsellerIds = [
   'amore-caffe',
   'le-beau-le-parfum',
   'spicebomb-extreme',
-  'born-in-roma-coral-fantasy',
+  'born-in-roma-intense',
   'imagination',
   'le-male-le-parfum',
   'le-male-elixir',
@@ -232,7 +232,7 @@ export const products: Product[] = [
     price: 11.99,
     originalPrice: 28.50,
     category: 'men',
-    description: 'Born in Roma Intense takes everything bold about the original and turns it up. A warm, intoxicating blend of creamy vanilla and aromatic lavender sits over earthy vetiver, creating a scent that feels refined yet unapologetically powerful — perfect for nights out or cold weather.',
+    description: 'Born in Roma Intense, probably the best born in roma, takes everything bold about the original and turns it up. A warm, intoxicating blend of creamy vanilla and aromatic lavender sits over earthy vetiver, creating a scent that feels refined yet unapologetically powerful, for sure one of the best date night scents.',
     scentNotes: {
       top: ['Vanilla'],
       heart: ['Lavender'],
@@ -255,7 +255,7 @@ export const products: Product[] = [
     price: 11.99,
     originalPrice: 28.50,
     category: 'men',
-    description: 'Green Stravaganza is the freshest entry in the Born in Roma line. A zesty burst of Calabrian bergamot on top gives way to a rich, roasted coffee heart before settling into a smooth, earthy vetiver base — think fresh mornings with an edge. Perfect for daytime wear when you want something lively but still sophisticated.',
+    description: 'Green Stravaganza is the freshest entry in the Born in Roma line, not my favourite, but its interesting and unique, and can be weird to some. A zesty burst of Calabrian bergamot on top gives way to a rich, roasted coffee heart before settling into a smooth, earthy vetiver base.',
     scentNotes: {
       top: ['Calabrian Bergamot'],
       heart: ['Coffee'],
