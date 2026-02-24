@@ -850,6 +850,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
+    imagePadding: 'p-6',
     affiliateUrl: 'https://profparfums.store/products/ysl-y-edp',
     inStock: true,
     variants: [
