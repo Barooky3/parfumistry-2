@@ -842,7 +842,7 @@ export const products: Product[] = [
     price: 7.99,
     originalPrice: 31.96,
     category: 'men',
-    description: 'YSL Y EDP is a fresh yet powerful masculine scent. Crisp apple, ginger, and bergamot open into an aromatic heart of sage, juniper berries, and geranium, before settling into a warm, woody base of amberwood, tonka bean, cedar, vetiver, and olibanum. Versatile and refined – perfect for everyday confidence.',
+    description: 'This is known as the "marlon" fragrance, very popular and easy to use. Its a fresh yet powerful masculine scent. Crisp apple, ginger, and bergamot in the opening and drying down to a warm, woody base of amberwood, tonka bean, cedar, vetiver, and olibanum.',
     scentNotes: {
       top: ['Apple', 'Ginger', 'Bergamot'],
       heart: ['Sage', 'Juniper Berries', 'Geranium'],
@@ -850,7 +850,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
-    imagePadding: 'p-6',
+    imagePadding: 'p-10',
     affiliateUrl: 'https://profparfums.store/products/ysl-y-edp',
     inStock: true,
     variants: [
