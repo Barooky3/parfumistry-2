@@ -21,7 +21,6 @@ export const products: Product[] = [
     name: 'Fragrance Bundle "Evening Sweetheart"',
     brand: 'Profparfums',
     price: 26.99,
-    originalPrice: 199.50,
     category: 'bundle',
     description: '"Evening Sweetheart" Bundle – top-tier sweet bangers for the night. Got a date? A party? These fragrances will make you unforgettable.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-evening-sweetheart-9560408.png?v=1768068549&width=800',
@@ -30,8 +29,8 @@ export const products: Product[] = [
     featured: true,
     isBundle: true,
     variants: [
-      { ml: 50, price: 26.99, originalPrice: 199.50, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 299.50, inStock: true },
+      { ml: 50, price: 26.99, inStock: true },
+      { ml: 100, price: 32.99, inStock: true },
     ],
   },
   {
@@ -39,7 +38,6 @@ export const products: Product[] = [
     name: 'Fragrance Bundle "Young Playboy"',
     brand: 'Profparfums',
     price: 27.99,
-    originalPrice: 209.50,
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800',
@@ -48,8 +46,8 @@ export const products: Product[] = [
     featured: true,
     isBundle: true,
     variants: [
-      { ml: 50, price: 27.99, originalPrice: 209.50, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 309.50, inStock: true },
+      { ml: 50, price: 27.99, inStock: true },
+      { ml: 100, price: 32.99, inStock: true },
     ],
   },
   {
@@ -57,7 +55,6 @@ export const products: Product[] = [
     name: 'Fragrance Bundle "Sleek and Clean"',
     brand: 'Profparfums',
     price: 25.99,
-    originalPrice: 189.50,
     category: 'bundle',
     description: 'Looking for fragrances that work anytime, anywhere? This set is your daily go-to – fresh, masculine, and clean.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-sleek-and-clean-3751514.png?v=1768068487&width=800',
@@ -65,8 +62,8 @@ export const products: Product[] = [
     inStock: true,
     isBundle: true,
     variants: [
-      { ml: 50, price: 25.99, originalPrice: 189.50, inStock: true },
-      { ml: 100, price: 31.99, originalPrice: 289.50, inStock: true },
+      { ml: 50, price: 25.99, inStock: true },
+      { ml: 100, price: 31.99, inStock: true },
     ],
   },
 
@@ -226,28 +223,6 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 13.99, originalPrice: 82.50, inStock: true },
       { ml: 100, price: 19.99, originalPrice: 132.50, inStock: true },
-    ],
-  },
-  {
-    id: 'french-defence',
-    name: 'French Defence',
-    brand: 'Mind Games',
-    price: 40.00,
-    originalPrice: 395.00,
-    category: 'unisex',
-    description: '',
-    scentNotes: {
-      top: ['Cherry', 'Violet Leaves', 'Chamomile'],
-      heart: ['Geranium Madagascar', 'Rose Absolute', 'Mimosa'],
-      base: ['Amber', 'Cedarwood', 'Blonde Wood'],
-    },
-    accentColor: '#8C8C8C',
-    scentNotesImage: '/images/scent-notes/french-defence.png',
-    image: '/images/scent-notes/french-defence.png',
-    affiliateUrl: 'https://www.mindgamesfragrance.com/products/french-defense',
-    inStock: true,
-    variants: [
-      { ml: 100, price: 40.00, originalPrice: 395.00, inStock: true },
     ],
   },
   {
@@ -535,28 +510,6 @@ export const products: Product[] = [
     inStock: false,
     variants: [
       { ml: 100, price: 18.99, originalPrice: 56.97, inStock: false },
-    ],
-  },
-  {
-    id: 'mentor',
-    name: 'Mentor',
-    brand: 'Mind Games',
-    price: 40.00,
-    originalPrice: 475.00,
-    category: 'unisex',
-    description: '',
-    scentNotes: {
-      top: ['Salted Caramel', 'Italian Lemon', 'Dark Plum'],
-      heart: ['Amber Coffee', 'Crème de Cassis'],
-      base: ['Boya Oud', 'Sandalwood', 'Tonka Bean'],
-    },
-    accentColor: '#2C1810',
-    scentNotesImage: '/images/scent-notes/mentor.png',
-    image: '/images/scent-notes/mentor.png',
-    affiliateUrl: 'https://www.mindgamesfragrance.com/products/mentor',
-    inStock: true,
-    variants: [
-      { ml: 100, price: 40.00, originalPrice: 475.00, inStock: true },
     ],
   },
   {
@@ -860,28 +813,6 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'queening',
-    name: 'Queening',
-    brand: 'Mind Games',
-    price: 40.00,
-    originalPrice: 395.00,
-    category: 'women',
-    description: '',
-    scentNotes: {
-      top: ['Clean Cotton Accord', 'Cypress', 'Apple'],
-      heart: ['Orris', 'Rum', 'Saffron'],
-      base: ['Whipped Vanilla Bean', 'Fluffy Musk', 'Coconut'],
-    },
-    accentColor: '#D4C5B0',
-    scentNotesImage: '/images/scent-notes/queening.png',
-    image: '/images/scent-notes/queening.png',
-    affiliateUrl: 'https://www.mindgamesfragrance.com/products/queening',
-    inStock: true,
-    variants: [
-      { ml: 100, price: 40.00, originalPrice: 395.00, inStock: true },
-    ],
-  },
-  {
     id: 'myself-edp',
     name: 'Myself EDP',
     brand: 'Yves Saint Laurent',
@@ -902,29 +833,6 @@ export const products: Product[] = [
       { ml: 40, price: 7.99, originalPrice: 31.96, inStock: true },
       { ml: 60, price: 9.99, originalPrice: 39.96, inStock: true },
       { ml: 100, price: 15.99, originalPrice: 63.96, inStock: true },
-    ],
-  },
-  {
-    id: 'ysl-y-edp',
-    name: 'Y EDP',
-    brand: 'Yves Saint Laurent',
-    price: 7.99,
-    originalPrice: 35.96,
-    category: 'men',
-    description: '',
-    scentNotes: {
-      top: ['Bergamot', 'Ginger', 'Apple'],
-      heart: ['Sage', 'Geranium', 'Juniper Berries'],
-      base: ['Vetiver', 'Cedar', 'Tonka Bean', 'Amberwood', 'Olibanum'],
-    },
-    accentColor: '#1A1A40',
-    image: '/images/scent-notes/ysl-y-edp.png',
-    affiliateUrl: '',
-    inStock: true,
-    variants: [
-      { ml: 40, price: 7.99, originalPrice: 35.96, inStock: true },
-      { ml: 60, price: 9.99, originalPrice: 44.96, inStock: true },
-      { ml: 100, price: 15.99, originalPrice: 71.96, inStock: true },
     ],
   },
   {

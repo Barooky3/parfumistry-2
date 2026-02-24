@@ -28,7 +28,6 @@ const brandMap: Record<string, string[]> = {
   tomford: ['Tom Ford'],
   viktor: ['Viktor & Rolf'],
   xerjoff: ['Xerjoff'],
-  mindgames: ['Mind Games'],
 };
 
 const brandDisplayNames: Record<string, string> = {
@@ -45,7 +44,6 @@ const brandDisplayNames: Record<string, string> = {
   tomford: 'Tom Ford',
   viktor: 'Viktor & Rolf',
   xerjoff: 'Xerjoff',
-  mindgames: 'Mind Games',
 };
 
 const Shop = () => {
