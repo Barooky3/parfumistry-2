@@ -21,6 +21,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
 import BankTransfer from "./pages/BankTransfer";
+import Rewarble from "./pages/Rewarble";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/bank-transfer" element={<BankTransfer />} />
+              <Route path="/rewarble" element={<Rewarble />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

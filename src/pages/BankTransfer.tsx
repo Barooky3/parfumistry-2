@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { Copy, Check, ArrowLeft, Building2, Shield, Clock, Info } from 'lucide-react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Copy, Check, ArrowLeft, Building2, Shield, Clock, Info, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useCart } from '@/contexts/CartContext';
 
 const BANK_DETAILS = [
   { label: 'IBAN', value: 'IE26 REVO 9903 6038 5697 96', copyValue: 'IE26REVO99036038569796' },
@@ -14,15 +17,51 @@ const BANK_DETAILS = [
 
 const BankTransfer = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderTotal = searchParams.get('total') || '';
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { clearCart } = useCart();
 
   const handleCopy = (label: string, value: string) => {
     navigator.clipboard.writeText(value);
     setCopiedField(label);
     toast({ title: 'Copied!', description: `${label} copied to clipboard` });
     setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  const handleConfirmTransfer = async () => {
+    setIsProcessing(true);
+    try {
+      const orderContext = sessionStorage.getItem('checkoutOrderContext');
+      if (!orderContext) {
+        toast({ title: 'Session expired', description: 'Please go back to checkout and try again.', variant: 'destructive' });
+        setIsProcessing(false);
+        return;
+      }
+      const ctx = JSON.parse(orderContext);
+      await supabase.functions.invoke('request-order-approval', {
+        body: {
+          orderItems: ctx.cartItems,
+          customerEmail: ctx.email,
+          customerName: ctx.customerName,
+          shippingAddress: ctx.shippingAddress,
+          totalAmount: ctx.totalAmount,
+          paymentMethod: 'bank_transfer',
+        },
+      });
+      clearCart();
+      sessionStorage.removeItem('checkoutOrderContext');
+      sessionStorage.removeItem('checkoutFormData');
+      navigate('/checkout?completed=bank_transfer');
+    } catch (err: any) {
+      console.error('Bank transfer order error:', err);
+      toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -116,8 +155,8 @@ const BankTransfer = () => {
             <div className="flex gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0 mt-0.5">4</span>
               <div>
-                <p className="text-sm font-medium text-foreground">Return to checkout & confirm</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Once you've initiated the transfer, go back and click "Confirm Transfer Sent" to place your order.</p>
+                <p className="text-sm font-medium text-foreground">Click "Confirm Transfer Sent" below</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Once you've initiated the transfer, confirm it to place your order.</p>
               </div>
             </div>
           </div>
@@ -131,8 +170,44 @@ const BankTransfer = () => {
           </p>
         </div>
 
+        {/* Confirm Transfer Sent Button */}
+        <Button
+          type="button"
+          disabled={isProcessing}
+          className="w-full h-[52px] rounded-lg text-sm font-semibold tracking-wide bg-green-600 hover:bg-green-700 text-white shadow-lg disabled:opacity-40"
+          onClick={() => setShowConfirmDialog(true)}
+        >
+          {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />Confirm Transfer Sent</>}
+        </Button>
+
+        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                Confirm Bank Transfer
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-sm leading-relaxed">
+                <span className="font-semibold text-foreground block mb-2">
+                  Please confirm that you have initiated a bank transfer for the correct amount.
+                </span>
+                Your order will be placed as pending and processed once we verify the payment has been received. This typically takes 1 business day for SEPA transfers.
+                <span className="font-semibold text-red-500 block mt-2">
+                  Orders confirmed without a valid bank transfer will be rejected.
+                </span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Go Back</AlertDialogCancel>
+              <AlertDialogAction className="bg-green-600 hover:bg-green-700" onClick={handleConfirmTransfer}>
+                Yes, I've Sent the Transfer
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         {/* Trust badges */}
-        <div className="flex flex-col items-center gap-2 pt-4 border-t border-border/50">
+        <div className="flex flex-col items-center gap-2 pt-4 mt-4 border-t border-border/50">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Shield className="h-3.5 w-3.5 text-accent" />
@@ -143,16 +218,6 @@ const BankTransfer = () => {
               <span className="text-[11px]">1 business day</span>
             </div>
           </div>
-        </div>
-
-        {/* Back to checkout button */}
-        <div className="mt-6">
-          <Link to="/checkout">
-            <Button className="w-full h-12">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Checkout
-            </Button>
-          </Link>
         </div>
       </div>
     </div>
