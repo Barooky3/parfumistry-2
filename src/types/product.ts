@@ -28,6 +28,7 @@ export interface Product {
   featured?: boolean;
   variants?: ProductVariant[]; // ML options
   isBundle?: boolean;
+  imagePadding?: string; // Tailwind padding class for image sizing
 }
 
 export interface CartItem {
