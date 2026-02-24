@@ -378,6 +378,7 @@ const Checkout = () => {
   // Form state
   const [formData, setFormData] = useState({
     email: '',
+    confirmEmail: '',
     firstName: '',
     lastName: '',
     country: '',
@@ -523,7 +524,8 @@ const Checkout = () => {
   };
 
   const isFormValid = () => {
-    return formData.email && isValidEmail(formData.email) && formData.firstName && formData.lastName && 
+    return formData.email && isValidEmail(formData.email) && formData.confirmEmail && formData.email === formData.confirmEmail &&
+           formData.firstName && formData.lastName && 
            formData.country && formData.streetAddress && formData.postalCode && formData.city;
   };
 
@@ -755,6 +757,26 @@ const Checkout = () => {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">{t('checkout.emailHelper')}</p>
+              </div>
+
+              {/* Confirm Email Field */}
+              <div className="space-y-2">
+                <Label className="text-xs font-medium tracking-wider text-foreground">
+                  CONFIRM EMAIL <span className="text-accent">*</span>
+                </Label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="email"
+                    placeholder="Confirm your email address"
+                    value={formData.confirmEmail}
+                    onChange={(e) => updateFormData('confirmEmail', e.target.value)}
+                    className={cn("pl-12 h-12 bg-background border-border rounded-md", formData.confirmEmail && formData.confirmEmail !== formData.email && "border-destructive")}
+                  />
+                </div>
+                {formData.confirmEmail && formData.confirmEmail !== formData.email && (
+                  <p className="text-xs text-destructive mt-1">Emails do not match</p>
+                )}
               </div>
 
               {/* Name Fields */}
