@@ -1170,20 +1170,20 @@ const Checkout = () => {
                   </Button>
                   {/* European bank logos */}
                   <div className="flex items-center justify-center gap-2">
-                    <div className="flex items-center justify-center w-14 h-9 rounded border border-border bg-white overflow-hidden p-1.5">
-                      <img src="/images/banks/ing.png" alt="ING" className="h-full w-auto object-contain" />
+                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
+                      <img src="/images/banks/ing.png" alt="ING" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-14 h-9 rounded border border-border bg-white overflow-hidden p-1.5">
-                      <img src="/images/banks/deutsche-bank.png" alt="Deutsche Bank" className="h-full w-auto object-contain" />
+                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
+                      <img src="/images/banks/deutsche-bank.png" alt="Deutsche Bank" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-14 h-9 rounded border border-border bg-white overflow-hidden p-1.5">
-                      <img src="/images/banks/bnp-paribas.png" alt="BNP Paribas" className="h-full w-auto object-contain" />
+                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
+                      <img src="/images/banks/bnp-paribas.png" alt="BNP Paribas" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-14 h-9 rounded border border-border bg-white overflow-hidden p-1.5">
-                      <img src="/images/banks/hsbc.png" alt="HSBC" className="h-full w-auto object-contain" />
+                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
+                      <img src="/images/banks/hsbc.png" alt="HSBC" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-8 h-9 rounded border border-border bg-muted">
-                      <span className="text-xs font-bold text-muted-foreground">+</span>
+                    <div className="flex items-center justify-center w-7 h-7 rounded border border-border bg-muted">
+                      <span className="text-[10px] font-bold text-muted-foreground">+</span>
                     </div>
                   </div>
                 </div>
