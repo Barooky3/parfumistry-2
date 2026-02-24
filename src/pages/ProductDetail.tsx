@@ -1,6 +1,7 @@
 import { useState, forwardRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, StarHalf, Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
@@ -83,11 +84,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="aspect-square md:aspect-[3/4] bg-secondary overflow-hidden">
+            <div className={cn("aspect-square md:aspect-[3/4] bg-secondary overflow-hidden", product.imagePadding)}>
               <img 
                 src={product.image} 
                 alt={product.name} 
-                className="w-full h-full object-cover"
+                className={cn("w-full h-full", product.imagePadding ? "object-contain" : "object-cover")}
                 loading="eager"
               />
             </div>
