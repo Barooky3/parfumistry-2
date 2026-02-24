@@ -10,7 +10,7 @@ export const bestsellerIds = [
   'imagination',
   'le-male-le-parfum',
   'le-male-elixir',
-  'khamrah-parfum',
+  'ysl-y-edp',
   'the-most-wanted-parfum',
 ];
 
@@ -850,7 +850,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
-    imagePadding: 'p-20',
+    imagePadding: 'p-17',
     affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
