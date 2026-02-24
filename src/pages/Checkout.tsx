@@ -1179,23 +1179,18 @@ const Checkout = () => {
                   </Button>
                   {/* European bank logos */}
                   <div className="flex items-center justify-center gap-2">
-                    {/* ING */}
-                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#FF6200]">
-                      <span className="text-[8px] font-bold text-white">ING</span>
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-white overflow-hidden">
+                      <img src="/images/banks/ing.png" alt="ING" className="h-4 w-auto object-contain" />
                     </div>
-                    {/* Deutsche Bank */}
-                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#0018A8]">
-                      <span className="text-[8px] font-bold text-white">DB</span>
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-white overflow-hidden">
+                      <img src="/images/banks/deutsche-bank.png" alt="Deutsche Bank" className="h-4 w-auto object-contain" />
                     </div>
-                    {/* BNP Paribas */}
-                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#009A44]">
-                      <span className="text-[8px] font-bold text-white">BNP</span>
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-white overflow-hidden">
+                      <img src="/images/banks/bnp-paribas.png" alt="BNP Paribas" className="h-4 w-auto object-contain" />
                     </div>
-                    {/* HSBC */}
-                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-[#DB0011]">
-                      <span className="text-[8px] font-bold text-white">HSBC</span>
+                    <div className="flex items-center justify-center w-9 h-6 rounded border border-border bg-white overflow-hidden">
+                      <img src="/images/banks/hsbc.png" alt="HSBC" className="h-4 w-auto object-contain" />
                     </div>
-                    {/* More */}
                     <div className="flex items-center justify-center w-6 h-6 rounded border border-border bg-muted">
                       <span className="text-[10px] font-bold text-muted-foreground">+</span>
                     </div>
