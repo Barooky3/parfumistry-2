@@ -7,28 +7,27 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
-  const apiKey = Deno.env.get("BREVO_API_KEY");
-  if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "api-key": apiKey,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "Accept": "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "ProfParfums", email: "orders@profparfum.com" },
-      to: [{ email: to }],
+      from: "ProfParfums <orders@profparfum.com>",
+      to: [to],
       subject,
-      htmlContent,
+      html: htmlContent,
     }),
   });
 
   if (!res.ok) {
     const errBody = await res.text();
-    throw new Error("Brevo API error (" + res.status + "): " + errBody);
+    throw new Error("Resend API error (" + res.status + "): " + errBody);
   }
 }
 
@@ -76,7 +75,7 @@ serve(async (req) => {
       '</div></body></html>',
     ].join("\n");
 
-    await sendWithBrevo(email, "Your Verification Code - ProfParfums", html);
+    await sendEmail(email, "Your Verification Code - ProfParfums", html);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

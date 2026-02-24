@@ -348,31 +348,30 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
-  const apiKey = Deno.env.get("BREVO_API_KEY");
-  if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "api-key": apiKey,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "Accept": "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "ProfParfums", email: "orders@profparfum.com" },
-      to: [{ email: to }],
+      from: "ProfParfums <orders@profparfum.com>",
+      to: [to],
       subject,
-      htmlContent,
+      html: htmlContent,
     }),
   });
 
   if (!res.ok) {
     const errBody = await res.text();
-    throw new Error("Brevo API error (" + res.status + "): " + errBody);
+    throw new Error("Resend API error (" + res.status + "): " + errBody);
   }
 
-  console.log("Email sent via Brevo to:", to);
+  console.log("Email sent via Resend to:", to);
 }
 
 serve(async (req) => {
@@ -416,7 +415,7 @@ serve(async (req) => {
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
-    await sendWithBrevo(customerEmail, emailSubject, html);
+    await sendEmail(customerEmail, emailSubject, html);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

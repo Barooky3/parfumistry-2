@@ -157,28 +157,27 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<void> {
-  const apiKey = Deno.env.get("BREVO_API_KEY");
-  if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "api-key": apiKey,
+      "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "Accept": "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
-      to: [{ email: to }],
+      from: "ProfParfums Orders <orders@profparfum.com>",
+      to: [to],
       subject,
-      htmlContent,
+      html: htmlContent,
     }),
   });
 
   if (!res.ok) {
     const errBody = await res.text();
-    throw new Error("Brevo API error (" + res.status + "): " + errBody);
+    throw new Error("Resend API error (" + res.status + "): " + errBody);
   }
 }
 
@@ -277,7 +276,7 @@ serve(async (req) => {
         giftCardCode,
       );
       const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-      await sendWithBrevo(ADMIN_EMAIL, "Invoice" + orderNumLabel + ": " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount, invoiceHtml);
+      await sendEmail(ADMIN_EMAIL, "Invoice" + orderNumLabel + ": " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount, invoiceHtml);
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 
@@ -291,7 +290,7 @@ serve(async (req) => {
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number);
       const rejSubject = order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums";
-      await sendWithBrevo(order.customer_email, rejSubject, rejectionHtml);
+      await sendEmail(order.customer_email, rejSubject, rejectionHtml);
 
       console.log("Order rejected and customer notified:", orderId);
 

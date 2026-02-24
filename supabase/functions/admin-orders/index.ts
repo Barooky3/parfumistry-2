@@ -113,21 +113,20 @@ serve(async (req) => {
         // Send admin invoice
         const invoiceUrl = supabaseUrl + "/functions/v1/handle-order-action?id=" + orderId + "&token=" + (order.approval_token || "") + "&action=approve";
         // We already handled the confirmation above, just send invoice via Brevo
-        const apiKey = Deno.env.get("BREVO_API_KEY");
+        const apiKey = Deno.env.get("RESEND_API_KEY");
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
           const pmLabel = isGiftCard ? "Rewarble (Verified)" : "Revolut Transfer (Verified)";
           const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
           const invoiceSubject = "Invoice: Order" + orderNumLabel + " - " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
-          // Use minimal invoice notification
-          await fetch("https://api.brevo.com/v3/smtp/email", {
+          await fetch("https://api.resend.com/emails", {
             method: "POST",
-            headers: { "api-key": apiKey, "Content-Type": "application/json", "Accept": "application/json" },
+            headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              sender: { name: "ProfParfums Orders", email: "orders@profparfum.com" },
-              to: [{ email: ADMIN_EMAIL }],
+              from: "ProfParfums Orders <orders@profparfum.com>",
+              to: [ADMIN_EMAIL],
               subject: invoiceSubject,
-              htmlContent: `<p>Order ${orderId} approved via admin dashboard. Customer: ${order.customer_name} (${order.customer_email}). Total: EUR${order.total_amount}. Payment: ${pmLabel}.</p>`,
+              html: `<p>Order ${orderId} approved via admin dashboard. Customer: ${order.customer_name} (${order.customer_email}). Total: EUR${order.total_amount}. Payment: ${pmLabel}.</p>`,
             }),
           });
         }
@@ -140,21 +139,21 @@ serve(async (req) => {
         await adminClient.from("orders").update({ status: "rejected" }).eq("id", orderId);
 
         // Send rejection email to customer
-        const apiKey = Deno.env.get("BREVO_API_KEY");
+        const apiKey = Deno.env.get("RESEND_API_KEY");
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
           const reason = isGiftCard
             ? "Unfortunately, the Rewarble code you provided could not be verified. Your order has been cancelled."
             : "Unfortunately, your payment could not be verified. No money has been taken from your account.";
 
-          await fetch("https://api.brevo.com/v3/smtp/email", {
+          await fetch("https://api.resend.com/emails", {
             method: "POST",
-            headers: { "api-key": apiKey, "Content-Type": "application/json", "Accept": "application/json" },
+            headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              sender: { name: "ProfParfums", email: "orders@profparfum.com" },
-              to: [{ email: order.customer_email }],
+              from: "ProfParfums <orders@profparfum.com>",
+              to: [order.customer_email],
               subject: order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums",
-              htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
+              html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
     <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PROFPARFUMS</h1>

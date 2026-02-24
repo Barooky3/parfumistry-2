@@ -82,28 +82,27 @@ serve(async (req) => {
       order.order_number,
     );
 
-    const apiKey = Deno.env.get("BREVO_API_KEY");
-    if (!apiKey) throw new Error("BREVO_API_KEY not configured");
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        "api-key": apiKey,
+        "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json",
-        "Accept": "application/json",
       },
       body: JSON.stringify({
-        sender: { name: "ProfParfums", email: "orders@profparfum.com" },
-        to: [{ email: order.customer_email }],
-        replyTo: { email: ADMIN_EMAIL },
+        from: "ProfParfums <orders@profparfum.com>",
+        to: [order.customer_email],
+        reply_to: ADMIN_EMAIL,
         subject: order.order_number ? `Proof of Payment Required — Order #${order.order_number} — ProfParfums` : "Proof of Payment Required — ProfParfums",
-        htmlContent: html,
+        html: html,
       }),
     });
 
     if (!res.ok) {
       const errBody = await res.text();
-      throw new Error("Brevo error: " + errBody);
+      throw new Error("Resend error: " + errBody);
     }
 
     console.log("Proof of payment email sent to:", order.customer_email);
