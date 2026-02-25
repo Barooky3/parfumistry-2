@@ -241,6 +241,15 @@ function buildEmailHtml(
     '<span style="font-size: 22px; font-weight: 600; color: #1a1a1a;">&euro;' + totalAmount + '</span>',
     '</div>',
 
+    ...(noLinks ? [
+    '<div style="padding: 0 32px 24px 32px;">',
+    '<div style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 2px solid #c9a96e; padding: 24px; border-radius: 10px; text-align: center;">',
+    '<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #c9a96e; margin: 0 0 8px 0;">&#128666; Shipping Update</p>',
+    '<p style="font-size: 16px; font-weight: 600; color: #ffffff; margin: 0 0 8px 0; line-height: 1.4;">You\'ll receive a DHL tracking number within 3 days</p>',
+    '<p style="font-size: 13px; color: #ccc; margin: 0; line-height: 1.5;">Your order is already being prepared and will be on its way to you by then.</p>',
+    '</div></div>',
+    ] : []),
+
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
@@ -442,7 +451,7 @@ serve(async (req) => {
     const noLinks = paymentMethod === "rewarble" || paymentMethod === "bank_transfer";
     const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, noLinks)).join("");
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, isRewarble);
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, noLinks);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
     await sendEmail(customerEmail, emailSubject, html);
