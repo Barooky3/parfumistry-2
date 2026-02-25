@@ -99,7 +99,7 @@ export default function AdminOrders() {
         }
         const res = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/request-proof-of-payment?id=${orderId}&token=${order.approval_token || ""}`,
-          { method: "GET" }
+          { method: "GET", headers: { "Accept": "application/json" } }
         );
         if (res.ok) {
           toast.success("Proof of payment request sent.");
