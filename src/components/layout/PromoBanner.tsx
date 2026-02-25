@@ -107,7 +107,7 @@ export const PromoBanner = () => {
                 Buy 2 Fragrances, Get 1 Free
               </h3>
               <p className="text-[10px] sm:text-xs md:text-sm text-primary-foreground/70 mb-3 sm:mb-4 leading-relaxed pr-6 sm:pr-0">
-                Reduced prices + add 3 to your cart and one becomes free!
+                Add 3 fragrances to your cart and one becomes free!
               </p>
 
               {/* Countdown Timer */}
