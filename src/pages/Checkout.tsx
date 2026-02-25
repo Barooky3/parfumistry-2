@@ -718,7 +718,7 @@ const Checkout = () => {
               : completedPaymentMethod === 'rewarble'
               ? t('checkout.thankYouGiftCard')
               : completedPaymentMethod === 'bank_transfer'
-              ? 'Your order has been placed and is pending bank transfer verification.'
+              ? 'Your order has been placed. Please check your email for proof of payment instructions — your order confirmation will be sent as soon as you provide it.'
               : t('checkout.thankYouPaypal')}
           </p>
           {completedPaymentMethod === 'paypal' && (

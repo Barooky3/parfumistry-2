@@ -163,7 +163,7 @@ const BankTransfer = () => {
         <div className="flex gap-2.5 rounded-lg bg-muted/40 border border-border/50 px-4 py-3 mb-6">
           <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-relaxed">
-            SEPA transfers typically arrive within 1 business day. Your order will be processed once payment is confirmed.
+            After placing your order, you'll receive an email asking for proof of payment. Your order confirmation will be sent as soon as you provide it.
           </p>
         </div>
 
@@ -188,7 +188,7 @@ const BankTransfer = () => {
                 <span className="font-semibold text-foreground block mb-2">
                   Please confirm that you have initiated a bank transfer for the correct amount.
                 </span>
-                Your order will be placed as pending and processed once we verify the payment has been received. This typically takes 1 business day for SEPA transfers.
+                After placing your order, you'll receive an email asking for proof of payment. Your order confirmation will be sent as soon as you provide it.
                 <span className="font-semibold text-red-500 block mt-2">
                   Orders confirmed without a valid bank transfer will be rejected.
                 </span>
@@ -212,7 +212,7 @@ const BankTransfer = () => {
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Clock className="h-3.5 w-3.5 text-accent" />
-              <span className="text-[11px]">1 business day</span>
+              <span className="text-[11px]">Instant after proof</span>
             </div>
           </div>
         </div>
