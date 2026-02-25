@@ -139,6 +139,12 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
 
+      } else if (orderAction === "dismiss") {
+        await adminClient.from("orders").delete().eq("id", orderId);
+        return new Response(JSON.stringify({ success: true, message: "Order removed." }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+
       } else if (orderAction === "reject") {
         await adminClient.from("orders").update({ status: "rejected" }).eq("id", orderId);
 

@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
@@ -84,6 +84,33 @@ export default function AdminOrders() {
   useEffect(() => {
     if (ADMIN_EMAILS.includes(user?.email || "")) fetchOrders();
   }, [user, statusFilter]);
+
+  const handleDismiss = async (orderId: string) => {
+    if (!confirm("Remove this order from the list? This cannot be undone.")) return;
+    setActionLoading(orderId);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId, action: "dismiss" }),
+        }
+      );
+      const json = await res.json();
+      if (res.ok) {
+        toast.success("Order removed");
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+      } else {
+        toast.error(json.error || "Failed to remove order");
+      }
+    } catch {
+      toast.error("Failed to remove order");
+    }
+    setActionLoading(null);
+  };
 
   const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof") => {
     setActionLoading(orderId);
@@ -309,6 +336,15 @@ export default function AdminOrders() {
                       disabled={actionLoading === order.id}
                     >
                       <Mail className="h-4 w-4 mr-1" /> Request Proof
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-muted-foreground"
+                      onClick={() => handleDismiss(order.id)}
+                      disabled={actionLoading === order.id}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" /> Remove
                     </Button>
                   </div>
                 </div>
