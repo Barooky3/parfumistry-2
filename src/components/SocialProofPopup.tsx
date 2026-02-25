@@ -168,7 +168,7 @@ export const SocialProofPopup = () => {
                 src={notification.product.image}
                 alt={notification.product.name}
                 className={`w-full h-full ${
-                  ['born-in-roma-intense', 'born-in-roma-green-stravaganza'].includes(notification.product.id)
+                  ['born-in-roma-intense', 'born-in-roma-green-stravaganza', 'ysl-y-edp'].includes(notification.product.id)
                     ? 'object-contain p-1'
                     : 'object-cover'
                 }`}
