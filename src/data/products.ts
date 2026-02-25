@@ -21,7 +21,7 @@ export const products: Product[] = [
     name: 'Fragrance Bundle "Evening Sweetheart"',
     brand: 'Profparfums',
     price: 26.99,
-    originalPrice: 190.50,
+    originalPrice: 145.50,
     category: 'bundle',
     description: '"Evening Sweetheart" Bundle – top-tier sweet bangers for the night. Got a date? A party? These fragrances will make you unforgettable.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-evening-sweetheart-9560408.png?v=1768068549&width=800',
@@ -37,8 +37,8 @@ export const products: Product[] = [
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
     variants: [
-      { ml: 50, price: 26.99, originalPrice: 190.50, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 309.50, inStock: true },
+      { ml: 50, price: 26.99, originalPrice: 145.50, inStock: true },
+      { ml: 100, price: 32.99, originalPrice: 264.50, inStock: true },
     ],
   },
   {
@@ -46,7 +46,7 @@ export const products: Product[] = [
     name: 'Fragrance Bundle "Young Playboy"',
     brand: 'Profparfums',
     price: 27.99,
-    originalPrice: 175.00,
+    originalPrice: 130.00,
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800',
@@ -62,8 +62,8 @@ export const products: Product[] = [
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
     ],
     variants: [
-      { ml: 50, price: 27.99, originalPrice: 175.00, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 282.00, inStock: true },
+      { ml: 50, price: 27.99, originalPrice: 130.00, inStock: true },
+      { ml: 100, price: 32.99, originalPrice: 237.00, inStock: true },
     ],
   },
   {
@@ -71,7 +71,7 @@ export const products: Product[] = [
     name: 'Fragrance Bundle "Sleek and Clean"',
     brand: 'Profparfums',
     price: 25.99,
-    originalPrice: 126.42,
+    originalPrice: 106.42,
     category: 'bundle',
     description: 'Looking for fragrances that work anytime, anywhere? This set is your daily go-to – fresh, masculine, and clean.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-sleek-and-clean-3751514.png?v=1768068487&width=800',
@@ -86,8 +86,8 @@ export const products: Product[] = [
       { name: 'Armani Code', topNote: 'Bergamot', heartNote: 'Olive Blossom', baseNote: 'Tonka Bean', accentColor: '#2C2C2C' },
     ],
     variants: [
-      { ml: 50, price: 25.99, originalPrice: 126.42, inStock: true },
-      { ml: 100, price: 31.99, originalPrice: 235.42, inStock: true },
+      { ml: 50, price: 25.99, originalPrice: 106.42, inStock: true },
+      { ml: 100, price: 31.99, originalPrice: 215.42, inStock: true },
     ],
   },
 

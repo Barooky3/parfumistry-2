@@ -103,7 +103,7 @@ const Rewarble = () => {
                   variant="outline"
                   size="sm"
                   className="mt-2 text-xs"
-                  onClick={() => window.open('https://skine.com/en-us/rewarble?utm_source=rewarble.com', '_blank')}
+                  onClick={() => window.open('https://www.g2a.com/revolut-gift-card-5-eur-by-rewarble-global-i10000504736016', '_blank')}
                 >
                   <ExternalLink className="h-3 w-3 mr-1.5" />
                   Buy Rewarble Card
@@ -137,17 +137,32 @@ const Rewarble = () => {
 
         {/* Payment logos */}
         <div className="flex items-center justify-center gap-3 mb-6">
+          {/* Visa */}
           <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
             <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
           </svg>
+          {/* Mastercard */}
           <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-            <text x="24" y="20" textAnchor="middle" fill="#CC0066" fontSize="10" fontWeight="bold" fontFamily="Arial, sans-serif">iDEAL</text>
+            <circle cx="19" cy="16" r="8" fill="#EB001B"/>
+            <circle cx="29" cy="16" r="8" fill="#F79E1B"/>
+            <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00"/>
           </svg>
+          {/* Apple Pay */}
           <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#191C1F" stroke="#333"/>
-            <path d="M28.25 8H20.77L20.27 10.69H25.7C27.89 10.69 29.1 11.82 29.1 13.67C29.1 15.86 27.51 17.71 25.32 17.71H22.08L18.5 28H21.33L23.83 19.53H25.56C29.46 19.53 32.06 16.82 32.06 13.33C32.06 10.11 30.18 8 28.25 8Z" fill="white" transform="scale(0.7) translate(6, 2)"/>
+            <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#000" stroke="#333"/>
+            <text x="24" y="20" textAnchor="middle" fill="white" fontSize="9" fontWeight="600" fontFamily="Arial, sans-serif"> Pay</text>
+          </svg>
+          {/* Google Pay */}
+          <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
+            <text x="24" y="20" textAnchor="middle" fill="#5F6368" fontSize="8" fontWeight="600" fontFamily="Arial, sans-serif">G Pay</text>
+          </svg>
+          {/* Paysafecard */}
+          <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#0A3163" stroke="#0A3163"/>
+            <text x="24" y="20" textAnchor="middle" fill="white" fontSize="6" fontWeight="bold" fontFamily="Arial, sans-serif">paysafe</text>
           </svg>
         </div>
 
@@ -167,6 +182,9 @@ const Rewarble = () => {
               onChange={(e) => handleCodeChange(e.target.value)}
               className="h-12 bg-background border-border rounded-md font-mono"
             />
+            <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
+              Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your products.
+            </p>
           </div>
         </div>
 
