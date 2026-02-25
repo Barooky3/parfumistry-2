@@ -62,7 +62,18 @@ function pickRandomPaymentMethod(): typeof PAYMENT_METHODS[0] {
 }
 
 function randomMinutesAgo(): string {
-  const mins = Math.floor(Math.random() * 30) + 1;
+  const rand = Math.random();
+  let mins: number;
+  if (rand < 0.6) {
+    // 60% chance: 20-30 mins
+    mins = Math.floor(Math.random() * 11) + 20;
+  } else if (rand < 0.85) {
+    // 25% chance: 10-19 mins
+    mins = Math.floor(Math.random() * 10) + 10;
+  } else {
+    // 15% chance: 1-9 mins
+    mins = Math.floor(Math.random() * 9) + 1;
+  }
   return `${mins} min${mins > 1 ? 's' : ''} ago`;
 }
 
