@@ -24,7 +24,7 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
 const PAYMENT_METHODS = [
   { id: 'revolut', label: 'Revolut', icon: null, iconUrl: null, weight: 1, inlineSvg: true, bgColor: '#191C1F', textColor: '#fff' },
   { id: 'paypal', label: 'PayPal', icon: null, iconUrl: null, weight: 1.15, inlineSvg: true, bgColor: '#0070BA', textColor: '#fff' },
-  { id: 'rewarble', label: 'Rewarble', icon: null, iconUrl: '/images/rewarble-icon.svg', weight: 1.40 },
+  { id: 'rewarble', label: 'Rewarble', icon: null, iconUrl: '/images/rewarble-icon.svg', weight: 1.50 },
   { id: 'bank_transfer', label: 'Bank Transfer', icon: '🏦', weight: 1 },
 ];
 
