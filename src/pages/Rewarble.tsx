@@ -138,27 +138,27 @@ const Rewarble = () => {
         {/* Payment logos */}
         <div className="flex items-center justify-center gap-3 mb-6">
           {/* Visa */}
-          <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
             <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
           </svg>
           {/* Mastercard */}
-          <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
             <circle cx="19" cy="16" r="8" fill="#EB001B"/>
             <circle cx="29" cy="16" r="8" fill="#F79E1B"/>
             <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00"/>
           </svg>
           {/* Apple Pay */}
-          <div className="w-[36px] h-[24px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+          <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
             <img src="/images/apple-pay.png" alt="Apple Pay" className="h-full w-full object-contain" />
           </div>
           {/* Google Pay */}
-          <div className="w-[36px] h-[24px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+          <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
             <img src="/images/google-pay.png" alt="Google Pay" className="h-full w-full object-contain" />
           </div>
           {/* Paysafecard */}
-          <div className="w-[36px] h-[24px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+          <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
             <img src="/images/paysafecard.png" alt="Paysafecard" className="h-full w-full object-contain" />
           </div>
         </div>
