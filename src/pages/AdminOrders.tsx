@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
 
@@ -50,7 +51,7 @@ export default function AdminOrders() {
   const [statusFilter, setStatusFilter] = useState("pending_approval");
   const [paymentFilter, setPaymentFilter] = useState("All");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       navigate("/", { replace: true });
@@ -153,9 +154,16 @@ export default function AdminOrders() {
     "Other": "bg-gray-100 text-gray-800",
   };
 
-  const filteredOrders = paymentFilter === "All"
-    ? orders
-    : orders.filter(o => getPaymentMethod(o.checkout_reference) === paymentFilter);
+  const filteredOrders = orders.filter(o => {
+    const pm = getPaymentMethod(o.checkout_reference);
+    const matchesPayment = paymentFilter === "All" || pm === paymentFilter;
+    const query = searchQuery.toLowerCase().trim();
+    const matchesSearch = !query || 
+      o.customer_name.toLowerCase().includes(query) ||
+      o.customer_email.toLowerCase().includes(query) ||
+      (o.order_number && o.order_number.toString().includes(query));
+    return matchesPayment && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-background py-8 px-4">
@@ -203,6 +211,17 @@ export default function AdminOrders() {
               </Button>
             ))}
           </div>
+        </div>
+
+        {/* Search */}
+        <div className="mb-6 relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, email, or order number..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
         </div>
 
         {loading ? (
