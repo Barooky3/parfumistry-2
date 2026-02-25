@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail } from "lucide-react";
 
 const ADMIN_EMAIL = "ewhz3384@gmail.com";
 
@@ -28,6 +28,7 @@ interface Order {
   checkout_reference: string;
   created_at: string;
   order_number: number | null;
+  approval_token: string | null;
 }
 
 export default function AdminOrders() {
@@ -71,29 +72,48 @@ export default function AdminOrders() {
     if (user?.email === ADMIN_EMAIL) fetchOrders();
   }, [user, statusFilter]);
 
-  const handleAction = async (orderId: string, action: "approve" | "reject") => {
+  const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof") => {
     setActionLoading(orderId);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ orderId, action }),
+      if (action === "request_proof") {
+        // Find the order to get its approval_token
+        const order = orders.find(o => o.id === orderId);
+        if (!order) {
+          toast.error("Order not found");
+          setActionLoading(null);
+          return;
         }
-      );
-      const json = await res.json();
-      if (res.ok) {
-        toast.success(json.message);
-        fetchOrders();
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/request-proof-of-payment?id=${orderId}&token=${(order as any).approval_token || ""}`,
+          { method: "GET" }
+        );
+        if (res.ok) {
+          toast.success("Proof of payment request sent.");
+        } else {
+          toast.error("Failed to send proof request");
+        }
       } else {
-        toast.error(json.error || "Action failed");
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ orderId, action }),
+          }
+        );
+        const json = await res.json();
+        if (res.ok) {
+          toast.success(json.message);
+          fetchOrders();
+        } else {
+          toast.error(json.error || "Action failed");
+        }
       }
     } catch {
       toast.error("Action failed");
@@ -193,15 +213,14 @@ export default function AdminOrders() {
                     </div>
                   </div>
 
-                  {order.status === "pending_approval" && (
-                    <div className="mt-4 flex gap-3">
+                  <div className="mt-4 flex gap-3 flex-wrap">
                       <Button
                         size="sm"
                         className="bg-green-600 hover:bg-green-700 text-white"
                         onClick={() => handleAction(order.id, "approve")}
                         disabled={actionLoading === order.id}
                       >
-                        <Check className="h-4 w-4 mr-1" /> Approve
+                        <Check className="h-4 w-4 mr-1" /> {order.status === "approved" ? "Re-Approve" : "Approve"}
                       </Button>
                       <Button
                         size="sm"
@@ -209,10 +228,17 @@ export default function AdminOrders() {
                         onClick={() => handleAction(order.id, "reject")}
                         disabled={actionLoading === order.id}
                       >
-                        <X className="h-4 w-4 mr-1" /> Reject
+                        <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleAction(order.id, "request_proof")}
+                        disabled={actionLoading === order.id}
+                      >
+                        <Mail className="h-4 w-4 mr-1" /> Request Proof
                       </Button>
                     </div>
-                  )}
                 </div>
               );
             })}
