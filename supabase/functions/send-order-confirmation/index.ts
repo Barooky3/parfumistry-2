@@ -234,8 +234,8 @@ function buildEmailHtml(
     '<div style="padding: 0 32px 24px 32px;">',
     '<div style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 2px solid #c9a96e; padding: 24px; border-radius: 10px; text-align: center;">',
     '<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #c9a96e; margin: 0 0 8px 0;">&#128666; Shipping Update</p>',
-    '<p style="font-size: 16px; font-weight: 600; color: #ffffff; margin: 0 0 8px 0; line-height: 1.4;">Your DHL tracking number will be sent to you within 3 days</p>',
-    '<p style="font-size: 13px; color: #ccc; margin: 0; line-height: 1.5;">By then, your order will already be on its way to you.</p>',
+    '<p style="font-size: 16px; font-weight: 600; color: #c9a96e; margin: 0 0 8px 0; line-height: 1.4;">Your DHL tracking number will be sent to you within 3 days</p>',
+    '<p style="font-size: 13px; color: #c9a96e; margin: 0; line-height: 1.5; opacity: 0.8;">By then, your order will already be on its way to you.</p>',
     '</div></div>',
     ] : []),
 
