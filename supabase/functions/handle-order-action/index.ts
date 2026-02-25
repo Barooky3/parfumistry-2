@@ -37,6 +37,12 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   const reason = isGiftCard
     ? "Unfortunately, the Rewarble code you provided for your recent order could not be verified and is invalid. Your order has been cancelled."
     : "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
+  const giftCardTip = isGiftCard
+    ? `<div style="background:#fef3c7;border:1px solid #f59e0b;padding:16px 20px;border-radius:8px;margin:16px 0;">
+        <p style="font-size:14px;font-weight:600;color:#92400e;margin:0 0 8px;">⚠️ Important: Send the Gift Card Code, NOT the Order Number</p>
+        <p style="font-size:13px;color:#92400e;line-height:1.6;margin:0;">Please make sure you send us the <strong>actual Rewarble gift card code</strong> (found on the card or in your email from Rewarble). The Rewarble <strong>order number</strong> (e.g. a number starting with #) is <strong>not</strong> the gift card code and cannot be used to redeem your purchase.</p>
+      </div>`
+    : "";
   const nextStep = isGiftCard
     ? "If you believe this is an error, please contact us and we'll be happy to assist you."
     : "Please try again and ensure the payment is completed successfully before confirming your order. If the issue persists, feel free to reach out to us for assistance.";
@@ -53,6 +59,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     ${orderNumText}
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
+    ${giftCardTip}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
