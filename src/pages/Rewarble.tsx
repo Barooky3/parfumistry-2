@@ -158,10 +158,9 @@ const Rewarble = () => {
             <img src="/images/google-pay.png" alt="Google Pay" className="h-full w-full object-contain" />
           </div>
           {/* Paysafecard */}
-          <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#0A3163" stroke="#0A3163"/>
-            <text x="24" y="20" textAnchor="middle" fill="white" fontSize="6" fontWeight="bold" fontFamily="Arial, sans-serif">paysafe</text>
-          </svg>
+          <div className="w-[36px] h-[24px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+            <img src="/images/paysafecard.png" alt="Paysafecard" className="h-full w-full object-contain" />
+          </div>
         </div>
 
         {/* Code Input */}
