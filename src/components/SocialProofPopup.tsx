@@ -40,7 +40,7 @@ const inStockProducts = products.filter(p => p.inStock);
 
 function pickRandomProduct(): typeof products[0] {
   const rand = Math.random();
-  if (rand < 0.30) {
+  if (rand < 0.50) {
     const bundles = inStockProducts.filter(p => p.isBundle);
     if (bundles.length > 0) return bundles[Math.floor(Math.random() * bundles.length)];
   }
