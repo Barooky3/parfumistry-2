@@ -7,6 +7,14 @@ export interface ProductVariant {
   inStock: boolean;
 }
 
+export interface BundleFragrance {
+  name: string;
+  topNote: string;
+  heartNote: string;
+  baseNote: string;
+  accentColor: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -28,6 +36,7 @@ export interface Product {
   featured?: boolean;
   variants?: ProductVariant[]; // ML options
   isBundle?: boolean;
+  bundleContents?: BundleFragrance[]; // Fragrances in a bundle
   imagePadding?: string; // Tailwind padding class for image sizing
 }
 
