@@ -1129,6 +1129,40 @@ const Checkout = () => {
                   </Button>
                 </div>
 
+                {/* Pay with PayPal (via Eneba) */}
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#0070BA] hover:bg-[#005C99] text-white shadow-lg border border-white/10 relative overflow-hidden"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+                        cartItems,
+                        email: fd.email,
+                        customerName: `${fd.firstName} ${fd.lastName}`,
+                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
+                        totalAmount: finalTotal.toFixed(2),
+                      }));
+                      navigate(`/paypal?total=${finalTotal.toFixed(2)}`);
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.645h6.527c2.168 0 3.87.458 5.048 1.36 1.236.945 1.86 2.378 1.86 4.26 0 .376-.04.758-.117 1.15-.727 3.655-3.25 5.507-7.516 5.507H9.522a.77.77 0 0 0-.757.645l-1.69 5.34z" fill="white"/>
+                        <path d="M20.16 8.848c-.727 3.655-3.25 5.507-7.516 5.507H10.66a.77.77 0 0 0-.757.645l-1.15 3.63-.486 3.085a.641.641 0 0 0 .633.74h3.34a.77.77 0 0 0 .757-.645l.632-3.18a.77.77 0 0 1 .757-.645h1.594c4.267 0 6.79-1.852 7.516-5.507.41-2.06-.076-3.655-1.337-4.63z" fill="rgba(255,255,255,0.7)"/>
+                      </svg>
+                      <span>Pay with PayPal</span>
+                    </span>
+                  </Button>
+                </div>
+
                 {/* Alternative Methods Divider */}
                 <div className="space-y-2 mt-4">
                   <div className="flex items-center gap-3 my-1">

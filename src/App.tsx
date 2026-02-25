@@ -22,6 +22,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
 import BankTransfer from "./pages/BankTransfer";
 import Rewarble from "./pages/Rewarble";
+import PaypalEneba from "./pages/PaypalEneba";
 import RevolutApp from "./pages/RevolutApp";
 import NotFound from "./pages/NotFound";
 
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/bank-transfer" element={<BankTransfer />} />
               <Route path="/rewarble" element={<Rewarble />} />
+              <Route path="/paypal" element={<PaypalEneba />} />
               <Route path="/revolut" element={<RevolutApp />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
