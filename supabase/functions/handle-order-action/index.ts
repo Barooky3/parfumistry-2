@@ -189,6 +189,7 @@ async function sendConfirmationViaFunction(
   totalAmount: string,
   shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
   orderNumber?: number | null,
+  paymentMethod?: string,
 ): Promise<void> {
   const url = supabaseUrl + "/functions/v1/send-order-confirmation";
   const res = await fetch(url, {
@@ -204,6 +205,7 @@ async function sendConfirmationViaFunction(
       shippingAddress,
       totalAmount,
       orderNumber,
+      paymentMethod,
     }),
   });
   if (!res.ok) {
@@ -260,6 +262,7 @@ serve(async (req) => {
 
       // Check email validity via Resend before sending
       let emailWarning = "";
+      const isRewarble = order.checkout_reference?.startsWith("rewarble");
       try {
         await sendConfirmationViaFunction(
           supabaseUrl,
@@ -269,6 +272,7 @@ serve(async (req) => {
           order.total_amount.toString(),
           (order.shipping_address as any) || {},
           order.order_number,
+          isRewarble ? "rewarble" : undefined,
         );
       } catch (emailErr: any) {
         console.error("Failed to send customer email:", emailErr);
