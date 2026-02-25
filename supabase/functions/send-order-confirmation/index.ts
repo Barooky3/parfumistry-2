@@ -439,8 +439,8 @@ serve(async (req) => {
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
     const origin = "https://profparfums.lovable.app";
-    const isRewarble = paymentMethod === "rewarble";
-    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, isRewarble)).join("");
+    const noLinks = paymentMethod === "rewarble" || paymentMethod === "bank_transfer";
+    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, noLinks)).join("");
 
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, isRewarble);
 
