@@ -21,6 +21,15 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
   'Switzerland': { first: ['Liam', 'Mia', 'Noah', 'Elena', 'Leon', 'Lara', 'Luca', 'Emilia', 'Julian', 'Sara'], last: ['Müller', 'Meier', 'Schmid', 'Keller', 'Weber', 'Huber', 'Schneider', 'Meyer', 'Steiner', 'Fischer'] },
 };
 
+const PAYMENT_METHODS = [
+  { id: 'card', label: 'Card', icon: '💳', weight: 1 },
+  { id: 'revolut', label: 'Revolut', icon: null, iconUrl: '/images/revolut-icon.svg', weight: 1 },
+  { id: 'paypal', label: 'PayPal', icon: null, iconUrl: '/images/paypal-icon.svg', weight: 1.15 },
+  { id: 'rewarble', label: 'Rewarble', icon: null, iconUrl: '/images/rewarble-icon.svg', weight: 1.40 },
+  { id: 'bank_transfer', label: 'Bank Transfer', icon: '🏦', weight: 1 },
+  { id: 'paysafecard', label: 'Paysafecard', icon: null, iconUrl: '/images/paysafecard.png', weight: 1 },
+];
+
 const ALL_COUNTRIES = Object.keys(NAMES_BY_COUNTRY);
 const inStockProducts = products.filter(p => p.inStock);
 
@@ -37,16 +46,36 @@ function pickRandomProduct(): typeof products[0] {
   return inStockProducts[Math.floor(Math.random() * inStockProducts.length)];
 }
 
+function pickRandomPaymentMethod(): typeof PAYMENT_METHODS[0] {
+  const totalWeight = PAYMENT_METHODS.reduce((sum, m) => sum + m.weight, 0);
+  let rand = Math.random() * totalWeight;
+  for (const method of PAYMENT_METHODS) {
+    rand -= method.weight;
+    if (rand <= 0) return method;
+  }
+  return PAYMENT_METHODS[0];
+}
+
 function randomMinutesAgo(): string {
   const mins = Math.floor(Math.random() * 30) + 1;
   return `${mins} min${mins > 1 ? 's' : ''} ago`;
 }
 
+function randomInterval(): number {
+  return (Math.floor(Math.random() * 16) + 15) * 1000; // 15-30 seconds
+}
+
 export const SocialProofPopup = () => {
   const [visible, setVisible] = useState(false);
-  const [notification, setNotification] = useState<{ product: typeof products[0]; customerName: string; country: string; timeAgo: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    product: typeof products[0];
+    customerName: string;
+    country: string;
+    timeAgo: string;
+    paymentMethod: typeof PAYMENT_METHODS[0];
+  } | null>(null);
   const countryIndexRef = useRef(0);
-  // Shuffle countries once
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const shuffledCountriesRef = useRef<string[]>([]);
 
   useEffect(() => {
@@ -56,6 +85,11 @@ export const SocialProofPopup = () => {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     shuffledCountriesRef.current = arr;
+  }, []);
+
+  const scheduleNext = useCallback((fn: () => void) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(fn, randomInterval());
   }, []);
 
   const showNotification = useCallback(() => {
@@ -70,35 +104,50 @@ export const SocialProofPopup = () => {
 
     const product = pickRandomProduct();
     const timeAgo = randomMinutesAgo();
-    setNotification({ product, customerName: `${first} ${last.charAt(0)}.`, country, timeAgo });
+    const paymentMethod = pickRandomPaymentMethod();
+    setNotification({ product, customerName: `${first} ${last.charAt(0)}.`, country, timeAgo, paymentMethod });
     setVisible(true);
-    setTimeout(() => setVisible(false), 5000);
-  }, []);
+    setTimeout(() => {
+      setVisible(false);
+      scheduleNext(showNotification);
+    }, 5000);
+  }, [scheduleNext]);
 
   useEffect(() => {
-    const initialTimeout = setTimeout(showNotification, 10000);
-    const interval = setInterval(showNotification, 20000);
-    return () => { clearTimeout(initialTimeout); clearInterval(interval); };
+    const initialTimeout = setTimeout(showNotification, 8000);
+    return () => {
+      clearTimeout(initialTimeout);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [showNotification]);
 
   if (!notification) return null;
+
+  const pm = notification.paymentMethod;
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          initial={{ opacity: 0, y: 40, scale: 0.92 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.97 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-5 left-5 z-50 w-[340px] bg-background/95 backdrop-blur-md border border-border/60 rounded-xl shadow-[0_8px_30px_-4px_hsl(var(--accent)/0.15),0_2px_8px_-2px_rgba(0,0,0,0.4)] overflow-hidden"
+          exit={{ opacity: 0, y: 30, scale: 0.95 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed bottom-5 left-5 z-50 w-[370px] rounded-2xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, hsl(30 25% 98% / 0.97), hsl(30 20% 96% / 0.95))',
+            boxShadow: '0 12px 40px -8px rgba(0,0,0,0.12), 0 4px 16px -4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6)',
+            border: '1px solid hsl(30 15% 88%)',
+          }}
         >
-          {/* Accent top bar */}
-          <div className="h-[2px] w-full bg-gradient-to-r from-accent/60 via-accent to-accent/60" />
+          {/* Top accent line */}
+          <div className="h-[2.5px] w-full bg-gradient-to-r from-transparent via-accent to-transparent" />
 
-          <div className="flex items-center gap-3.5 p-4">
+          <div className="flex items-center gap-4 p-5">
             {/* Product image */}
-            <div className="w-14 h-16 rounded-lg bg-secondary/40 border border-border/40 overflow-hidden flex-shrink-0">
+            <div className="w-[60px] h-[68px] rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-border/50"
+              style={{ background: 'hsl(30 20% 94%)' }}
+            >
               <img
                 src={notification.product.image}
                 alt={notification.product.name}
@@ -107,22 +156,36 @@ export const SocialProofPopup = () => {
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] text-muted-foreground leading-snug">
+              <p className="text-[13.5px] text-muted-foreground leading-snug">
                 <span className="font-semibold text-foreground">{notification.customerName}</span>
-                {' '}from <span className="text-foreground">{notification.country}</span>
+                {' '}from <span className="text-foreground font-medium">{notification.country}</span>
               </p>
-              <p className="text-[13px] font-medium text-foreground mt-0.5 truncate">
+              <p className="text-[13.5px] font-semibold text-foreground mt-1 truncate">
                 ordered {notification.product.name}
               </p>
-              <div className="flex items-center gap-1.5 mt-1.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                <span className="text-[11px] text-muted-foreground">{notification.timeAgo}</span>
+
+              {/* Payment method + time */}
+              <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md"
+                  style={{ background: 'hsl(30 15% 92%)' }}
+                >
+                  {pm.icon ? (
+                    <span className="text-xs">{pm.icon}</span>
+                  ) : pm.iconUrl ? (
+                    <img src={pm.iconUrl} alt={pm.label} className="w-3.5 h-3.5 object-contain" />
+                  ) : null}
+                  <span className="text-[11px] font-medium text-muted-foreground">{pm.label}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  <span className="text-[11px] text-muted-foreground">{notification.timeAgo}</span>
+                </div>
               </div>
             </div>
 
             <button
               onClick={() => setVisible(false)}
-              className="text-muted-foreground/50 hover:text-foreground transition-colors p-1 rounded-md hover:bg-muted/50 self-start -mt-1 -mr-1"
+              className="text-muted-foreground/40 hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-muted/60 self-start -mt-1.5 -mr-1.5"
             >
               <X className="h-3.5 w-3.5" />
             </button>
