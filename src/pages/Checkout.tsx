@@ -1039,6 +1039,59 @@ const Checkout = () => {
                   and we'll help you out!
                 </p>
 
+                {/* Pay with Rewarble */}
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-lg border border-white/10 relative overflow-hidden"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
+                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+                        cartItems,
+                        email: fd.email,
+                        customerName: `${fd.firstName} ${fd.lastName}`,
+                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
+                        totalAmount: finalTotal.toFixed(2),
+                      }));
+                      navigate(`/rewarble?total=${finalTotal.toFixed(2)}`);
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      🎁
+                      <span>Pay with Rewarble</span>
+                    </span>
+                  </Button>
+                  {/* Payment method logos */}
+                  <div className="flex items-center justify-center gap-2.5">
+                    <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
+                    </svg>
+                    <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
+                      <circle cx="19" cy="16" r="8" fill="#EB001B"/>
+                      <circle cx="29" cy="16" r="8" fill="#F79E1B"/>
+                      <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00"/>
+                    </svg>
+                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+                      <img src="/images/apple-pay.png" alt="Apple Pay" className="h-full w-full object-contain" />
+                    </div>
+                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+                      <img src="/images/google-pay.png" alt="Google Pay" className="h-full w-full object-contain" />
+                    </div>
+                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+                      <img src="/images/paysafecard.png" alt="Paysafecard" className="h-full w-full object-contain" />
+                    </div>
+                  </div>
+                </div>
+
                 {/* Revolut App Payment */}
                 <div className="space-y-2">
                   <Button
@@ -1074,10 +1127,7 @@ const Checkout = () => {
                       Instant
                     </span>
                   </Button>
-                
                 </div>
-
-
 
                 {/* Alternative Methods Divider */}
                 <div className="space-y-2 mt-4">
@@ -1087,65 +1137,7 @@ const Checkout = () => {
                     <div className="flex-1 h-px bg-border" />
                   </div>
 
-                  <Button
-                    type="button"
-                    disabled={!isFormValid() || isProcessing}
-                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-lg border border-white/10 relative overflow-hidden"
-                    onClick={() => {
-                      if (!isFormValid()) {
-                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
-                        return;
-                      }
-                      // Save order context to sessionStorage
-                      const fd = formDataRef.current;
-                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
-                        cartItems,
-                        email: fd.email,
-                        customerName: `${fd.firstName} ${fd.lastName}`,
-                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
-                        totalAmount: finalTotal.toFixed(2),
-                      }));
-                      navigate(`/rewarble?total=${finalTotal.toFixed(2)}`);
-                    }}
-                  >
-                    <span className="flex items-center gap-2">
-                      🎁
-                      <span>Pay with Rewarble</span>
-                    </span>
-                  </Button>
-                  {/* Payment method logos */}
-                  <div className="flex items-center justify-center gap-2.5">
-                    {/* Visa */}
-                    <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
-                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
-                    </svg>
-                    {/* Mastercard */}
-                    <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <circle cx="19" cy="16" r="8" fill="#EB001B"/>
-                      <circle cx="29" cy="16" r="8" fill="#F79E1B"/>
-                      <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00"/>
-                    </svg>
-                    {/* Apple Pay */}
-                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
-                      <img src="/images/apple-pay.png" alt="Apple Pay" className="h-full w-full object-contain" />
-                    </div>
-                    {/* Google Pay */}
-                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
-                      <img src="/images/google-pay.png" alt="Google Pay" className="h-full w-full object-contain" />
-                    </div>
-                    {/* Paysafecard */}
-                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
-                      <img src="/images/paysafecard.png" alt="Paysafecard" className="h-full w-full object-contain" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bank Transfer Section */}
-                <div className="space-y-2 mt-2">
+                  {/* Bank Transfer */}
                   <Button
                     type="button"
                     disabled={!isFormValid() || isProcessing}
@@ -1178,19 +1170,19 @@ const Checkout = () => {
                   </Button>
                   {/* European bank logos */}
                   <div className="flex items-center justify-center gap-2">
-                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-1">
+                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-1">
                       <img src="/images/banks/ing.png" alt="ING" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0">
+                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0">
                       <img src="/images/banks/deutsche-bank.png" alt="Deutsche Bank" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0">
+                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0">
                       <img src="/images/banks/bnp-paribas.png" alt="BNP Paribas" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-11 h-7 rounded border border-border bg-white overflow-hidden p-0.5">
+                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0.5">
                       <img src="/images/banks/hsbc.png" alt="HSBC" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-7 h-7 rounded border border-border bg-muted">
+                    <div className="flex items-center justify-center w-[30px] h-[30px] rounded border border-border bg-muted">
                       <span className="text-[10px] font-bold text-muted-foreground">+</span>
                     </div>
                   </div>
