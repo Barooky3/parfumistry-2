@@ -156,7 +156,7 @@ export const SocialProofPopup = () => {
               <img
                 src={notification.product.image}
                 alt={notification.product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain p-1"
               />
             </div>
 
