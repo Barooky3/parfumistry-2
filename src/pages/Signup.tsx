@@ -22,6 +22,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
@@ -53,6 +54,10 @@ const Signup = () => {
     e.preventDefault();
     if (!allRulesPass) {
       toast({ title: 'Password does not meet requirements', variant: 'destructive' });
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast({ title: 'Passwords do not match', variant: 'destructive' });
       return;
     }
     setIsSubmitting(true);
@@ -267,11 +272,35 @@ const Signup = () => {
                 )}
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-xs font-medium tracking-[0.1em] uppercase text-muted-foreground">
+                  Confirm Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="confirmPassword"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    required
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
+                  />
+                </div>
+                {confirmPassword.length > 0 && password !== confirmPassword && (
+                  <div className="flex items-center gap-2 text-xs pt-1">
+                    <X className="h-3.5 w-3.5 text-destructive" />
+                    <span className="text-muted-foreground">Passwords do not match</span>
+                  </div>
+                )}
+              </div>
+
               <Button
                 type="submit"
                 size="lg"
                 className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
-                disabled={isSubmitting || !allRulesPass}
+                disabled={isSubmitting || !allRulesPass || password !== confirmPassword}
               >
                 {isSubmitting ? 'Sending code...' : 'Create Account'}
               </Button>
