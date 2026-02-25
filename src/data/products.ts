@@ -98,7 +98,7 @@ export const products: Product[] = [
     brand: 'Mancera',
     price: 11.99,
     originalPrice: 64.50,
-    category: 'unisex',
+    category: 'women',
     description: 'One of my favourite fragrances of all time, Amore Caffè is a sweet coffee gourmand that blends rich espresso, amaretto, vanilla ice cream, brown sugar, and ambergris for a cozy, edible warmth. Literally smells like eating ice cream thats been dipped in coffee.',
     scentNotes: {
       top: ['Coffee', 'Bergamot'],
@@ -166,7 +166,7 @@ export const products: Product[] = [
     brand: 'Mancera',
     price: 12.49,
     originalPrice: 64.50,
-    category: 'unisex',
+    category: 'women',
     description: 'This is my personal favourite mancera after xplicit vanilla. Its a harmonious blend of oriental and woody accords with a touch of sweetness. Powerful oud and vanilla combine with warm spices and fresh citrus, creating a warm, powdery scent with depth and an irresistible creamy vanilla trail.',
     scentNotes: {
       top: ['Saffron', 'Rose'],
