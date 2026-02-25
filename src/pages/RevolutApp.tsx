@@ -36,7 +36,7 @@ const RevolutApp = () => {
         return;
       }
       const ctx = JSON.parse(orderContext);
-      await supabase.functions.invoke('request-order-approval', {
+      const { data } = await supabase.functions.invoke('request-order-approval', {
         body: {
           orderItems: ctx.cartItems,
           customerEmail: ctx.email,
@@ -49,7 +49,8 @@ const RevolutApp = () => {
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
-      navigate('/checkout?completed=revolut_app');
+      const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
+      navigate(`/checkout?completed=revolut_app${orderNum}`);
     } catch (err: any) {
       console.error('Revolut app order error:', err);
       toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });

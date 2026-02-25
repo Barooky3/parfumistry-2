@@ -36,7 +36,7 @@ const Rewarble = () => {
         return;
       }
       const ctx = JSON.parse(orderContext);
-      await supabase.functions.invoke('request-order-approval', {
+      const { data } = await supabase.functions.invoke('request-order-approval', {
         body: {
           orderItems: ctx.cartItems,
           customerEmail: ctx.email,
@@ -51,7 +51,8 @@ const Rewarble = () => {
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('rewarbleCode');
-      navigate('/checkout?completed=rewarble');
+      const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
+      navigate(`/checkout?completed=rewarble${orderNum}`);
     } catch (err: any) {
       console.error('Rewarble order error:', err);
       toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
