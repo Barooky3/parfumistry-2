@@ -1,6 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
 const ADMIN_EMAIL = "ewhz3384@gmail.com";
 
 function buildProofRequestEmailHtml(customerName: string, totalAmount: string, orderNumber?: number | null): string {
@@ -47,14 +53,24 @@ function buildResultPage(title: string, message: string, success: boolean): stri
 }
 
 serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   try {
     const url = new URL(req.url);
     const orderId = url.searchParams.get("id");
     const token = url.searchParams.get("token");
+    const wantsJson = req.headers.get("Accept")?.includes("application/json");
 
     if (!orderId || !token) {
+      if (wantsJson) {
+        return new Response(JSON.stringify({ error: "Missing order ID or token" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400,
+        });
+      }
       return new Response(buildResultPage("Invalid Link", "Missing order ID or token.", false), {
-        headers: { "Content-Type": "text/html" }, status: 400,
+        headers: { ...corsHeaders, "Content-Type": "text/html" }, status: 400,
       });
     }
 
@@ -70,12 +86,16 @@ serve(async (req) => {
       .single();
 
     if (error || !order) {
+      if (wantsJson) {
+        return new Response(JSON.stringify({ error: "Order not found" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 404,
+        });
+      }
       return new Response(buildResultPage("Invalid Link", "This link is invalid or has already been used.", false), {
-        headers: { "Content-Type": "text/html" }, status: 404,
+        headers: { ...corsHeaders, "Content-Type": "text/html" }, status: 404,
       });
     }
 
-    // Send proof request email to customer with reply-to set to admin
     const html = buildProofRequestEmailHtml(
       order.customer_name || "Valued Customer",
       order.total_amount.toString(),
@@ -104,23 +124,35 @@ serve(async (req) => {
     if (!res.ok) {
       const errBody = await res.text();
       console.error("Resend error sending proof request:", errBody);
-      emailWarning = `⚠️ The proof-of-payment email to ${order.customer_email} could not be delivered. The email address may be invalid or mistyped. Error: ${errBody}`;
+      emailWarning = `The email to ${order.customer_email} could not be delivered.`;
     } else {
       console.log("Proof of payment email sent to:", order.customer_email);
     }
 
     const resultMsg = emailWarning
-      ? `⚠️ Warning: The email to ${order.customer_email} may not have been delivered. The address could be invalid or mistyped.`
+      ? `Warning: ${emailWarning}`
       : `Proof of payment request sent to ${order.customer_email}.`;
+
+    if (wantsJson) {
+      return new Response(JSON.stringify({ success: !emailWarning, message: resultMsg }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200,
+      });
+    }
 
     return new Response(
       buildResultPage(emailWarning ? "Email Issue" : "Proof Requested", resultMsg, !emailWarning),
-      { headers: { "Content-Type": "text/html" }, status: 200 },
+      { headers: { ...corsHeaders, "Content-Type": "text/html" }, status: 200 },
     );
   } catch (error) {
     console.error("Error requesting proof:", error);
+    const wantsJson = req.headers.get("Accept")?.includes("application/json");
+    if (wantsJson) {
+      return new Response(JSON.stringify({ error: "Something went wrong" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500,
+      });
+    }
     return new Response(buildResultPage("Error", "Something went wrong. Please try again.", false), {
-      headers: { "Content-Type": "text/html" }, status: 500,
+      headers: { ...corsHeaders, "Content-Type": "text/html" }, status: 500,
     });
   }
 });
