@@ -102,6 +102,10 @@ serve(async (req) => {
             shippingAddress: order.shipping_address,
             totalAmount: order.total_amount.toString(),
             orderNumber: order.order_number,
+            paymentMethod: order.checkout_reference?.startsWith("rewarble") ? "rewarble"
+              : order.checkout_reference?.startsWith("bank-transfer") ? "bank_transfer"
+              : order.checkout_reference?.startsWith("revolut") ? "revolut"
+              : undefined,
           }),
         });
         if (!confRes.ok) {
