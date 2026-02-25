@@ -58,7 +58,7 @@ export const products: Product[] = [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
       { name: 'Dior Sauvage Parfum', topNote: 'Bergamot', heartNote: 'Sandalwood', baseNote: 'Vanilla', accentColor: '#2C3E50' },
       { name: 'Versace Eros', topNote: 'Mint', heartNote: 'Ambroxan', baseNote: 'Vanilla', accentColor: '#1E90FF' },
-      { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#4A6741' },
+      { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A' },
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
     ],
     variants: [
@@ -1098,7 +1098,7 @@ export const products: Product[] = [
       heart: ['Lavender', 'Cinnamon'],
       base: ['Vanilla', 'Chestnut', 'Suede'],
     },
-    accentColor: '#4A6741',
+    accentColor: '#8B1A1A',
     image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=800',
     affiliateUrl: 'https://profparfums.store/products/stronger-with-you-absolute',
     inStock: true,
