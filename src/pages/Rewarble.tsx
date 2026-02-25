@@ -150,18 +150,9 @@ const Rewarble = () => {
             <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00"/>
           </svg>
           {/* Apple Pay */}
-          <svg width="36" height="24" viewBox="0 0 165 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="165" height="40" rx="4" fill="#000"/>
-            <g transform="translate(16, 3) scale(0.85)">
-              <path d="M25.2 7.8c-1.4 1.7-3.7 3-5.9 2.8-.3-2.3.8-4.8 2.1-6.3C22.8 2.6 25.3 1.5 27.2 1.4c.2 2.5-.7 4.9-2 6.4z" fill="white"/>
-              <path d="M27.1 10.5c-3.3-.2-6.1 1.9-7.6 1.9-1.6 0-4-1.8-6.6-1.8-3.4.1-6.5 2-8.3 5-3.5 6.1-.9 15.2 2.5 20.2 1.7 2.5 3.7 5.2 6.3 5.1 2.5-.1 3.5-1.6 6.5-1.6 3 0 3.9 1.6 6.6 1.6 2.7-.1 4.4-2.5 6.1-5 1.9-2.8 2.7-5.5 2.7-5.7-.1 0-5.2-2-5.3-7.9-.1-5 4-7.3 4.2-7.5-2.3-3.4-5.8-3.8-7.1-3.8v.5z" fill="white"/>
-            </g>
-            <g transform="translate(70, 6)">
-              <path d="M7.3 27.4V1.7h8.5c4.2 0 7.1 2.8 7.1 6.9 0 4.1-3 6.9-7.2 6.9H11v11.9H7.3zM11 12.6h3.5c2.9 0 4.5-1.5 4.5-4.1 0-2.5-1.6-4-4.5-4H11v8.1z" fill="white"/>
-              <path d="M35.5 23.4c0 2.6-2 4.3-5 4.3-2.6 0-4.5-1.3-4.6-3.2h3.3c.2 1 1.2 1.7 2.5 1.7 1.6 0 2.5-.8 2.5-1.9 0-1-.8-1.6-2.5-2l-1.8-.4c-3-.7-4.3-2-4.3-4.2 0-2.7 2.2-4.5 5.3-4.5 2.5 0 4.3 1.3 4.4 3.2h-3.2c-.2-1-1-1.7-2.3-1.7-1.4 0-2.3.7-2.3 1.8 0 1 .8 1.5 2.4 1.9l1.5.4c3.3.8 4.8 2 4.8 4.3l-.7.3z" fill="white"/>
-              <path d="M39 28.9c-.4 0-.8 0-1.1-.1v-2.5c.3 0 .7.1 1 .1 1.4 0 2.1-.6 2.6-2l.3-.8-5.7-15.1h3.5l4 12.1h.1l4-12.1h3.4L45.2 25c-1.3 3.6-2.8 4.2-5.3 4.2l-.9-.3z" fill="white"/>
-            </g>
-          </svg>
+          <div className="w-[36px] h-[24px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+            <img src="/images/apple-pay.png" alt="Apple Pay" className="h-full w-full object-contain" />
+          </div>
           {/* Google Pay */}
           <svg width="36" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
