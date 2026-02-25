@@ -31,12 +31,24 @@ interface Order {
   approval_token: string | null;
 }
 
+function getPaymentMethod(ref: string): string {
+  if (ref?.startsWith("rewarble")) return "Rewarble";
+  if (ref?.startsWith("revolut-app")) return "Revolut App";
+  if (ref?.startsWith("bank-transfer")) return "Bank Transfer";
+  if (ref?.startsWith("revolut")) return "Revolut";
+  if (ref?.startsWith("paypal")) return "PayPal";
+  return "Other";
+}
+
+const PAYMENT_METHODS = ["All", "Rewarble", "PayPal", "Bank Transfer", "Revolut App", "Revolut", "Other"];
+
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("pending_approval");
+  const [paymentFilter, setPaymentFilter] = useState("All");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
@@ -79,7 +91,6 @@ export default function AdminOrders() {
       if (!session) return;
 
       if (action === "request_proof") {
-        // Find the order to get its approval_token
         const order = orders.find(o => o.id === orderId);
         if (!order) {
           toast.error("Order not found");
@@ -87,7 +98,7 @@ export default function AdminOrders() {
           return;
         }
         const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/request-proof-of-payment?id=${orderId}&token=${(order as any).approval_token || ""}`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/request-proof-of-payment?id=${orderId}&token=${order.approval_token || ""}`,
           { method: "GET" }
         );
         if (res.ok) {
@@ -134,6 +145,19 @@ export default function AdminOrders() {
     pending: "bg-gray-100 text-gray-800",
   };
 
+  const pmColors: Record<string, string> = {
+    "Rewarble": "bg-purple-100 text-purple-800",
+    "PayPal": "bg-blue-100 text-blue-800",
+    "Bank Transfer": "bg-emerald-100 text-emerald-800",
+    "Revolut App": "bg-indigo-100 text-indigo-800",
+    "Revolut": "bg-cyan-100 text-cyan-800",
+    "Other": "bg-gray-100 text-gray-800",
+  };
+
+  const filteredOrders = paymentFilter === "All"
+    ? orders
+    : orders.filter(o => getPaymentMethod(o.checkout_reference) === paymentFilter);
+
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-5xl mx-auto">
@@ -147,33 +171,54 @@ export default function AdminOrders() {
           </Button>
         </div>
 
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {["pending_approval", "approved", "rejected", "all"].map((s) => (
-            <Button
-              key={s}
-              variant={statusFilter === s ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter(s)}
-              className="capitalize"
-            >
-              {s === "pending_approval" ? "Pending" : s === "all" ? "All" : s}
-            </Button>
-          ))}
+        {/* Status Filter */}
+        <div className="mb-3">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Status</p>
+          <div className="flex gap-2 flex-wrap">
+            {["pending_approval", "approved", "rejected", "all"].map((s) => (
+              <Button
+                key={s}
+                variant={statusFilter === s ? "default" : "outline"}
+                size="sm"
+                onClick={() => setStatusFilter(s)}
+                className="capitalize"
+              >
+                {s === "pending_approval" ? "Pending" : s === "all" ? "All" : s}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Payment Method Filter */}
+        <div className="mb-6">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Payment Method</p>
+          <div className="flex gap-2 flex-wrap">
+            {PAYMENT_METHODS.map((pm) => (
+              <Button
+                key={pm}
+                variant={paymentFilter === pm ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPaymentFilter(pm)}
+              >
+                {pm}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {loading ? (
           <div className="text-center py-16 text-muted-foreground">Loading orders...</div>
-        ) : orders.length === 0 ? (
+        ) : filteredOrders.length === 0 ? (
           <div className="text-center py-16">
             <Package className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
             <p className="text-muted-foreground">No orders found</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {orders.map((order) => {
+            {filteredOrders.map((order) => {
               const items = (Array.isArray(order.order_items) ? order.order_items : []) as OrderItem[];
               const date = new Date(order.created_at);
-              const isRewarble = order.checkout_reference?.startsWith("rewarble");
+              const pm = getPaymentMethod(order.checkout_reference);
 
               return (
                 <div key={order.id} className="border rounded-lg p-5 bg-card">
@@ -185,7 +230,9 @@ export default function AdminOrders() {
                         <Badge className={statusColors[order.status] || "bg-gray-100 text-gray-800"}>
                           {order.status.replace("_", " ")}
                         </Badge>
-                        {isRewarble && <Badge variant="outline" className="text-xs">Rewarble</Badge>}
+                        <Badge className={pmColors[pm] || "bg-gray-100 text-gray-800"}>
+                          {pm}
+                        </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">{order.customer_email}</p>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -214,31 +261,31 @@ export default function AdminOrders() {
                   </div>
 
                   <div className="mt-4 flex gap-3 flex-wrap">
-                      <Button
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => handleAction(order.id, "approve")}
-                        disabled={actionLoading === order.id}
-                      >
-                        <Check className="h-4 w-4 mr-1" /> {order.status === "approved" ? "Re-Approve" : "Approve"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleAction(order.id, "reject")}
-                        disabled={actionLoading === order.id}
-                      >
-                        <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleAction(order.id, "request_proof")}
-                        disabled={actionLoading === order.id}
-                      >
-                        <Mail className="h-4 w-4 mr-1" /> Request Proof
-                      </Button>
-                    </div>
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => handleAction(order.id, "approve")}
+                      disabled={actionLoading === order.id}
+                    >
+                      <Check className="h-4 w-4 mr-1" /> {order.status === "approved" ? "Re-Approve" : "Approve"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleAction(order.id, "reject")}
+                      disabled={actionLoading === order.id}
+                    >
+                      <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAction(order.id, "request_proof")}
+                      disabled={actionLoading === order.id}
+                    >
+                      <Mail className="h-4 w-4 mr-1" /> Request Proof
+                    </Button>
+                  </div>
                 </div>
               );
             })}

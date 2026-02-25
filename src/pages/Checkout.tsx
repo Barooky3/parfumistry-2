@@ -347,6 +347,7 @@ const Checkout = () => {
   const { t } = useLanguage();
   const [isCompleted, setIsCompleted] = useState(false);
   const [completedPaymentMethod, setCompletedPaymentMethod] = useState<string>('');
+  const [completedOrderNumber, setCompletedOrderNumber] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [revolutLinkOpened, setRevolutLinkOpened] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
@@ -400,8 +401,10 @@ const Checkout = () => {
   // Handle completed payment redirect from BankTransfer/Rewarble pages
   useEffect(() => {
     const completed = searchParams.get('completed');
+    const orderNum = searchParams.get('order');
     if (completed) {
       setCompletedPaymentMethod(completed);
+      setCompletedOrderNumber(orderNum);
       setIsCompleted(true);
     }
   }, [searchParams]);
@@ -712,6 +715,11 @@ const Checkout = () => {
 
           {/* Thank You Text */}
           <h1 className="font-display text-3xl text-foreground text-center mb-4">{t('checkout.thankYou')}</h1>
+          {completedOrderNumber && (
+            <p className="text-center text-sm font-mono font-semibold text-accent mb-4">
+              Order #{completedOrderNumber}
+            </p>
+          )}
           <p className="text-muted-foreground text-center mb-2">
             {completedPaymentMethod === 'revolut'
               ? t('checkout.thankYouRevolut')
