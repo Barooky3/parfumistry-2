@@ -1118,21 +1118,29 @@ const Checkout = () => {
                   {/* Payment method logos */}
                   <div className="flex items-center justify-center gap-2.5">
                     {/* Visa */}
-                    <svg width="38" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#1A1F71" stroke="#2A2F81"/>
-                      <path d="M20.4 21H17.8L19.5 11H22.1L20.4 21ZM16.2 11L13.7 17.8L13.4 16.3L13.4 16.3L12.5 12C12.5 12 12.4 11 11.1 11H7.1L7 11.2C7 11.2 8.5 11.5 10.2 12.5L12.5 21H15.2L19 11H16.2ZM37 21H39.3L37.3 11H35.2C34.1 11 33.8 11.9 33.8 11.9L29.9 21H32.6L33.1 19.5H36.4L36.7 21H37ZM33.9 17.5L35.3 13.5L36.1 17.5H33.9ZM30.4 13.5L30.8 11.3C30.8 11.3 29.5 10.8 28.1 10.8C26.6 10.8 23.2 11.5 23.2 14.3C23.2 16.9 26.8 16.9 26.8 18.3C26.8 19.6 23.6 19.3 22.4 18.4L22 20.7C22 20.7 23.3 21.3 25.2 21.3C27.1 21.3 29.8 20.2 29.8 17.7C29.8 15.1 26.1 14.8 26.1 13.7C26.1 12.5 28.5 12.7 30.4 13.5Z" fill="white"/>
+                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial, sans-serif">VISA</text>
                     </svg>
                     {/* Mastercard */}
-                    <svg width="38" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <circle cx="19" cy="16" r="8" fill="#EB001B"/><circle cx="29" cy="16" r="8" fill="#F79E1B"/><path d="M24 10a8 8 0 010 12 8 8 0 010-12z" fill="#FF5F00"/>
+                      <circle cx="19" cy="16" r="8" fill="#EB001B"/>
+                      <circle cx="29" cy="16" r="8" fill="#F79E1B"/>
+                      <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00"/>
                     </svg>
-                    {/* iDEAL */}
-                    <svg width="38" height="24" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" y="0.5" width="47" height="31" rx="3.5" fill="#fff" stroke="#ddd"/>
-                      <rect x="8" y="6" width="32" height="20" rx="2" fill="#CC0066"/>
-                      <text x="24" y="19.5" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" fontFamily="Arial, sans-serif">iDEAL</text>
-                    </svg>
+                    {/* Apple Pay */}
+                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+                      <img src="/images/apple-pay.png" alt="Apple Pay" className="h-full w-full object-contain" />
+                    </div>
+                    {/* Google Pay */}
+                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+                      <img src="/images/google-pay.png" alt="Google Pay" className="h-full w-full object-contain" />
+                    </div>
+                    {/* Paysafecard */}
+                    <div className="w-[44px] h-[30px] rounded border border-border overflow-hidden bg-white flex items-center justify-center">
+                      <img src="/images/paysafecard.png" alt="Paysafecard" className="h-full w-full object-contain" />
+                    </div>
                   </div>
                 </div>
 
