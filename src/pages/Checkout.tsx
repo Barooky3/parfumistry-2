@@ -1092,6 +1092,11 @@ const Checkout = () => {
                   </div>
                 </div>
 
+                {/* Separator between Rewarble and Revolut */}
+                <div className="flex items-center gap-3 my-1">
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+
                 {/* Revolut App Payment */}
                 <div className="space-y-2">
                   <Button
@@ -1216,7 +1221,7 @@ const Checkout = () => {
                     <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0.5">
                       <img src="/images/banks/hsbc.png" alt="HSBC" className="max-h-full max-w-full object-contain" />
                     </div>
-                    <div className="flex items-center justify-center w-[30px] h-[30px] rounded border border-border bg-muted">
+                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-muted">
                       <span className="text-[10px] font-bold text-muted-foreground">+</span>
                     </div>
                   </div>

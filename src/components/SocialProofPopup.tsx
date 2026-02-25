@@ -110,7 +110,7 @@ export const SocialProofPopup = () => {
     setTimeout(() => {
       setVisible(false);
       scheduleNext(showNotification);
-    }, 5000);
+    }, 9000);
   }, [scheduleNext]);
 
   useEffect(() => {
@@ -145,7 +145,7 @@ export const SocialProofPopup = () => {
 
           <div className="flex items-center gap-4 p-5">
             {/* Product image */}
-            <div className="w-[60px] h-[68px] rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-border/50"
+            <div className="w-[72px] h-[82px] rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-border/50"
               style={{ background: 'hsl(30 20% 94%)' }}
             >
               <img
@@ -170,9 +170,9 @@ export const SocialProofPopup = () => {
                   style={{ background: 'hsl(30 15% 92%)' }}
                 >
                   {pm.icon ? (
-                    <span className="text-xs">{pm.icon}</span>
+                    <span className="text-sm">{pm.icon}</span>
                   ) : pm.iconUrl ? (
-                    <img src={pm.iconUrl} alt={pm.label} className="w-3.5 h-3.5 object-contain" />
+                    <img src={pm.iconUrl} alt={pm.label} className="w-5 h-5 object-contain" />
                   ) : null}
                   <span className="text-[11px] font-medium text-muted-foreground">{pm.label}</span>
                 </div>
