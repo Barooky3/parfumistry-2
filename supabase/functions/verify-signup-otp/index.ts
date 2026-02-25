@@ -49,6 +49,7 @@ serve(async (req) => {
       .eq("id", otpRecord.id);
 
     // Create the user with admin API (auto-confirmed)
+    let userId: string | undefined;
     const { data: userData, error: createError } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -57,14 +58,41 @@ serve(async (req) => {
     });
 
     if (createError) {
-      return new Response(
-        JSON.stringify({ error: createError.message }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-      );
+      // If user already exists, try to update their password instead
+      if (createError.message?.includes("already been registered")) {
+        const { data: users } = await supabase.auth.admin.listUsers();
+        const existingUser = users?.users?.find((u: any) => u.email === email);
+        if (existingUser) {
+          const { error: updateError } = await supabase.auth.admin.updateUserById(existingUser.id, {
+            password,
+            email_confirm: true,
+            user_metadata: { full_name: name },
+          });
+          if (updateError) {
+            return new Response(
+              JSON.stringify({ error: updateError.message }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+            );
+          }
+          userId = existingUser.id;
+        } else {
+          return new Response(
+            JSON.stringify({ error: createError.message }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+          );
+        }
+      } else {
+        return new Response(
+          JSON.stringify({ error: createError.message }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+        );
+      }
+    } else {
+      userId = userData.user?.id;
     }
 
     return new Response(
-      JSON.stringify({ success: true, userId: userData.user?.id }),
+      JSON.stringify({ success: true, userId }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );
   } catch (error) {
