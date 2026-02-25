@@ -263,6 +263,8 @@ serve(async (req) => {
       // Check email validity via Resend before sending
       let emailWarning = "";
       const isRewarble = order.checkout_reference?.startsWith("rewarble");
+      const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
+      const noLinksMethod = isRewarble ? "rewarble" : isBankTransfer ? "bank_transfer" : undefined;
       try {
         await sendConfirmationViaFunction(
           supabaseUrl,
@@ -272,7 +274,7 @@ serve(async (req) => {
           order.total_amount.toString(),
           (order.shipping_address as any) || {},
           order.order_number,
-          isRewarble ? "rewarble" : undefined,
+          noLinksMethod,
         );
       } catch (emailErr: any) {
         console.error("Failed to send customer email:", emailErr);
