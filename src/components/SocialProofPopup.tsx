@@ -14,11 +14,17 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
   'Poland': { first: ['Antoni', 'Zuzanna', 'Jakub', 'Hanna', 'Szymon', 'Maja', 'Filip', 'Lena', 'Mikołaj', 'Alicja'], last: ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski'] },
   'Sweden': { first: ['Liam', 'Astrid', 'Elias', 'Maja', 'William', 'Ella', 'Hugo', 'Ebba', 'Oscar', 'Wilma'], last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'] },
   'United States': { first: ['Ethan', 'Sophia', 'Mason', 'Olivia', 'Caleb', 'Ava', 'Noah', 'Mia', 'Logan', 'Harper'], last: ['Johnson', 'Williams', 'Davis', 'Miller', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin'] },
+  'Canada': { first: ['Liam', 'Emma', 'Noah', 'Olivia', 'Ethan', 'Charlotte', 'Jack', 'Amelia', 'Lucas', 'Sophia'], last: ['Smith', 'Brown', 'Tremblay', 'Martin', 'Roy', 'Wilson', 'Gagnon', 'Taylor', 'Campbell', 'Anderson'] },
   'Portugal': { first: ['Santiago', 'Leonor', 'Tomás', 'Matilde', 'Martim', 'Beatriz', 'Rodrigo', 'Carolina', 'Afonso', 'Mariana'], last: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Costa', 'Rodrigues', 'Martins', 'Sousa', 'Fernandes'] },
   'Austria': { first: ['Felix', 'Anna', 'Paul', 'Laura', 'David', 'Sarah', 'Jonas', 'Sophie', 'Maximilian', 'Marie'], last: ['Gruber', 'Huber', 'Bauer', 'Wagner', 'Steiner', 'Pichler', 'Moser', 'Berger', 'Mayer', 'Hofer'] },
   'Denmark': { first: ['Noah', 'Alma', 'Oscar', 'Ida', 'William', 'Freja', 'Lucas', 'Clara', 'Emil', 'Ella'], last: ['Nielsen', 'Jensen', 'Hansen', 'Andersen', 'Pedersen', 'Christensen', 'Larsen', 'Sørensen', 'Rasmussen', 'Madsen'] },
   'Norway': { first: ['Nora', 'Jakob', 'Emma', 'Filip', 'Olivia', 'Aksel', 'Ella', 'Henrik', 'Ingrid', 'Theodor'], last: ['Hansen', 'Johansen', 'Olsen', 'Larsen', 'Andersen', 'Pedersen', 'Nilsen', 'Kristiansen', 'Karlsen', 'Eriksen'] },
   'Switzerland': { first: ['Liam', 'Mia', 'Noah', 'Elena', 'Leon', 'Lara', 'Luca', 'Emilia', 'Julian', 'Sara'], last: ['Müller', 'Meier', 'Schmid', 'Keller', 'Weber', 'Huber', 'Schneider', 'Meyer', 'Steiner', 'Fischer'] },
+  'Greece': { first: ['Georgios', 'Maria', 'Dimitris', 'Eleni', 'Nikos', 'Sofia', 'Alexandros', 'Anna', 'Kostas', 'Katerina'], last: ['Papadopoulos', 'Vlahos', 'Nikolaou', 'Georgiou', 'Pappas', 'Koutsikos', 'Ioannou', 'Dimitriou', 'Antoniou', 'Karagiannis'] },
+  'Czech Republic': { first: ['Jakub', 'Eliška', 'Tomáš', 'Tereza', 'Adam', 'Anna', 'Filip', 'Natálie', 'Ondřej', 'Karolína'], last: ['Novák', 'Svoboda', 'Dvořák', 'Černý', 'Procházka', 'Kučera', 'Veselý', 'Horák', 'Němec', 'Pokorný'] },
+  'Ireland': { first: ['Conor', 'Aoife', 'Sean', 'Saoirse', 'Cian', 'Ciara', 'Oisín', 'Niamh', 'Fionn', 'Róisín'], last: ['Murphy', 'Kelly', 'O\'Sullivan', 'Walsh', 'O\'Brien', 'Byrne', 'Ryan', 'O\'Connor', 'Doyle', 'McCarthy'] },
+  'Croatia': { first: ['Luka', 'Ana', 'Marko', 'Petra', 'Ivan', 'Mia', 'Matej', 'Lucija', 'Filip', 'Sara'], last: ['Horvat', 'Kovačević', 'Babić', 'Marić', 'Novak', 'Jurić', 'Knežević', 'Vuković', 'Matić', 'Tomić'] },
+  'Romania': { first: ['Andrei', 'Maria', 'Alexandru', 'Elena', 'David', 'Ioana', 'Stefan', 'Ana', 'Gabriel', 'Daria'], last: ['Popa', 'Ionescu', 'Popescu', 'Stan', 'Dumitru', 'Stoica', 'Gheorghe', 'Rusu', 'Moldovan', 'Munteanu'] },
 };
 
 const PAYMENT_METHODS = [
