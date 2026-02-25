@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Check, X, RefreshCw, Package, Mail } from "lucide-react";
 
-const ADMIN_EMAIL = "ewhz3384@gmail.com";
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
 
 interface OrderItem {
   name: string;
@@ -52,13 +52,13 @@ export default function AdminOrders() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!authLoading && (!user || user.email !== ADMIN_EMAIL)) {
+    if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       navigate("/", { replace: true });
     }
   }, [user, authLoading, navigate]);
 
   const fetchOrders = async () => {
-    if (!user || user.email !== ADMIN_EMAIL) return;
+    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -81,7 +81,7 @@ export default function AdminOrders() {
   };
 
   useEffect(() => {
-    if (user?.email === ADMIN_EMAIL) fetchOrders();
+    if (ADMIN_EMAILS.includes(user?.email || "")) fetchOrders();
   }, [user, statusFilter]);
 
   const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof") => {
@@ -136,7 +136,7 @@ export default function AdminOrders() {
     return <div className="min-h-screen flex items-center justify-center"><RefreshCw className="animate-spin h-8 w-8 text-muted-foreground" /></div>;
   }
 
-  if (!user || user.email !== ADMIN_EMAIL) return null;
+  if (!user || !ADMIN_EMAILS.includes(user.email || "")) return null;
 
   const statusColors: Record<string, string> = {
     pending_approval: "bg-yellow-100 text-yellow-800",
