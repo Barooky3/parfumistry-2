@@ -194,6 +194,7 @@ serve(async (req) => {
       status: "pending_approval",
       approval_token: token,
       email_sent: false,
+      gift_card_code: giftCardCode || null,
     }).select("id, order_number").single();
 
     if (dbError || !order) {
