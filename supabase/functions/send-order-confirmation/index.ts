@@ -138,14 +138,33 @@ function getBundleBonusLinks(name: string): { label: string; url: string }[] {
   return [];
 }
 
-function buildItemRow(item: OrderItem, origin: string): string {
+function buildItemRow(item: OrderItem, origin: string, noLinks: boolean = false): string {
   const rawImage = item.image.startsWith("http")
     ? item.image
     : origin + (item.image.startsWith("/") ? "" : "/") + item.image;
   const imageUrl = resolveProductImage(item.name, rawImage);
-  const productLink = getProductLink(item.name, item.brand);
   const mlLabel = item.selectedMl ? " \u2014 " + item.selectedMl + "ml" : "";
   const itemTotal = (item.price * item.quantity).toFixed(2);
+
+  if (noLinks) {
+    // Rewarble orders: images only, no links
+    return [
+      '<tr>',
+      '<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">',
+      '<table cellpadding="0" cellspacing="0" border="0"><tr>',
+      '<td style="width: 80px; vertical-align: top;">',
+      '<img src="' + imageUrl + '" alt="' + item.name + '" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />',
+      '</td>',
+      '<td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">',
+      '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">' + item.brand + '</div>',
+      '<div style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px;">' + item.name + mlLabel + '</div>',
+      '<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
+      '</td></tr></table>',
+      '</td></tr>',
+    ].join("\n");
+  }
+
+  const productLink = getProductLink(item.name, item.brand);
 
   const bonusLinks = getBundleBonusLinks(item.name);
   const bonusHtml = bonusLinks.map((b) =>
@@ -177,6 +196,7 @@ function buildEmailHtml(
   totalAmount: string,
   shippingAddress: { line1: string; city: string; postalCode: string; country: string },
   orderNumber?: number | null,
+  noLinks: boolean = false,
 ): string {
   const year = new Date().getFullYear();
   const orderNumDisplay = orderNumber ? `#${orderNumber}` : "";
@@ -207,7 +227,7 @@ function buildEmailHtml(
     '<div style="padding: 32px 32px 0 32px;">',
     orderNumSection,
     '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
-    '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products. Click on any product to access it.</p>',
+    '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products.' + (noLinks ? '' : ' Click on any product to access it.') + '</p>',
     '</div>',
 
     '<div style="padding: 0 32px;">',
@@ -389,13 +409,14 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount, orderNumber } = body as {
+    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount, orderNumber, paymentMethod } = body as {
       orderItems: (OrderItem | { product: { name: string; brand: string; image: string; price: number }; quantity: number; selectedMl?: number; selectedPrice?: number })[];
       customerEmail: string;
       customerName: string;
       shippingAddress: { line1: string; city: string; postalCode: string; country: string };
       totalAmount: string;
       orderNumber?: number | null;
+      paymentMethod?: string;
     };
 
     if (!customerEmail) throw new Error("Customer email is required");
@@ -418,9 +439,10 @@ serve(async (req) => {
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
     const origin = "https://profparfums.lovable.app";
-    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin)).join("");
+    const isRewarble = paymentMethod === "rewarble";
+    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, isRewarble)).join("");
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber);
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, isRewarble);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
     await sendEmail(customerEmail, emailSubject, html);
