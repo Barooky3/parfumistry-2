@@ -25,6 +25,7 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
   'Ireland': { first: ['Conor', 'Aoife', 'Sean', 'Saoirse', 'Cian', 'Ciara', 'Oisín', 'Niamh', 'Fionn', 'Róisín'], last: ['Murphy', 'Kelly', 'O\'Sullivan', 'Walsh', 'O\'Brien', 'Byrne', 'Ryan', 'O\'Connor', 'Doyle', 'McCarthy'] },
   'Croatia': { first: ['Luka', 'Ana', 'Marko', 'Petra', 'Ivan', 'Mia', 'Matej', 'Lucija', 'Filip', 'Sara'], last: ['Horvat', 'Kovačević', 'Babić', 'Marić', 'Novak', 'Jurić', 'Knežević', 'Vuković', 'Matić', 'Tomić'] },
   'Romania': { first: ['Andrei', 'Maria', 'Alexandru', 'Elena', 'David', 'Ioana', 'Stefan', 'Ana', 'Gabriel', 'Daria'], last: ['Popa', 'Ionescu', 'Popescu', 'Stan', 'Dumitru', 'Stoica', 'Gheorghe', 'Rusu', 'Moldovan', 'Munteanu'] },
+  'Bulgaria': { first: ['Georgi', 'Maria', 'Ivan', 'Elena', 'Dimitar', 'Viktoria', 'Nikola', 'Gabriela', 'Alexander', 'Sophia'], last: ['Ivanov', 'Georgiev', 'Dimitrov', 'Petrov', 'Nikolov', 'Hristov', 'Todorov', 'Stoyanov', 'Angelov', 'Kolev'] },
 };
 
 const PAYMENT_METHODS = [
