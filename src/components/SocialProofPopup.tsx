@@ -1,10 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { ShoppingBag, X } from 'lucide-react';
-import { products } from '@/data/products';
-import { bestsellerIds } from '@/data/products';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { X } from 'lucide-react';
+import { products, bestsellerIds } from '@/data/products';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Names by region – believable, non-cliché
 const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
   'Netherlands': { first: ['Daan', 'Sem', 'Lieke', 'Fleur', 'Thijs', 'Noor', 'Ruben', 'Femke', 'Bram', 'Sanne'], last: ['de Vries', 'Jansen', 'Bakker', 'Visser', 'Smit', 'Meijer', 'Mulder', 'Bos', 'Vos', 'Peters'] },
   'Belgium': { first: ['Wout', 'Lore', 'Tibo', 'Noor', 'Senne', 'Fien', 'Matteo', 'Roos', 'Emile', 'Axelle'], last: ['Peeters', 'Janssens', 'Maes', 'Willems', 'Claes', 'Goossens', 'Wouters', 'De Smedt', 'Hermans', 'Jacobs'] },
@@ -16,38 +14,27 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
   'Poland': { first: ['Antoni', 'Zuzanna', 'Jakub', 'Hanna', 'Szymon', 'Maja', 'Filip', 'Lena', 'Mikołaj', 'Alicja'], last: ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski'] },
   'Sweden': { first: ['Liam', 'Astrid', 'Elias', 'Maja', 'William', 'Ella', 'Hugo', 'Ebba', 'Oscar', 'Wilma'], last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'] },
   'United States': { first: ['Ethan', 'Sophia', 'Mason', 'Olivia', 'Caleb', 'Ava', 'Noah', 'Mia', 'Logan', 'Harper'], last: ['Johnson', 'Williams', 'Davis', 'Miller', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin'] },
+  'Portugal': { first: ['Santiago', 'Leonor', 'Tomás', 'Matilde', 'Martim', 'Beatriz', 'Rodrigo', 'Carolina', 'Afonso', 'Mariana'], last: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Costa', 'Rodrigues', 'Martins', 'Sousa', 'Fernandes'] },
+  'Austria': { first: ['Felix', 'Anna', 'Paul', 'Laura', 'David', 'Sarah', 'Jonas', 'Sophie', 'Maximilian', 'Marie'], last: ['Gruber', 'Huber', 'Bauer', 'Wagner', 'Steiner', 'Pichler', 'Moser', 'Berger', 'Mayer', 'Hofer'] },
+  'Denmark': { first: ['Noah', 'Alma', 'Oscar', 'Ida', 'William', 'Freja', 'Lucas', 'Clara', 'Emil', 'Ella'], last: ['Nielsen', 'Jensen', 'Hansen', 'Andersen', 'Pedersen', 'Christensen', 'Larsen', 'Sørensen', 'Rasmussen', 'Madsen'] },
+  'Norway': { first: ['Nora', 'Jakob', 'Emma', 'Filip', 'Olivia', 'Aksel', 'Ella', 'Henrik', 'Ingrid', 'Theodor'], last: ['Hansen', 'Johansen', 'Olsen', 'Larsen', 'Andersen', 'Pedersen', 'Nilsen', 'Kristiansen', 'Karlsen', 'Eriksen'] },
+  'Switzerland': { first: ['Liam', 'Mia', 'Noah', 'Elena', 'Leon', 'Lara', 'Luca', 'Emilia', 'Julian', 'Sara'], last: ['Müller', 'Meier', 'Schmid', 'Keller', 'Weber', 'Huber', 'Schneider', 'Meyer', 'Steiner', 'Fischer'] },
 };
 
 const ALL_COUNTRIES = Object.keys(NAMES_BY_COUNTRY);
-
-const bundleIds = products.filter(p => p.isBundle).map(p => p.id);
 const inStockProducts = products.filter(p => p.inStock);
 
 function pickRandomProduct(): typeof products[0] {
   const rand = Math.random();
-  
-  // 30% chance bundle
   if (rand < 0.30) {
     const bundles = inStockProducts.filter(p => p.isBundle);
     if (bundles.length > 0) return bundles[Math.floor(Math.random() * bundles.length)];
   }
-  
-  // 10% increased chance bestseller
   if (rand < 0.40) {
     const bestsellers = inStockProducts.filter(p => bestsellerIds.includes(p.id) && !p.isBundle);
     if (bestsellers.length > 0) return bestsellers[Math.floor(Math.random() * bestsellers.length)];
   }
-  
-  // Regular random
   return inStockProducts[Math.floor(Math.random() * inStockProducts.length)];
-}
-
-function pickRandomCustomer() {
-  const country = ALL_COUNTRIES[Math.floor(Math.random() * ALL_COUNTRIES.length)];
-  const names = NAMES_BY_COUNTRY[country];
-  const first = names.first[Math.floor(Math.random() * names.first.length)];
-  const last = names.last[Math.floor(Math.random() * names.last.length)];
-  return { name: `${first} ${last.charAt(0)}.`, country };
 }
 
 function randomMinutesAgo(): string {
@@ -57,30 +44,41 @@ function randomMinutesAgo(): string {
 
 export const SocialProofPopup = () => {
   const [visible, setVisible] = useState(false);
-  const [notification, setNotification] = useState<{ product: typeof products[0]; customer: { name: string; country: string }; timeAgo: string } | null>(null);
+  const [notification, setNotification] = useState<{ product: typeof products[0]; customerName: string; country: string; timeAgo: string } | null>(null);
+  const countryIndexRef = useRef(0);
+  // Shuffle countries once
+  const shuffledCountriesRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    const arr = [...ALL_COUNTRIES];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    shuffledCountriesRef.current = arr;
+  }, []);
 
   const showNotification = useCallback(() => {
+    const countries = shuffledCountriesRef.current;
+    if (countries.length === 0) return;
+    const country = countries[countryIndexRef.current % countries.length];
+    countryIndexRef.current++;
+
+    const names = NAMES_BY_COUNTRY[country];
+    const first = names.first[Math.floor(Math.random() * names.first.length)];
+    const last = names.last[Math.floor(Math.random() * names.last.length)];
+
     const product = pickRandomProduct();
-    const customer = pickRandomCustomer();
     const timeAgo = randomMinutesAgo();
-    setNotification({ product, customer, timeAgo });
+    setNotification({ product, customerName: `${first} ${last.charAt(0)}.`, country, timeAgo });
     setVisible(true);
-    
-    // Auto-hide after 5 seconds
     setTimeout(() => setVisible(false), 5000);
   }, []);
 
   useEffect(() => {
-    // First popup after 10 seconds
     const initialTimeout = setTimeout(showNotification, 10000);
-    
-    // Then every 20 seconds
     const interval = setInterval(showNotification, 20000);
-    
-    return () => {
-      clearTimeout(initialTimeout);
-      clearInterval(interval);
-    };
+    return () => { clearTimeout(initialTimeout); clearInterval(interval); };
   }, [showNotification]);
 
   if (!notification) return null;
@@ -89,38 +87,42 @@ export const SocialProofPopup = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 20, x: 0 }}
-          animate={{ opacity: 1, y: 0, x: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="fixed bottom-4 left-4 z-50 max-w-[320px] bg-card border border-border rounded-lg shadow-xl overflow-hidden"
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.97 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed bottom-5 left-5 z-50 w-[340px] bg-background/95 backdrop-blur-md border border-border/60 rounded-xl shadow-[0_8px_30px_-4px_hsl(var(--accent)/0.15),0_2px_8px_-2px_rgba(0,0,0,0.4)] overflow-hidden"
         >
-          <div className="flex items-start gap-3 p-3">
+          {/* Accent top bar */}
+          <div className="h-[2px] w-full bg-gradient-to-r from-accent/60 via-accent to-accent/60" />
+
+          <div className="flex items-center gap-3.5 p-4">
             {/* Product image */}
-            <div className="w-12 h-14 rounded bg-secondary/50 overflow-hidden flex-shrink-0">
+            <div className="w-14 h-16 rounded-lg bg-secondary/40 border border-border/40 overflow-hidden flex-shrink-0">
               <img
                 src={notification.product.image}
                 alt={notification.product.name}
                 className="w-full h-full object-cover"
               />
             </div>
-            
+
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-foreground leading-snug">
-                <span className="font-semibold">{notification.customer.name}</span>
-                {' '}from {notification.customer.country} ordered
+              <p className="text-[13px] text-muted-foreground leading-snug">
+                <span className="font-semibold text-foreground">{notification.customerName}</span>
+                {' '}from <span className="text-foreground">{notification.country}</span>
               </p>
-              <p className="text-xs font-medium text-foreground mt-0.5 truncate">
-                {notification.product.name}
+              <p className="text-[13px] font-medium text-foreground mt-0.5 truncate">
+                ordered {notification.product.name}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                {notification.timeAgo}
-              </p>
+              <div className="flex items-center gap-1.5 mt-1.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                <span className="text-[11px] text-muted-foreground">{notification.timeAgo}</span>
+              </div>
             </div>
 
             <button
               onClick={() => setVisible(false)}
-              className="text-muted-foreground hover:text-foreground transition-colors p-0.5 -mt-0.5 -mr-0.5"
+              className="text-muted-foreground/50 hover:text-foreground transition-colors p-1 rounded-md hover:bg-muted/50 self-start -mt-1 -mr-1"
             >
               <X className="h-3.5 w-3.5" />
             </button>
