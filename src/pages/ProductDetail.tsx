@@ -8,6 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
+import { BundleContents } from '@/components/product/BundleContents';
 import { getProductReviews } from '@/data/productReviews';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
@@ -184,9 +185,18 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             )}
 
+            {/* Bundle Contents */}
+            {product.bundleContents && product.bundleContents.length > 0 && (
+              <div className="py-6 border-t border-border">
+                <BundleContents contents={product.bundleContents} />
+              </div>
+            )}
+
             {/* Description */}
             <div className="space-y-3 py-6 border-t border-border">
-              <h3 className="text-lg font-semibold text-foreground">About This Fragrance</h3>
+              <h3 className="text-lg font-semibold text-foreground">
+                {product.isBundle ? 'About This Bundle' : 'About This Fragrance'}
+              </h3>
               <p className="text-[15px] md:text-base text-foreground/80 leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
