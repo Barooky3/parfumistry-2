@@ -3,6 +3,7 @@ import { PromoBanner } from './PromoBanner';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
+import { SocialProofPopup } from '@/components/SocialProofPopup';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ export const Layout = ({ children }: LayoutProps) => {
       </main>
       <Footer />
       <CartDrawer />
+      <SocialProofPopup />
     </div>
   );
 };
