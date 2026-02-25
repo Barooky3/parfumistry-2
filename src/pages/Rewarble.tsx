@@ -96,7 +96,7 @@ const Rewarble = () => {
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a Rewarble gift card</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a card closest to your order amount ({orderTotal ? `€${orderTotal}` : 'see checkout'}) using Visa, iDEAL, or Revolut.
+                  Buy a card closest to your order amount ({orderTotal ? `€${orderTotal}` : 'see checkout'}) using one of the many supported payment methods.
                 </p>
                 <Button
                   type="button"
@@ -121,7 +121,7 @@ const Rewarble = () => {
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
               <div>
                 <p className="text-sm font-medium text-foreground">Confirm your payment</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Click confirm to place your order. We'll verify the code and process your order.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released to us once you receive your products.</p>
               </div>
             </div>
           </div>
