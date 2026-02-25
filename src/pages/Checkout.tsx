@@ -1093,8 +1093,10 @@ const Checkout = () => {
                 </div>
 
                 {/* Separator between Rewarble and Revolut */}
-                <div className="flex items-center gap-3 my-1">
-                  <div className="flex-1 h-px bg-border" />
+                <div className="flex items-center gap-3 my-3">
+                  <div className="flex-1 h-[1.5px] bg-border/80" />
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-widest">or</span>
+                  <div className="flex-1 h-[1.5px] bg-border/80" />
                 </div>
 
                 {/* Revolut App Payment */}
