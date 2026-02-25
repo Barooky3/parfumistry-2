@@ -51,6 +51,7 @@ export type Database = {
           discount_code: string | null
           discount_percent: number | null
           email_sent: boolean
+          gift_card_code: string | null
           id: string
           order_items: Json
           order_number: number | null
@@ -69,6 +70,7 @@ export type Database = {
           discount_code?: string | null
           discount_percent?: number | null
           email_sent?: boolean
+          gift_card_code?: string | null
           id?: string
           order_items: Json
           order_number?: number | null
@@ -87,6 +89,7 @@ export type Database = {
           discount_code?: string | null
           discount_percent?: number | null
           email_sent?: boolean
+          gift_card_code?: string | null
           id?: string
           order_items?: Json
           order_number?: number | null

@@ -29,18 +29,18 @@ interface Order {
   created_at: string;
   order_number: number | null;
   approval_token: string | null;
+  gift_card_code: string | null;
 }
 
 function getPaymentMethod(ref: string): string {
   if (ref?.startsWith("rewarble")) return "Rewarble";
-  if (ref?.startsWith("revolut-app")) return "Revolut App";
+  if (ref?.startsWith("revolut-app") || ref?.startsWith("revolut")) return "Revolut";
   if (ref?.startsWith("bank-transfer")) return "Bank Transfer";
-  if (ref?.startsWith("revolut")) return "Revolut";
   if (ref?.startsWith("paypal")) return "PayPal";
   return "Other";
 }
 
-const PAYMENT_METHODS = ["All", "Rewarble", "PayPal", "Bank Transfer", "Revolut App", "Revolut", "Other"];
+const PAYMENT_METHODS = ["All", "Rewarble", "PayPal", "Bank Transfer", "Revolut"];
 
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
@@ -149,7 +149,6 @@ export default function AdminOrders() {
     "Rewarble": "bg-purple-100 text-purple-800",
     "PayPal": "bg-blue-100 text-blue-800",
     "Bank Transfer": "bg-emerald-100 text-emerald-800",
-    "Revolut App": "bg-indigo-100 text-indigo-800",
     "Revolut": "bg-cyan-100 text-cyan-800",
     "Other": "bg-gray-100 text-gray-800",
   };
@@ -259,6 +258,13 @@ export default function AdminOrders() {
                       ))}
                     </div>
                   </div>
+
+                  {order.gift_card_code && (
+                    <div className="mt-3 border-t pt-3">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Gift Card Code</p>
+                      <p className="font-mono text-sm font-bold text-purple-700 bg-purple-50 inline-block px-3 py-1.5 rounded border border-purple-200">{order.gift_card_code}</p>
+                    </div>
+                  )}
 
                   <div className="mt-4 flex gap-3 flex-wrap">
                     <Button
