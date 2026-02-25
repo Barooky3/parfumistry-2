@@ -22,12 +22,10 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
 };
 
 const PAYMENT_METHODS = [
-  { id: 'card', label: 'Card', icon: '💳', weight: 1 },
   { id: 'revolut', label: 'Revolut', icon: null, iconUrl: '/images/revolut-icon.svg', weight: 1 },
   { id: 'paypal', label: 'PayPal', icon: null, iconUrl: '/images/paypal-icon.svg', weight: 1.15 },
   { id: 'rewarble', label: 'Rewarble', icon: null, iconUrl: '/images/rewarble-icon.svg', weight: 1.40 },
   { id: 'bank_transfer', label: 'Bank Transfer', icon: '🏦', weight: 1 },
-  { id: 'paysafecard', label: 'Paysafecard', icon: null, iconUrl: '/images/paysafecard.png', weight: 1 },
 ];
 
 const ALL_COUNTRIES = Object.keys(NAMES_BY_COUNTRY);
