@@ -104,7 +104,7 @@ serve(async (req) => {
             orderNumber: order.order_number,
             paymentMethod: order.checkout_reference?.startsWith("rewarble") ? "rewarble"
               : order.checkout_reference?.startsWith("bank-transfer") ? "bank_transfer"
-              : order.checkout_reference?.startsWith("revolut") ? "revolut"
+              : order.checkout_reference?.startsWith("paypal") ? "paypal"
               : undefined,
           }),
         });
