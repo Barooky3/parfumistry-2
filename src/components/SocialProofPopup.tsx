@@ -22,8 +22,8 @@ const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
 };
 
 const PAYMENT_METHODS = [
-  { id: 'revolut', label: 'Revolut', icon: null, iconUrl: '/images/revolut-icon.svg', weight: 1 },
-  { id: 'paypal', label: 'PayPal', icon: null, iconUrl: '/images/paypal-icon.svg', weight: 1.15 },
+  { id: 'revolut', label: 'Revolut', icon: null, iconUrl: null, weight: 1, inlineSvg: true, bgColor: '#191C1F', textColor: '#fff' },
+  { id: 'paypal', label: 'PayPal', icon: null, iconUrl: null, weight: 1.15, inlineSvg: true, bgColor: '#0070BA', textColor: '#fff' },
   { id: 'rewarble', label: 'Rewarble', icon: null, iconUrl: '/images/rewarble-icon.svg', weight: 1.40 },
   { id: 'bank_transfer', label: 'Bank Transfer', icon: '🏦', weight: 1 },
 ];
@@ -164,15 +164,30 @@ export const SocialProofPopup = () => {
 
               {/* Payment method + time */}
               <div className="flex items-center gap-3 mt-2">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md"
-                  style={{ background: 'hsl(30 15% 92%)' }}
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md"
+                  style={{
+                    background: pm.bgColor || 'hsl(30 15% 92%)',
+                    color: pm.textColor || undefined,
+                  }}
                 >
+                  {pm.id === 'revolut' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/>
+                      <path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/>
+                    </svg>
+                  )}
+                  {pm.id === 'paypal' && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.645h6.527c2.168 0 3.87.458 5.048 1.36 1.236.945 1.86 2.378 1.86 4.26 0 .376-.04.758-.117 1.15-.727 3.655-3.25 5.507-7.516 5.507H9.522a.77.77 0 0 0-.757.645l-1.69 5.34z" fill="white"/>
+                      <path d="M20.16 8.848c-.727 3.655-3.25 5.507-7.516 5.507H10.66a.77.77 0 0 0-.757.645l-1.15 3.63-.486 3.085a.641.641 0 0 0 .633.74h3.34a.77.77 0 0 0 .757-.645l.632-3.18a.77.77 0 0 1 .757-.645h1.594c4.267 0 6.79-1.852 7.516-5.507.41-2.06-.076-3.655-1.337-4.63z" fill="rgba(255,255,255,0.7)"/>
+                    </svg>
+                  )}
                   {pm.icon ? (
                     <span className="text-sm">{pm.icon}</span>
                   ) : pm.iconUrl ? (
                     <img src={pm.iconUrl} alt={pm.label} className="w-5 h-5 object-contain" />
                   ) : null}
-                  <span className="text-[11px] font-medium text-muted-foreground">{pm.label}</span>
+                  <span className="text-[11.5px] font-semibold" style={{ color: pm.textColor || undefined }}>{pm.label}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
