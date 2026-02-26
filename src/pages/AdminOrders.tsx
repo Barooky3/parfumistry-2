@@ -172,7 +172,11 @@ export default function AdminOrders() {
     setActionLoading(orderId + "-dismiss");
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        toast.error("Not authenticated");
+        setActionLoading(null);
+        return;
+      }
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders`,
         {
@@ -185,20 +189,26 @@ export default function AdminOrders() {
       if (res.ok) {
         toast.success("Order removed");
         setOrders(prev => prev.filter(o => o.id !== orderId));
+        setApprovedOrders(prev => prev.filter(o => o.id !== orderId));
       } else {
         toast.error(json.error || "Failed to remove order");
       }
     } catch {
       toast.error("Failed to remove order");
+    } finally {
+      setActionLoading(null);
     }
-    setActionLoading(null);
   };
 
   const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof") => {
     setActionLoading(orderId);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        toast.error("Not authenticated");
+        setActionLoading(null);
+        return;
+      }
 
       if (action === "request_proof") {
         const order = orders.find(o => o.id === orderId);
