@@ -50,7 +50,9 @@ const PaypalEneba = () => {
   const combinedCode = allCodes.join(' | ');
 
   const handleConfirm = async () => {
+    if (isProcessing) return;
     setIsProcessing(true);
+    setShowConfirmDialog(false);
     try {
       const orderContext = sessionStorage.getItem('checkoutOrderContext');
       if (!orderContext) {
@@ -144,7 +146,7 @@ const PaypalEneba = () => {
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#0070BA] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
               <div>
                 <p className="text-sm font-medium text-foreground">Confirm your payment</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released to us once you receive your products.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released once you receive your products.</p>
               </div>
             </div>
           </div>
@@ -188,6 +190,12 @@ const PaypalEneba = () => {
             <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
               Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your products.
             </p>
+            <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-border/60">
+              <Shield className="h-3.5 w-3.5 text-[#0070BA]" />
+              <span className="text-xs text-muted-foreground">Secure verification powered by</span>
+              <img src="/images/rewarble-icon.svg" alt="Rewarble" className="h-5 w-5" />
+              <span className="text-sm font-semibold text-foreground">Rewarble</span>
+            </div>
           </div>
         </div>
 
