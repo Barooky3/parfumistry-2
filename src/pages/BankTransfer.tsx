@@ -7,12 +7,20 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 
-const BANK_DETAILS = [
+const EUR_BANK_DETAILS = [
   { label: 'IBAN', value: 'IE26 REVO 9903 6038 5697 96', copyValue: 'IE26REVO99036038569796' },
   { label: 'Account Holder', value: 'Mubarak Elkhabir' },
   { label: 'BIC / SWIFT', value: 'REVOIE23' },
   { label: 'Bank', value: 'Revolut' },
   { label: 'Country', value: 'Ireland' },
+];
+
+const GBP_BANK_DETAILS = [
+  { label: 'Sort Code', value: '04-00-75', copyValue: '040075' },
+  { label: 'Account Number', value: '46493557', copyValue: '46493557' },
+  { label: 'Account Holder', value: 'Mubarak Elkhabir' },
+  { label: 'Bank', value: 'Revolut' },
+  { label: 'Country', value: 'United Kingdom' },
 ];
 
 const BankTransfer = () => {
@@ -23,7 +31,10 @@ const BankTransfer = () => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'eur' | 'gbp'>('eur');
   const { clearCart } = useCart();
+
+  const bankDetails = activeTab === 'eur' ? EUR_BANK_DETAILS : GBP_BANK_DETAILS;
 
   const handleCopy = (label: string, value: string) => {
     navigator.clipboard.writeText(value);
@@ -94,11 +105,25 @@ const BankTransfer = () => {
 
         {/* Bank details card */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
-          <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+          <div className="px-5 py-3.5 border-b border-border bg-muted/30 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-foreground tracking-wide">Account Details</h2>
+            <div className="flex rounded-lg border border-border overflow-hidden">
+              <button
+                onClick={() => setActiveTab('eur')}
+                className={`px-3 py-1.5 text-xs font-semibold transition-colors ${activeTab === 'eur' ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:text-foreground'}`}
+              >
+                EUR (SEPA)
+              </button>
+              <button
+                onClick={() => setActiveTab('gbp')}
+                className={`px-3 py-1.5 text-xs font-semibold transition-colors ${activeTab === 'gbp' ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:text-foreground'}`}
+              >
+                GBP
+              </button>
+            </div>
           </div>
           <div className="divide-y divide-border">
-            {BANK_DETAILS.map((detail) => (
+            {bankDetails.map((detail) => (
               <div key={detail.label} className="flex items-center justify-between px-5 py-3.5 group">
                 <div>
                   <p className="text-xs text-muted-foreground mb-0.5">{detail.label}</p>
