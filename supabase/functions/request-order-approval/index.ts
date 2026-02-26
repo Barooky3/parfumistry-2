@@ -157,7 +157,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode } = body;
+    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, discountPercent } = body;
 
     if (!customerEmail) throw new Error("Customer email is required");
     if (!orderItems || orderItems.length === 0) throw new Error("No order items");
@@ -195,6 +195,8 @@ serve(async (req) => {
       approval_token: token,
       email_sent: false,
       gift_card_code: giftCardCode || null,
+      discount_code: discountCode || null,
+      discount_percent: discountPercent || 0,
     }).select("id, order_number").single();
 
     if (dbError || !order) {

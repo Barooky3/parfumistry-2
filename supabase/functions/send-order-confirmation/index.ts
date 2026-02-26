@@ -197,6 +197,8 @@ function buildEmailHtml(
   shippingAddress: { line1: string; city: string; postalCode: string; country: string },
   orderNumber?: number | null,
   noLinks: boolean = false,
+  discountCode?: string | null,
+  discountPercent?: number | null,
 ): string {
   const year = new Date().getFullYear();
   const orderNumDisplay = orderNumber ? `#${orderNumber}` : "";
@@ -245,6 +247,13 @@ function buildEmailHtml(
     itemsHtml,
     '</tbody></table></div>',
 
+    ...(discountCode && discountPercent ? [
+    '<div style="padding: 0 32px; text-align: right;">',
+    '<span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #999;">Discount: </span>',
+    '<span style="font-size: 15px; font-weight: 500; color: #c9a96e;">' + discountCode + ' (' + discountPercent + '% off)</span>',
+    '</div>',
+    ] : []),
+
     '<div style="padding: 20px 32px; margin: 0 32px; border-top: 2px solid #1a1a1a; text-align: right;">',
     '<span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #999;">Total Paid: </span>',
     '<span style="font-size: 22px; font-weight: 600; color: #1a1a1a;">&euro;' + totalAmount + '</span>',
@@ -275,6 +284,8 @@ function buildAdminInvoiceHtml(
   totalAmount: string,
   billingAddress: { line1: string; city: string; postalCode: string; country: string },
   paymentMethod: string,
+  discountCode?: string | null,
+  discountPercent?: number | null,
 ): string {
   const year = new Date().getFullYear();
   const now = new Date();
@@ -353,6 +364,11 @@ function buildAdminInvoiceHtml(
         <td style="padding:16px 10px 6px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Subtotal</td>
         <td style="padding:16px 10px 6px;text-align:right;font-size:14px;color:#333;">€${totalAmount}</td>
       </tr>
+      ${discountCode && discountPercent ? `<tr>
+        <td></td>
+        <td style="padding:6px 10px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#c9a96e;font-weight:600;">Discount (${discountCode})</td>
+        <td style="padding:6px 10px;text-align:right;font-size:14px;color:#c9a96e;font-weight:600;">${discountPercent}% off</td>
+      </tr>` : ''}
       <tr>
         <td></td>
         <td style="padding:6px 10px;text-align:right;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#999;">Tax (0%)</td>
@@ -418,7 +434,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount, orderNumber, paymentMethod } = body as {
+    let { orderItems, customerEmail, customerName, shippingAddress, totalAmount, orderNumber, paymentMethod, discountCode, discountPercent } = body as {
       orderItems: (OrderItem | { product: { name: string; brand: string; image: string; price: number }; quantity: number; selectedMl?: number; selectedPrice?: number })[];
       customerEmail: string;
       customerName: string;
@@ -426,6 +442,8 @@ serve(async (req) => {
       totalAmount: string;
       orderNumber?: number | null;
       paymentMethod?: string;
+      discountCode?: string | null;
+      discountPercent?: number | null;
     };
 
     if (!customerEmail) throw new Error("Customer email is required");
@@ -451,7 +469,7 @@ serve(async (req) => {
     const noLinks = paymentMethod === "rewarble" || paymentMethod === "bank_transfer" || paymentMethod === "paypal";
     const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, noLinks)).join("");
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, noLinks);
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, noLinks, discountCode, discountPercent);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
     await sendEmail(customerEmail, emailSubject, html);

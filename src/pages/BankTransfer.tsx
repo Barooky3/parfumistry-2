@@ -50,6 +50,8 @@ const BankTransfer = () => {
           shippingAddress: ctx.shippingAddress,
           totalAmount: ctx.totalAmount,
           paymentMethod: 'bank_transfer',
+          discountCode: ctx.discountCode || null,
+          discountPercent: ctx.discountPercent || 0,
         },
       });
       clearCart();

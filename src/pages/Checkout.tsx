@@ -1067,6 +1067,8 @@ const Checkout = () => {
                         customerName: `${fd.firstName} ${fd.lastName}`,
                         shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
                         totalAmount: finalTotal.toFixed(2),
+                        discountCode: appliedDiscountRef.current?.code || null,
+                        discountPercent: appliedDiscountRef.current?.percent || 0,
                       }));
                       navigate(`/rewarble?total=${finalTotal.toFixed(2)}`);
                     }}
@@ -1127,6 +1129,8 @@ const Checkout = () => {
                         customerName: `${fd.firstName} ${fd.lastName}`,
                         shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
                         totalAmount: finalTotal.toFixed(2),
+                        discountCode: appliedDiscountRef.current?.code || null,
+                        discountPercent: appliedDiscountRef.current?.percent || 0,
                       }));
                       navigate(`/revolut?total=${finalTotal.toFixed(2)}`);
                     }}
@@ -1164,6 +1168,8 @@ const Checkout = () => {
                         customerName: `${fd.firstName} ${fd.lastName}`,
                         shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
                         totalAmount: finalTotal.toFixed(2),
+                        discountCode: appliedDiscountRef.current?.code || null,
+                        discountPercent: appliedDiscountRef.current?.percent || 0,
                       }));
                       navigate(`/paypal?total=${finalTotal.toFixed(2)}`);
                     }}
@@ -1205,6 +1211,8 @@ const Checkout = () => {
                         customerName: `${fd.firstName} ${fd.lastName}`,
                         shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
                         totalAmount: finalTotal.toFixed(2),
+                        discountCode: appliedDiscountRef.current?.code || null,
+                        discountPercent: appliedDiscountRef.current?.percent || 0,
                       }));
                       navigate(`/bank-transfer?total=${finalTotal.toFixed(2)}`);
                     }}

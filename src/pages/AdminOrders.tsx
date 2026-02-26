@@ -41,6 +41,8 @@ interface Order {
   order_number: number | null;
   approval_token: string | null;
   gift_card_code: string | null;
+  discount_code: string | null;
+  discount_percent: number | null;
 }
 
 function getPaymentMethod(ref: string): string {
@@ -411,6 +413,11 @@ export default function AdminOrders() {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold">EUR {order.total_amount.toFixed(2)}</p>
+                      {order.discount_code && order.discount_percent ? (
+                        <p className="text-xs text-accent font-medium">
+                          Code: {order.discount_code} ({order.discount_percent}% off)
+                        </p>
+                      ) : null}
                     </div>
                   </div>
 

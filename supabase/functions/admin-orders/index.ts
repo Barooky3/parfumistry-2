@@ -102,6 +102,8 @@ serve(async (req) => {
             shippingAddress: order.shipping_address,
             totalAmount: order.total_amount.toString(),
             orderNumber: order.order_number,
+            discountCode: order.discount_code || null,
+            discountPercent: order.discount_percent || 0,
             paymentMethod: order.checkout_reference?.startsWith("rewarble") ? "rewarble"
               : order.checkout_reference?.startsWith("bank-transfer") ? "bank_transfer"
               : order.checkout_reference?.startsWith("paypal") ? "paypal"
@@ -121,6 +123,7 @@ serve(async (req) => {
           const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
           const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
           const pmLabel = isGiftCard ? "Rewarble (Verified)" : isRevolutApp ? "Revolut App (Verified)" : isBankTransfer ? "Bank Transfer (Verified)" : "Revolut Transfer (Verified)";
+          const discountLabel = order.discount_code && order.discount_percent ? ` | Discount: ${order.discount_code} (${order.discount_percent}%)` : "";
           const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
           const invoiceSubject = "Invoice: Order" + orderNumLabel + " - " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
           await fetch("https://api.resend.com/emails", {
@@ -130,7 +133,7 @@ serve(async (req) => {
               from: "ProfParfums Orders <orders@profparfum.com>",
               to: ADMIN_EMAILS,
               subject: invoiceSubject,
-              html: `<p>Order ${orderId} approved via admin dashboard. Customer: ${order.customer_name} (${order.customer_email}). Total: EUR${order.total_amount}. Payment: ${pmLabel}.</p>`,
+              html: `<p>Order ${orderId} approved via admin dashboard. Customer: ${order.customer_name} (${order.customer_email}). Total: EUR${order.total_amount}. Payment: ${pmLabel}.${discountLabel}</p>`,
             }),
           });
         }

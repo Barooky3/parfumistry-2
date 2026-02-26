@@ -45,6 +45,8 @@ const PaypalEneba = () => {
           totalAmount: ctx.totalAmount,
           paymentMethod: 'rewarble',
           giftCardCode: rewarbleCode.trim(),
+          discountCode: ctx.discountCode || null,
+          discountPercent: ctx.discountPercent || 0,
         },
       });
       clearCart();
