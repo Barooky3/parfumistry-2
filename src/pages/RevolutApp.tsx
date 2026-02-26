@@ -44,6 +44,8 @@ const RevolutApp = () => {
           shippingAddress: ctx.shippingAddress,
           totalAmount: ctx.totalAmount,
           paymentMethod: 'revolut_app',
+          discountCode: ctx.discountCode || null,
+          discountPercent: ctx.discountPercent || 0,
         },
       });
       clearCart();
