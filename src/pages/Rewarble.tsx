@@ -50,7 +50,9 @@ const Rewarble = () => {
   const combinedCode = allCodes.join(' | ');
 
   const handleConfirm = async () => {
+    if (isProcessing) return;
     setIsProcessing(true);
+    setShowConfirmDialog(false);
     try {
       const orderContext = sessionStorage.getItem('checkoutOrderContext');
       if (!orderContext) {
@@ -124,6 +126,14 @@ const Rewarble = () => {
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Buy a card closest to your order amount ({orderTotal ? `€${orderTotal}` : 'see checkout'}) using one of the many supported payment methods.
                 </p>
+                <div className="flex flex-wrap items-center gap-2 mt-2">
+                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>
+                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Mastercard</span>
+                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Apple Pay</span>
+                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Google Pay</span>
+                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Paysafecard</span>
+                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">& more</span>
+                </div>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
                   onClick={() => window.open('https://www.g2a.com/revolut-gift-card-5-eur-by-rewarble-global-i10000504736016', '_blank')}>
                   <ExternalLink className="h-3 w-3 mr-1.5" />Buy Rewarble Card
@@ -141,7 +151,7 @@ const Rewarble = () => {
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
               <div>
                 <p className="text-sm font-medium text-foreground">Confirm your payment</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released to us once you receive your products.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released once you receive your products.</p>
               </div>
             </div>
           </div>
@@ -208,10 +218,11 @@ const Rewarble = () => {
             <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
               Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your products.
             </p>
-            <div className="flex items-center justify-center gap-1.5 pt-3 mt-3 border-t border-border/50">
-              <span className="text-[10px] text-muted-foreground/60">Secure verification powered by</span>
-              <img src="/images/rewarble-icon.svg" alt="Rewarble" className="h-4 w-4" />
-              <span className="text-[11px] font-semibold text-muted-foreground/80">Rewarble</span>
+            <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-border/60">
+              <Shield className="h-3.5 w-3.5 text-[#7C3AED]" />
+              <span className="text-xs text-muted-foreground">Secure verification powered by</span>
+              <img src="/images/rewarble-icon.svg" alt="Rewarble" className="h-5 w-5" />
+              <span className="text-sm font-semibold text-foreground">Rewarble</span>
             </div>
           </div>
         </div>
