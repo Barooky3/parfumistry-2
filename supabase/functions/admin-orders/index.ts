@@ -272,6 +272,7 @@ serve(async (req) => {
 
       } else if (orderAction === "reject") {
         await adminClient.from("orders").update({ status: "rejected" }).eq("id", orderId);
+        const { rejectionNotes } = body;
 
         // Send rejection email to customer
         const apiKey = Deno.env.get("RESEND_API_KEY");
@@ -291,6 +292,13 @@ serve(async (req) => {
             ? "If you'd like to try again, please place a new order and make sure to include your email address in the payment reference so we can match your transfer. If you have any questions, don't hesitate to reach out."
             : "Please try again or contact us for assistance.";
 
+          const adminNotesHtml = rejectionNotes && rejectionNotes.trim()
+            ? `<div style="background:#fef2f2;border:1px solid #fca5a5;padding:16px 20px;border-radius:8px;margin:16px 0;">
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#991b1b;margin-bottom:6px;font-weight:600;">Reason for Rejection</div>
+                <p style="font-size:14px;color:#991b1b;line-height:1.6;margin:0;">${rejectionNotes.trim().replace(/\n/g, '<br>')}</p>
+              </div>`
+            : "";
+
           await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -309,6 +317,7 @@ serve(async (req) => {
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
     <p style="font-size:15px;color:#333;">Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
+    ${adminNotesHtml}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
       <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>${order.order_number ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + order.order_number + '</strong></span>' : ''}</p>
