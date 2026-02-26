@@ -725,8 +725,6 @@ const Checkout = () => {
               ? t('checkout.thankYouRevolut')
               : completedPaymentMethod === 'rewarble'
               ? t('checkout.thankYouGiftCard')
-              : completedPaymentMethod === 'bank_transfer'
-              ? 'Your order has been placed. Please check your email for proof of payment instructions — your order confirmation will be sent as soon as you provide it.'
               : t('checkout.thankYouPaypal')}
           </p>
           {completedPaymentMethod === 'paypal' && (
@@ -734,7 +732,7 @@ const Checkout = () => {
               {t('checkout.thankYouSpam')}
             </p>
           )}
-          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble' || completedPaymentMethod === 'bank_transfer') && (
+          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble') && (
             <p className="text-sm text-muted-foreground text-center mb-10">
               {t('checkout.thankYouPatience')}
             </p>
@@ -1184,66 +1182,6 @@ const Checkout = () => {
                   </Button>
                 </div>
 
-                {/* Alternative Methods Divider */}
-                <div className="space-y-2 mt-4">
-                  <div className="flex items-center gap-3 my-1">
-                    <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-muted-foreground">If other payment methods don't work for you</span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-
-                  {/* Bank Transfer */}
-                  <Button
-                    type="button"
-                    disabled={!isFormValid() || isProcessing}
-                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#0A2540] hover:bg-[#0D3158] text-white shadow-lg border border-white/10 relative overflow-hidden"
-                    onClick={() => {
-                      if (!isFormValid()) {
-                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
-                        return;
-                      }
-                      const fd = formDataRef.current;
-                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
-                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
-                        cartItems,
-                        email: fd.email,
-                        customerName: `${fd.firstName} ${fd.lastName}`,
-                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
-                        totalAmount: finalTotal.toFixed(2),
-                        discountCode: appliedDiscountRef.current?.code || null,
-                        discountPercent: appliedDiscountRef.current?.percent || 0,
-                      }));
-                      navigate(`/bank-transfer?total=${finalTotal.toFixed(2)}`);
-                    }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                      <span>Pay by Bank Transfer</span>
-                    </span>
-                    <span className="absolute right-3 flex items-center gap-1 text-[10px] font-normal text-white/50">
-                      SEPA
-                    </span>
-                  </Button>
-                  {/* European bank logos */}
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-1">
-                      <img src="/images/banks/ing.png" alt="ING" className="max-h-full max-w-full object-contain" />
-                    </div>
-                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0">
-                      <img src="/images/banks/deutsche-bank.png" alt="Deutsche Bank" className="max-h-full max-w-full object-contain" />
-                    </div>
-                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0">
-                      <img src="/images/banks/bnp-paribas.png" alt="BNP Paribas" className="max-h-full max-w-full object-contain" />
-                    </div>
-                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-white overflow-hidden p-0.5">
-                      <img src="/images/banks/hsbc.png" alt="HSBC" className="max-h-full max-w-full object-contain" />
-                    </div>
-                    <div className="flex items-center justify-center w-[44px] h-[30px] rounded border border-border bg-muted">
-                      <span className="text-[10px] font-bold text-muted-foreground">+</span>
-                    </div>
-                  </div>
-                </div>
 
                 <p className="text-[11px] text-muted-foreground/60 text-center">
                   By completing this purchase you agree to our terms and conditions

@@ -20,7 +20,6 @@ import Account from "./pages/Account";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
-import BankTransfer from "./pages/BankTransfer";
 import Rewarble from "./pages/Rewarble";
 import PaypalEneba from "./pages/PaypalEneba";
 import RevolutApp from "./pages/RevolutApp";
@@ -58,7 +57,6 @@ const App = () => (
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
-              <Route path="/bank-transfer" element={<BankTransfer />} />
               <Route path="/rewarble" element={<Rewarble />} />
               <Route path="/paypal" element={<PaypalEneba />} />
               <Route path="/revolut" element={<RevolutApp />} />
