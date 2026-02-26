@@ -49,6 +49,15 @@ const Rewarble = () => {
   const allCodes = codes.map(c => c.trim()).filter(Boolean);
   const combinedCode = allCodes.join(' | ');
 
+  // Generate a stable idempotency key per session to prevent duplicate orders
+  const [idempotencyKey] = useState(() => {
+    const existing = sessionStorage.getItem('rewarbleIdempotencyKey');
+    if (existing) return existing;
+    const key = crypto.randomUUID();
+    sessionStorage.setItem('rewarbleIdempotencyKey', key);
+    return key;
+  });
+
   const handleConfirm = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
@@ -72,12 +81,14 @@ const Rewarble = () => {
           giftCardCode: combinedCode,
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
+          idempotencyKey,
         },
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('rewarbleCodes');
+      sessionStorage.removeItem('rewarbleIdempotencyKey');
       const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
       navigate(`/checkout?completed=rewarble${orderNum}`);
     } catch (err: any) {

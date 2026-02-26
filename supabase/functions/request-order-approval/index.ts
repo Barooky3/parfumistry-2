@@ -157,7 +157,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, discountPercent } = body;
+    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, discountPercent, idempotencyKey } = body;
 
     if (!customerEmail) throw new Error("Customer email is required");
     if (!orderItems || orderItems.length === 0) throw new Error("No order items");
@@ -183,9 +183,29 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Server-side idempotency check: if this idempotency key was already used, return the existing order
+    if (idempotencyKey) {
+      const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
+      const expectedRef = refPrefix + "-idem-" + idempotencyKey;
+      const { data: existingOrder } = await supabase
+        .from("orders")
+        .select("id, order_number")
+        .eq("checkout_reference", expectedRef)
+        .maybeSingle();
+
+      if (existingOrder) {
+        console.log("Duplicate submission detected, returning existing order:", existingOrder.id);
+        return new Response(JSON.stringify({ success: true, orderId: existingOrder.id, orderNumber: existingOrder.order_number }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+    }
+
     const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
+    const checkoutRef = idempotencyKey ? refPrefix + "-idem-" + idempotencyKey : refPrefix + "-" + Date.now();
     const { data: order, error: dbError } = await supabase.from("orders").insert({
-      checkout_reference: refPrefix + "-" + Date.now(),
+      checkout_reference: checkoutRef,
       customer_email: customerEmail,
       customer_name: customerName || "Valued Customer",
       shipping_address: shippingAddress || {},

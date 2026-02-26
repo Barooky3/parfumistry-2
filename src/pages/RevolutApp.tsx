@@ -26,8 +26,19 @@ const RevolutApp = () => {
     setTimeout(() => setCopiedRevtag(false), 2000);
   };
 
+  // Generate a stable idempotency key per session to prevent duplicate orders
+  const [idempotencyKey] = useState(() => {
+    const existing = sessionStorage.getItem('revolutIdempotencyKey');
+    if (existing) return existing;
+    const key = crypto.randomUUID();
+    sessionStorage.setItem('revolutIdempotencyKey', key);
+    return key;
+  });
+
   const handleConfirm = async () => {
+    if (isProcessing) return;
     setIsProcessing(true);
+    setShowConfirmDialog(false);
     try {
       const orderContext = sessionStorage.getItem('checkoutOrderContext');
       if (!orderContext) {
@@ -46,11 +57,13 @@ const RevolutApp = () => {
           paymentMethod: 'revolut_app',
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
+          idempotencyKey,
         },
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
+      sessionStorage.removeItem('revolutIdempotencyKey');
       if (data?.orderNumber) {
         navigate(`/proof?order=${data.orderNumber}&method=revolut_app`);
       } else {
