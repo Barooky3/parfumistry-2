@@ -176,8 +176,12 @@ serve(async (req) => {
             : isRevolutApp
             ? "Unfortunately, your Revolut payment could not be verified. Your order has been cancelled."
             : isBankTransfer
-            ? "Unfortunately, your bank transfer could not be verified. Your order has been cancelled."
+            ? "Unfortunately, your bank transfer could not be verified or was bounced back by the receiving bank. Your order has been cancelled.<br><br><strong>If you did send the payment, don't worry -- your money is already on its way back to your account.</strong> Depending on your bank, it may take 1-3 business days to appear in your balance."
             : "Unfortunately, your payment could not be verified. No money has been taken from your account.";
+
+          const nextStep = isBankTransfer
+            ? "If you'd like to try again, please place a new order and make sure to include your email address in the payment reference so we can match your transfer. If you have any questions, don't hesitate to reach out."
+            : "Please try again or contact us for assistance.";
 
           await fetch("https://api.resend.com/emails", {
             method: "POST",
@@ -185,6 +189,7 @@ serve(async (req) => {
             body: JSON.stringify({
               from: "ProfParfums <orders@profparfum.com>",
               to: [order.customer_email],
+              reply_to: "ewhz3384@gmail.com",
               subject: order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums",
               html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
@@ -195,8 +200,11 @@ serve(async (req) => {
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
     <p style="font-size:15px;color:#333;">Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
-    <p style="font-size:14px;color:#666;">${reason}</p>
-    <p style="font-size:14px;color:#666;">Please try again or contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>${order.order_number ? `. Please reference order <strong>#${order.order_number}</strong>.` : ""}</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
+    <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
+      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>${order.order_number ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + order.order_number + '</strong></span>' : ''}</p>
+    </div>
   </div>
 </div></body></html>`,
             }),
