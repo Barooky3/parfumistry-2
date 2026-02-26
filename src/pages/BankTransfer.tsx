@@ -16,11 +16,11 @@ const EUR_BANK_DETAILS = [
 ];
 
 const GBP_BANK_DETAILS = [
-  { label: 'Sort Code', value: '04-00-75', copyValue: '040075' },
-  { label: 'Account Number', value: '46493557', copyValue: '46493557' },
+  { label: 'Sort Code', value: '23-01-20', copyValue: '230120' },
+  { label: 'Account Number', value: '18879447', copyValue: '18879447' },
   { label: 'Account Holder', value: 'Mubarak Elkhabir' },
-  { label: 'Bank', value: 'Revolut' },
-  { label: 'Country', value: 'United Kingdom' },
+  { label: 'Bank', value: 'Revolut Ltd' },
+  { label: 'Bank Address', value: '30 South Colonnade, E14 5HX, London, UK' },
 ];
 
 const BankTransfer = () => {
