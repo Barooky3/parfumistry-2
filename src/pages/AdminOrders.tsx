@@ -556,11 +556,11 @@ export default function AdminOrders() {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold">EUR {order.total_amount.toFixed(2)}</p>
-                      {order.discount_code && order.discount_percent ? (
-                        <p className="text-xs text-accent font-medium">
-                          Code: {order.discount_code} ({order.discount_percent}% off)
-                        </p>
-                      ) : null}
+                      {order.discount_code && (
+                        <Badge variant="outline" className="text-green-600 border-green-300 mt-1 text-[10px]">
+                          {order.discount_code} ({order.discount_percent}% off)
+                        </Badge>
+                      )}
                     </div>
                   </div>
 
@@ -583,6 +583,26 @@ export default function AdminOrders() {
                         </div>
                       ))}
                     </div>
+                    {order.discount_code && order.discount_percent ? (() => {
+                      const subtotal = items.reduce((s, it) => s + it.price * it.quantity, 0);
+                      const discountAmount = subtotal * (order.discount_percent / 100);
+                      return (
+                        <div className="mt-2 pt-2 border-t border-dashed space-y-1">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Subtotal</span>
+                            <span>EUR {subtotal.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between text-sm text-green-600">
+                            <span>Discount ({order.discount_code} — {order.discount_percent}%)</span>
+                            <span>−EUR {discountAmount.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between text-sm font-semibold">
+                            <span>Total</span>
+                            <span>EUR {order.total_amount.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      );
+                    })() : null}
                   </div>
 
                   {order.gift_card_code && (
