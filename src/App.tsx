@@ -25,6 +25,7 @@ import Rewarble from "./pages/Rewarble";
 import PaypalEneba from "./pages/PaypalEneba";
 import RevolutApp from "./pages/RevolutApp";
 import ResetPassword from "./pages/ResetPassword";
+import ProofUpload from "./pages/ProofUpload";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ const App = () => (
               <Route path="/paypal" element={<PaypalEneba />} />
               <Route path="/revolut" element={<RevolutApp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/proof" element={<ProofUpload />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
