@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +16,10 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotSending, setForgotSending] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,6 +88,16 @@ const Login = () => {
                 </div>
               </div>
 
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => { setForgotMode(true); setForgotEmail(email); }}
+                  className="text-xs text-muted-foreground hover:text-foreground underline transition-colors"
+                >
+                  Forgot password?
+                </button>
+              </div>
+
               <Button
                 type="submit"
                 size="lg"
@@ -93,6 +108,63 @@ const Login = () => {
               </Button>
             </div>
           </form>
+
+          {/* Forgot Password Modal */}
+          {forgotMode && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setForgotMode(false)}>
+              <div className="bg-background border border-border p-8 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
+                {forgotSent ? (
+                  <div className="text-center">
+                    <h2 className="font-display text-2xl text-foreground mb-2">Check your email</h2>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      If an account exists for <strong>{forgotEmail}</strong>, we've sent a password reset link.
+                    </p>
+                    <Button variant="outline" className="rounded-none" onClick={() => { setForgotMode(false); setForgotSent(false); }}>
+                      Back to Login
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <h2 className="font-display text-2xl text-foreground mb-2">Reset Password</h2>
+                    <p className="text-sm text-muted-foreground mb-6">Enter your email and we'll send you a reset link.</p>
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="email"
+                          placeholder="your@email.com"
+                          value={forgotEmail}
+                          onChange={e => setForgotEmail(e.target.value)}
+                          className="pl-11 h-12 bg-background border-border rounded-none focus:border-foreground"
+                        />
+                      </div>
+                      <Button
+                        className="w-full h-12 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
+                        disabled={forgotSending || !forgotEmail.trim()}
+                        onClick={async () => {
+                          setForgotSending(true);
+                          await supabase.auth.resetPasswordForEmail(forgotEmail.trim(), {
+                            redirectTo: `${window.location.origin}/reset-password`,
+                          });
+                          setForgotSending(false);
+                          setForgotSent(true);
+                        }}
+                      >
+                        {forgotSending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send Reset Link'}
+                      </Button>
+                      <button
+                        type="button"
+                        onClick={() => setForgotMode(false)}
+                        className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
 
           <p className="text-center text-sm text-muted-foreground mt-8">
             Don't have an account?{' '}
