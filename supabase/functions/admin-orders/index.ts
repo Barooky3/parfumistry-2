@@ -116,18 +116,126 @@ serve(async (req) => {
           console.error("Failed to send confirmation:", await confRes.text());
         }
 
-        // Send admin invoice
-        const invoiceUrl = supabaseUrl + "/functions/v1/handle-order-action?id=" + orderId + "&token=" + (order.approval_token || "") + "&action=approve";
-        // We already handled the confirmation above, just send invoice via Brevo
+        // Send comprehensive admin invoice
         const apiKey = Deno.env.get("RESEND_API_KEY");
         if (apiKey) {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
           const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
           const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
-          const pmLabel = isGiftCard ? "Rewarble (Verified)" : isRevolutApp ? "Revolut App (Verified)" : isBankTransfer ? "Bank Transfer (Verified)" : "Revolut Transfer (Verified)";
-          const discountLabel = order.discount_code && order.discount_percent ? ` | Discount: ${order.discount_code} (${order.discount_percent}%)` : "";
-          const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-          const invoiceSubject = "Invoice: Order" + orderNumLabel + " - " + (order.customer_name || order.customer_email) + " - EUR" + order.total_amount;
+          const isPaypal = order.checkout_reference?.startsWith("paypal");
+          const pmLabel = isGiftCard ? "Rewarble Gift Card (Verified)" : isRevolutApp ? "Revolut App (Verified)" : isBankTransfer ? "Bank Transfer / SEPA (Verified)" : isPaypal ? "PayPal (Verified)" : "Revolut Transfer (Verified)";
+          const orderNumLabel = order.order_number ? `#${order.order_number}` : order.id.slice(0, 8);
+          const invoiceDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+
+          // Parse order items
+          const items = Array.isArray(order.order_items) ? order.order_items : [];
+          const itemRows = items.map((item: any) => {
+            const name = item.product?.name || item.name || "Unknown";
+            const brand = item.product?.brand || item.brand || "";
+            const qty = item.quantity || 1;
+            const price = item.selectedPrice || item.product?.price || item.price || 0;
+            const ml = item.selectedMl || item.product?.selectedMl || "";
+            const mlLabel = ml ? ` — ${ml}ml` : "";
+            const lineTotal = (price * qty).toFixed(2);
+            const affiliateUrl = item.product?.affiliateUrl || item.affiliateUrl || "";
+            const linkHtml = affiliateUrl ? ` <a href="${affiliateUrl}" style="color:#c9a96e;font-size:12px;">(link)</a>` : "";
+            return `<tr>
+              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;">${brand} — ${name}${mlLabel}${linkHtml}</td>
+              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:center;">${qty}</td>
+              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${Number(price).toFixed(2)}</td>
+              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;font-weight:600;">€${lineTotal}</td>
+            </tr>`;
+          }).join("");
+
+          // Calculate subtotal from items
+          const subtotal = items.reduce((sum: number, item: any) => {
+            const price = item.selectedPrice || item.product?.price || item.price || 0;
+            const qty = item.quantity || 1;
+            return sum + price * qty;
+          }, 0);
+
+          // Discount info
+          const hasDiscount = order.discount_code && order.discount_percent;
+          const discountAmount = hasDiscount ? (subtotal * order.discount_percent / 100) : 0;
+
+          // Shipping address
+          const addr = order.shipping_address || {};
+          const addressLines = [addr.line1, addr.line2, [addr.city, addr.postalCode].filter(Boolean).join(" "), addr.country].filter(Boolean);
+          const addressHtml = addressLines.length > 0 ? addressLines.join("<br/>") : "N/A";
+
+          // Gift card codes
+          const giftCardHtml = order.gift_card_code 
+            ? `<tr><td style="padding:6px 0;color:#999;font-size:13px;">Gift Card Code(s):</td><td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:700;color:#92400e;">${order.gift_card_code}</td></tr>` 
+            : "";
+
+          const invoiceSubject = `Invoice: Order ${orderNumLabel} — ${order.customer_name || order.customer_email} — €${order.total_amount}`;
+
+          const invoiceHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:20px;background:#f4f3ef;font-family:Arial,sans-serif;">
+<div style="max-width:700px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e5e5;">
+  
+  <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
+    <h1 style="color:#c9a96e;font-size:22px;font-weight:300;letter-spacing:5px;margin:0;">PROFPARFUMS</h1>
+    <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Invoice / Order Confirmation</p>
+  </div>
+
+  <div style="padding:28px 32px;">
+    <table style="width:100%;margin-bottom:24px;font-size:13px;">
+      <tr>
+        <td style="vertical-align:top;width:50%;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px;">Bill To</div>
+          <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px;">${order.customer_name || "N/A"}</div>
+          <div style="color:#666;line-height:1.5;">${order.customer_email}</div>
+          <div style="color:#666;line-height:1.5;margin-top:4px;">${addressHtml}</div>
+        </td>
+        <td style="vertical-align:top;text-align:right;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px;">Invoice Details</div>
+          <table style="margin-left:auto;font-size:13px;">
+            <tr><td style="padding:3px 12px 3px 0;color:#999;">Order №:</td><td style="padding:3px 0;font-weight:600;">${orderNumLabel}</td></tr>
+            <tr><td style="padding:3px 12px 3px 0;color:#999;">Date:</td><td style="padding:3px 0;">${invoiceDate}</td></tr>
+            <tr><td style="padding:3px 12px 3px 0;color:#999;">Payment:</td><td style="padding:3px 0;">${pmLabel}</td></tr>
+            <tr><td style="padding:3px 12px 3px 0;color:#999;">Status:</td><td style="padding:3px 0;color:#16a34a;font-weight:600;">APPROVED ✓</td></tr>
+            ${giftCardHtml}
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;padding-bottom:8px;border-bottom:2px solid #1a1a1a;margin-bottom:0;">Order Items</div>
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="background:#faf9f6;">
+          <th style="padding:10px 8px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;border-bottom:1px solid #ddd;">Product</th>
+          <th style="padding:10px 8px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;border-bottom:1px solid #ddd;">Qty</th>
+          <th style="padding:10px 8px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;border-bottom:1px solid #ddd;">Unit Price</th>
+          <th style="padding:10px 8px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;border-bottom:1px solid #ddd;">Total</th>
+        </tr>
+      </thead>
+      <tbody>${itemRows}</tbody>
+    </table>
+
+    <table style="width:100%;margin-top:16px;font-size:14px;">
+      <tr>
+        <td style="padding:6px 8px;color:#666;">Subtotal:</td>
+        <td style="padding:6px 8px;text-align:right;">€${subtotal.toFixed(2)}</td>
+      </tr>
+      ${hasDiscount ? `<tr>
+        <td style="padding:6px 8px;color:#c9a96e;font-weight:500;">Discount (${order.discount_code} — ${order.discount_percent}%):</td>
+        <td style="padding:6px 8px;text-align:right;color:#c9a96e;font-weight:500;">-€${discountAmount.toFixed(2)}</td>
+      </tr>` : ""}
+      <tr style="border-top:2px solid #1a1a1a;">
+        <td style="padding:12px 8px;font-size:16px;font-weight:700;">Total Paid:</td>
+        <td style="padding:12px 8px;text-align:right;font-size:20px;font-weight:700;">€${Number(order.total_amount).toFixed(2)}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background:#faf9f6;padding:16px 32px;border-top:1px solid #eee;font-size:12px;color:#999;text-align:center;">
+    This invoice was generated automatically upon order approval. Order ID: ${order.id}
+  </div>
+</div>
+</body></html>`;
+
           await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -135,7 +243,7 @@ serve(async (req) => {
               from: "ProfParfums Orders <orders@profparfum.com>",
               to: ADMIN_EMAILS,
               subject: invoiceSubject,
-              html: `<p>Order ${orderId} approved via admin dashboard. Customer: ${order.customer_name} (${order.customer_email}). Total: EUR${order.total_amount}. Payment: ${pmLabel}.${discountLabel}</p>`,
+              html: invoiceHtml,
             }),
           });
         }
