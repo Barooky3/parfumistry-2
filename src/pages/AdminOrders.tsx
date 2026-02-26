@@ -90,6 +90,14 @@ export default function AdminOrders() {
   const [catalogueSearch, setCatalogueSearch] = useState("");
   const [showCatalogue, setShowCatalogue] = useState(false);
 
+  // Manual email sender state
+  const [manualOpen, setManualOpen] = useState(false);
+  const [manualEmail, setManualEmail] = useState("");
+  const [manualName, setManualName] = useState("");
+  const [manualItems, setManualItems] = useState<OrderItem[]>([]);
+  const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
+  const [manualSending, setManualSending] = useState(false);
+
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       navigate("/", { replace: true });
@@ -198,6 +206,101 @@ export default function AdminOrders() {
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
 
+  // Manual email catalogue search
+  const manualFilteredCatalogue = useMemo(() => {
+    if (!manualCatalogueSearch.trim()) return products.slice(0, 15);
+    const q = manualCatalogueSearch.toLowerCase();
+    return products.filter(p =>
+      p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
+    ).slice(0, 15);
+  }, [manualCatalogueSearch]);
+
+  const addManualProduct = (product: Product) => {
+    const defaultVariant = product.variants?.[0];
+    const newItem: OrderItem = {
+      name: product.name,
+      brand: product.brand,
+      price: defaultVariant?.price ?? product.price,
+      quantity: 1,
+      selectedMl: defaultVariant?.ml,
+    };
+    setManualItems(prev => [...prev, newItem]);
+    setManualCatalogueSearch("");
+  };
+
+  const changeManualVariant = (index: number, product: Product, ml: number) => {
+    const variant = product.variants?.find(v => v.ml === ml);
+    if (!variant) return;
+    setManualItems(prev => {
+      const next = [...prev];
+      next[index] = { ...next[index], selectedMl: ml, price: variant.price };
+      return next;
+    });
+  };
+
+  const manualTotal = manualItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const sendManualEmail = async () => {
+    if (!manualEmail.trim() || !manualName.trim() || manualItems.length === 0) {
+      toast.error("Fill in all fields and add at least one product");
+      return;
+    }
+    setManualSending(true);
+    try {
+      // Build order items with image for the email function
+      const orderItemsWithImages = manualItems.map(item => {
+        const catalogueProduct = products.find(p =>
+          p.name.toLowerCase() === item.name.toLowerCase() &&
+          p.brand.toLowerCase() === item.brand.toLowerCase()
+        );
+        return {
+          ...item,
+          product: catalogueProduct ? {
+            name: catalogueProduct.name,
+            brand: catalogueProduct.brand,
+            price: item.price,
+            image: catalogueProduct.image,
+            affiliateUrl: catalogueProduct.affiliateUrl,
+            selectedMl: item.selectedMl,
+          } : undefined,
+          image: catalogueProduct?.image || "",
+          affiliateUrl: catalogueProduct?.affiliateUrl || "",
+          selectedPrice: item.price,
+        };
+      });
+
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-order-confirmation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            orderItems: orderItemsWithImages,
+            customerEmail: manualEmail.trim(),
+            customerName: manualName.trim(),
+            shippingAddress: {},
+            totalAmount: manualTotal.toFixed(2),
+          }),
+        }
+      );
+      if (res.ok) {
+        toast.success(`Confirmation email sent to ${manualEmail}`);
+        setManualItems([]);
+        setManualEmail("");
+        setManualName("");
+        setManualOpen(false);
+      } else {
+        const json = await res.json();
+        toast.error(json.error || "Failed to send email");
+      }
+    } catch {
+      toast.error("Failed to send email");
+    }
+    setManualSending(false);
+  };
 
   const handleDismiss = async (orderId: string) => {
     setActionLoading(orderId + "-dismiss");
@@ -561,6 +664,112 @@ export default function AdminOrders() {
             </div>
           </div>
         )}
+
+        {/* Manual Email Sender */}
+        <div className="mb-6 border rounded-lg p-4 bg-card">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">Send Manual Order Email</p>
+            <Button variant="outline" size="sm" onClick={() => setManualOpen(!manualOpen)}>
+              <Mail className="h-4 w-4 mr-1" /> {manualOpen ? "Close" : "Compose"}
+            </Button>
+          </div>
+          {manualOpen && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Customer Name</label>
+                  <Input value={manualName} onChange={(e) => setManualName(e.target.value)} placeholder="John Doe" className="h-9" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Customer Email</label>
+                  <Input value={manualEmail} onChange={(e) => setManualEmail(e.target.value)} placeholder="john@example.com" className="h-9" />
+                </div>
+              </div>
+
+              {/* Selected items */}
+              {manualItems.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Products</p>
+                  {manualItems.map((item, i) => {
+                    const catalogueProduct = findProduct(item);
+                    return (
+                      <div key={i} className="border rounded-md p-3 relative">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-1 right-1 h-6 w-6 text-destructive"
+                          onClick={() => setManualItems(prev => prev.filter((_, idx) => idx !== i))}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                        <p className="text-sm font-medium pr-8">{item.brand} — {item.name}</p>
+                        {catalogueProduct?.variants && catalogueProduct.variants.length > 0 && (
+                          <div className="flex gap-2 mt-2">
+                            {catalogueProduct.variants.map(v => (
+                              <button
+                                key={v.ml}
+                                onClick={() => changeManualVariant(i, catalogueProduct, v.ml)}
+                                className={`text-xs px-3 py-1.5 rounded-md border transition-colors ${
+                                  item.selectedMl === v.ml
+                                    ? "bg-primary text-primary-foreground border-primary"
+                                    : "bg-muted/50 border-border hover:bg-muted"
+                                }`}
+                              >
+                                {v.ml}ml — €{v.price.toFixed(2)}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        {!catalogueProduct?.variants && (
+                          <p className="text-xs text-muted-foreground mt-1">{item.selectedMl ? `${item.selectedMl}ml — ` : ""}€{item.price.toFixed(2)}</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Add products */}
+              <div>
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search catalogue to add products..."
+                    value={manualCatalogueSearch}
+                    onChange={(e) => setManualCatalogueSearch(e.target.value)}
+                    className="h-8 text-sm pl-8"
+                  />
+                </div>
+                {manualCatalogueSearch.trim() && (
+                  <div className="max-h-48 overflow-y-auto space-y-1 mt-2 border rounded-md p-1">
+                    {manualFilteredCatalogue.map(p => (
+                      <button
+                        key={p.id}
+                        onClick={() => addManualProduct(p)}
+                        className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors flex justify-between items-center"
+                      >
+                        <span><span className="font-medium">{p.brand}</span> — {p.name}</span>
+                        <span className="text-xs text-muted-foreground">€{p.price.toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Total and send */}
+              <div className="flex items-center justify-between border-t pt-3">
+                <p className="text-sm font-semibold">Total: €{manualTotal.toFixed(2)}</p>
+                <Button
+                  onClick={sendManualEmail}
+                  disabled={manualSending || manualItems.length === 0 || !manualEmail.trim() || !manualName.trim()}
+                  size="sm"
+                >
+                  <Mail className="h-4 w-4 mr-1" /> {manualSending ? "Sending..." : "Send Confirmation Email"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
 
         {loading ? (
           <div className="text-center py-16 text-muted-foreground">Loading orders...</div>
