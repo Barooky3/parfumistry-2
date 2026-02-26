@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users } from "lucide-react";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -72,6 +72,7 @@ export default function AdminOrders() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
+  const [allOrdersForRepeat, setAllOrdersForRepeat] = useState<Order[]>([]);
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
@@ -147,8 +148,36 @@ export default function AdminOrders() {
   }, [user, statusFilter]);
 
   useEffect(() => {
-    if (ADMIN_EMAILS.includes(user?.email || "")) fetchApprovedOrders();
+    if (ADMIN_EMAILS.includes(user?.email || "")) {
+      fetchApprovedOrders();
+      fetchAllOrdersForRepeat();
+    }
   }, [user]);
+
+  // Fetch all orders to detect repeat customers
+  const fetchAllOrdersForRepeat = async () => {
+    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?status=all`,
+        { headers: { Authorization: `Bearer ${session.access_token}` } }
+      );
+      const json = await res.json();
+      if (res.ok) setAllOrdersForRepeat(json.orders || []);
+    } catch { /* silent */ }
+  };
+
+  // Compute order count per email for repeat customer detection
+  const emailOrderCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const o of allOrdersForRepeat) {
+      const email = o.customer_email.toLowerCase();
+      counts[email] = (counts[email] || 0) + 1;
+    }
+    return counts;
+  }, [allOrdersForRepeat]);
 
   // Compute date range from preset or custom
   const dateRange = useMemo<{ from: Date; to: Date } | null>(() => {
@@ -798,6 +827,15 @@ export default function AdminOrders() {
                         <Badge className={pmColors[pm] || "bg-gray-100 text-gray-800"}>
                           {pm}
                         </Badge>
+                        {(() => {
+                          const count = emailOrderCounts[order.customer_email.toLowerCase()] || 0;
+                          return count > 1 ? (
+                            <Badge className="bg-amber-100 text-amber-800 border-amber-300 gap-1">
+                              <Users className="h-3 w-3" />
+                              Repeat ({count} orders)
+                            </Badge>
+                          ) : null;
+                        })()}
                       </div>
                       <p className="text-sm text-muted-foreground">{order.customer_email}</p>
                       <p className="text-xs text-muted-foreground mt-1">
