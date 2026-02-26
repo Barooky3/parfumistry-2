@@ -23,6 +23,8 @@ import { Product } from "@/types/product";
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
 
+// State for delete confirmation dialog - replaces native confirm() which breaks when "don't ask again" is checked
+
 interface OrderItem {
   name: string;
   brand: string;
@@ -68,6 +70,7 @@ export default function AdminOrders() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
@@ -167,8 +170,9 @@ export default function AdminOrders() {
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
 
+
   const handleDismiss = async (orderId: string) => {
-    if (!confirm("Remove this order from the list? This cannot be undone.")) return;
+    setConfirmDeleteId(null);
     setActionLoading(orderId + "-dismiss");
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -651,7 +655,7 @@ export default function AdminOrders() {
                       size="sm"
                       variant="ghost"
                       className="text-muted-foreground"
-                      onClick={() => handleDismiss(order.id)}
+                      onClick={() => setConfirmDeleteId(order.id)}
                       disabled={!!actionLoading}
                     >
                       <Trash2 className="h-4 w-4 mr-1" /> Remove
@@ -663,6 +667,22 @@ export default function AdminOrders() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!confirmDeleteId} onOpenChange={(open) => { if (!open) setConfirmDeleteId(null); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Remove Order</DialogTitle>
+            <DialogDescription>
+              Remove this order from the list? This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={() => confirmDeleteId && handleDismiss(confirmDeleteId)}>Remove</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Order Items Dialog */}
       <Dialog open={!!editingOrder} onOpenChange={(open) => { if (!open) { setEditingOrder(null); setShowCatalogue(false); } }}>
