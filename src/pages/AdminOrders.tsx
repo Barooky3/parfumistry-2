@@ -64,6 +64,7 @@ export default function AdminOrders() {
   const [paymentFilter, setPaymentFilter] = useState("All");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
@@ -101,9 +102,40 @@ export default function AdminOrders() {
     setLoading(false);
   };
 
+  // Fetch all approved orders for revenue tally
+  const fetchApprovedOrders = async () => {
+    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?status=approved`,
+        { headers: { Authorization: `Bearer ${session.access_token}` } }
+      );
+      const json = await res.json();
+      if (res.ok) setApprovedOrders(json.orders || []);
+    } catch { /* silent */ }
+  };
+
   useEffect(() => {
     if (ADMIN_EMAILS.includes(user?.email || "")) fetchOrders();
   }, [user, statusFilter]);
+
+  useEffect(() => {
+    if (ADMIN_EMAILS.includes(user?.email || "")) fetchApprovedOrders();
+  }, [user]);
+
+  // Revenue tally from approved orders
+  const revenueTally = useMemo(() => {
+    const byMethod: Record<string, number> = {};
+    let total = 0;
+    for (const o of approvedOrders) {
+      const pm = getPaymentMethod(o.checkout_reference);
+      byMethod[pm] = (byMethod[pm] || 0) + o.total_amount;
+      total += o.total_amount;
+    }
+    return { byMethod, total };
+  }, [approvedOrders]);
 
   const handleDismiss = async (orderId: string) => {
     if (!confirm("Remove this order from the list? This cannot be undone.")) return;
@@ -377,6 +409,25 @@ export default function AdminOrders() {
             className="pl-9"
           />
         </div>
+
+        {/* Revenue Tally */}
+        {approvedOrders.length > 0 && (
+          <div className="mb-6 border rounded-lg p-4 bg-card">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">Revenue (Approved Orders)</p>
+            <div className="flex flex-wrap gap-4 items-end">
+              {Object.entries(revenueTally.byMethod).sort((a, b) => b[1] - a[1]).map(([method, amount]) => (
+                <div key={method} className="text-center">
+                  <p className="text-xs text-muted-foreground">{method}</p>
+                  <p className="text-sm font-semibold">€{amount.toFixed(2)}</p>
+                </div>
+              ))}
+              <div className="text-center border-l pl-4 ml-2">
+                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-lg font-bold text-primary">€{revenueTally.total.toFixed(2)}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <div className="text-center py-16 text-muted-foreground">Loading orders...</div>
