@@ -289,8 +289,9 @@ function buildAdminInvoiceHtml(
     const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
     const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
+    const productLink = getProductLink(item.name, item.brand);
     return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <a href="${productLink}" style="color:#c9a96e;font-weight:500;text-decoration:none;">(link)</a></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
