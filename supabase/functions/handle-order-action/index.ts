@@ -32,20 +32,30 @@ function buildResultPage(title: string, message: string, success: boolean): stri
 </body></html>`;
 }
 
-function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = false, orderNumber?: number | null): string {
+function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = false, orderNumber?: number | null, isBankTransfer: boolean = false): string {
   const year = new Date().getFullYear();
-  const reason = isGiftCard
-    ? "Unfortunately, the Rewarble code you provided for your recent order could not be verified and is invalid. Your order has been cancelled."
-    : "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
+  let reason: string;
+  if (isGiftCard) {
+    reason = "Unfortunately, the Rewarble code you provided for your recent order could not be verified and is invalid. Your order has been cancelled.";
+  } else if (isBankTransfer) {
+    reason = "Unfortunately, your bank transfer could not be verified or was bounced back by the receiving bank. Your order has been cancelled.<br><br><strong>If you did send the payment, don't worry -- your money is already on its way back to your account.</strong> Depending on your bank, it may take 1-3 business days to appear in your balance.";
+  } else {
+    reason = "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
+  }
   const giftCardTip = isGiftCard
     ? `<div style="background:#fef3c7;border:1px solid #f59e0b;padding:16px 20px;border-radius:8px;margin:16px 0;">
-        <p style="font-size:14px;font-weight:600;color:#92400e;margin:0 0 8px;">⚠️ Important: Send the Gift Card Code, NOT the Order Number</p>
+        <p style="font-size:14px;font-weight:600;color:#92400e;margin:0 0 8px;">Important: Send the Gift Card Code, NOT the Order Number</p>
         <p style="font-size:13px;color:#92400e;line-height:1.6;margin:0;">Please make sure you send us the <strong>actual Rewarble gift card code</strong>. The gift card code is <strong>16 characters long and contains letters</strong>. The Rewarble <strong>order number</strong> (e.g. a number starting with #, containing only digits) is <strong>not</strong> the gift card code and cannot be used to redeem your purchase.</p>
       </div>`
     : "";
-  const nextStep = isGiftCard
-    ? "If you believe this is an error, please contact us and we'll be happy to assist you."
-    : "Please try again and ensure the payment is completed successfully before confirming your order. If the issue persists, feel free to reach out to us for assistance.";
+  let nextStep: string;
+  if (isGiftCard) {
+    nextStep = "If you believe this is an error, please contact us and we'll be happy to assist you.";
+  } else if (isBankTransfer) {
+    nextStep = "If you'd like to try again, please place a new order and make sure to include your email address in the payment reference so we can match your transfer. If you have any questions, don't hesitate to reach out.";
+  } else {
+    nextStep = "Please try again and ensure the payment is completed successfully before confirming your order. If the issue persists, feel free to reach out to us for assistance.";
+  }
   const orderNumText = orderNumber ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${orderNumber}</strong></p>` : "";
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
@@ -341,7 +351,8 @@ serve(async (req) => {
       await supabase.from("orders").update({ status: "rejected" }).eq("id", orderId);
 
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number);
+      const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
+      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number, isBankTransferRej);
       const rejSubject = order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums";
       
       let rejEmailWarning = "";
