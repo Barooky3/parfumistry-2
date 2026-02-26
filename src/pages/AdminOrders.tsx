@@ -138,15 +138,37 @@ export default function AdminOrders() {
   // Compute date range from preset or custom
   const dateRange = useMemo<{ from: Date; to: Date } | null>(() => {
     const now = new Date();
+
+    // "Day start" = 1:00 AM Bulgarian time (UTC+2 winter / UTC+3 summer).
+    // We approximate with a fixed UTC+3 offset (EET is +2, EEST is +3; most of the year is EEST).
+    const bulgarianDayStart = (ref: Date) => {
+      // Convert ref to Bulgarian time, floor to date, set hour to 1, convert back to UTC
+      const bgOffset = 3; // UTC+3 (EEST – covers Mar-Oct; winter is +2, close enough)
+      const bgTime = new Date(ref.getTime() + bgOffset * 3600000);
+      const bgDay = new Date(Date.UTC(bgTime.getUTCFullYear(), bgTime.getUTCMonth(), bgTime.getUTCDate(), 1, 0, 0, 0));
+      // If bgTime is before 1 AM Bulgarian, the "day" actually started the previous calendar day at 1 AM
+      if (bgTime.getUTCHours() < 1) {
+        bgDay.setUTCDate(bgDay.getUTCDate() - 1);
+      }
+      // Convert back from Bulgarian to UTC
+      return new Date(bgDay.getTime() - bgOffset * 3600000);
+    };
+
+    const dayStart = (ref: Date) => bulgarianDayStart(ref);
+    const dayEnd = (ref: Date) => {
+      const start = dayStart(ref);
+      return new Date(start.getTime() + 24 * 3600000 - 1);
+    };
+
     switch (datePreset) {
-      case "today": return { from: startOfDay(now), to: endOfDay(now) };
-      case "yesterday": return { from: startOfDay(subDays(now, 1)), to: endOfDay(subDays(now, 1)) };
-      case "7days": return { from: startOfDay(subDays(now, 6)), to: endOfDay(now) };
-      case "30days": return { from: startOfDay(subDays(now, 29)), to: endOfDay(now) };
-      case "this_month": return { from: startOfMonth(now), to: endOfDay(now) };
-      case "last_month": { const lm = subMonths(now, 1); return { from: startOfMonth(lm), to: endOfDay(subDays(startOfMonth(now), 1)) }; }
-      case "this_week": return { from: startOfWeek(now, { weekStartsOn: 1 }), to: endOfDay(now) };
-      case "custom": return customFrom && customTo ? { from: startOfDay(customFrom), to: endOfDay(customTo) } : null;
+      case "today": return { from: dayStart(now), to: dayEnd(now) };
+      case "yesterday": return { from: dayStart(subDays(now, 1)), to: dayEnd(subDays(now, 1)) };
+      case "7days": return { from: dayStart(subDays(now, 6)), to: dayEnd(now) };
+      case "30days": return { from: dayStart(subDays(now, 29)), to: dayEnd(now) };
+      case "this_month": return { from: startOfMonth(now), to: dayEnd(now) };
+      case "last_month": { const lm = subMonths(now, 1); return { from: startOfMonth(lm), to: dayEnd(subDays(startOfMonth(now), 1)) }; }
+      case "this_week": return { from: startOfWeek(now, { weekStartsOn: 1 }), to: dayEnd(now) };
+      case "custom": return customFrom && customTo ? { from: dayStart(customFrom), to: dayEnd(customTo) } : null;
       default: return null; // "all"
     }
   }, [datePreset, customFrom, customTo]);
