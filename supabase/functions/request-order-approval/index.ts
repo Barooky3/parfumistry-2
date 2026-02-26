@@ -204,32 +204,25 @@ serve(async (req) => {
       throw new Error("Failed to store order");
     }
 
-    // For bank_transfer and revolut_app, defer admin email until proof is uploaded
-    const deferEmail = paymentMethod === "bank_transfer" || paymentMethod === "revolut_app";
+    // Send approval email to admin immediately for all payment methods
+    const html = buildApprovalEmailHtml(
+      order.id,
+      token,
+      customerName || "Valued Customer",
+      customerEmail,
+      normalizedItems,
+      calculatedTotal,
+      shippingAddress || {},
+      supabaseUrl,
+      paymentMethod,
+      giftCardCode,
+      order.order_number,
+    );
 
-    if (!deferEmail) {
-      // Send approval email to admin immediately for other payment methods
-      const html = buildApprovalEmailHtml(
-        order.id,
-        token,
-        customerName || "Valued Customer",
-        customerEmail,
-        normalizedItems,
-        calculatedTotal,
-        shippingAddress || {},
-        supabaseUrl,
-        paymentMethod,
-        giftCardCode,
-        order.order_number,
-      );
-
-      const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-      const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
-      await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
-      console.log("Approval email sent to admin for order:", order.id);
-    } else {
-      console.log("Admin email deferred until proof is uploaded for order:", order.id);
-    }
+    const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
+    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
+    await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+    console.log("Approval email sent to admin for order:", order.id);
 
     // Auto proof emails removed — customers now upload proof via the website after confirming payment
 
