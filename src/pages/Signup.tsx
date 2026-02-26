@@ -96,6 +96,12 @@ const Signup = () => {
 
       // Auto sign in after successful verification
       const { error: signInError } = await signIn(email, password);
+
+      // Send welcome email with discount code (fire and forget)
+      supabase.functions.invoke('send-welcome-email', {
+        body: { email, name },
+      }).catch((err) => console.error('Welcome email error:', err));
+
       if (signInError) {
         toast({ title: 'Account created!', description: 'Please sign in with your credentials.' });
         navigate('/login');

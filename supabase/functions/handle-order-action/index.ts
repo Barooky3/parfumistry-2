@@ -312,14 +312,20 @@ serve(async (req) => {
     }
 
     if (action === "approve") {
-      // Prevent duplicate invoice: only process if not already approved
-      if (order.status === "approved" && order.email_sent === true) {
+      // Atomic check-and-update to prevent duplicate invoices
+      const { data: updated, error: updateErr } = await supabase
+        .from("orders")
+        .update({ status: "approved", email_sent: true })
+        .eq("id", orderId)
+        .eq("email_sent", false)
+        .select("id")
+        .maybeSingle();
+
+      if (!updated) {
         return new Response(buildResultPage("Already Approved", "This order has already been approved and the confirmation email was sent.", true), {
           headers: { "Content-Type": "text/html" }, status: 200,
         });
       }
-
-      await supabase.from("orders").update({ status: "approved", email_sent: true }).eq("id", orderId);
 
       const items = (order.order_items as unknown as OrderItem[]) || [];
 
