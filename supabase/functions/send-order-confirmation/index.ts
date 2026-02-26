@@ -232,14 +232,6 @@ function buildEmailHtml(
     '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products.' + (noLinks ? '' : ' Click on any product to access it.') + '</p>',
     '</div>',
 
-    ...(noLinks ? [
-    '<div style="padding: 0 32px 24px 32px;">',
-    '<div style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 2px solid #c9a96e; padding: 24px; border-radius: 10px; text-align: center;">',
-    '<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #c9a96e; margin: 0 0 8px 0;">&#128666; Shipping Update</p>',
-    '<p style="font-size: 16px; font-weight: 600; color: #c9a96e; margin: 0 0 8px 0; line-height: 1.4;">Your DHL tracking number will be sent to you within 3 days</p>',
-    '<p style="font-size: 13px; color: #c9a96e; margin: 0; line-height: 1.5; opacity: 0.8;">By then, your order will already be on its way to you.</p>',
-    '</div></div>',
-    ] : []),
 
     '<div style="padding: 0 32px;">',
     '<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; padding-bottom: 12px; border-bottom: 2px solid #1a1a1a; margin-bottom: 0;">Your Products</div>',
@@ -466,10 +458,9 @@ serve(async (req) => {
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
     const origin = "https://profparfums.lovable.app";
-    const noLinks = paymentMethod === "rewarble" || paymentMethod === "bank_transfer" || paymentMethod === "paypal";
-    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, noLinks)).join("");
+    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, false)).join("");
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, noLinks, discountCode, discountPercent);
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, false, discountCode, discountPercent);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
     await sendEmail(customerEmail, emailSubject, html);
