@@ -5,7 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon } from "lucide-react";
+import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -66,6 +69,11 @@ export default function AdminOrders() {
   const [searchQuery, setSearchQuery] = useState("");
   const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
 
+  // Date range for revenue tally
+  const [datePreset, setDatePreset] = useState<string>("all");
+  const [customFrom, setCustomFrom] = useState<Date | undefined>();
+  const [customTo, setCustomTo] = useState<Date | undefined>();
+
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [editItems, setEditItems] = useState<OrderItem[]>([]);
@@ -125,17 +133,39 @@ export default function AdminOrders() {
     if (ADMIN_EMAILS.includes(user?.email || "")) fetchApprovedOrders();
   }, [user]);
 
-  // Revenue tally from approved orders
+  // Compute date range from preset or custom
+  const dateRange = useMemo<{ from: Date; to: Date } | null>(() => {
+    const now = new Date();
+    switch (datePreset) {
+      case "today": return { from: startOfDay(now), to: endOfDay(now) };
+      case "yesterday": return { from: startOfDay(subDays(now, 1)), to: endOfDay(subDays(now, 1)) };
+      case "7days": return { from: startOfDay(subDays(now, 6)), to: endOfDay(now) };
+      case "30days": return { from: startOfDay(subDays(now, 29)), to: endOfDay(now) };
+      case "this_month": return { from: startOfMonth(now), to: endOfDay(now) };
+      case "last_month": { const lm = subMonths(now, 1); return { from: startOfMonth(lm), to: endOfDay(subDays(startOfMonth(now), 1)) }; }
+      case "this_week": return { from: startOfWeek(now, { weekStartsOn: 1 }), to: endOfDay(now) };
+      case "custom": return customFrom && customTo ? { from: startOfDay(customFrom), to: endOfDay(customTo) } : null;
+      default: return null; // "all"
+    }
+  }, [datePreset, customFrom, customTo]);
+
+  // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
     const byMethod: Record<string, number> = {};
     let total = 0;
+    let count = 0;
     for (const o of approvedOrders) {
+      if (dateRange) {
+        const d = new Date(o.created_at);
+        if (!isWithinInterval(d, { start: dateRange.from, end: dateRange.to })) continue;
+      }
       const pm = getPaymentMethod(o.checkout_reference);
       byMethod[pm] = (byMethod[pm] || 0) + o.total_amount;
       total += o.total_amount;
+      count++;
     }
-    return { byMethod, total };
-  }, [approvedOrders]);
+    return { byMethod, total, count };
+  }, [approvedOrders, dateRange]);
 
   const handleDismiss = async (orderId: string) => {
     if (!confirm("Remove this order from the list? This cannot be undone.")) return;
@@ -413,7 +443,69 @@ export default function AdminOrders() {
         {/* Revenue Tally */}
         {approvedOrders.length > 0 && (
           <div className="mb-6 border rounded-lg p-4 bg-card">
-            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">Revenue (Approved Orders)</p>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                Revenue (Approved Orders) — {revenueTally.count} orders
+              </p>
+            </div>
+            {/* Date presets */}
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {[
+                { key: "all", label: "All Time" },
+                { key: "today", label: "Today" },
+                { key: "yesterday", label: "Yesterday" },
+                { key: "this_week", label: "This Week" },
+                { key: "7days", label: "Last 7 Days" },
+                { key: "this_month", label: "This Month" },
+                { key: "last_month", label: "Last Month" },
+                { key: "30days", label: "Last 30 Days" },
+                { key: "custom", label: "Custom" },
+              ].map(p => (
+                <button
+                  key={p.key}
+                  onClick={() => setDatePreset(p.key)}
+                  className={`px-2.5 py-1 text-xs rounded-md border transition-colors ${
+                    datePreset === p.key
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-muted-foreground border-input hover:bg-accent"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            {/* Custom date pickers */}
+            {datePreset === "custom" && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="text-xs">
+                      <CalendarIcon className="h-3 w-3 mr-1" />
+                      {customFrom ? format(customFrom, "dd/MM/yyyy") : "From"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={customFrom} onSelect={setCustomFrom} className="p-3 pointer-events-auto" />
+                  </PopoverContent>
+                </Popover>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="text-xs">
+                      <CalendarIcon className="h-3 w-3 mr-1" />
+                      {customTo ? format(customTo, "dd/MM/yyyy") : "To"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={customTo} onSelect={setCustomTo} className="p-3 pointer-events-auto" />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
+            {dateRange && (
+              <p className="text-xs text-muted-foreground mb-2">
+                {format(dateRange.from, "dd MMM yyyy")} – {format(dateRange.to, "dd MMM yyyy")}
+              </p>
+            )}
             <div className="flex flex-wrap gap-4 items-end">
               {Object.entries(revenueTally.byMethod).sort((a, b) => b[1] - a[1]).map(([method, amount]) => (
                 <div key={method} className="text-center">
