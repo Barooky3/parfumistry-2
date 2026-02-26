@@ -209,7 +209,7 @@ const Rewarble = () => {
               Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your products.
             </p>
             <div className="flex items-center justify-center gap-1.5 pt-3 mt-3 border-t border-border/50">
-              <span className="text-[10px] text-muted-foreground/60">Powered by</span>
+              <span className="text-[10px] text-muted-foreground/60">Secure verification powered by</span>
               <img src="/images/rewarble-icon.svg" alt="Rewarble" className="h-4 w-4" />
               <span className="text-[11px] font-semibold text-muted-foreground/80">Rewarble</span>
             </div>
