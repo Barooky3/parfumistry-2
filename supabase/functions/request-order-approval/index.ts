@@ -240,7 +240,13 @@ serve(async (req) => {
     );
 
     const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-    const emailPrefix = paymentMethod === "rewarble" ? "Rewarble Order" : "Order Approval";
+    const methodLabels: Record<string, string> = {
+      rewarble: "Rewarble Order",
+      revolut_app: "Revolut Order",
+      bank_transfer: "Bank Transfer Order",
+      paypal_eneba: "PayPal/Eneba Order",
+    };
+    const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
     await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
     console.log("Approval email sent to admin for order:", order.id);
 

@@ -85,11 +85,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
-            <div className={cn("aspect-square md:aspect-[3/4] bg-secondary overflow-hidden", product.imagePadding)}>
+            <div className={cn("aspect-square md:aspect-[3/4] bg-secondary overflow-hidden flex items-end justify-center", product.imagePadding)}>
               <img 
                 src={product.image} 
                 alt={product.name} 
-                className={cn("w-full h-full", product.imagePadding ? "object-contain" : "object-cover")}
+                className={cn("w-full h-full", product.imagePadding ? "object-contain object-bottom" : "object-cover")}
                 loading="eager"
               />
             </div>
