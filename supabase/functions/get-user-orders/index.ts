@@ -16,22 +16,22 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Get user from auth header
+    // Get user email from JWT (avoids session lookup)
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
+    if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Verify the user token
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: { user }, error: userError } = await userClient.auth.getUser();
-
-    if (userError || !user?.email) {
+    let userEmail: string;
+    try {
+      const token = authHeader.replace("Bearer ", "");
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      userEmail = payload.email;
+      if (!userEmail) throw new Error("No email");
+    } catch {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const { data: orders, error: ordersError } = await adminClient
       .from("orders")
       .select("*")
-      .eq("customer_email", user.email)
+      .eq("customer_email", userEmail)
       .order("created_at", { ascending: false });
 
     if (ordersError) {
