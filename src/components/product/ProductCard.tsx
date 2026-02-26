@@ -117,11 +117,11 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           className="block relative mb-2.5"
           onClick={handleCardClick}
         >
-          <div className={cn("aspect-[3/4] bg-secondary overflow-hidden rounded-sm", product.imagePadding)}>
+          <div className={cn("aspect-[3/4] bg-secondary overflow-hidden rounded-sm flex items-end justify-center", product.imagePadding)}>
             <motion.img
               src={product.image}
               alt={product.name}
-              className={cn("w-full h-full", product.imagePadding ? "object-contain" : "object-cover")}
+              className={cn("w-full", product.imagePadding ? "h-full object-contain object-bottom" : "h-full object-cover")}
               loading="lazy"
               whileHover={{ scale: 1.08 }}
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
