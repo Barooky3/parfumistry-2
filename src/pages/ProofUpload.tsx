@@ -135,6 +135,13 @@ const ProofUpload = () => {
           )}
         </div>
 
+        {/* Warning */}
+        <div className="rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 px-5 py-4 mb-6">
+          <p className="text-sm text-amber-800 dark:text-amber-300 font-medium">
+            ⏳ Please upload your proof of payment within the next <strong>3 hours</strong>. Orders without proof will be automatically cancelled.
+          </p>
+        </div>
+
         {/* Instructions */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
           <div className="px-5 py-3.5 border-b border-border bg-muted/30">
