@@ -7,7 +7,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 
-const REVTAG = '@mubarak_e';
+const REVTAG = '@Malik_ll_dkwy';
 
 const RevolutApp = () => {
   const { toast } = useToast();
