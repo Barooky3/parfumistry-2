@@ -10,6 +10,7 @@ import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, is
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -76,6 +77,11 @@ export default function AdminOrders() {
   const [datePreset, setDatePreset] = useState<string>("all");
   const [customFrom, setCustomFrom] = useState<Date | undefined>();
   const [customTo, setCustomTo] = useState<Date | undefined>();
+
+  // Rejection notes state
+  const [rejectingOrder, setRejectingOrder] = useState<Order | null>(null);
+  const [rejectionNotes, setRejectionNotes] = useState("");
+  const [rejectLoading, setRejectLoading] = useState(false);
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
@@ -260,7 +266,7 @@ export default function AdminOrders() {
               Authorization: `Bearer ${session.access_token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ orderId, action }),
+            body: JSON.stringify({ orderId, action, ...(action === "reject" ? { rejectionNotes: "" } : {}) }),
           }
         );
         const json = await res.json();
@@ -688,7 +694,7 @@ export default function AdminOrders() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleAction(order.id, "reject")}
+                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); }}
                       disabled={!!actionLoading}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
@@ -718,6 +724,59 @@ export default function AdminOrders() {
         )}
       </div>
 
+
+      {/* Rejection Notes Dialog */}
+      <Dialog open={!!rejectingOrder} onOpenChange={(open) => { if (!open) setRejectingOrder(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reject Order — #{rejectingOrder?.order_number || '—'}</DialogTitle>
+            <DialogDescription>Add optional notes to include in the rejection email sent to the customer.</DialogDescription>
+          </DialogHeader>
+          <div className="py-2">
+            <label className="text-sm font-medium mb-2 block">Reason for Rejection (optional)</label>
+            <Textarea
+              placeholder="e.g. The gift card code was invalid, please double-check and resend..."
+              value={rejectionNotes}
+              onChange={(e) => setRejectionNotes(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRejectingOrder(null)}>Cancel</Button>
+            <Button
+              variant="destructive"
+              disabled={rejectLoading}
+              onClick={async () => {
+                if (!rejectingOrder) return;
+                setRejectLoading(true);
+                try {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  if (!session) { toast.error("Not authenticated"); return; }
+                  const res = await fetch(
+                    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders`,
+                    {
+                      method: "POST",
+                      headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionNotes }),
+                    }
+                  );
+                  const json = await res.json();
+                  if (res.ok) {
+                    toast.success(json.message);
+                    setRejectingOrder(null);
+                    fetchOrders();
+                  } else {
+                    toast.error(json.error || "Failed to reject");
+                  }
+                } catch { toast.error("Failed to reject"); }
+                finally { setRejectLoading(false); }
+              }}
+            >
+              {rejectLoading ? "Rejecting..." : "Reject Order"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Order Items Dialog */}
       <Dialog open={!!editingOrder} onOpenChange={(open) => { if (!open) { setEditingOrder(null); setShowCatalogue(false); } }}>
