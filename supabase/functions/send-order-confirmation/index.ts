@@ -124,6 +124,7 @@ interface OrderItem {
 const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
   "evening-sweetheart": [
     { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["jean-paul-gaultier"] },
+    { label: "Valentino Born in Roma Intense", url: PRODUCT_LINKS["valentino"] },
     { label: "Azzaro The Most Wanted Parfum", url: PRODUCT_LINKS["azzaro"] },
   ],
   "young-playboy": [
