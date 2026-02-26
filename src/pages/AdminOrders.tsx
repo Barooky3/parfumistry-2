@@ -5,8 +5,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2 } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
 
@@ -52,6 +60,12 @@ export default function AdminOrders() {
   const [paymentFilter, setPaymentFilter] = useState("All");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Edit state
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [editItems, setEditItems] = useState<OrderItem[]>([]);
+  const [editSaving, setEditSaving] = useState(false);
+
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       navigate("/", { replace: true });
@@ -158,6 +172,63 @@ export default function AdminOrders() {
       toast.error("Action failed");
     }
     setActionLoading(null);
+  };
+
+  const openEditDialog = (order: Order) => {
+    const items = Array.isArray(order.order_items) ? order.order_items : [];
+    setEditItems(JSON.parse(JSON.stringify(items)));
+    setEditingOrder(order);
+  };
+
+  const updateEditItem = (index: number, field: keyof OrderItem, value: string | number) => {
+    setEditItems(prev => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const removeEditItem = (index: number) => {
+    setEditItems(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const addEditItem = () => {
+    setEditItems(prev => [...prev, { name: "", brand: "", price: 0, quantity: 1 }]);
+  };
+
+  const editTotal = editItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const saveEditItems = async () => {
+    if (!editingOrder) return;
+    setEditSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: editingOrder.id,
+            action: "update_items",
+            orderItems: editItems,
+            totalAmount: editTotal,
+          }),
+        }
+      );
+      const json = await res.json();
+      if (res.ok) {
+        toast.success("Order items updated");
+        setEditingOrder(null);
+        fetchOrders();
+      } else {
+        toast.error(json.error || "Failed to update");
+      }
+    } catch {
+      toast.error("Failed to update");
+    }
+    setEditSaving(false);
   };
 
   if (authLoading) {
@@ -290,7 +361,12 @@ export default function AdminOrders() {
                   </div>
 
                   <div className="mt-3 border-t pt-3">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Items</p>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">Items</p>
+                      <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openEditDialog(order)}>
+                        <Pencil className="h-3 w-3 mr-1" /> Edit Items
+                      </Button>
+                    </div>
                     <div className="space-y-1">
                       {items.map((item, i) => (
                         <div key={i} className="flex justify-between text-sm">
@@ -353,6 +429,67 @@ export default function AdminOrders() {
           </div>
         )}
       </div>
+
+      {/* Edit Order Items Dialog */}
+      <Dialog open={!!editingOrder} onOpenChange={(open) => { if (!open) setEditingOrder(null); }}>
+        <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Order Items — #{editingOrder?.order_number || '—'}</DialogTitle>
+            <DialogDescription>Modify items, then save. Re-approve to send the customer an updated email.</DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            {editItems.map((item, i) => (
+              <div key={i} className="border rounded-md p-3 space-y-2 relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-1 right-1 h-6 w-6"
+                  onClick={() => removeEditItem(i)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-xs text-muted-foreground">Brand</label>
+                    <Input value={item.brand} onChange={(e) => updateEditItem(i, "brand", e.target.value)} className="h-8 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground">Name</label>
+                    <Input value={item.name} onChange={(e) => updateEditItem(i, "name", e.target.value)} className="h-8 text-sm" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="text-xs text-muted-foreground">Price (EUR)</label>
+                    <Input type="number" step="0.01" value={item.price} onChange={(e) => updateEditItem(i, "price", parseFloat(e.target.value) || 0)} className="h-8 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground">Qty</label>
+                    <Input type="number" min="1" value={item.quantity} onChange={(e) => updateEditItem(i, "quantity", parseInt(e.target.value) || 1)} className="h-8 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground">ML</label>
+                    <Input type="number" value={item.selectedMl || ""} onChange={(e) => updateEditItem(i, "selectedMl", parseInt(e.target.value) || 0)} className="h-8 text-sm" placeholder="—" />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Button variant="outline" size="sm" onClick={addEditItem} className="w-full">+ Add Item</Button>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t">
+            <p className="text-sm font-semibold">New Total: EUR {editTotal.toFixed(2)}</p>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingOrder(null)}>Cancel</Button>
+            <Button onClick={saveEditItems} disabled={editSaving}>
+              {editSaving ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

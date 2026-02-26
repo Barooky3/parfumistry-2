@@ -145,6 +145,18 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
 
+      } else if (orderAction === "update_items") {
+        const { orderItems, totalAmount } = body;
+        if (!orderItems || totalAmount === undefined) {
+          return new Response(JSON.stringify({ error: "Missing orderItems or totalAmount" }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        await adminClient.from("orders").update({ order_items: orderItems, total_amount: totalAmount }).eq("id", orderId);
+        return new Response(JSON.stringify({ success: true, message: "Order items updated." }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+
       } else if (orderAction === "reject") {
         await adminClient.from("orders").update({ status: "rejected" }).eq("id", orderId);
 
