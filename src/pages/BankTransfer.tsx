@@ -69,8 +69,11 @@ const BankTransfer = () => {
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
-      const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
-      navigate(`/checkout?completed=bank_transfer${orderNum}`);
+      if (data?.orderNumber) {
+        navigate(`/proof?order=${data.orderNumber}&method=bank_transfer`);
+      } else {
+        navigate(`/checkout?completed=bank_transfer`);
+      }
     } catch (err: any) {
       console.error('Bank transfer order error:', err);
       toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });

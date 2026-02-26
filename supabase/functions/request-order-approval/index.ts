@@ -225,23 +225,7 @@ serve(async (req) => {
 
     console.log("Approval email sent to admin for order:", order.id);
 
-    // Auto-send proof of payment request for bank transfer and revolut app payments
-    if (paymentMethod === "bank_transfer" || paymentMethod === "revolut_app") {
-      try {
-        const proofHtml = buildProofRequestEmailHtml(
-          customerName || "Valued Customer",
-          calculatedTotal,
-          order.order_number,
-        );
-        const proofSubject = order.order_number
-          ? `Proof of Payment Required — Order #${order.order_number} — ProfParfums`
-          : "Proof of Payment Required — ProfParfums";
-        await sendEmail(customerEmail, proofSubject, proofHtml, ADMIN_EMAIL);
-        console.log("Auto proof-of-payment request sent to:", customerEmail);
-      } catch (proofErr) {
-        console.error("Failed to send auto proof request (non-fatal):", proofErr);
-      }
-    }
+    // Auto proof emails removed — customers now upload proof via the website after confirming payment
 
     return new Response(JSON.stringify({ success: true, orderId: order.id, orderNumber: order.order_number }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

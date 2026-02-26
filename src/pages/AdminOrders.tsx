@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink } from "lucide-react";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -48,6 +48,7 @@ interface Order {
   gift_card_code: string | null;
   discount_code: string | null;
   discount_percent: number | null;
+  proof_url: string | null;
 }
 
 function getPaymentMethod(ref: string): string {
@@ -645,6 +646,35 @@ export default function AdminOrders() {
                       <p className="font-mono text-sm font-bold text-purple-700 bg-purple-50 inline-block px-3 py-1.5 rounded border border-purple-200">{order.gift_card_code}</p>
                     </div>
                   )}
+
+                  {/* Proof of Payment */}
+                  <div className="mt-3 border-t pt-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">Proof of Payment</p>
+                    </div>
+                    {order.proof_url ? (
+                      <div className="flex flex-wrap gap-2">
+                        {order.proof_url.split(',').map((url, i) => (
+                          <a
+                            key={i}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded hover:bg-green-100 transition-colors"
+                          >
+                            <ImageIcon className="h-3 w-3" />
+                            View Proof {order.proof_url.split(',').length > 1 ? `#${i + 1}` : ''}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <Badge variant="outline" className="text-amber-600 border-amber-300 text-[10px]">
+                        No proof uploaded
+                      </Badge>
+                    )}
+                  </div>
 
                   <div className="mt-4 flex gap-3 flex-wrap">
                     <Button
