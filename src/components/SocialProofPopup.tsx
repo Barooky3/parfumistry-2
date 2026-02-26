@@ -3,29 +3,29 @@ import { X } from 'lucide-react';
 import { products, bestsellerIds } from '@/data/products';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const NAMES_BY_COUNTRY: Record<string, { first: string[]; last: string[] }> = {
-  'Netherlands': { first: ['Daan', 'Sem', 'Lieke', 'Fleur', 'Thijs', 'Noor', 'Ruben', 'Femke', 'Bram', 'Sanne'], last: ['de Vries', 'Jansen', 'Bakker', 'Visser', 'Smit', 'Meijer', 'Mulder', 'Bos', 'Vos', 'Peters'] },
-  'Belgium': { first: ['Wout', 'Lore', 'Tibo', 'Noor', 'Senne', 'Fien', 'Matteo', 'Roos', 'Emile', 'Axelle'], last: ['Peeters', 'Janssens', 'Maes', 'Willems', 'Claes', 'Goossens', 'Wouters', 'De Smedt', 'Hermans', 'Jacobs'] },
-  'Germany': { first: ['Lukas', 'Mia', 'Finn', 'Lena', 'Moritz', 'Clara', 'Elias', 'Lea', 'Nico', 'Emilia'], last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Wagner', 'Becker', 'Hoffmann', 'Richter', 'Klein'] },
-  'France': { first: ['Hugo', 'Léa', 'Louis', 'Manon', 'Jules', 'Camille', 'Arthur', 'Chloé', 'Raphaël', 'Inès'], last: ['Martin', 'Bernard', 'Dubois', 'Laurent', 'Moreau', 'Lefèvre', 'Roux', 'Girard', 'Bonnet', 'Dupont'] },
-  'United Kingdom': { first: ['Oliver', 'Amelia', 'George', 'Isla', 'Freddie', 'Florence', 'Archie', 'Ivy', 'Oscar', 'Rosie'], last: ['Smith', 'Taylor', 'Brown', 'Wilson', 'Davies', 'Evans', 'Thomas', 'Roberts', 'Walker', 'Clarke'] },
-  'Spain': { first: ['Mateo', 'Lucía', 'Hugo', 'Martina', 'Pablo', 'Sofía', 'Daniel', 'Valeria', 'Álvaro', 'Claudia'], last: ['García', 'Fernández', 'López', 'Martínez', 'Sánchez', 'Pérez', 'Gómez', 'Ruiz', 'Hernández', 'Díaz'] },
-  'Italy': { first: ['Leonardo', 'Sofia', 'Francesco', 'Aurora', 'Alessandro', 'Giulia', 'Lorenzo', 'Alice', 'Matteo', 'Ginevra'], last: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco'] },
-  'Poland': { first: ['Antoni', 'Zuzanna', 'Jakub', 'Hanna', 'Szymon', 'Maja', 'Filip', 'Lena', 'Mikołaj', 'Alicja'], last: ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski'] },
-  'Sweden': { first: ['Liam', 'Astrid', 'Elias', 'Maja', 'William', 'Ella', 'Hugo', 'Ebba', 'Oscar', 'Wilma'], last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'] },
-  'United States': { first: ['Ethan', 'Sophia', 'Mason', 'Olivia', 'Caleb', 'Ava', 'Noah', 'Mia', 'Logan', 'Harper'], last: ['Johnson', 'Williams', 'Davis', 'Miller', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin'] },
-  'Canada': { first: ['Liam', 'Emma', 'Noah', 'Olivia', 'Ethan', 'Charlotte', 'Jack', 'Amelia', 'Lucas', 'Sophia'], last: ['Smith', 'Brown', 'Tremblay', 'Martin', 'Roy', 'Wilson', 'Gagnon', 'Taylor', 'Campbell', 'Anderson'] },
-  'Portugal': { first: ['Santiago', 'Leonor', 'Tomás', 'Matilde', 'Martim', 'Beatriz', 'Rodrigo', 'Carolina', 'Afonso', 'Mariana'], last: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Costa', 'Rodrigues', 'Martins', 'Sousa', 'Fernandes'] },
-  'Austria': { first: ['Felix', 'Anna', 'Paul', 'Laura', 'David', 'Sarah', 'Jonas', 'Sophie', 'Maximilian', 'Marie'], last: ['Gruber', 'Huber', 'Bauer', 'Wagner', 'Steiner', 'Pichler', 'Moser', 'Berger', 'Mayer', 'Hofer'] },
-  'Denmark': { first: ['Noah', 'Alma', 'Oscar', 'Ida', 'William', 'Freja', 'Lucas', 'Clara', 'Emil', 'Ella'], last: ['Nielsen', 'Jensen', 'Hansen', 'Andersen', 'Pedersen', 'Christensen', 'Larsen', 'Sørensen', 'Rasmussen', 'Madsen'] },
-  'Norway': { first: ['Nora', 'Jakob', 'Emma', 'Filip', 'Olivia', 'Aksel', 'Ella', 'Henrik', 'Ingrid', 'Theodor'], last: ['Hansen', 'Johansen', 'Olsen', 'Larsen', 'Andersen', 'Pedersen', 'Nilsen', 'Kristiansen', 'Karlsen', 'Eriksen'] },
-  'Switzerland': { first: ['Liam', 'Mia', 'Noah', 'Elena', 'Leon', 'Lara', 'Luca', 'Emilia', 'Julian', 'Sara'], last: ['Müller', 'Meier', 'Schmid', 'Keller', 'Weber', 'Huber', 'Schneider', 'Meyer', 'Steiner', 'Fischer'] },
-  'Greece': { first: ['Georgios', 'Maria', 'Dimitris', 'Eleni', 'Nikos', 'Sofia', 'Alexandros', 'Anna', 'Kostas', 'Katerina'], last: ['Papadopoulos', 'Vlahos', 'Nikolaou', 'Georgiou', 'Pappas', 'Koutsikos', 'Ioannou', 'Dimitriou', 'Antoniou', 'Karagiannis'] },
-  'Czech Republic': { first: ['Jakub', 'Eliška', 'Tomáš', 'Tereza', 'Adam', 'Anna', 'Filip', 'Natálie', 'Ondřej', 'Karolína'], last: ['Novák', 'Svoboda', 'Dvořák', 'Černý', 'Procházka', 'Kučera', 'Veselý', 'Horák', 'Němec', 'Pokorný'] },
-  'Ireland': { first: ['Conor', 'Aoife', 'Sean', 'Saoirse', 'Cian', 'Ciara', 'Oisín', 'Niamh', 'Fionn', 'Róisín'], last: ['Murphy', 'Kelly', 'O\'Sullivan', 'Walsh', 'O\'Brien', 'Byrne', 'Ryan', 'O\'Connor', 'Doyle', 'McCarthy'] },
-  'Croatia': { first: ['Luka', 'Ana', 'Marko', 'Petra', 'Ivan', 'Mia', 'Matej', 'Lucija', 'Filip', 'Sara'], last: ['Horvat', 'Kovačević', 'Babić', 'Marić', 'Novak', 'Jurić', 'Knežević', 'Vuković', 'Matić', 'Tomić'] },
-  'Romania': { first: ['Andrei', 'Maria', 'Alexandru', 'Elena', 'David', 'Ioana', 'Stefan', 'Ana', 'Gabriel', 'Daria'], last: ['Popa', 'Ionescu', 'Popescu', 'Stan', 'Dumitru', 'Stoica', 'Gheorghe', 'Rusu', 'Moldovan', 'Munteanu'] },
-  'Bulgaria': { first: ['Georgi', 'Maria', 'Ivan', 'Elena', 'Dimitar', 'Viktoria', 'Nikola', 'Gabriela', 'Alexander', 'Sophia'], last: ['Ivanov', 'Georgiev', 'Dimitrov', 'Petrov', 'Nikolov', 'Hristov', 'Todorov', 'Stoyanov', 'Angelov', 'Kolev'] },
+const NAMES_BY_COUNTRY: Record<string, { male: string[]; female: string[]; last: string[] }> = {
+  'Netherlands': { male: ['Daan', 'Sem', 'Thijs', 'Ruben', 'Bram', 'Stijn', 'Lars', 'Jesse'], female: ['Lieke', 'Fleur', 'Noor', 'Femke', 'Sanne'], last: ['de Vries', 'Jansen', 'Bakker', 'Visser', 'Smit', 'Meijer', 'Mulder', 'Bos', 'Vos', 'Peters'] },
+  'Belgium': { male: ['Wout', 'Tibo', 'Senne', 'Matteo', 'Emile', 'Noah', 'Arthur', 'Victor'], female: ['Lore', 'Noor', 'Fien', 'Roos', 'Axelle'], last: ['Peeters', 'Janssens', 'Maes', 'Willems', 'Claes', 'Goossens', 'Wouters', 'De Smedt', 'Hermans', 'Jacobs'] },
+  'Germany': { male: ['Lukas', 'Finn', 'Moritz', 'Elias', 'Nico', 'Leon', 'Ben', 'Paul'], female: ['Mia', 'Lena', 'Clara', 'Lea', 'Emilia'], last: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Wagner', 'Becker', 'Hoffmann', 'Richter', 'Klein'] },
+  'France': { male: ['Hugo', 'Louis', 'Jules', 'Arthur', 'Raphaël', 'Léo', 'Gabriel', 'Adam'], female: ['Léa', 'Manon', 'Camille', 'Chloé', 'Inès'], last: ['Martin', 'Bernard', 'Dubois', 'Laurent', 'Moreau', 'Lefèvre', 'Roux', 'Girard', 'Bonnet', 'Dupont'] },
+  'United Kingdom': { male: ['Oliver', 'George', 'Freddie', 'Archie', 'Oscar', 'Jack', 'Harry', 'Noah'], female: ['Amelia', 'Isla', 'Florence', 'Ivy', 'Rosie'], last: ['Smith', 'Taylor', 'Brown', 'Wilson', 'Davies', 'Evans', 'Thomas', 'Roberts', 'Walker', 'Clarke'] },
+  'Spain': { male: ['Mateo', 'Hugo', 'Pablo', 'Daniel', 'Álvaro', 'Lucas', 'Adrián', 'Leo'], female: ['Lucía', 'Martina', 'Sofía', 'Valeria', 'Claudia'], last: ['García', 'Fernández', 'López', 'Martínez', 'Sánchez', 'Pérez', 'Gómez', 'Ruiz', 'Hernández', 'Díaz'] },
+  'Italy': { male: ['Leonardo', 'Francesco', 'Alessandro', 'Lorenzo', 'Matteo', 'Tommaso', 'Riccardo', 'Andrea'], female: ['Sofia', 'Aurora', 'Giulia', 'Alice', 'Ginevra'], last: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco'] },
+  'Poland': { male: ['Antoni', 'Jakub', 'Szymon', 'Filip', 'Mikołaj', 'Kacper', 'Wojciech', 'Adam'], female: ['Zuzanna', 'Hanna', 'Maja', 'Lena', 'Alicja'], last: ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski'] },
+  'Sweden': { male: ['Liam', 'Elias', 'William', 'Hugo', 'Oscar', 'Noah', 'Adam', 'Lucas'], female: ['Astrid', 'Maja', 'Ella', 'Ebba', 'Wilma'], last: ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'] },
+  'United States': { male: ['Ethan', 'Mason', 'Caleb', 'Noah', 'Logan', 'James', 'Liam', 'Jackson'], female: ['Sophia', 'Olivia', 'Ava', 'Mia', 'Harper'], last: ['Johnson', 'Williams', 'Davis', 'Miller', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin'] },
+  'Canada': { male: ['Liam', 'Noah', 'Ethan', 'Jack', 'Lucas', 'Owen', 'James', 'Ben'], female: ['Emma', 'Olivia', 'Charlotte', 'Amelia', 'Sophia'], last: ['Smith', 'Brown', 'Tremblay', 'Martin', 'Roy', 'Wilson', 'Gagnon', 'Taylor', 'Campbell', 'Anderson'] },
+  'Portugal': { male: ['Santiago', 'Tomás', 'Martim', 'Rodrigo', 'Afonso', 'Guilherme', 'Duarte', 'Miguel'], female: ['Leonor', 'Matilde', 'Beatriz', 'Carolina', 'Mariana'], last: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Costa', 'Rodrigues', 'Martins', 'Sousa', 'Fernandes'] },
+  'Austria': { male: ['Felix', 'Paul', 'David', 'Jonas', 'Maximilian', 'Lukas', 'Jakob', 'Elias'], female: ['Anna', 'Laura', 'Sarah', 'Sophie', 'Marie'], last: ['Gruber', 'Huber', 'Bauer', 'Wagner', 'Steiner', 'Pichler', 'Moser', 'Berger', 'Mayer', 'Hofer'] },
+  'Denmark': { male: ['Noah', 'Oscar', 'William', 'Lucas', 'Emil', 'Victor', 'Magnus', 'Oliver'], female: ['Alma', 'Ida', 'Freja', 'Clara', 'Ella'], last: ['Nielsen', 'Jensen', 'Hansen', 'Andersen', 'Pedersen', 'Christensen', 'Larsen', 'Sørensen', 'Rasmussen', 'Madsen'] },
+  'Norway': { male: ['Jakob', 'Filip', 'Aksel', 'Henrik', 'Theodor', 'Emil', 'Oliver', 'Magnus'], female: ['Nora', 'Emma', 'Olivia', 'Ella', 'Ingrid'], last: ['Hansen', 'Johansen', 'Olsen', 'Larsen', 'Andersen', 'Pedersen', 'Nilsen', 'Kristiansen', 'Karlsen', 'Eriksen'] },
+  'Switzerland': { male: ['Liam', 'Noah', 'Leon', 'Luca', 'Julian', 'David', 'Samuel', 'Elias'], female: ['Mia', 'Elena', 'Lara', 'Emilia', 'Sara'], last: ['Müller', 'Meier', 'Schmid', 'Keller', 'Weber', 'Huber', 'Schneider', 'Meyer', 'Steiner', 'Fischer'] },
+  'Greece': { male: ['Georgios', 'Dimitris', 'Nikos', 'Alexandros', 'Kostas', 'Andreas', 'Ioannis', 'Michalis'], female: ['Maria', 'Eleni', 'Sofia', 'Anna', 'Katerina'], last: ['Papadopoulos', 'Vlahos', 'Nikolaou', 'Georgiou', 'Pappas', 'Koutsikos', 'Ioannou', 'Dimitriou', 'Antoniou', 'Karagiannis'] },
+  'Czech Republic': { male: ['Jakub', 'Tomáš', 'Adam', 'Filip', 'Ondřej', 'Matěj', 'David', 'Vojtěch'], female: ['Eliška', 'Tereza', 'Anna', 'Natálie', 'Karolína'], last: ['Novák', 'Svoboda', 'Dvořák', 'Černý', 'Procházka', 'Kučera', 'Veselý', 'Horák', 'Němec', 'Pokorný'] },
+  'Ireland': { male: ['Conor', 'Sean', 'Cian', 'Oisín', 'Fionn', 'Liam', 'Jack', 'James'], female: ['Aoife', 'Saoirse', 'Ciara', 'Niamh', 'Róisín'], last: ['Murphy', 'Kelly', 'O\'Sullivan', 'Walsh', 'O\'Brien', 'Byrne', 'Ryan', 'O\'Connor', 'Doyle', 'McCarthy'] },
+  'Croatia': { male: ['Luka', 'Marko', 'Ivan', 'Matej', 'Filip', 'Antonio', 'David', 'Leon'], female: ['Ana', 'Petra', 'Mia', 'Lucija', 'Sara'], last: ['Horvat', 'Kovačević', 'Babić', 'Marić', 'Novak', 'Jurić', 'Knežević', 'Vuković', 'Matić', 'Tomić'] },
+  'Romania': { male: ['Andrei', 'Alexandru', 'David', 'Stefan', 'Gabriel', 'Mihai', 'Radu', 'Cristian'], female: ['Maria', 'Elena', 'Ioana', 'Ana', 'Daria'], last: ['Popa', 'Ionescu', 'Popescu', 'Stan', 'Dumitru', 'Stoica', 'Gheorghe', 'Rusu', 'Moldovan', 'Munteanu'] },
+  'Bulgaria': { male: ['Georgi', 'Ivan', 'Dimitar', 'Nikola', 'Alexander', 'Martin', 'Boris', 'Stefan'], female: ['Maria', 'Elena', 'Viktoria', 'Gabriela', 'Sophia'], last: ['Ivanov', 'Georgiev', 'Dimitrov', 'Petrov', 'Nikolov', 'Hristov', 'Todorov', 'Stoyanov', 'Angelov', 'Kolev'] },
 };
 
 const PAYMENT_METHODS = [
@@ -115,7 +115,9 @@ export const SocialProofPopup = () => {
     countryIndexRef.current++;
 
     const names = NAMES_BY_COUNTRY[country];
-    const first = names.first[Math.floor(Math.random() * names.first.length)];
+    const isMale = Math.random() < 0.8;
+    const firstList = isMale ? names.male : names.female;
+    const first = firstList[Math.floor(Math.random() * firstList.length)];
     const last = names.last[Math.floor(Math.random() * names.last.length)];
 
     const product = pickRandomProduct();

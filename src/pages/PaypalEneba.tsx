@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Shield, CheckCircle, AlertTriangle, Loader2, Info, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Shield, CheckCircle, AlertTriangle, Loader2, ExternalLink, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,17 +14,40 @@ const PaypalEneba = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderTotal = searchParams.get('total') || '';
-  const [rewarbleCode, setRewarbleCode] = useState(() => {
-    return sessionStorage.getItem('paypalEnebaCode') || '';
+  const [codes, setCodes] = useState<string[]>(() => {
+    const saved = sessionStorage.getItem('paypalEnebaCodes');
+    return saved ? JSON.parse(saved) : [''];
   });
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { clearCart } = useCart();
 
-  const handleCodeChange = (value: string) => {
-    setRewarbleCode(value);
-    sessionStorage.setItem('paypalEnebaCode', value);
+  const updateCode = (index: number, value: string) => {
+    setCodes(prev => {
+      const next = [...prev];
+      next[index] = value;
+      sessionStorage.setItem('paypalEnebaCodes', JSON.stringify(next));
+      return next;
+    });
   };
+
+  const addCodeSlot = () => setCodes(prev => {
+    const next = [...prev, ''];
+    sessionStorage.setItem('paypalEnebaCodes', JSON.stringify(next));
+    return next;
+  });
+
+  const removeCodeSlot = (index: number) => {
+    if (codes.length <= 1) return;
+    setCodes(prev => {
+      const next = prev.filter((_, i) => i !== index);
+      sessionStorage.setItem('paypalEnebaCodes', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const allCodes = codes.map(c => c.trim()).filter(Boolean);
+  const combinedCode = allCodes.join(' | ');
 
   const handleConfirm = async () => {
     setIsProcessing(true);
@@ -44,7 +67,7 @@ const PaypalEneba = () => {
           shippingAddress: ctx.shippingAddress,
           totalAmount: ctx.totalAmount,
           paymentMethod: 'rewarble',
-          giftCardCode: rewarbleCode.trim(),
+          giftCardCode: combinedCode,
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
         },
@@ -52,7 +75,7 @@ const PaypalEneba = () => {
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
-      sessionStorage.removeItem('paypalEnebaCode');
+      sessionStorage.removeItem('paypalEnebaCodes');
       const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
       navigate(`/checkout?completed=rewarble${orderNum}`);
     } catch (err: any) {
@@ -104,15 +127,9 @@ const PaypalEneba = () => {
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Buy a voucher closest to your order amount ({orderTotal ? `€${orderTotal}` : 'see checkout'}). At Eneba checkout, select <strong>PayPal</strong> as your payment method.
                 </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="mt-2 text-xs"
-                  onClick={() => window.open('https://www.eneba.com/rewarble-rewarble-revolut-5-gbp-voucher-global', '_blank')}
-                >
-                  <ExternalLink className="h-3 w-3 mr-1.5" />
-                  Buy on Eneba with PayPal
+                <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
+                  onClick={() => window.open('https://www.eneba.com/rewarble-rewarble-revolut-5-gbp-voucher-global', '_blank')}>
+                  <ExternalLink className="h-3 w-3 mr-1.5" />Buy on Eneba with PayPal
                 </Button>
               </div>
             </div>
@@ -133,30 +150,41 @@ const PaypalEneba = () => {
           </div>
         </div>
 
-        {/* Multiple codes note */}
-        <div className="flex gap-2.5 rounded-lg bg-muted/40 border border-border/50 px-4 py-3 mb-6">
-          <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            If you need to use multiple codes, simply repeat the order process for each. Orders with matching details (name, email, address) will be manually joined.
-          </p>
-        </div>
-
-        {/* Code Input */}
+        {/* Code Inputs */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
           <div className="px-5 py-3.5 border-b border-border bg-muted/30">
-            <h2 className="text-sm font-semibold text-foreground tracking-wide">Enter your code</h2>
+            <h2 className="text-sm font-semibold text-foreground tracking-wide">Enter your code{codes.length > 1 ? 's' : ''}</h2>
           </div>
           <div className="p-5 space-y-3">
-            <Label className="text-xs font-medium tracking-wider text-foreground">
-              REWARBLE CODE
-            </Label>
-            <Input
-              type="text"
-              placeholder="Paste your Rewarble code here..."
-              value={rewarbleCode}
-              onChange={(e) => handleCodeChange(e.target.value)}
-              className="h-12 bg-background border-border rounded-md font-mono"
-            />
+            {codes.map((code, i) => (
+              <div key={i}>
+                <Label className="text-xs font-medium tracking-wider text-foreground">
+                  REWARBLE CODE {codes.length > 1 ? `#${i + 1}` : ''}
+                </Label>
+                <div className="flex gap-2 mt-1">
+                  <Input
+                    type="text"
+                    placeholder="Paste your Rewarble code here..."
+                    value={code}
+                    onChange={(e) => updateCode(i, e.target.value)}
+                    className="h-12 bg-background border-border rounded-md font-mono flex-1"
+                  />
+                  {codes.length > 1 && (
+                    <Button type="button" variant="ghost" size="icon" className="h-12 w-12 text-muted-foreground hover:text-destructive shrink-0" onClick={() => removeCodeSlot(i)}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addCodeSlot}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors pt-1"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add another code
+            </button>
             <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
               Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your products.
             </p>
@@ -166,7 +194,7 @@ const PaypalEneba = () => {
         {/* Confirm Button */}
         <Button
           type="button"
-          disabled={!rewarbleCode.trim() || isProcessing}
+          disabled={allCodes.length === 0 || isProcessing}
           className="w-full h-[52px] rounded-lg text-sm font-semibold tracking-wide bg-[#0070BA] hover:bg-[#005C99] text-white shadow-lg disabled:opacity-40"
           onClick={() => setShowConfirmDialog(true)}
         >
@@ -184,7 +212,7 @@ const PaypalEneba = () => {
                 <span className="font-semibold text-red-500 block mb-2">
                   Orders confirmed with invalid Rewarble codes will be rejected upon review.
                 </span>
-                Your Rewarble code will be verified before your order is processed. If the code is invalid or has already been used, your order will be rejected. Are you sure you have a valid Rewarble code?
+                Your Rewarble code{allCodes.length > 1 ? 's' : ''} will be verified before your order is processed. If any code is invalid or has already been used, your order will be rejected. Are you sure you have valid Rewarble code{allCodes.length > 1 ? 's' : ''}?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
