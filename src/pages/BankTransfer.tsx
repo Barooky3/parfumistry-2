@@ -9,16 +9,17 @@ import { useCart } from '@/contexts/CartContext';
 
 const EUR_BANK_DETAILS = [
   { label: 'IBAN', value: 'IE26 REVO 9903 6038 5697 96', copyValue: 'IE26REVO99036038569796' },
-  { label: 'Account Holder', value: 'Mubarak Elkhabir' },
+  { label: 'Beneficiary', value: 'Mubarak Elkhabir' },
   { label: 'BIC / SWIFT', value: 'REVOIE23' },
-  { label: 'Bank', value: 'Revolut' },
-  { label: 'Country', value: 'Ireland' },
+  { label: 'Correspondent BIC', value: 'CHASDEFX' },
+  { label: 'Bank', value: 'Revolut Bank UAB' },
+  { label: 'Bank Address', value: '2 Dublin Landings, North Dock, Dublin 1, D01 V4A3, Ireland' },
 ];
 
 const GBP_BANK_DETAILS = [
   { label: 'Sort Code', value: '23-01-20', copyValue: '230120' },
   { label: 'Account Number', value: '18879447', copyValue: '18879447' },
-  { label: 'Account Holder', value: 'Mubarak Elkhabir' },
+  { label: 'Beneficiary', value: 'Mubarak Elkhabir' },
   { label: 'Bank', value: 'Revolut Ltd' },
   { label: 'Bank Address', value: '30 South Colonnade, E14 5HX, London, UK' },
 ];
