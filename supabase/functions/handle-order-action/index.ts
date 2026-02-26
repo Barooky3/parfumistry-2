@@ -18,6 +18,51 @@ interface OrderItem {
   selectedMl?: number;
 }
 
+const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
+
+const PRODUCT_LINKS: Record<string, string> = {
+  "stronger-with-you-absolutely": "https://litbuy.shop/lit/nOAwjxV0",
+  "stronger-with-you": "https://litbuy.shop/lit/nOAwjxV0",
+  "aventus": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661817242&affcode=c5v3b",
+  "born-in-roma-intense": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "born-in-roma-green-stravaganza": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "born-in-roma-coral-fantasy": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "born-in-roma": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "valentino": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
+  "louis-vuitton": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661789506&affcode=c5v3b",
+  "xerjoff": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7662173327&affcode=c5v3b",
+  "eros": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7665241752&affcode=c5v3b",
+  "dior": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661870378&affcode=c5v3b",
+  "parfums-de-marly": "https://m.orientdig.com/pages/product/product?id=857200052892&shoptype=ALI_1688&ref=100144636",
+  "jean-paul-gaultier": "https://litbuy.shop/lit/JeaFpAPH",
+  "lattafa": "https://litbuy.shop/lit/XVWEmSku",
+  "azzaro": "https://litbuy.shop/lit/hVExk1tS",
+  "mancera": "https://litbuy.shop/lit/qYJ4Tj6g",
+};
+
+function getProductLink(name: string, brand: string): string {
+  const n = name.toLowerCase();
+  const b = brand.toLowerCase();
+  if (n.includes("stronger with you absolutely")) return PRODUCT_LINKS["stronger-with-you-absolutely"];
+  if (n.includes("stronger with you")) return PRODUCT_LINKS["stronger-with-you"];
+  if (n.includes("aventus")) return PRODUCT_LINKS["aventus"];
+  if (n.includes("born in roma intense")) return PRODUCT_LINKS["born-in-roma-intense"];
+  if (n.includes("born in roma green stravaganza")) return PRODUCT_LINKS["born-in-roma-green-stravaganza"];
+  if (n.includes("born in roma coral fantasy")) return PRODUCT_LINKS["born-in-roma-coral-fantasy"];
+  if (n.includes("born in roma")) return PRODUCT_LINKS["born-in-roma"];
+  if (b.includes("valentino")) return PRODUCT_LINKS["valentino"];
+  if (b.includes("louis vuitton")) return PRODUCT_LINKS["louis-vuitton"];
+  if (b.includes("xerjoff")) return PRODUCT_LINKS["xerjoff"];
+  if (n.includes("eros")) return PRODUCT_LINKS["eros"];
+  if (b.includes("dior")) return PRODUCT_LINKS["dior"];
+  if (b.includes("parfums de marly")) return PRODUCT_LINKS["parfums-de-marly"];
+  if (b.includes("jean paul gaultier")) return PRODUCT_LINKS["jean-paul-gaultier"];
+  if (b.includes("lattafa")) return PRODUCT_LINKS["lattafa"];
+  if (b.includes("azzaro")) return PRODUCT_LINKS["azzaro"];
+  if (b.includes("mancera")) return PRODUCT_LINKS["mancera"];
+  return DEFAULT_SELLER_LINK;
+}
+
 function buildResultPage(title: string, message: string, success: boolean): string {
   const color = success ? "#16a34a" : "#dc2626";
   const icon = success ? "V" : "X";
@@ -103,8 +148,9 @@ function buildAdminInvoiceHtml(
     const mlLabel = item.selectedMl ? ` - ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
     const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
+    const productLink = getProductLink(item.name, item.brand);
     return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} - ${item.name}${mlLabel} <span style="color:#c9a96e;font-weight:500;">(link)</span></td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} - ${item.name}${mlLabel} <a href="${productLink}" target="_blank" style="color:#c9a96e;font-weight:500;text-decoration:underline;">(link)</a></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">EUR${item.price.toFixed(2)}</td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">EUR${lineTotal}</td>
