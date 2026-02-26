@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -15,6 +15,8 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { products } from "@/data/products";
+import { Product } from "@/types/product";
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
 
@@ -65,6 +67,8 @@ export default function AdminOrders() {
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [editItems, setEditItems] = useState<OrderItem[]>([]);
   const [editSaving, setEditSaving] = useState(false);
+  const [catalogueSearch, setCatalogueSearch] = useState("");
+  const [showCatalogue, setShowCatalogue] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
@@ -101,7 +105,7 @@ export default function AdminOrders() {
 
   const handleDismiss = async (orderId: string) => {
     if (!confirm("Remove this order from the list? This cannot be undone.")) return;
-    setActionLoading(orderId);
+    setActionLoading(orderId + "-dismiss");
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
@@ -174,32 +178,82 @@ export default function AdminOrders() {
     setActionLoading(null);
   };
 
+  // Edit helpers
   const openEditDialog = (order: Order) => {
     const items = Array.isArray(order.order_items) ? order.order_items : [];
     setEditItems(JSON.parse(JSON.stringify(items)));
     setEditingOrder(order);
-  };
-
-  const updateEditItem = (index: number, field: keyof OrderItem, value: string | number) => {
-    setEditItems(prev => {
-      const next = [...prev];
-      next[index] = { ...next[index], [field]: value };
-      return next;
-    });
+    setCatalogueSearch("");
+    setShowCatalogue(false);
   };
 
   const removeEditItem = (index: number) => {
     setEditItems(prev => prev.filter((_, i) => i !== index));
   };
 
-  const addEditItem = () => {
-    setEditItems(prev => [...prev, { name: "", brand: "", price: 0, quantity: 1 }]);
+  const changeVariant = (index: number, product: Product, ml: number) => {
+    const variant = product.variants?.find(v => v.ml === ml);
+    if (!variant) return;
+    setEditItems(prev => {
+      const next = [...prev];
+      next[index] = { ...next[index], selectedMl: ml, price: variant.price };
+      return next;
+    });
+  };
+
+  const addProductToOrder = (product: Product) => {
+    const defaultVariant = product.variants?.[0];
+    const newItem: OrderItem = {
+      name: product.name,
+      brand: product.brand,
+      price: defaultVariant?.price ?? product.price,
+      quantity: 1,
+      selectedMl: defaultVariant?.ml,
+    };
+    setEditItems(prev => [...prev, newItem]);
+    setShowCatalogue(false);
+    setCatalogueSearch("");
+  };
+
+  const swapProduct = (index: number, product: Product) => {
+    const defaultVariant = product.variants?.[0];
+    setEditItems(prev => {
+      const next = [...prev];
+      next[index] = {
+        name: product.name,
+        brand: product.brand,
+        price: defaultVariant?.price ?? product.price,
+        quantity: next[index].quantity,
+        selectedMl: defaultVariant?.ml,
+      };
+      return next;
+    });
   };
 
   const editTotal = editItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  // Find matching product from catalogue for an order item
+  const findProduct = (item: OrderItem): Product | undefined => {
+    return products.find(p => 
+      p.name.toLowerCase() === item.name.toLowerCase() && 
+      p.brand.toLowerCase() === item.brand.toLowerCase()
+    );
+  };
+
+  const filteredCatalogue = useMemo(() => {
+    if (!catalogueSearch.trim()) return products.slice(0, 15);
+    const q = catalogueSearch.toLowerCase();
+    return products.filter(p => 
+      p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
+    ).slice(0, 15);
+  }, [catalogueSearch]);
+
   const saveEditItems = async () => {
     if (!editingOrder) return;
+    if (editItems.length === 0) {
+      toast.error("Order must have at least one item");
+      return;
+    }
     setEditSaving(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -393,7 +447,7 @@ export default function AdminOrders() {
                       size="sm"
                       className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={() => handleAction(order.id, "approve")}
-                      disabled={actionLoading === order.id}
+                      disabled={!!actionLoading}
                     >
                       <Check className="h-4 w-4 mr-1" /> {order.status === "approved" ? "Re-Approve" : "Approve"}
                     </Button>
@@ -401,7 +455,7 @@ export default function AdminOrders() {
                       size="sm"
                       variant="destructive"
                       onClick={() => handleAction(order.id, "reject")}
-                      disabled={actionLoading === order.id}
+                      disabled={!!actionLoading}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
                     </Button>
@@ -409,7 +463,7 @@ export default function AdminOrders() {
                       size="sm"
                       variant="outline"
                       onClick={() => handleAction(order.id, "request_proof")}
-                      disabled={actionLoading === order.id}
+                      disabled={!!actionLoading}
                     >
                       <Mail className="h-4 w-4 mr-1" /> Request Proof
                     </Button>
@@ -418,7 +472,7 @@ export default function AdminOrders() {
                       variant="ghost"
                       className="text-muted-foreground"
                       onClick={() => handleDismiss(order.id)}
-                      disabled={actionLoading === order.id}
+                      disabled={!!actionLoading}
                     >
                       <Trash2 className="h-4 w-4 mr-1" /> Remove
                     </Button>
@@ -431,51 +485,102 @@ export default function AdminOrders() {
       </div>
 
       {/* Edit Order Items Dialog */}
-      <Dialog open={!!editingOrder} onOpenChange={(open) => { if (!open) setEditingOrder(null); }}>
-        <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+      <Dialog open={!!editingOrder} onOpenChange={(open) => { if (!open) { setEditingOrder(null); setShowCatalogue(false); } }}>
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Order Items — #{editingOrder?.order_number || '—'}</DialogTitle>
-            <DialogDescription>Modify items, then save. Re-approve to send the customer an updated email.</DialogDescription>
+            <DialogTitle>Edit Order — #{editingOrder?.order_number || '—'}</DialogTitle>
+            <DialogDescription>Remove, swap, or add items. Save then re-approve to send updated email.</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-2">
-            {editItems.map((item, i) => (
-              <div key={i} className="border rounded-md p-3 space-y-2 relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-1 right-1 h-6 w-6"
-                  onClick={() => removeEditItem(i)}
-                >
-                  <X className="h-3 w-3" />
+          {/* Current items */}
+          <div className="space-y-3 py-2">
+            {editItems.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">No items. Add from catalogue below.</p>
+            )}
+            {editItems.map((item, i) => {
+              const catalogueProduct = findProduct(item);
+              return (
+                <div key={i} className="border rounded-md p-3 relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-1 right-1 h-6 w-6 text-destructive"
+                    onClick={() => removeEditItem(i)}
+                    title="Remove item"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+
+                  <p className="text-sm font-medium pr-8">
+                    {item.brand} — {item.name}
+                    {item.quantity > 1 ? ` x${item.quantity}` : ""}
+                  </p>
+
+                  {/* Variant selector */}
+                  {catalogueProduct?.variants && catalogueProduct.variants.length > 0 ? (
+                    <div className="flex gap-2 mt-2">
+                      {catalogueProduct.variants.map(v => (
+                        <button
+                          key={v.ml}
+                          onClick={() => changeVariant(i, catalogueProduct, v.ml)}
+                          className={`text-xs px-3 py-1.5 rounded-md border transition-colors ${
+                            item.selectedMl === v.ml
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-muted/50 border-border hover:bg-muted"
+                          }`}
+                        >
+                          {v.ml}ml — €{v.price.toFixed(2)}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {item.selectedMl ? `${item.selectedMl}ml` : ""} — EUR {item.price.toFixed(2)}
+                    </p>
+                  )}
+
+                  {/* Swap button */}
+                  <SwapSearch item={item} index={i} onSwap={swapProduct} />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Add from catalogue */}
+          <div className="border-t pt-3">
+            {!showCatalogue ? (
+              <Button variant="outline" size="sm" className="w-full" onClick={() => setShowCatalogue(true)}>
+                <Plus className="h-3 w-3 mr-1" /> Add Item from Catalogue
+              </Button>
+            ) : (
+              <div className="space-y-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search products..."
+                    value={catalogueSearch}
+                    onChange={(e) => setCatalogueSearch(e.target.value)}
+                    className="h-8 text-sm pl-8"
+                    autoFocus
+                  />
+                </div>
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {filteredCatalogue.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => addProductToOrder(p)}
+                      className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors flex justify-between items-center"
+                    >
+                      <span><span className="font-medium">{p.brand}</span> — {p.name}</span>
+                      <span className="text-xs text-muted-foreground">€{p.price.toFixed(2)}</span>
+                    </button>
+                  ))}
+                </div>
+                <Button variant="ghost" size="sm" className="w-full text-xs" onClick={() => { setShowCatalogue(false); setCatalogueSearch(""); }}>
+                  Cancel
                 </Button>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-xs text-muted-foreground">Brand</label>
-                    <Input value={item.brand} onChange={(e) => updateEditItem(i, "brand", e.target.value)} className="h-8 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground">Name</label>
-                    <Input value={item.name} onChange={(e) => updateEditItem(i, "name", e.target.value)} className="h-8 text-sm" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  <div>
-                    <label className="text-xs text-muted-foreground">Price (EUR)</label>
-                    <Input type="number" step="0.01" value={item.price} onChange={(e) => updateEditItem(i, "price", parseFloat(e.target.value) || 0)} className="h-8 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground">Qty</label>
-                    <Input type="number" min="1" value={item.quantity} onChange={(e) => updateEditItem(i, "quantity", parseInt(e.target.value) || 1)} className="h-8 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground">ML</label>
-                    <Input type="number" value={item.selectedMl || ""} onChange={(e) => updateEditItem(i, "selectedMl", parseInt(e.target.value) || 0)} className="h-8 text-sm" placeholder="—" />
-                  </div>
-                </div>
               </div>
-            ))}
-            <Button variant="outline" size="sm" onClick={addEditItem} className="w-full">+ Add Item</Button>
+            )}
           </div>
 
           <div className="flex items-center justify-between pt-2 border-t">
@@ -484,12 +589,59 @@ export default function AdminOrders() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingOrder(null)}>Cancel</Button>
-            <Button onClick={saveEditItems} disabled={editSaving}>
+            <Button onClick={saveEditItems} disabled={editSaving || editItems.length === 0}>
               {editSaving ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+/** Inline swap search for a single item */
+function SwapSearch({ item, index, onSwap }: { item: OrderItem; index: number; onSwap: (i: number, p: Product) => void }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const results = useMemo(() => {
+    if (!query.trim()) return products.slice(0, 10);
+    const q = query.toLowerCase();
+    return products.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)).slice(0, 10);
+  }, [query]);
+
+  if (!open) {
+    return (
+      <button onClick={() => setOpen(true)} className="text-xs text-primary hover:underline mt-2 block">
+        Swap for different product
+      </button>
+    );
+  }
+
+  return (
+    <div className="mt-2 space-y-1">
+      <div className="relative">
+        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+        <Input
+          placeholder="Search to swap..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="h-7 text-xs pl-7"
+          autoFocus
+        />
+      </div>
+      <div className="max-h-32 overflow-y-auto space-y-0.5">
+        {results.map(p => (
+          <button
+            key={p.id}
+            onClick={() => { onSwap(index, p); setOpen(false); setQuery(""); }}
+            className="w-full text-left px-2 py-1 text-xs rounded hover:bg-muted transition-colors"
+          >
+            <span className="font-medium">{p.brand}</span> — {p.name} (€{p.price.toFixed(2)})
+          </button>
+        ))}
+      </div>
+      <button onClick={() => { setOpen(false); setQuery(""); }} className="text-xs text-muted-foreground hover:underline">Cancel</button>
     </div>
   );
 }
