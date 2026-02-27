@@ -1171,6 +1171,28 @@ export const products: Product[] = [
       { ml: 100, price: 18.99, originalPrice: 77.50, inStock: true },
     ],
   },
+  {
+    id: '1-million-elixir',
+    name: '1 Million Elixir',
+    brand: 'Paco Rabanne',
+    price: 12.99,
+    originalPrice: 52.50,
+    category: 'men',
+    description: '1 Million Elixir is a rich, opulent take on the iconic 1 Million line. A bold gourmand fragrance that opens with crisp apple and aromatic davana, developing into a luxurious heart of damask rose, cedar, and osmanthus. The base is deep and addictive with vanilla absolute, tonka bean, and patchouli, creating a warm, sweet, and seductive trail perfect for nights out.',
+    scentNotes: {
+      top: ['Apple', 'Davana'],
+      heart: ['Damask Rose', 'Cedar', 'Osmanthus'],
+      base: ['Vanilla Absolute', 'Tonka Bean', 'Patchouli'],
+    },
+    accentColor: '#DAA520',
+    image: '',
+    affiliateUrl: '',
+    inStock: true,
+    variants: [
+      { ml: 50, price: 12.99, originalPrice: 52.50, inStock: true },
+      { ml: 100, price: 19.99, originalPrice: 77.50, inStock: true },
+    ],
+  },
 ];
 
 export const getProductById = (id: string): Product | undefined => {
