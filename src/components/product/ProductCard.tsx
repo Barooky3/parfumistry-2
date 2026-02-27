@@ -7,7 +7,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useProductPadding, getPaddingStyle } from '@/hooks/useProductPadding';
+import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 
 interface ProductCardProps {
@@ -125,28 +125,29 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           className="block relative mb-2.5"
           onClick={handleCardClick}
         >
-          <div 
-            className={cn(
-              "aspect-[3/4] bg-secondary overflow-hidden rounded-sm flex items-end justify-center relative",
-              !paddingOverride && product.imagePadding
-            )}
-            style={paddingOverride && (paddingOverride.padding_top !== 0 || paddingOverride.padding_right !== 0 || paddingOverride.padding_bottom !== 0 || paddingOverride.padding_left !== 0) ? {
-              paddingTop: `${paddingOverride.padding_top}rem`,
-              paddingRight: `${paddingOverride.padding_right}rem`,
-              paddingBottom: `${paddingOverride.padding_bottom}rem`,
-              paddingLeft: `${paddingOverride.padding_left}rem`,
-            } : undefined}
-          >
-            {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
-            <motion.img
-              src={product.image}
-              alt={product.name}
-              className={cn("w-full", (product.imagePadding || paddingOverride) ? "h-full object-contain object-bottom" : "h-full object-cover")}
-              loading="lazy"
-              whileHover={{ scale: 1.08 }}
-              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-            />
-          </div>
+          {(() => {
+            const { containerStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
+            return (
+              <div 
+                className={cn(
+                  "aspect-[3/4] bg-secondary overflow-hidden rounded-sm flex items-end justify-center relative",
+                  !hasOverride && product.imagePadding
+                )}
+                style={containerStyle}
+              >
+                {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
+                <motion.img
+                  src={product.image}
+                  alt={product.name}
+                  className={cn("w-full", (product.imagePadding || hasOverride) ? "h-full object-contain object-bottom" : "h-full object-cover")}
+                  loading="lazy"
+                  style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
+                  whileHover={{ scale: 1.08 * imageScale }}
+                  transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                />
+              </div>
+            );
+          })()}
           
           {/* Category Badge */}
           <span className="absolute top-2 left-2 text-[9px] font-medium tracking-[0.08em] px-2 py-1 bg-background/90 text-foreground uppercase">
