@@ -91,7 +91,6 @@ function getPageLabel(path: string): string {
 
 // Get the "store section" for 3D store positioning
 export function getStoreSection(path: string): string {
-  if (path === '/' ) return 'entrance';
   if (path === '/checkout') return 'cashier';
   if (path.startsWith('/product/')) {
     const slug = path.replace('/product/', '');
@@ -109,7 +108,12 @@ export function getStoreSection(path: string): string {
     return `brand-${sub}`;
   }
   if (path === '/shop') return 'shop';
-  return 'entrance';
+  // Homepage visitors are browsing — spread them across the store
+  if (path === '/') return 'browsing-home';
+  // Contact/account/login etc. — place near cashier area
+  if (path === '/contact' || path === '/login' || path === '/signup' || path === '/account') return 'cashier';
+  // Any other page — place in shop area
+  return 'shop';
 }
 
 function getDeviceIcon(type: string | null) {
