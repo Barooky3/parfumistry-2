@@ -147,6 +147,7 @@ export type Database = {
           region: string | null
           screen_width: number | null
           session_id: string
+          user_email: string | null
         }
         Insert: {
           browser?: string | null
@@ -166,6 +167,7 @@ export type Database = {
           region?: string | null
           screen_width?: number | null
           session_id: string
+          user_email?: string | null
         }
         Update: {
           browser?: string | null
@@ -185,6 +187,7 @@ export type Database = {
           region?: string | null
           screen_width?: number | null
           session_id?: string
+          user_email?: string | null
         }
         Relationships: []
       }

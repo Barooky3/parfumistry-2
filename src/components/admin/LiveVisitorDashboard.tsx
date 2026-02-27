@@ -4,8 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Eye, ShoppingCart, CreditCard, Globe, Monitor, Smartphone, Tablet,
-  RefreshCw, MapPin, ArrowRight, Clock, Users
+  RefreshCw, MapPin, Clock, Users, Mail, Store
 } from 'lucide-react';
+import { products } from '@/data/products';
+import { bestsellerIds } from '@/data/products';
+import StoreVisualization from './StoreVisualization';
 
 interface VisitorSession {
   id: string;
@@ -25,11 +28,33 @@ interface VisitorSession {
   pages_viewed: string[];
   last_seen_at: string;
   created_at: string;
+  user_email: string | null;
 }
+
+// Brand slug → display name mapping
+const BRAND_SLUGS: Record<string, string> = {
+  'mancera': 'Mancera',
+  'valentino': 'Valentino',
+  'versace': 'Versace',
+  'jean-paul-gaultier': 'Jean Paul Gaultier',
+  'giorgio-armani': 'Giorgio Armani',
+  'ysl': 'YSL',
+  'dior': 'Dior',
+  'tom-ford': 'Tom Ford',
+  'creed': 'Creed',
+  'parfums-de-marly': 'Parfums de Marly',
+  'xerjoff': 'Xerjoff',
+  'louis-vuitton': 'Louis Vuitton',
+  'viktor-rolf': 'Viktor & Rolf',
+  'azzaro': 'Azzaro',
+  'lattafa': 'Lattafa',
+  'initio': 'Initio',
+  'montale': 'Montale',
+};
 
 const PAGE_LABELS: Record<string, string> = {
   '/': 'Home',
-  '/shop': 'Shop',
+  '/shop': 'Shop (All)',
   '/checkout': 'Checkout',
   '/contact': 'Contact',
   '/login': 'Login',
@@ -39,9 +64,52 @@ const PAGE_LABELS: Record<string, string> = {
 
 function getPageLabel(path: string): string {
   if (PAGE_LABELS[path]) return PAGE_LABELS[path];
-  if (path.startsWith('/product/')) return 'Product Page';
-  if (path.startsWith('/shop/')) return 'Shop Category';
+  
+  // Product detail page
+  if (path.startsWith('/product/')) {
+    const slug = path.replace('/product/', '');
+    const product = products.find(p => p.id === slug);
+    if (product) return `🧴 ${product.brand} — ${product.name}`;
+    return `Product: ${slug}`;
+  }
+  
+  // Brand page
+  if (path.startsWith('/shop/')) {
+    const brandSlug = path.replace('/shop/', '');
+    if (brandSlug === 'bestsellers') return '⭐ Best Sellers';
+    if (brandSlug === 'bundles') return '📦 Bundles';
+    if (brandSlug === 'men') return '👔 Men\'s Fragrances';
+    if (brandSlug === 'women') return '👗 Women\'s Fragrances';
+    if (brandSlug === 'unisex') return '🌿 Unisex Fragrances';
+    const brandName = BRAND_SLUGS[brandSlug];
+    if (brandName) return `🏷️ ${brandName}`;
+    return `Shop: ${brandSlug}`;
+  }
+  
   return path;
+}
+
+// Get the "store section" for 3D store positioning
+export function getStoreSection(path: string): string {
+  if (path === '/' ) return 'entrance';
+  if (path === '/checkout') return 'cashier';
+  if (path.startsWith('/product/')) {
+    const slug = path.replace('/product/', '');
+    if (bestsellerIds.includes(slug)) return 'bestsellers';
+    const product = products.find(p => p.id === slug);
+    if (product) {
+      const brandSlug = product.brand.toLowerCase().replace(/[^a-z]/g, '-').replace(/-+/g, '-');
+      return `brand-${brandSlug}`;
+    }
+    return 'shop';
+  }
+  if (path.startsWith('/shop/')) {
+    const sub = path.replace('/shop/', '');
+    if (sub === 'bestsellers') return 'bestsellers';
+    return `brand-${sub}`;
+  }
+  if (path === '/shop') return 'shop';
+  return 'entrance';
 }
 
 function getDeviceIcon(type: string | null) {
@@ -63,6 +131,7 @@ export default function LiveVisitorDashboard() {
   const [sessions, setSessions] = useState<VisitorSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [showStore, setShowStore] = useState(false);
 
   const fetchSessions = async () => {
     try {
@@ -92,33 +161,17 @@ export default function LiveVisitorDashboard() {
     const withCart = sessions.filter(s => s.cart_items && s.cart_items.length > 0).length;
     const totalCartValue = sessions.reduce((sum, s) => sum + (s.cart_total || 0), 0);
 
-    // Country breakdown
     const countries: Record<string, number> = {};
-    sessions.forEach(s => {
-      const c = s.country || 'Unknown';
-      countries[c] = (countries[c] || 0) + 1;
-    });
+    sessions.forEach(s => { const c = s.country || 'Unknown'; countries[c] = (countries[c] || 0) + 1; });
 
-    // Device breakdown
     const devices: Record<string, number> = {};
-    sessions.forEach(s => {
-      const d = s.device_type || 'unknown';
-      devices[d] = (devices[d] || 0) + 1;
-    });
+    sessions.forEach(s => { const d = s.device_type || 'unknown'; devices[d] = (devices[d] || 0) + 1; });
 
-    // Page breakdown
     const pages: Record<string, number> = {};
-    sessions.forEach(s => {
-      const p = getPageLabel(s.current_page);
-      pages[p] = (pages[p] || 0) + 1;
-    });
+    sessions.forEach(s => { const p = getPageLabel(s.current_page); pages[p] = (pages[p] || 0) + 1; });
 
-    // Browser breakdown
     const browsers: Record<string, number> = {};
-    sessions.forEach(s => {
-      const b = s.browser || 'Unknown';
-      browsers[b] = (browsers[b] || 0) + 1;
-    });
+    sessions.forEach(s => { const b = s.browser || 'Unknown'; browsers[b] = (browsers[b] || 0) + 1; });
 
     return { total, inCheckout, withCart, totalCartValue, countries, devices, pages, browsers };
   }, [sessions]);
@@ -127,8 +180,6 @@ export default function LiveVisitorDashboard() {
   const sortedPages = Object.entries(stats.pages).sort((a, b) => b[1] - a[1]);
   const sortedDevices = Object.entries(stats.devices).sort((a, b) => b[1] - a[1]);
   const sortedBrowsers = Object.entries(stats.browsers).sort((a, b) => b[1] - a[1]);
-
-  // Sessions with active carts
   const cartSessions = sessions.filter(s => s.cart_items && s.cart_items.length > 0);
 
   return (
@@ -145,6 +196,15 @@ export default function LiveVisitorDashboard() {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant={showStore ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowStore(!showStore)}
+            className="gap-1.5"
+          >
+            <Store className="h-3.5 w-3.5" />
+            {showStore ? 'Hide Store' : '3D Store'}
+          </Button>
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`text-xs px-3 py-1.5 rounded-md border transition-colors ${
@@ -160,6 +220,13 @@ export default function LiveVisitorDashboard() {
           </Button>
         </div>
       </div>
+
+      {/* 3D Store Visualization */}
+      {showStore && (
+        <div className="border rounded-lg overflow-hidden bg-card" style={{ height: '500px' }}>
+          <StoreVisualization sessions={sessions} />
+        </div>
+      )}
 
       {/* Key Metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -209,7 +276,7 @@ export default function LiveVisitorDashboard() {
             <div className="space-y-2">
               {sortedPages.map(([page, count]) => (
                 <div key={page} className="flex items-center justify-between">
-                  <span className="text-sm">{page}</span>
+                  <span className="text-sm truncate max-w-[200px]">{page}</span>
                   <div className="flex items-center gap-2">
                     <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
                       <div
@@ -292,6 +359,11 @@ export default function LiveVisitorDashboard() {
                     <div className="flex items-center gap-2">
                       {getDeviceIcon(s.device_type)}
                       <span className="text-xs text-muted-foreground">{s.country || 'Unknown'}</span>
+                      {s.user_email && (
+                        <Badge variant="outline" className="text-[10px] gap-0.5">
+                          <Mail className="h-2.5 w-2.5" /> {s.user_email}
+                        </Badge>
+                      )}
                       {s.is_in_checkout && (
                         <Badge className="bg-amber-100 text-amber-800 text-[10px]">
                           <CreditCard className="h-2.5 w-2.5 mr-0.5" /> Checkout
@@ -330,6 +402,11 @@ export default function LiveVisitorDashboard() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-medium">{getPageLabel(s.current_page)}</span>
+                    {s.user_email && (
+                      <Badge variant="outline" className="text-[10px] gap-0.5">
+                        <Mail className="h-2.5 w-2.5" /> {s.user_email}
+                      </Badge>
+                    )}
                     {s.cart_items && s.cart_items.length > 0 && (
                       <Badge variant="outline" className="text-[10px]">
                         <ShoppingCart className="h-2.5 w-2.5 mr-0.5" /> {s.cart_items.length} items
@@ -353,7 +430,7 @@ export default function LiveVisitorDashboard() {
                     {timeAgo(s.last_seen_at)}
                   </div>
                   {s.referrer && (
-                    <p className="text-[10px] text-muted-foreground truncate max-w-32">{new URL(s.referrer).hostname}</p>
+                    <p className="text-[10px] text-muted-foreground truncate max-w-32">{(() => { try { return new URL(s.referrer).hostname; } catch { return s.referrer; } })()}</p>
                   )}
                 </div>
               </div>

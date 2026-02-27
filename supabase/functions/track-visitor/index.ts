@@ -34,11 +34,20 @@ serve(async (req) => {
         screenWidth,
         referrer,
         pagesViewed,
+        userEmail,
       } = body;
 
       if (!sessionId) {
         return new Response(JSON.stringify({ error: "Missing sessionId" }), {
           status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Skip tracking for admin accounts
+      const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
+      if (userEmail && ADMIN_EMAILS.includes(userEmail)) {
+        return new Response(JSON.stringify({ ok: true, skipped: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -60,6 +69,7 @@ serve(async (req) => {
           screen_width: screenWidth || null,
           referrer: referrer || null,
           pages_viewed: pagesViewed || [],
+          user_email: userEmail || null,
           last_seen_at: new Date().toISOString(),
         },
         { onConflict: "session_id" }
