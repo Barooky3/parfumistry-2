@@ -104,6 +104,36 @@ export type Database = {
         }
         Relationships: []
       }
+      product_padding_overrides: {
+        Row: {
+          id: string
+          padding_bottom: number
+          padding_left: number
+          padding_right: number
+          padding_top: number
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          padding_bottom?: number
+          padding_left?: number
+          padding_right?: number
+          padding_top?: number
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          padding_bottom?: number
+          padding_left?: number
+          padding_right?: number
+          padding_top?: number
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
