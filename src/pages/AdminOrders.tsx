@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio } from "lucide-react";
+import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -72,6 +73,7 @@ export default function AdminOrders() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
+  const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
   const [allOrdersForRepeat, setAllOrdersForRepeat] = useState<Order[]>([]);
 
   // Date range for revenue tally
@@ -557,7 +559,7 @@ export default function AdminOrders() {
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Order Management</h1>
             <p className="text-sm text-muted-foreground mt-1">Approve or reject pending orders</p>
@@ -566,6 +568,37 @@ export default function AdminOrders() {
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
         </div>
+
+        {/* Tab Switcher */}
+        <div className="flex gap-2 mb-6 border-b pb-3">
+          <button
+            onClick={() => setActiveTab("orders")}
+            className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+              activeTab === "orders"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            <Package className="h-4 w-4 inline mr-1.5" />
+            Orders
+          </button>
+          <button
+            onClick={() => setActiveTab("live")}
+            className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+              activeTab === "live"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            <Radio className="h-4 w-4 inline mr-1.5" />
+            Live Visitors
+          </button>
+        </div>
+
+        {activeTab === "live" ? (
+          <LiveVisitorDashboard />
+        ) : (
+        <>
 
         {/* Status Filter */}
         <div className="mb-3">
@@ -968,6 +1001,8 @@ export default function AdminOrders() {
               );
             })}
           </div>
+        )}
+        </>
         )}
       </div>
 

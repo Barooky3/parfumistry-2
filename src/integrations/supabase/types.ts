@@ -128,6 +128,66 @@ export type Database = {
         }
         Relationships: []
       }
+      visitor_sessions: {
+        Row: {
+          browser: string | null
+          cart_items: Json | null
+          cart_total: number | null
+          city: string | null
+          country: string | null
+          created_at: string
+          current_page: string
+          device_type: string | null
+          id: string
+          is_in_checkout: boolean | null
+          last_seen_at: string
+          os: string | null
+          pages_viewed: Json | null
+          referrer: string | null
+          region: string | null
+          screen_width: number | null
+          session_id: string
+        }
+        Insert: {
+          browser?: string | null
+          cart_items?: Json | null
+          cart_total?: number | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          current_page?: string
+          device_type?: string | null
+          id?: string
+          is_in_checkout?: boolean | null
+          last_seen_at?: string
+          os?: string | null
+          pages_viewed?: Json | null
+          referrer?: string | null
+          region?: string | null
+          screen_width?: number | null
+          session_id: string
+        }
+        Update: {
+          browser?: string | null
+          cart_items?: Json | null
+          cart_total?: number | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          current_page?: string
+          device_type?: string | null
+          id?: string
+          is_in_checkout?: boolean | null
+          last_seen_at?: string
+          os?: string | null
+          pages_viewed?: Json | null
+          referrer?: string | null
+          region?: string | null
+          screen_width?: number | null
+          session_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
