@@ -364,6 +364,7 @@ const Checkout = () => {
   const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const VALID_CODES: Record<string, number> = {
+    'professor15': 15,
     'parfum10': 10,
     'parfumz20': 20,
     'parfuma90': 90,

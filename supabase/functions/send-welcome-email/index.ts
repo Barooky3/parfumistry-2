@@ -30,31 +30,30 @@ serve(async (req) => {
   </div>
 
   <div style="background:linear-gradient(135deg,#c9a96e 0%,#b8944f 100%);padding:28px 32px;text-align:center;">
-    <h2 style="color:#fff;font-size:22px;font-weight:400;margin:0;letter-spacing:1px;">Welcome to ProfParfums! 🎉</h2>
+    <h2 style="color:#fff;font-size:22px;font-weight:400;margin:0;letter-spacing:1px;">Welcome, ${name}!</h2>
   </div>
 
   <div style="padding:32px;">
     <p style="font-size:16px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${name}</strong>,</p>
-    <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 16px;">Thank you so much for creating an account with us! We're thrilled to have you as part of the ProfParfums family. You now have access to our exclusive collection of premium fragrances at unbeatable prices.</p>
-    <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 24px;">As a thank-you for joining, here's your exclusive welcome discount:</p>
+    <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 16px;">Thanks for creating an account with us. You now have access to our full collection of premium fragrances at competitive prices.</p>
+    <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 24px;">As a welcome gift, here's a discount for your first order:</p>
 
     <div style="background:#1a1a1a;padding:24px;border-radius:8px;text-align:center;margin-bottom:24px;">
-      <p style="color:#c9a96e;font-size:12px;letter-spacing:3px;text-transform:uppercase;margin:0 0 8px;">Your Exclusive Discount Code</p>
+      <p style="color:#c9a96e;font-size:12px;letter-spacing:3px;text-transform:uppercase;margin:0 0 8px;">Your Discount Code</p>
       <div style="background:#c9a96e;display:inline-block;padding:10px 28px;border-radius:6px;margin-bottom:12px;">
-        <span style="font-size:28px;font-weight:700;letter-spacing:4px;color:#1a1a1a;">Parfum10</span>
+        <span style="font-size:28px;font-weight:700;letter-spacing:4px;color:#1a1a1a;">Professor15</span>
       </div>
-      <p style="color:#fff;font-size:16px;font-weight:600;margin:8px 0 4px;">10% OFF your first order</p>
-      <p style="color:#f59e0b;font-size:13px;margin:0;">⏰ Valid for 13 hours only — don't miss out!</p>
+      <p style="color:#fff;font-size:16px;font-weight:600;margin:8px 0 0;">15% OFF your first order</p>
     </div>
 
-    <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 16px;">Simply enter the code <strong>Parfum10</strong> at checkout to claim your discount. Browse our collection and find your signature scent today!</p>
+    <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 16px;">Enter <strong>Professor15</strong> at checkout to apply your discount.</p>
 
     <div style="text-align:center;margin:24px 0;">
-      <a href="https://profparfums.lovable.app/shop" style="display:inline-block;background:#1a1a1a;color:#c9a96e;padding:14px 36px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:1px;text-transform:uppercase;">Start Shopping</a>
+      <a href="https://profparfums.lovable.app/shop" style="display:inline-block;background:#1a1a1a;color:#c9a96e;padding:14px 36px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:1px;text-transform:uppercase;">Browse Collection</a>
     </div>
 
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
-      <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? We're always here for you at<br>
+      <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Questions? Reach us at<br>
       <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
     </div>
   </div>
@@ -76,7 +75,7 @@ serve(async (req) => {
       body: JSON.stringify({
         from: "ProfParfums <orders@profparfum.com>",
         to: [email],
-        subject: "Welcome to ProfParfums! 🎁 Here's 10% Off Your First Order",
+        subject: "Welcome to ProfParfums — Here's 15% Off Your First Order",
         html,
       }),
     });
