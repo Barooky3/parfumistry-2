@@ -50,7 +50,7 @@ export const products: Product[] = [
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800',
-    affiliateUrl: 'https://profparfums.store/products/fragrance-bundle-young-playboy',
+    affiliateUrl: 'https://litbuy.com/product/1688/993578833339?inviteCode=QMYK3RAL2',
     inStock: true,
     featured: true,
     isBundle: true,
@@ -577,7 +577,7 @@ export const products: Product[] = [
     },
     accentColor: '#F5C542',
     image: 'https://profparfums.store/cdn/shop/files/product_4_matched_1.png?v=1768068548&width=800',
-    affiliateUrl: 'https://profparfums.store/products/lv-imagination',
+    affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
     variants: [
@@ -1058,7 +1058,7 @@ export const products: Product[] = [
     },
     accentColor: '#87CEEB',
     image: 'https://profparfums.store/cdn/shop/files/image_6261aa49-3221-4a96-91e9-c8d120107fc0.png?v=1768493348&width=800',
-    affiliateUrl: 'https://profparfums.store/products/pacific-chill',
+    affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: false,
     variants: [
       { ml: 50, price: 29.00, originalPrice: 215.00, inStock: false },
@@ -1235,7 +1235,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8C8A0',
     image: 'https://profparfums.store/cdn/shop/files/image_f5380ed8-72f9-4429-ae98-588f5395b6ba.png?v=1768493348&width=800',
-    affiliateUrl: 'https://profparfums.store/products/symphony',
+    affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
       { ml: 100, price: 31.99, originalPrice: 405.00, inStock: true },
