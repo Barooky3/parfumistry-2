@@ -47,19 +47,18 @@ STORE_SECTIONS.forEach(s => { SECTION_MAP[s.key] = s.pos; });
 SECTION_MAP['entrance'] = [0, 0, 12];
 SECTION_MAP['cashier'] = [6, 0, 9]; // Near entrance, front-right
 
-// Homepage visitors get random positions throughout the store to simulate browsing
-const BROWSING_POSITIONS: [number, number, number][] = [
-  [-6, 0, -4], [0, 0, -4], [6, 0, -4],
-  [-6, 0, 2], [0, 0, 2], [6, 0, 2],
-  [-3, 0, -1], [3, 0, -1], [0, 0, 5],
-  [-9, 0, 2], [9, 0, 2], [0, 0, -7],
+// Homepage visitors are at the entrance — they haven't gone to a specific section yet
+const ENTRANCE_POSITIONS: [number, number, number][] = [
+  [-3, 0, 11], [-1, 0, 12], [1, 0, 11], [3, 0, 12],
+  [-2, 0, 10], [0, 0, 11], [2, 0, 10],
+  [-1, 0, 13], [1, 0, 13],
 ];
 
 function getSectionPosition(section: string, sessionId?: string): [number, number, number] {
   // Homepage visitors get distributed across the store
   if (section === 'browsing-home' && sessionId) {
     const hash = sessionId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-    return BROWSING_POSITIONS[hash % BROWSING_POSITIONS.length];
+    return ENTRANCE_POSITIONS[hash % ENTRANCE_POSITIONS.length];
   }
   if (SECTION_MAP[section]) return SECTION_MAP[section];
   const hash = (sessionId || section).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
@@ -433,9 +432,9 @@ function StoreScene({ sessions, selectedId, onSelectSession }: {
         const basePos = getSectionPosition(section, session.session_id);
         const hash = session.session_id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
         const offset: [number, number, number] = [
-          basePos[0] + ((hash % 5) - 2) * 0.8,
+          basePos[0] + ((hash % 5) - 2) * 0.4,
           0,
-          basePos[2] + ((hash % 7) - 3) * 0.6 + 1.8,
+          basePos[2] + ((hash % 7) - 3) * 0.3 + 1.2,
         ];
         return (
           <Character
