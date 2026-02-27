@@ -187,6 +187,9 @@ export const VisitorTracker = () => {
   }, [location.pathname]);
 
   useEffect(() => {
+    // Don't track admins or lovable.dev previews
+    if (isLovableDev || isAdmin) return;
+
     const sendHeartbeat = async () => {
       try {
         const cartItems = items.map(item => ({
@@ -224,16 +227,13 @@ export const VisitorTracker = () => {
       }
     };
 
-    // Send immediately on mount/navigation
     sendHeartbeat();
-
-    // Set up interval
     intervalRef.current = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [location.pathname, items, totalPrice, user]);
+  }, [location.pathname, items, totalPrice, user, isLovableDev, isAdmin]);
 
   return null; // Invisible component
 };
