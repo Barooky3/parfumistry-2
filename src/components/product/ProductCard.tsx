@@ -130,7 +130,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               "aspect-[3/4] bg-secondary overflow-hidden rounded-sm flex items-end justify-center relative",
               !paddingOverride && product.imagePadding
             )}
-            style={paddingOverride && (paddingOverride.padding_top > 0 || paddingOverride.padding_right > 0 || paddingOverride.padding_bottom > 0 || paddingOverride.padding_left > 0) ? {
+            style={paddingOverride && (paddingOverride.padding_top !== 0 || paddingOverride.padding_right !== 0 || paddingOverride.padding_bottom !== 0 || paddingOverride.padding_left !== 0) ? {
               paddingTop: `${paddingOverride.padding_top}rem`,
               paddingRight: `${paddingOverride.padding_right}rem`,
               paddingBottom: `${paddingOverride.padding_bottom}rem`,
