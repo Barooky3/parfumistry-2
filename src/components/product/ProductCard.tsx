@@ -121,7 +121,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             <motion.img
               src={product.image}
               alt={product.name}
-              className={cn("w-full", product.imagePadding ? "h-full object-contain object-bottom" : "h-full object-cover")}
+              className={cn("w-full", product.imagePadding ? "h-full object-contain object-bottom mix-blend-multiply" : "h-full object-cover")}
               loading="lazy"
               whileHover={{ scale: 1.08 }}
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
