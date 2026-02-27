@@ -75,8 +75,8 @@ export const computePaddingAndScale = (override: PaddingOverride | null) => {
   // Negative values → scale factor. More negative = bigger image
   const negValues = [override.padding_top, override.padding_right, override.padding_bottom, override.padding_left].filter(v => v < 0);
   const maxNeg = negValues.length > 0 ? Math.min(...negValues) : 0;
-  // Each -1rem ≈ 10% scale increase
-  const imageScale = maxNeg < 0 ? 1 + Math.abs(maxNeg) * 0.1 : 1;
+  // Each -1rem ≈ 25% scale increase for more noticeable effect
+  const imageScale = maxNeg < 0 ? 1 + Math.abs(maxNeg) * 0.25 : 1;
 
   const containerStyle = (posTop > 0 || posRight > 0 || posBottom > 0 || posLeft > 0) ? {
     paddingTop: `${posTop}rem`,
