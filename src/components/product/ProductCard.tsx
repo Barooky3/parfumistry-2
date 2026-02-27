@@ -141,7 +141,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                   alt={product.name}
                   className={cn("w-full", (product.imagePadding || hasOverride) ? "h-full object-contain object-bottom" : "h-full object-cover")}
                   loading="lazy"
-                  style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
+                  initial={{ scale: imageScale }}
+                  animate={{ scale: imageScale }}
                   whileHover={{ scale: 1.08 * imageScale }}
                   transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                 />
