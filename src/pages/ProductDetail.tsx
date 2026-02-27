@@ -11,7 +11,7 @@ import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
 import { BundleContents } from '@/components/product/BundleContents';
 import { getProductReviews } from '@/data/productReviews';
-import { useProductPadding } from '@/hooks/useProductPadding';
+import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
@@ -93,26 +93,27 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
-            <div 
-              className={cn(
-                "aspect-square md:aspect-[3/4] bg-secondary overflow-hidden flex items-end justify-center relative",
-                !paddingOverride && product.imagePadding
-              )}
-              style={paddingOverride && (paddingOverride.padding_top !== 0 || paddingOverride.padding_right !== 0 || paddingOverride.padding_bottom !== 0 || paddingOverride.padding_left !== 0) ? {
-                paddingTop: `${paddingOverride.padding_top}rem`,
-                paddingRight: `${paddingOverride.padding_right}rem`,
-                paddingBottom: `${paddingOverride.padding_bottom}rem`,
-                paddingLeft: `${paddingOverride.padding_left}rem`,
-              } : undefined}
-            >
-              {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className={cn("w-full h-full", (product.imagePadding || paddingOverride) ? "object-contain object-bottom" : "object-cover")}
-                loading="eager"
-              />
-            </div>
+            {(() => {
+              const { containerStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
+              return (
+                <div 
+                  className={cn(
+                    "aspect-square md:aspect-[3/4] bg-secondary overflow-hidden flex items-end justify-center relative",
+                    !hasOverride && product.imagePadding
+                  )}
+                  style={containerStyle}
+                >
+                  {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                    style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
+                    loading="eager"
+                  />
+                </div>
+              );
+            })()}
           </motion.div>
 
           {/* Info */}

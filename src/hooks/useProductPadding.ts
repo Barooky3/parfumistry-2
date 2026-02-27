@@ -60,14 +60,30 @@ export const useProductPadding = (productId: string): PaddingOverride | null => 
   return cache[productId] || null;
 };
 
-export const getPaddingStyle = (override: PaddingOverride | null, basePadding?: string) => {
-  if (!override || (override.padding_top === 0 && override.padding_right === 0 && override.padding_bottom === 0 && override.padding_left === 0)) {
-    return basePadding || undefined;
-  }
-  return {
-    paddingTop: `${override.padding_top}rem`,
-    paddingRight: `${override.padding_right}rem`,
-    paddingBottom: `${override.padding_bottom}rem`,
-    paddingLeft: `${override.padding_left}rem`,
-  };
+export const computePaddingAndScale = (override: PaddingOverride | null) => {
+  if (!override) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
+  
+  const hasAny = override.padding_top !== 0 || override.padding_right !== 0 || override.padding_bottom !== 0 || override.padding_left !== 0;
+  if (!hasAny) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
+
+  // Separate positive (padding) from negative (scale-up)
+  const posTop = Math.max(0, override.padding_top);
+  const posRight = Math.max(0, override.padding_right);
+  const posBottom = Math.max(0, override.padding_bottom);
+  const posLeft = Math.max(0, override.padding_left);
+
+  // Negative values → scale factor. More negative = bigger image
+  const negValues = [override.padding_top, override.padding_right, override.padding_bottom, override.padding_left].filter(v => v < 0);
+  const maxNeg = negValues.length > 0 ? Math.min(...negValues) : 0;
+  // Each -1rem ≈ 10% scale increase
+  const imageScale = maxNeg < 0 ? 1 + Math.abs(maxNeg) * 0.1 : 1;
+
+  const containerStyle = (posTop > 0 || posRight > 0 || posBottom > 0 || posLeft > 0) ? {
+    paddingTop: `${posTop}rem`,
+    paddingRight: `${posRight}rem`,
+    paddingBottom: `${posBottom}rem`,
+    paddingLeft: `${posLeft}rem`,
+  } : undefined;
+
+  return { containerStyle, imageScale, hasOverride: true };
 };
