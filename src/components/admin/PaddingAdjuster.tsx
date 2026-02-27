@@ -39,12 +39,12 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   const adjust = (side: Side | 'all', delta: number) => {
     const next = { ...local };
     if (side === 'all') {
-      next.padding_top = Math.max(0, +(next.padding_top + delta).toFixed(2));
-      next.padding_right = Math.max(0, +(next.padding_right + delta).toFixed(2));
-      next.padding_bottom = Math.max(0, +(next.padding_bottom + delta).toFixed(2));
-      next.padding_left = Math.max(0, +(next.padding_left + delta).toFixed(2));
+      next.padding_top = +(next.padding_top + delta).toFixed(2);
+      next.padding_right = +(next.padding_right + delta).toFixed(2);
+      next.padding_bottom = +(next.padding_bottom + delta).toFixed(2);
+      next.padding_left = +(next.padding_left + delta).toFixed(2);
     } else {
-      next[side] = Math.max(0, +(next[side] + delta).toFixed(2));
+      next[side] = +(next[side] + delta).toFixed(2);
     }
     updateAndSave(next);
   };
@@ -52,15 +52,15 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   const handleInputChange = (side: Side, value: string) => {
     const num = parseFloat(value);
     if (isNaN(num)) return;
-    const next = { ...local, [side]: Math.max(0, +num.toFixed(2)) };
+    const next = { ...local, [side]: +num.toFixed(2) };
     updateAndSave(next);
   };
 
   const handleAllInputChange = (value: string) => {
     const num = parseFloat(value);
     if (isNaN(num)) return;
-    const clamped = Math.max(0, +num.toFixed(2));
-    updateAndSave({ padding_top: clamped, padding_right: clamped, padding_bottom: clamped, padding_left: clamped });
+    const val = +num.toFixed(2);
+    updateAndSave({ padding_top: val, padding_right: val, padding_bottom: val, padding_left: val });
   };
 
   const isDetail = variant === 'detail';
@@ -112,7 +112,6 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
           <input
             type="number"
             step="0.25"
-            min="0"
             value={local.padding_top === local.padding_right && local.padding_right === local.padding_bottom && local.padding_bottom === local.padding_left ? local.padding_top : ''}
             placeholder="—"
             onChange={(e) => handleAllInputChange(e.target.value)}
@@ -147,7 +146,7 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
             <input
               type="number"
               step="0.25"
-              min="0"
+              
               value={local[key]}
               onChange={(e) => handleInputChange(key, e.target.value)}
               onClick={(e) => e.stopPropagation()}
