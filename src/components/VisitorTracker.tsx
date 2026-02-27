@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SESSION_KEY = 'profparfums-visitor-session';
 const HEARTBEAT_INTERVAL = 15000; // 15 seconds
@@ -77,6 +78,7 @@ function getCountryFromTimezone(): string {
 export const VisitorTracker = () => {
   const location = useLocation();
   const { items, totalPrice } = useCart();
+  const { user } = useAuth();
   const pagesViewedRef = useRef<string[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
@@ -117,6 +119,7 @@ export const VisitorTracker = () => {
               screenWidth: window.innerWidth,
               referrer: document.referrer || null,
               pagesViewed: pagesViewedRef.current,
+              userEmail: user?.email || null,
             }),
           }
         );
@@ -134,7 +137,7 @@ export const VisitorTracker = () => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [location.pathname, items, totalPrice]);
+  }, [location.pathname, items, totalPrice, user]);
 
   return null; // Invisible component
 };
