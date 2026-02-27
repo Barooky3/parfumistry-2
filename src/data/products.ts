@@ -263,7 +263,7 @@ export const products: Product[] = [
       base: ['Vetiver'],
     },
     accentColor: '#8B1A3A',
-    image: '',
+    image: '/images/scent-notes/born-in-roma-intense.png',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
