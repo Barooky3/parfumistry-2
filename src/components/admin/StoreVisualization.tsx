@@ -52,45 +52,45 @@ function getSectionPosition(section: string): [number, number, number] {
   return [(hash % 8) - 4, 0, (hash % 6) - 3];
 }
 
-// --- Display Table (like reference — wide, low table with product rows) ---
-function DisplayTable({ position, label, color }: { position: [number, number, number]; label: string; color: string }) {
-  const products = useMemo(() => {
+// --- Tall Shelf with bottles ---
+function Shelf({ position, label, color }: { position: [number, number, number]; label: string; color: string }) {
+  const bottles = useMemo(() => {
     const arr: [number, number, number][] = [];
-    for (let r = 0; r < 4; r++)
-      for (let c = 0; c < 6; c++)
-        arr.push([c * 0.42 - 1.05, 0.65, r * 0.35 - 0.52]);
+    for (let r = 0; r < 3; r++)
+      for (let c = 0; c < 5; c++)
+        arr.push([c * 0.35 - 0.7, 0.95 + r * 0.32, r * 0.1 - 0.1]);
     return arr;
   }, []);
 
   return (
     <group position={position}>
-      {/* Table surface */}
+      {/* Shelf body */}
       <mesh position={[0, 0.5, 0]}>
-        <boxGeometry args={[3.5, 0.12, 2]} />
-        <meshStandardMaterial color="#888" />
+        <boxGeometry args={[2.4, 1, 0.7]} />
+        <meshStandardMaterial color="#8a8a8a" />
       </mesh>
-      {/* Table legs */}
-      {[[-1.5, -0.7], [1.5, -0.7], [-1.5, 0.7], [1.5, 0.7]].map(([x, z], i) => (
-        <mesh key={i} position={[x, 0.22, z]}>
-          <boxGeometry args={[0.08, 0.44, 0.08]} />
-          <meshStandardMaterial color="#666" />
+      {/* Shelf layers */}
+      {[0, 1, 2].map(i => (
+        <mesh key={i} position={[0, 0.88 + i * 0.32, 0]}>
+          <boxGeometry args={[2.5, 0.05, 0.75]} />
+          <meshStandardMaterial color="#a0a0a0" />
         </mesh>
       ))}
       {/* Product bottles */}
-      {products.map((p, i) => (
+      {bottles.map((p, i) => (
         <mesh key={i} position={p}>
-          <boxGeometry args={[0.15, 0.28, 0.12]} />
+          <boxGeometry args={[0.12, 0.2, 0.1]} />
           <meshStandardMaterial color={color} />
         </mesh>
       ))}
-      {/* Label plate on front */}
-      <mesh position={[0, 0.5, 1.05]}>
-        <boxGeometry args={[2.2, 0.35, 0.06]} />
+      {/* Label plate */}
+      <mesh position={[0, 1.72, 0]}>
+        <boxGeometry args={[1.9, 0.3, 0.05]} />
         <meshStandardMaterial color={color} />
       </mesh>
       <Text
-        position={[0, 0.5, 1.09]}
-        fontSize={0.2}
+        position={[0, 1.72, 0.04]}
+        fontSize={0.17}
         color="#ffffff"
         anchorX="center"
         anchorY="middle"
@@ -151,42 +151,42 @@ function Character({
       {/* Selection ring */}
       {isSelected && (
         <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.5, 0.65, 24]} />
+          <ringGeometry args={[0.6, 0.75, 24]} />
           <meshBasicMaterial color="#facc15" side={THREE.DoubleSide} />
         </mesh>
       )}
       {/* Legs */}
-      <mesh position={[-0.12, 0.3, 0]}>
-        <boxGeometry args={[0.18, 0.6, 0.2]} />
+      <mesh position={[-0.15, 0.35, 0]}>
+        <boxGeometry args={[0.22, 0.7, 0.25]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
-      <mesh position={[0.12, 0.3, 0]}>
-        <boxGeometry args={[0.18, 0.6, 0.2]} />
+      <mesh position={[0.15, 0.35, 0]}>
+        <boxGeometry args={[0.22, 0.7, 0.25]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
       {/* Body */}
-      <mesh position={[0, 0.85, 0]}>
-        <boxGeometry args={[0.5, 0.55, 0.3]} />
+      <mesh position={[0, 1.0, 0]}>
+        <boxGeometry args={[0.6, 0.7, 0.35]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
       {/* Arms */}
-      <mesh position={[-0.35, 0.8, 0]}>
-        <boxGeometry args={[0.14, 0.45, 0.16]} />
+      <mesh position={[-0.42, 0.95, 0]}>
+        <boxGeometry args={[0.18, 0.55, 0.2]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
-      <mesh position={[0.35, 0.8, 0]}>
-        <boxGeometry args={[0.14, 0.45, 0.16]} />
+      <mesh position={[0.42, 0.95, 0]}>
+        <boxGeometry args={[0.18, 0.55, 0.2]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
       {/* Head */}
-      <mesh position={[0, 1.3, 0]}>
-        <boxGeometry args={[0.35, 0.35, 0.35]} />
+      <mesh position={[0, 1.6, 0]}>
+        <boxGeometry args={[0.4, 0.4, 0.4]} />
         <meshStandardMaterial color="#FFD5B8" />
       </mesh>
       {/* Shopping bag */}
       {hasCart && (
-        <mesh position={[0.42, 0.6, 0]}>
-          <boxGeometry args={[0.18, 0.25, 0.12]} />
+        <mesh position={[0.5, 0.7, 0]}>
+          <boxGeometry args={[0.22, 0.3, 0.15]} />
           <meshStandardMaterial color="#f59e0b" />
         </mesh>
       )}
@@ -407,7 +407,7 @@ function StoreScene({ sessions, selectedId, onSelectSession }: {
       <CashierDesk />
 
       {STORE_SECTIONS.map(s => (
-        <DisplayTable key={s.key} position={s.pos} label={s.label} color={s.color} />
+        <Shelf key={s.key} position={s.pos} label={s.label} color={s.color} />
       ))}
 
       {sessions.map(session => {
