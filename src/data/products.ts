@@ -50,7 +50,7 @@ export const products: Product[] = [
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
     image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800',
-    affiliateUrl: 'https://litbuy.com/product/1688/993578833339?inviteCode=QMYK3RAL2',
+    affiliateUrl: 'https://profparfums.store/products/fragrance-bundle-young-playboy',
     inStock: true,
     featured: true,
     isBundle: true,
@@ -58,7 +58,7 @@ export const products: Product[] = [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
       { name: 'Dior Sauvage Parfum', topNote: 'Bergamot', heartNote: 'Sandalwood', baseNote: 'Vanilla', accentColor: '#2C3E50' },
       { name: 'Versace Eros', topNote: 'Mint', heartNote: 'Ambroxan', baseNote: 'Vanilla', accentColor: '#1E90FF' },
-      { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A' },
+      { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A', affiliateUrl: 'https://litbuy.com/product/1688/993578833339?inviteCode=QMYK3RAL2' },
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520', affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU' },
     ],
     variants: [
