@@ -918,6 +918,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
+    imagePadding: 'p-[2rem] md:p-[4.5rem]',
     affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
