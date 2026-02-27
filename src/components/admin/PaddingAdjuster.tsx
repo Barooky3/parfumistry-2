@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Minus, Move, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Maximize, X, ZoomIn } from 'lucide-react';
+import { Plus, Minus, Move, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Maximize, X, ZoomIn, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { useProductPadding, savePaddingOverride, PaddingOverride } from '@/hooks/useProductPadding';
@@ -104,7 +104,17 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
         <X className={isDetail ? 'w-5 h-5' : 'w-3.5 h-3.5'} />
       </button>
 
-      <p className={`${isDetail ? 'text-xs' : 'text-[8px]'} text-white/80 font-medium truncate max-w-full mb-0.5`}>{productName}</p>
+      <div className="flex items-center gap-2 mb-0.5">
+        <p className={`${isDetail ? 'text-xs' : 'text-[8px]'} text-white/80 font-medium truncate`}>{productName}</p>
+        <button
+          onClick={() => updateAndSave({ padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0, scale: 1 })}
+          className={`flex items-center gap-0.5 ${isDetail ? 'text-[10px]' : 'text-[7px]'} text-red-400 hover:text-red-300 transition-colors`}
+          title="Reset all"
+        >
+          <RotateCcw className={isDetail ? 'w-3 h-3' : 'w-2.5 h-2.5'} />
+          Reset
+        </button>
+      </div>
 
       {/* Scale Slider */}
       <div className="w-full px-1" onClick={(e) => e.stopPropagation()}>
