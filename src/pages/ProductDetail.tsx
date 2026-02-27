@@ -6,19 +6,27 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
 import { BundleContents } from '@/components/product/BundleContents';
 import { getProductReviews } from '@/data/productReviews';
+import { useProductPadding } from '@/hooks/useProductPadding';
+import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
   const { addItem, toggleCart } = useCart();
   const { formatPrice } = useCurrency();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [quantity] = useState(1);
 
+  const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
+
   const product = id ? getProductById(id) : undefined;
+  const paddingOverride = useProductPadding(id || '');
   const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
   const reviews = id ? getProductReviews(id) : [];
 
@@ -85,11 +93,23 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
-            <div className={cn("aspect-square md:aspect-[3/4] bg-secondary overflow-hidden flex items-end justify-center", product.imagePadding)}>
+            <div 
+              className={cn(
+                "aspect-square md:aspect-[3/4] bg-secondary overflow-hidden flex items-end justify-center relative",
+                !paddingOverride && product.imagePadding
+              )}
+              style={paddingOverride && (paddingOverride.padding_top > 0 || paddingOverride.padding_right > 0 || paddingOverride.padding_bottom > 0 || paddingOverride.padding_left > 0) ? {
+                paddingTop: `${paddingOverride.padding_top}rem`,
+                paddingRight: `${paddingOverride.padding_right}rem`,
+                paddingBottom: `${paddingOverride.padding_bottom}rem`,
+                paddingLeft: `${paddingOverride.padding_left}rem`,
+              } : undefined}
+            >
+              {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
               <img 
                 src={product.image} 
                 alt={product.name} 
-                className={cn("w-full h-full", product.imagePadding ? "object-contain object-bottom" : "object-cover")}
+                className={cn("w-full h-full", (product.imagePadding || paddingOverride) ? "object-contain object-bottom" : "object-cover")}
                 loading="eager"
               />
             </div>
