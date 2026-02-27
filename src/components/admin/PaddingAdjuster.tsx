@@ -33,23 +33,20 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
     if (override) setLocal(override);
   }, [override]);
 
-  // Block ALL clicks from reaching the parent Link when the adjuster is open
+  // Block navigation clicks from reaching the parent Link when the adjuster is open
   useEffect(() => {
     if (!open) return;
-    const blockClick = (e: Event) => {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
+    const blockNavigation = (e: MouseEvent) => {
+      // Only block if the click target is within our container (the overlay)
+      if (containerRef.current?.contains(e.target as Node)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     };
-    // Use capture phase on the parent <a> to intercept before React Router handles it
     const parent = containerRef.current?.closest('a');
     if (parent) {
-      parent.addEventListener('click', blockClick, true);
-      parent.addEventListener('pointerup', blockClick, true);
-      return () => {
-        parent.removeEventListener('click', blockClick, true);
-        parent.removeEventListener('pointerup', blockClick, true);
-      };
+      parent.addEventListener('click', blockNavigation, true);
+      return () => parent.removeEventListener('click', blockNavigation, true);
     }
   }, [open]);
 
