@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Plus, Minus, Move, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Maximize, X, ZoomIn, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -24,6 +24,7 @@ const sides: { key: Side; label: string; icon: typeof ChevronUp }[] = [
 export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: PaddingAdjusterProps) => {
   const override = useProductPadding(productId);
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [local, setLocal] = useState<PaddingOverride>({
     padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0, scale: 1,
   });
@@ -31,6 +32,25 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   useEffect(() => {
     if (override) setLocal(override);
   }, [override]);
+
+  // Block ALL clicks from reaching the parent Link when the adjuster is open
+  useEffect(() => {
+    if (!open) return;
+    const blockClick = (e: MouseEvent) => {
+      // Find the closest Link ancestor and block navigation
+      const el = containerRef.current;
+      if (el) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    // Use capture phase on the container's parent to intercept before Link handles it
+    const parent = containerRef.current?.closest('a');
+    if (parent) {
+      parent.addEventListener('click', blockClick, true);
+      return () => parent.removeEventListener('click', blockClick, true);
+    }
+  }, [open]);
 
   const updateAndSave = (next: PaddingOverride) => {
     setLocal(next);
@@ -94,6 +114,7 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
 
   return (
     <div
+      ref={containerRef}
       className="absolute inset-0 z-50 bg-black/85 rounded-sm flex flex-col items-center justify-center gap-1.5 p-3 overflow-y-auto"
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
       onPointerDown={(e) => e.stopPropagation()}
