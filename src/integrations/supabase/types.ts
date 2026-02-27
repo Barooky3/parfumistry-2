@@ -112,6 +112,7 @@ export type Database = {
           padding_right: number
           padding_top: number
           product_id: string
+          scale: number
           updated_at: string
         }
         Insert: {
@@ -121,6 +122,7 @@ export type Database = {
           padding_right?: number
           padding_top?: number
           product_id: string
+          scale?: number
           updated_at?: string
         }
         Update: {
@@ -130,6 +132,7 @@ export type Database = {
           padding_right?: number
           padding_top?: number
           product_id?: string
+          scale?: number
           updated_at?: string
         }
         Relationships: []

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Plus, Minus, Move, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Maximize, X } from 'lucide-react';
+import { Plus, Minus, Move, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Maximize, X, ZoomIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import { useProductPadding, savePaddingOverride, PaddingOverride } from '@/hooks/useProductPadding';
 
 interface PaddingAdjusterProps {
@@ -24,7 +25,7 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   const override = useProductPadding(productId);
   const [open, setOpen] = useState(false);
   const [local, setLocal] = useState<PaddingOverride>({
-    padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0,
+    padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0, scale: 1,
   });
 
   useEffect(() => {
@@ -52,15 +53,24 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   const handleInputChange = (side: Side, value: string) => {
     const num = parseFloat(value);
     if (isNaN(num)) return;
-    const next = { ...local, [side]: +num.toFixed(2) };
-    updateAndSave(next);
+    updateAndSave({ ...local, [side]: +num.toFixed(2) });
   };
 
   const handleAllInputChange = (value: string) => {
     const num = parseFloat(value);
     if (isNaN(num)) return;
     const val = +num.toFixed(2);
-    updateAndSave({ padding_top: val, padding_right: val, padding_bottom: val, padding_left: val });
+    updateAndSave({ ...local, padding_top: val, padding_right: val, padding_bottom: val, padding_left: val });
+  };
+
+  const handleScaleChange = (values: number[]) => {
+    updateAndSave({ ...local, scale: +values[0].toFixed(2) });
+  };
+
+  const handleScaleInput = (value: string) => {
+    const num = parseFloat(value);
+    if (isNaN(num)) return;
+    updateAndSave({ ...local, scale: Math.max(0.1, +num.toFixed(2)) });
   };
 
   const isDetail = variant === 'detail';
@@ -70,7 +80,7 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
       <button
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true); }}
         className={`absolute ${isDetail ? 'top-4 right-4 w-8 h-8' : 'top-2 right-2 w-6 h-6'} z-50 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors`}
-        title="Adjust padding"
+        title="Adjust padding & scale"
       >
         <Move className={isDetail ? 'w-4 h-4' : 'w-3 h-3'} />
       </button>
@@ -84,7 +94,7 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
 
   return (
     <div
-      className="absolute inset-0 z-50 bg-black/85 rounded-sm flex flex-col items-center justify-center gap-2 p-3"
+      className="absolute inset-0 z-50 bg-black/85 rounded-sm flex flex-col items-center justify-center gap-1.5 p-3 overflow-y-auto"
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
     >
       <button
@@ -94,7 +104,40 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
         <X className={isDetail ? 'w-5 h-5' : 'w-3.5 h-3.5'} />
       </button>
 
-      <p className={`${isDetail ? 'text-xs' : 'text-[8px]'} text-white/80 font-medium truncate max-w-full mb-1`}>{productName}</p>
+      <p className={`${isDetail ? 'text-xs' : 'text-[8px]'} text-white/80 font-medium truncate max-w-full mb-0.5`}>{productName}</p>
+
+      {/* Scale Slider */}
+      <div className="w-full px-1" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-1.5 mb-1">
+          <ZoomIn className={`${iconSize} text-blue-400`} />
+          <span className={`${labelClass} text-blue-400 font-medium`}>Scale</span>
+          <input
+            type="number"
+            step="0.05"
+            min="0.1"
+            max="5"
+            value={local.scale}
+            onChange={(e) => handleScaleInput(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            className={`${inputClass} border-blue-400/50`}
+          />
+        </div>
+        <Slider
+          value={[local.scale]}
+          onValueChange={handleScaleChange}
+          min={0.1}
+          max={3}
+          step={0.05}
+          className="w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:bg-blue-400"
+        />
+        <div className="flex justify-between mt-0.5">
+          <span className="text-[7px] text-white/40">0.1x</span>
+          <span className="text-[7px] text-white/40">1x</span>
+          <span className="text-[7px] text-white/40">3x</span>
+        </div>
+      </div>
+
+      <div className="w-full h-px bg-white/10 my-0.5" />
 
       {/* All padding control */}
       <div className="flex items-center gap-1.5">
@@ -146,7 +189,6 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
             <input
               type="number"
               step="0.25"
-              
               value={local[key]}
               onChange={(e) => handleInputChange(key, e.target.value)}
               onClick={(e) => e.stopPropagation()}
