@@ -12,6 +12,7 @@ interface VisitorSession {
   is_in_checkout: boolean;
   user_email: string | null;
   country: string | null;
+  city: string | null;
   created_at: string;
   pages_viewed?: string[];
   device_type?: string | null;
@@ -46,9 +47,22 @@ STORE_SECTIONS.forEach(s => { SECTION_MAP[s.key] = s.pos; });
 SECTION_MAP['entrance'] = [0, 0, 12];
 SECTION_MAP['cashier'] = [6, 0, 9]; // Near entrance, front-right
 
-function getSectionPosition(section: string): [number, number, number] {
+// Homepage visitors get random positions throughout the store to simulate browsing
+const BROWSING_POSITIONS: [number, number, number][] = [
+  [-6, 0, -4], [0, 0, -4], [6, 0, -4],
+  [-6, 0, 2], [0, 0, 2], [6, 0, 2],
+  [-3, 0, -1], [3, 0, -1], [0, 0, 5],
+  [-9, 0, 2], [9, 0, 2], [0, 0, -7],
+];
+
+function getSectionPosition(section: string, sessionId?: string): [number, number, number] {
+  // Homepage visitors get distributed across the store
+  if (section === 'browsing-home' && sessionId) {
+    const hash = sessionId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    return BROWSING_POSITIONS[hash % BROWSING_POSITIONS.length];
+  }
   if (SECTION_MAP[section]) return SECTION_MAP[section];
-  const hash = section.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const hash = (sessionId || section).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
   return [(hash % 8) - 4, 0, (hash % 6) - 3];
 }
 
@@ -343,7 +357,7 @@ function CustomerInfoCard({ session, onClose }: { session: VisitorSession; onClo
         <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#999', lineHeight: 1, padding: 0 }}>×</button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 8, fontSize: 12 }}>
-        <div>📍 From <strong>{session.country || 'Unknown'}</strong></div>
+        <div>📍 From <strong>{[session.city, session.country].filter(Boolean).join(', ') || 'Unknown'}</strong></div>
         <div>🕐 Arrived <strong>{timeLabel}</strong></div>
         <div>📱 {session.device_type || 'Unknown'} device</div>
         <div>{isReturning ? '🔁 Returning customer' : '🆕 New visitor'}</div>
@@ -416,7 +430,7 @@ function StoreScene({ sessions, selectedId, onSelectSession }: {
 
       {sessions.filter(s => !s.current_page.startsWith('/admin')).map(session => {
         const section = getStoreSection(session.current_page);
-        const basePos = getSectionPosition(section);
+        const basePos = getSectionPosition(section, session.session_id);
         const hash = session.session_id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
         const offset: [number, number, number] = [
           basePos[0] + ((hash % 5) - 2) * 0.8,

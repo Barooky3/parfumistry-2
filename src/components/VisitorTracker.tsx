@@ -42,36 +42,125 @@ function detectDeviceType(): string {
   return 'desktop';
 }
 
-function getCountryFromTimezone(): string {
+function getLocationFromTimezone(): { country: string; city: string } {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    // Map common timezones to countries
-    const tzMap: Record<string, string> = {
-      'Europe/Sofia': 'Bulgaria', 'Europe/Berlin': 'Germany', 'Europe/Paris': 'France',
-      'Europe/London': 'United Kingdom', 'Europe/Amsterdam': 'Netherlands', 'Europe/Brussels': 'Belgium',
-      'Europe/Madrid': 'Spain', 'Europe/Rome': 'Italy', 'Europe/Vienna': 'Austria',
-      'Europe/Warsaw': 'Poland', 'Europe/Prague': 'Czech Republic', 'Europe/Budapest': 'Hungary',
-      'Europe/Bucharest': 'Romania', 'Europe/Athens': 'Greece', 'Europe/Helsinki': 'Finland',
-      'Europe/Stockholm': 'Sweden', 'Europe/Oslo': 'Norway', 'Europe/Copenhagen': 'Denmark',
-      'Europe/Dublin': 'Ireland', 'Europe/Lisbon': 'Portugal', 'Europe/Zurich': 'Switzerland',
-      'America/New_York': 'United States', 'America/Chicago': 'United States',
-      'America/Denver': 'United States', 'America/Los_Angeles': 'United States',
-      'America/Toronto': 'Canada', 'America/Vancouver': 'Canada',
-      'Asia/Tokyo': 'Japan', 'Asia/Shanghai': 'China', 'Asia/Seoul': 'South Korea',
-      'Asia/Dubai': 'UAE', 'Asia/Riyadh': 'Saudi Arabia', 'Asia/Istanbul': 'Turkey',
-      'Australia/Sydney': 'Australia', 'Pacific/Auckland': 'New Zealand',
+    const tzMap: Record<string, { country: string; city: string }> = {
+      // Europe
+      'Europe/Sofia': { country: 'Bulgaria', city: 'Sofia' },
+      'Europe/Berlin': { country: 'Germany', city: 'Berlin' },
+      'Europe/Paris': { country: 'France', city: 'Paris' },
+      'Europe/London': { country: 'United Kingdom', city: 'London' },
+      'Europe/Amsterdam': { country: 'Netherlands', city: 'Amsterdam' },
+      'Europe/Brussels': { country: 'Belgium', city: 'Brussels' },
+      'Europe/Madrid': { country: 'Spain', city: 'Madrid' },
+      'Europe/Rome': { country: 'Italy', city: 'Rome' },
+      'Europe/Milan': { country: 'Italy', city: 'Milan' },
+      'Europe/Vienna': { country: 'Austria', city: 'Vienna' },
+      'Europe/Warsaw': { country: 'Poland', city: 'Warsaw' },
+      'Europe/Prague': { country: 'Czech Republic', city: 'Prague' },
+      'Europe/Budapest': { country: 'Hungary', city: 'Budapest' },
+      'Europe/Bucharest': { country: 'Romania', city: 'Bucharest' },
+      'Europe/Athens': { country: 'Greece', city: 'Athens' },
+      'Europe/Helsinki': { country: 'Finland', city: 'Helsinki' },
+      'Europe/Stockholm': { country: 'Sweden', city: 'Stockholm' },
+      'Europe/Oslo': { country: 'Norway', city: 'Oslo' },
+      'Europe/Copenhagen': { country: 'Denmark', city: 'Copenhagen' },
+      'Europe/Dublin': { country: 'Ireland', city: 'Dublin' },
+      'Europe/Lisbon': { country: 'Portugal', city: 'Lisbon' },
+      'Europe/Zurich': { country: 'Switzerland', city: 'Zurich' },
+      'Europe/Luxembourg': { country: 'Luxembourg', city: 'Luxembourg' },
+      'Europe/Monaco': { country: 'Monaco', city: 'Monaco' },
+      'Europe/Zagreb': { country: 'Croatia', city: 'Zagreb' },
+      'Europe/Ljubljana': { country: 'Slovenia', city: 'Ljubljana' },
+      'Europe/Bratislava': { country: 'Slovakia', city: 'Bratislava' },
+      'Europe/Tallinn': { country: 'Estonia', city: 'Tallinn' },
+      'Europe/Riga': { country: 'Latvia', city: 'Riga' },
+      'Europe/Vilnius': { country: 'Lithuania', city: 'Vilnius' },
+      'Europe/Belgrade': { country: 'Serbia', city: 'Belgrade' },
+      'Europe/Sarajevo': { country: 'Bosnia', city: 'Sarajevo' },
+      'Europe/Skopje': { country: 'North Macedonia', city: 'Skopje' },
+      'Europe/Podgorica': { country: 'Montenegro', city: 'Podgorica' },
+      'Europe/Tirana': { country: 'Albania', city: 'Tirana' },
+      'Europe/Chisinau': { country: 'Moldova', city: 'Chisinau' },
+      'Europe/Kiev': { country: 'Ukraine', city: 'Kyiv' },
+      'Europe/Kyiv': { country: 'Ukraine', city: 'Kyiv' },
+      'Europe/Minsk': { country: 'Belarus', city: 'Minsk' },
+      'Europe/Moscow': { country: 'Russia', city: 'Moscow' },
+      'Europe/Malta': { country: 'Malta', city: 'Valletta' },
+      'Europe/Nicosia': { country: 'Cyprus', city: 'Nicosia' },
+      'Europe/Andorra': { country: 'Andorra', city: 'Andorra la Vella' },
+      'Europe/Tirane': { country: 'Albania', city: 'Tirana' },
+      'Europe/Istanbul': { country: 'Turkey', city: 'Istanbul' },
+      'Europe/Mariehamn': { country: 'Finland', city: 'Mariehamn' },
+      'Europe/Gibraltar': { country: 'Gibraltar', city: 'Gibraltar' },
+      'Europe/San_Marino': { country: 'San Marino', city: 'San Marino' },
+      'Europe/Vatican': { country: 'Vatican City', city: 'Vatican' },
+      // Americas
+      'America/New_York': { country: 'United States', city: 'New York' },
+      'America/Chicago': { country: 'United States', city: 'Chicago' },
+      'America/Denver': { country: 'United States', city: 'Denver' },
+      'America/Los_Angeles': { country: 'United States', city: 'Los Angeles' },
+      'America/Phoenix': { country: 'United States', city: 'Phoenix' },
+      'America/Anchorage': { country: 'United States', city: 'Anchorage' },
+      'America/Toronto': { country: 'Canada', city: 'Toronto' },
+      'America/Vancouver': { country: 'Canada', city: 'Vancouver' },
+      'America/Montreal': { country: 'Canada', city: 'Montreal' },
+      'America/Sao_Paulo': { country: 'Brazil', city: 'São Paulo' },
+      'America/Argentina/Buenos_Aires': { country: 'Argentina', city: 'Buenos Aires' },
+      'America/Mexico_City': { country: 'Mexico', city: 'Mexico City' },
+      'America/Bogota': { country: 'Colombia', city: 'Bogotá' },
+      'America/Lima': { country: 'Peru', city: 'Lima' },
+      'America/Santiago': { country: 'Chile', city: 'Santiago' },
+      // Asia & Middle East
+      'Asia/Tokyo': { country: 'Japan', city: 'Tokyo' },
+      'Asia/Shanghai': { country: 'China', city: 'Shanghai' },
+      'Asia/Seoul': { country: 'South Korea', city: 'Seoul' },
+      'Asia/Dubai': { country: 'UAE', city: 'Dubai' },
+      'Asia/Riyadh': { country: 'Saudi Arabia', city: 'Riyadh' },
+      'Asia/Istanbul': { country: 'Turkey', city: 'Istanbul' },
+      'Asia/Kolkata': { country: 'India', city: 'Mumbai' },
+      'Asia/Calcutta': { country: 'India', city: 'Kolkata' },
+      'Asia/Singapore': { country: 'Singapore', city: 'Singapore' },
+      'Asia/Hong_Kong': { country: 'Hong Kong', city: 'Hong Kong' },
+      'Asia/Bangkok': { country: 'Thailand', city: 'Bangkok' },
+      'Asia/Kuala_Lumpur': { country: 'Malaysia', city: 'Kuala Lumpur' },
+      'Asia/Jakarta': { country: 'Indonesia', city: 'Jakarta' },
+      'Asia/Manila': { country: 'Philippines', city: 'Manila' },
+      'Asia/Taipei': { country: 'Taiwan', city: 'Taipei' },
+      'Asia/Beirut': { country: 'Lebanon', city: 'Beirut' },
+      'Asia/Jerusalem': { country: 'Israel', city: 'Jerusalem' },
+      'Asia/Tel_Aviv': { country: 'Israel', city: 'Tel Aviv' },
+      'Asia/Kuwait': { country: 'Kuwait', city: 'Kuwait City' },
+      'Asia/Qatar': { country: 'Qatar', city: 'Doha' },
+      'Asia/Bahrain': { country: 'Bahrain', city: 'Manama' },
+      'Asia/Muscat': { country: 'Oman', city: 'Muscat' },
+      // Africa
+      'Africa/Cairo': { country: 'Egypt', city: 'Cairo' },
+      'Africa/Johannesburg': { country: 'South Africa', city: 'Johannesburg' },
+      'Africa/Lagos': { country: 'Nigeria', city: 'Lagos' },
+      'Africa/Nairobi': { country: 'Kenya', city: 'Nairobi' },
+      'Africa/Casablanca': { country: 'Morocco', city: 'Casablanca' },
+      'Africa/Tunis': { country: 'Tunisia', city: 'Tunis' },
+      'Africa/Algiers': { country: 'Algeria', city: 'Algiers' },
+      // Oceania
+      'Australia/Sydney': { country: 'Australia', city: 'Sydney' },
+      'Australia/Melbourne': { country: 'Australia', city: 'Melbourne' },
+      'Australia/Perth': { country: 'Australia', city: 'Perth' },
+      'Pacific/Auckland': { country: 'New Zealand', city: 'Auckland' },
     };
-    // Try exact match first
     if (tzMap[tz]) return tzMap[tz];
-    // Try region
-    const region = tz.split('/')[0];
-    if (region === 'Europe') return 'Europe';
-    if (region === 'America') return 'Americas';
-    if (region === 'Asia') return 'Asia';
-    if (region === 'Africa') return 'Africa';
-    return tz;
+    // Fallback: extract city name from timezone
+    const parts = tz.split('/');
+    const cityName = (parts[parts.length - 1] || '').replace(/_/g, ' ');
+    const region = parts[0];
+    const regionMap: Record<string, string> = {
+      'Europe': 'Europe', 'America': 'Americas', 'Asia': 'Asia',
+      'Africa': 'Africa', 'Australia': 'Australia', 'Pacific': 'Oceania',
+    };
+    return { country: regionMap[region] || region, city: cityName || 'Unknown' };
   } catch {
-    return 'Unknown';
+    return { country: 'Unknown', city: 'Unknown' };
   }
 }
 
@@ -112,7 +201,7 @@ export const VisitorTracker = () => {
               cartItems,
               cartTotal: totalPrice,
               isInCheckout: location.pathname === '/checkout',
-              country: getCountryFromTimezone(),
+              ...getLocationFromTimezone(),
               deviceType: detectDeviceType(),
               browser: detectBrowser(),
               os: detectOS(),
