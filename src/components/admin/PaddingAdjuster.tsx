@@ -96,6 +96,10 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
     <div
       className="absolute inset-0 z-50 bg-black/85 rounded-sm flex flex-col items-center justify-center gap-1.5 p-3 overflow-y-auto"
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+      onPointerDown={(e) => e.stopPropagation()}
+      onPointerUp={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onMouseUp={(e) => e.stopPropagation()}
     >
       <button
         onClick={() => setOpen(false)}
@@ -117,7 +121,7 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
       </div>
 
       {/* Scale Slider */}
-      <div className="w-full px-1" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full px-1" onClick={(e) => e.stopPropagation()} onPointerUp={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-1.5 mb-1">
           <ZoomIn className={`${iconSize} text-blue-400`} />
           <span className={`${labelClass} text-blue-400 font-medium`}>Scale</span>
