@@ -236,7 +236,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.4 }}
           >
             <h2 className="font-display text-2xl md:text-3xl text-foreground mb-8">You May Also Like</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-6">
               {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           </motion.section>
