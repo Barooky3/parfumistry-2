@@ -108,8 +108,8 @@ export function getStoreSection(path: string): string {
     return `brand-${sub}`;
   }
   if (path === '/shop') return 'shop';
-  // Homepage visitors are browsing — spread them across the store
-  if (path === '/') return 'browsing-home';
+  // Homepage features bestsellers — place visitors at the bestsellers section
+  if (path === '/') return 'bestsellers';
   // Contact/account/login etc. — place near cashier area
   if (path === '/contact' || path === '/login' || path === '/signup' || path === '/account') return 'cashier';
   // Any other page — place in shop area
