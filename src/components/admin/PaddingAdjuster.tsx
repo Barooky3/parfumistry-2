@@ -36,19 +36,20 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   // Block ALL clicks from reaching the parent Link when the adjuster is open
   useEffect(() => {
     if (!open) return;
-    const blockClick = (e: MouseEvent) => {
-      // Find the closest Link ancestor and block navigation
-      const el = containerRef.current;
-      if (el) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    const blockClick = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
     };
-    // Use capture phase on the container's parent to intercept before Link handles it
+    // Use capture phase on the parent <a> to intercept before React Router handles it
     const parent = containerRef.current?.closest('a');
     if (parent) {
       parent.addEventListener('click', blockClick, true);
-      return () => parent.removeEventListener('click', blockClick, true);
+      parent.addEventListener('pointerup', blockClick, true);
+      return () => {
+        parent.removeEventListener('click', blockClick, true);
+        parent.removeEventListener('pointerup', blockClick, true);
+      };
     }
   }, [open]);
 
