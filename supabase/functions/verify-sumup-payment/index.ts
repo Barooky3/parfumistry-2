@@ -63,8 +63,21 @@ serve(async (req) => {
       });
     }
 
-    // Payment verified! Send order confirmation email
-    await supabase.from("orders").update({ status: "paid" }).eq("id", order.id);
+    // Payment verified! Use atomic update to prevent duplicate emails
+    const { data: atomicUpdate } = await supabase
+      .from("orders")
+      .update({ status: "paid", email_sent: true })
+      .eq("id", order.id)
+      .eq("email_sent", false)
+      .select("id")
+      .maybeSingle();
+
+    if (!atomicUpdate) {
+      console.log("Email already sent for this order, skipping:", checkoutReference);
+      return new Response(JSON.stringify({ success: true, message: "Already processed" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Call the existing send-order-confirmation function
     const { error: emailError } = await supabase.functions.invoke("send-order-confirmation", {
@@ -82,8 +95,6 @@ serve(async (req) => {
       throw new Error("Failed to send order confirmation email");
     }
 
-    // Mark email as sent
-    await supabase.from("orders").update({ email_sent: true }).eq("id", order.id);
     console.log("Order confirmed and email sent for:", checkoutReference);
 
     return new Response(JSON.stringify({ success: true }), {
