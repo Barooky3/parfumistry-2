@@ -164,12 +164,19 @@ function getLocationFromTimezone(): { country: string; city: string } {
   }
 }
 
+// Skip tracking entirely on lovable.dev preview domains
+const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'mubarak.elkhabir@gmail.com'];
+
 export const VisitorTracker = () => {
   const location = useLocation();
   const { items, totalPrice } = useCart();
   const { user } = useAuth();
   const pagesViewedRef = useRef<string[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
+
+  // Don't track if on lovable.dev or if user is an admin
+  const isLovableDev = window.location.hostname.includes('lovable.dev') || window.location.hostname.includes('lovable.app/id-preview');
+  const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
 
   useEffect(() => {
     // Track pages viewed
