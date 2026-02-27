@@ -917,7 +917,7 @@ export const products: Product[] = [
       base: ['Amberwood', 'Tonka Bean', 'Cedar', 'Vetiver', 'Olibanum'],
     },
     accentColor: '#1A3A5C',
-    image: '',
+    image: '/images/scent-notes/ysl-y-edp.png',
     affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
