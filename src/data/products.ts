@@ -1185,8 +1185,9 @@ export const products: Product[] = [
       base: ['Vanilla Absolute', 'Tonka Bean', 'Patchouli'],
     },
     accentColor: '#DAA520',
-    image: '',
-    affiliateUrl: '',
+    image: '/images/scent-notes/1-million-elixir.png',
+    imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
+    affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
       { ml: 50, price: 12.99, originalPrice: 52.50, inStock: true },
