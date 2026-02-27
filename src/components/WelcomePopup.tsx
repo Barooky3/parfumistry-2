@@ -57,12 +57,12 @@ export const WelcomePopup = () => {
               Your discount code
             </p>
             <p className="text-3xl font-bold tracking-widest text-foreground">
-              10% OFF
+              15% OFF
             </p>
           </div>
 
           <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-            Create an account now and receive an exclusive <strong className="text-foreground">10% discount code</strong> via email for your first order. Don't miss out!
+            Create an account and get an exclusive <strong className="text-foreground">15% discount code</strong> sent to your email. Use it on your first order!
           </p>
 
           <Button
