@@ -37,10 +37,9 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
   useEffect(() => {
     if (!open) return;
     const blockNavigation = (e: MouseEvent) => {
-      // Only block if the click target is within our container (the overlay)
+      // Only prevent navigation, don't stop propagation so child clicks still work
       if (containerRef.current?.contains(e.target as Node)) {
         e.preventDefault();
-        e.stopPropagation();
       }
     };
     const parent = containerRef.current?.closest('a');
