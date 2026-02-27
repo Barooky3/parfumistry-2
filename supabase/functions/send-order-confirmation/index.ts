@@ -70,8 +70,8 @@ function resolveProductImage(name: string, originalImage: string): string {
 }
 
 const PRODUCT_LINKS: Record<string, string> = {
-  "stronger-with-you-absolutely": "https://litbuy.shop/lit/nOAwjxV0",
-  "stronger-with-you": "https://litbuy.shop/lit/nOAwjxV0",
+  "stronger-with-you-absolutely": "https://litbuy.com/product/1688/993578833339?inviteCode=QMYK3RAL2",
+  "stronger-with-you": "https://litbuy.com/product/1688/993578833339?inviteCode=QMYK3RAL2",
   "aventus": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661817242&affcode=c5v3b",
   "born-in-roma-intense": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
   "born-in-roma-green-stravaganza": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
@@ -79,6 +79,14 @@ const PRODUCT_LINKS: Record<string, string> = {
   "born-in-roma": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
   "valentino": "https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU",
   "louis-vuitton": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661789506&affcode=c5v3b",
+  "imagination": "https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU",
+  "pacific": "https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU",
+  "symphony": "https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU",
+  "1-million-elixir": "https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU",
+  "1-million-parfum": "https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU",
+  "prada-paradoxe": "https://litbuy.com/product/0/953992936772?inviteCode=4W9SCOLDU",
+  "phantom": "https://litbuy.com/product/0/966979827880?inviteCode=4W9SCOLDU",
+  "ysl-y": "https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU",
   "xerjoff": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7662173327&affcode=c5v3b",
   "eros": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7665241752&affcode=c5v3b",
   "dior": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661870378&affcode=c5v3b",
@@ -89,11 +97,21 @@ const PRODUCT_LINKS: Record<string, string> = {
   "mancera": "https://litbuy.shop/lit/qYJ4Tj6g",
 };
 
-function getProductLink(name: string, brand: string): string {
+function getProductLink(name: string, brand: string, itemAffiliateUrl?: string): string {
+  // Always prefer the affiliate URL passed from the product data
+  if (itemAffiliateUrl) return itemAffiliateUrl;
   const n = name.toLowerCase();
   const b = brand.toLowerCase();
   if (n.includes("stronger with you absolutely")) return PRODUCT_LINKS["stronger-with-you-absolutely"];
   if (n.includes("stronger with you")) return PRODUCT_LINKS["stronger-with-you"];
+  if (n.includes("imagination")) return PRODUCT_LINKS["imagination"];
+  if (n.includes("pacific")) return PRODUCT_LINKS["pacific"];
+  if (n.includes("symphony")) return PRODUCT_LINKS["symphony"];
+  if (n.includes("1 million elixir")) return PRODUCT_LINKS["1-million-elixir"];
+  if (n.includes("1 million parfum")) return PRODUCT_LINKS["1-million-parfum"];
+  if (n.includes("prada paradoxe") || n.includes("paradoxe")) return PRODUCT_LINKS["prada-paradoxe"];
+  if (n.includes("phantom")) return PRODUCT_LINKS["phantom"];
+  if (n.includes("ysl y ") || n.includes("y edp") || n.includes("y eau de parfum")) return PRODUCT_LINKS["ysl-y"];
   if (n.includes("aventus")) return PRODUCT_LINKS["aventus"];
   if (n.includes("born in roma intense")) return PRODUCT_LINKS["born-in-roma-intense"];
   if (n.includes("born in roma green stravaganza")) return PRODUCT_LINKS["born-in-roma-green-stravaganza"];
@@ -119,6 +137,7 @@ interface OrderItem {
   price: number;
   quantity: number;
   selectedMl?: number;
+  affiliateUrl?: string;
 }
 
 const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
@@ -129,6 +148,8 @@ const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
   ],
   "young-playboy": [
     { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["jean-paul-gaultier"] },
+    { label: "Stronger With You Absolutely", url: PRODUCT_LINKS["stronger-with-you-absolutely"] },
+    { label: "1 Million Elixir", url: PRODUCT_LINKS["1-million-elixir"] },
   ],
 };
 
@@ -165,7 +186,7 @@ function buildItemRow(item: OrderItem, origin: string, noLinks: boolean = false)
     ].join("\n");
   }
 
-  const productLink = getProductLink(item.name, item.brand);
+  const productLink = getProductLink(item.name, item.brand, item.affiliateUrl);
 
   const bonusLinks = getBundleBonusLinks(item.name);
   const bonusHtml = bonusLinks.map((b) =>
@@ -290,7 +311,7 @@ function buildAdminInvoiceHtml(
     const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
     const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
-    const productLink = getProductLink(item.name, item.brand);
+    const productLink = getProductLink(item.name, item.brand, item.affiliateUrl);
     return `<tr style="background:${bg};">
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <a href="${productLink}" style="color:#c9a96e;font-weight:500;text-decoration:none;">(link)</a></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
@@ -452,6 +473,7 @@ serve(async (req) => {
           price: item.selectedPrice || item.product.price,
           quantity: item.quantity,
           selectedMl: item.selectedMl,
+          affiliateUrl: item.product.affiliateUrl || item.affiliateUrl,
         };
       }
       return item as OrderItem;
