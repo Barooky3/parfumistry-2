@@ -264,6 +264,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A3A',
     image: '/images/scent-notes/born-in-roma-intense.png',
+    imagePadding: 'p-[2rem] md:p-[4.5rem]',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
