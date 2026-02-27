@@ -8,12 +8,15 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const Rewarble = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderTotal = searchParams.get('total') || '';
+  const { currency, formatPrice } = useCurrency();
+  const orderTotalNum = orderTotal ? parseFloat(orderTotal) : 0;
   const [codes, setCodes] = useState<string[]>(() => {
     const saved = sessionStorage.getItem('rewarbleCodes');
     return saved ? JSON.parse(saved) : [''];
@@ -121,6 +124,9 @@ const Rewarble = () => {
           <div className="rounded-xl border border-[#7C3AED]/30 bg-[#7C3AED]/5 p-4 mb-6 text-center">
             <p className="text-xs text-muted-foreground mb-1">Order amount</p>
             <p className="text-2xl font-bold text-foreground">€{orderTotal}</p>
+            {currency !== 'EUR' && orderTotalNum > 0 && (
+              <p className="text-sm text-muted-foreground mt-1">≈ {formatPrice(orderTotalNum)}</p>
+            )}
           </div>
         )}
 
@@ -135,7 +141,7 @@ const Rewarble = () => {
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a Rewarble gift card</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a card closest to your order amount ({orderTotal ? `€${orderTotal}` : 'see checkout'}) using one of the many supported payment methods.
+                  Buy a card closest to your order amount ({orderTotal ? `€${orderTotal}${currency !== 'EUR' && orderTotalNum > 0 ? ` (≈ ${formatPrice(orderTotalNum)})` : ''}` : 'see checkout'}) using one of the many supported payment methods.
                 </p>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>

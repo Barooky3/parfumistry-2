@@ -8,12 +8,15 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const PaypalEneba = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderTotal = searchParams.get('total') || '';
+  const { currency, formatPrice } = useCurrency();
+  const orderTotalNum = orderTotal ? parseFloat(orderTotal) : 0;
   const [codes, setCodes] = useState<string[]>(() => {
     const saved = sessionStorage.getItem('paypalEnebaCodes');
     return saved ? JSON.parse(saved) : [''];
@@ -124,6 +127,9 @@ const PaypalEneba = () => {
           <div className="rounded-xl border border-[#0070BA]/30 bg-[#0070BA]/5 p-4 mb-6 text-center">
             <p className="text-xs text-muted-foreground mb-1">Order amount</p>
             <p className="text-2xl font-bold text-foreground">€{orderTotal}</p>
+            {currency !== 'EUR' && orderTotalNum > 0 && (
+              <p className="text-sm text-muted-foreground mt-1">≈ {formatPrice(orderTotalNum)}</p>
+            )}
           </div>
         )}
 
@@ -138,7 +144,7 @@ const PaypalEneba = () => {
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a Rewarble voucher on Eneba</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a voucher closest to your order amount ({orderTotal ? `€${orderTotal}` : 'see checkout'}). At Eneba checkout, select <strong>PayPal</strong> as your payment method.
+                  Buy a voucher closest to your order amount ({orderTotal ? `€${orderTotal}${currency !== 'EUR' && orderTotalNum > 0 ? ` (≈ ${formatPrice(orderTotalNum)})` : ''}` : 'see checkout'}). At Eneba checkout, select <strong>PayPal</strong> as your payment method.
                 </p>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
                   onClick={() => window.open('https://www.eneba.com/rewarble-rewarble-revolut-5-gbp-voucher-global', '_blank')}>
