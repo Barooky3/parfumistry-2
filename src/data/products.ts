@@ -264,7 +264,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A3A',
     image: '/images/scent-notes/born-in-roma-intense.png',
-    imagePadding: 'p-[1.5rem] md:p-[3.375rem]',
+    imagePadding: 'p-[1.3rem] md:p-[2.925rem]',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
@@ -287,7 +287,7 @@ export const products: Product[] = [
     },
     accentColor: '#4A7C3F',
     image: '/images/scent-notes/born-in-roma-green-stravaganza.png',
-    imagePadding: 'p-[1.5rem] md:p-[3.375rem]',
+    imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
