@@ -13,6 +13,7 @@ export interface BundleFragrance {
   heartNote: string;
   baseNote: string;
   accentColor: string;
+  affiliateUrl?: string;
 }
 
 export interface Product {

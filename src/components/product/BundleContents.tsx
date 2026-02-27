@@ -19,7 +19,11 @@ export const BundleContents = ({ contents }: BundleContentsProps) => {
                 className="w-3 h-3 rounded-full shrink-0"
                 style={{ backgroundColor: frag.accentColor }}
               />
-              <span className="font-medium text-sm text-foreground">{frag.name}</span>
+              {frag.affiliateUrl ? (
+                <a href={frag.affiliateUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-sm text-foreground underline hover:text-accent transition-colors">{frag.name}</a>
+              ) : (
+                <span className="font-medium text-sm text-foreground">{frag.name}</span>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               <span
