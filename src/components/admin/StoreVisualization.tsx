@@ -102,7 +102,7 @@ function Shelf({ position, label, color }: { position: [number, number, number];
   );
 }
 
-// --- Character (bigger, chunky like reference) ---
+// --- Character (big, chunky, Roblox-like proportions matching reference) ---
 function Character({
   session,
   targetPosition,
@@ -125,25 +125,29 @@ function Character({
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     const dist = posRef.current.distanceTo(target);
-    movingRef.current = dist > 0.08;
+    movingRef.current = dist > 0.15;
     if (movingRef.current) {
-      posRef.current.lerp(target, Math.min(delta * 0.6, 0.025));
-      bobRef.current += delta * 5;
+      posRef.current.lerp(target, Math.min(delta * 1.8, 0.06));
+      bobRef.current += delta * 6;
     }
     groupRef.current.position.copy(posRef.current);
-    groupRef.current.position.y = movingRef.current ? Math.abs(Math.sin(bobRef.current)) * 0.08 : 0;
+    groupRef.current.position.y = movingRef.current ? Math.abs(Math.sin(bobRef.current)) * 0.12 : 0;
     if (movingRef.current) {
       const dir = target.clone().sub(posRef.current).normalize();
       if (dir.length() > 0.01) {
         const ty = Math.atan2(dir.x, dir.z);
-        groupRef.current.rotation.y += (ty - groupRef.current.rotation.y) * Math.min(delta * 2, 0.1);
+        groupRef.current.rotation.y += (ty - groupRef.current.rotation.y) * Math.min(delta * 3, 0.15);
       }
     }
   });
 
+  // Scale factor to make characters big relative to shelves (like reference image)
+  const S = 1.8;
+
   return (
     <group
       ref={groupRef}
+      scale={[S, S, S]}
       onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); onSelect(); }}
       onPointerOver={() => { document.body.style.cursor = 'pointer'; }}
       onPointerOut={() => { document.body.style.cursor = 'auto'; }}
@@ -151,42 +155,42 @@ function Character({
       {/* Selection ring */}
       {isSelected && (
         <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.6, 0.75, 24]} />
+          <ringGeometry args={[0.55, 0.7, 24]} />
           <meshBasicMaterial color="#facc15" side={THREE.DoubleSide} />
         </mesh>
       )}
       {/* Legs */}
-      <mesh position={[-0.15, 0.35, 0]}>
-        <boxGeometry args={[0.22, 0.7, 0.25]} />
+      <mesh position={[-0.12, 0.3, 0]}>
+        <boxGeometry args={[0.2, 0.6, 0.22]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
-      <mesh position={[0.15, 0.35, 0]}>
-        <boxGeometry args={[0.22, 0.7, 0.25]} />
+      <mesh position={[0.12, 0.3, 0]}>
+        <boxGeometry args={[0.2, 0.6, 0.22]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
-      {/* Body */}
-      <mesh position={[0, 1.0, 0]}>
-        <boxGeometry args={[0.6, 0.7, 0.35]} />
+      {/* Body / Torso */}
+      <mesh position={[0, 0.85, 0]}>
+        <boxGeometry args={[0.55, 0.6, 0.3]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
       {/* Arms */}
-      <mesh position={[-0.42, 0.95, 0]}>
-        <boxGeometry args={[0.18, 0.55, 0.2]} />
+      <mesh position={[-0.38, 0.82, 0]}>
+        <boxGeometry args={[0.16, 0.5, 0.18]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
-      <mesh position={[0.42, 0.95, 0]}>
-        <boxGeometry args={[0.18, 0.55, 0.2]} />
+      <mesh position={[0.38, 0.82, 0]}>
+        <boxGeometry args={[0.16, 0.5, 0.18]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
       {/* Head */}
-      <mesh position={[0, 1.6, 0]}>
+      <mesh position={[0, 1.35, 0]}>
         <boxGeometry args={[0.4, 0.4, 0.4]} />
         <meshStandardMaterial color="#FFD5B8" />
       </mesh>
       {/* Shopping bag */}
       {hasCart && (
-        <mesh position={[0.5, 0.7, 0]}>
-          <boxGeometry args={[0.22, 0.3, 0.15]} />
+        <mesh position={[0.45, 0.55, 0]}>
+          <boxGeometry args={[0.2, 0.28, 0.14]} />
           <meshStandardMaterial color="#f59e0b" />
         </mesh>
       )}
@@ -410,14 +414,14 @@ function StoreScene({ sessions, selectedId, onSelectSession }: {
         <Shelf key={s.key} position={s.pos} label={s.label} color={s.color} />
       ))}
 
-      {sessions.map(session => {
+      {sessions.filter(s => !s.current_page.startsWith('/admin')).map(session => {
         const section = getStoreSection(session.current_page);
         const basePos = getSectionPosition(section);
         const hash = session.session_id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
         const offset: [number, number, number] = [
-          basePos[0] + ((hash % 5) - 2) * 0.6,
+          basePos[0] + ((hash % 5) - 2) * 0.8,
           0,
-          basePos[2] + ((hash % 7) - 3) * 0.5 + 1.5,
+          basePos[2] + ((hash % 7) - 3) * 0.6 + 1.8,
         ];
         return (
           <Character
