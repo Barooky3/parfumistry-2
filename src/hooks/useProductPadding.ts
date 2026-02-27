@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface PaddingOverride {
@@ -6,6 +6,7 @@ export interface PaddingOverride {
   padding_right: number;
   padding_bottom: number;
   padding_left: number;
+  scale: number;
 }
 
 const cache: Record<string, PaddingOverride> = {};
@@ -17,7 +18,7 @@ const notify = () => listeners.forEach(fn => fn());
 export const fetchAllPaddingOverrides = async () => {
   const { data } = await supabase
     .from('product_padding_overrides')
-    .select('product_id, padding_top, padding_right, padding_bottom, padding_left');
+    .select('product_id, padding_top, padding_right, padding_bottom, padding_left, scale');
   if (data) {
     data.forEach((row: any) => {
       cache[row.product_id] = {
@@ -25,6 +26,7 @@ export const fetchAllPaddingOverrides = async () => {
         padding_right: Number(row.padding_right),
         padding_bottom: Number(row.padding_bottom),
         padding_left: Number(row.padding_left),
+        scale: Number(row.scale) || 1,
       };
     });
     allFetched = true;
@@ -63,20 +65,16 @@ export const useProductPadding = (productId: string): PaddingOverride | null => 
 export const computePaddingAndScale = (override: PaddingOverride | null) => {
   if (!override) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
   
-  const hasAny = override.padding_top !== 0 || override.padding_right !== 0 || override.padding_bottom !== 0 || override.padding_left !== 0;
+  const hasAny = override.padding_top !== 0 || override.padding_right !== 0 || override.padding_bottom !== 0 || override.padding_left !== 0 || override.scale !== 1;
   if (!hasAny) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
 
-  // Separate positive (padding) from negative (scale-up)
   const posTop = Math.max(0, override.padding_top);
   const posRight = Math.max(0, override.padding_right);
   const posBottom = Math.max(0, override.padding_bottom);
   const posLeft = Math.max(0, override.padding_left);
 
-  // Negative values → scale factor. More negative = bigger image
-  const negValues = [override.padding_top, override.padding_right, override.padding_bottom, override.padding_left].filter(v => v < 0);
-  const maxNeg = negValues.length > 0 ? Math.min(...negValues) : 0;
-  // Each -1rem ≈ 25% scale increase for more noticeable effect
-  const imageScale = maxNeg < 0 ? 1 + Math.abs(maxNeg) * 0.25 : 1;
+  // Use the dedicated scale value directly
+  const imageScale = override.scale;
 
   const containerStyle = (posTop > 0 || posRight > 0 || posBottom > 0 || posLeft > 0) ? {
     paddingTop: `${posTop}rem`,
