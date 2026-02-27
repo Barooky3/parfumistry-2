@@ -59,7 +59,7 @@ export const products: Product[] = [
       { name: 'Dior Sauvage Parfum', topNote: 'Bergamot', heartNote: 'Sandalwood', baseNote: 'Vanilla', accentColor: '#2C3E50' },
       { name: 'Versace Eros', topNote: 'Mint', heartNote: 'Ambroxan', baseNote: 'Vanilla', accentColor: '#1E90FF' },
       { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A' },
-      { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
+      { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520', affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU' },
     ],
     variants: [
       { ml: 50, price: 27.99, originalPrice: 130.00, inStock: true },
