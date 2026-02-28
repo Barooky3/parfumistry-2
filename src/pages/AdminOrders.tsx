@@ -66,16 +66,14 @@ const PAYMENT_METHODS = ["All", "Rewarble", "PayPal", "Bank Transfer", "Revolut"
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("pending_approval");
   const [paymentFilter, setPaymentFilter] = useState("All");
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
-  const [allOrdersForRepeat, setAllOrdersForRepeat] = useState<Order[]>([]);
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
@@ -112,84 +110,44 @@ export default function AdminOrders() {
     if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
     if (showFullLoading) setLoading(true);
     else setTransitioning(true);
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?status=${statusFilter}`,
-        { headers: { Authorization: `Bearer ${session.access_token}` } }
-      );
-      const json = await res.json();
-      if (res.ok) {
-        setOrders(json.orders || []);
-      } else {
-        toast.error(json.error || "Failed to fetch orders");
-      }
-    } catch {
-      toast.error("Failed to fetch orders");
-    }
-    setLoading(false);
-    setTransitioning(false);
-  };
-
-  // Fetch all approved orders for revenue tally
-  const fetchApprovedOrders = async () => {
-    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?status=approved`,
-        { headers: { Authorization: `Bearer ${session.access_token}` } }
-      );
-      const json = await res.json();
-      if (res.ok) setApprovedOrders(json.orders || []);
-    } catch { /* silent */ }
-  };
-
-  useEffect(() => {
-    if (ADMIN_EMAILS.includes(user?.email || "")) {
-      // After first load, use soft transition for filter changes
-      if (orders.length > 0 || !loading) {
-        fetchOrders(false);
-      } else {
-        fetchOrders(true);
-      }
-    }
-  }, [user, statusFilter]);
-
-  useEffect(() => {
-    if (ADMIN_EMAILS.includes(user?.email || "")) {
-      fetchApprovedOrders();
-      fetchAllOrdersForRepeat();
-    }
-  }, [user]);
-
-  // Fetch all orders to detect repeat customers
-  const fetchAllOrdersForRepeat = async () => {
-    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?status=all`,
         { headers: { Authorization: `Bearer ${session.access_token}` } }
       );
       const json = await res.json();
-      if (res.ok) setAllOrdersForRepeat(json.orders || []);
-    } catch { /* silent */ }
+      if (res.ok) {
+        setAllOrders(json.orders || []);
+      } else {
+        toast.error(json.error || "Failed to fetch orders");
+      }
+    } catch {
+      toast.error("Failed to fetch orders");
+    } finally {
+      setLoading(false);
+      setTransitioning(false);
+    }
   };
+
+  useEffect(() => {
+    if (ADMIN_EMAILS.includes(user?.email || "")) {
+      fetchOrders(true);
+    }
+  }, [user]);
 
   // Compute order count per email for repeat customer detection
   const emailOrderCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const o of allOrdersForRepeat) {
+    for (const o of allOrders) {
       const email = o.customer_email.toLowerCase();
       counts[email] = (counts[email] || 0) + 1;
     }
     return counts;
-  }, [allOrdersForRepeat]);
+  }, [allOrders]);
 
   // Compute date range from preset or custom
   const dateRange = useMemo<{ from: Date; to: Date } | null>(() => {
@@ -228,6 +186,11 @@ export default function AdminOrders() {
       default: return null; // "all"
     }
   }, [datePreset, customFrom, customTo]);
+
+  const approvedOrders = useMemo(
+    () => allOrders.filter((o) => o.status === "approved"),
+    [allOrders],
+  );
 
   // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
@@ -363,8 +326,7 @@ export default function AdminOrders() {
       const json = await res.json();
       if (res.ok) {
         toast.success("Order removed");
-        setOrders(prev => prev.filter(o => o.id !== orderId));
-        setApprovedOrders(prev => prev.filter(o => o.id !== orderId));
+        setAllOrders(prev => prev.filter(o => o.id !== orderId));
       } else {
         toast.error(json.error || "Failed to remove order");
       }
@@ -386,7 +348,7 @@ export default function AdminOrders() {
       }
 
       if (action === "request_proof") {
-        const order = orders.find(o => o.id === orderId);
+        const order = allOrders.find(o => o.id === orderId);
         if (!order) {
           toast.error("Order not found");
           setActionLoading(prev => { const n = new Set(prev); n.delete(orderId); return n; });
@@ -418,11 +380,7 @@ export default function AdminOrders() {
           toast.success(json.message);
           // Optimistic update instead of full refetch
           const newStatus = action === "approve" ? "approved" : "rejected";
-          setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-          if (action === "approve") {
-            const order = orders.find(o => o.id === orderId);
-            if (order) setApprovedOrders(prev => [...prev, { ...order, status: "approved" }]);
-          }
+          setAllOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
         } else {
           toast.error(json.error || "Action failed");
         }
@@ -533,7 +491,7 @@ export default function AdminOrders() {
         const updatedItems = [...editItems];
         const updatedTotal = editTotal;
         setEditingOrder(null);
-        setOrders(prev => prev.map(o => o.id === updatedId ? { ...o, order_items: updatedItems, total_amount: updatedTotal } : o));
+        setAllOrders(prev => prev.map(o => o.id === updatedId ? { ...o, order_items: updatedItems, total_amount: updatedTotal } : o));
       } else {
         toast.error(json.error || "Failed to update");
       }
@@ -564,7 +522,8 @@ export default function AdminOrders() {
     "Other": "bg-gray-100 text-gray-800",
   };
 
-  const filteredOrders = orders.filter(o => {
+  const filteredOrders = allOrders.filter(o => {
+    const matchesStatus = statusFilter === "all" || o.status === statusFilter;
     const pm = getPaymentMethod(o.checkout_reference);
     const matchesPayment = paymentFilter === "All" || pm === paymentFilter;
     const query = searchQuery.toLowerCase().trim();
@@ -572,7 +531,7 @@ export default function AdminOrders() {
       o.customer_name.toLowerCase().includes(query) ||
       o.customer_email.toLowerCase().includes(query) ||
       (o.order_number && o.order_number.toString().includes(query));
-    return matchesPayment && matchesSearch;
+    return matchesStatus && matchesPayment && matchesSearch;
   });
 
   return (
@@ -1066,7 +1025,7 @@ export default function AdminOrders() {
                     toast.success(json.message);
                     const rejectedId = rejectingOrder.id;
                     setRejectingOrder(null);
-                    setOrders(prev => prev.map(o => o.id === rejectedId ? { ...o, status: "rejected" } : o));
+                    setAllOrders(prev => prev.map(o => o.id === rejectedId ? { ...o, status: "rejected" } : o));
                   } else {
                     toast.error(json.error || "Failed to reject");
                   }
