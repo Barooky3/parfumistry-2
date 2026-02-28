@@ -70,6 +70,7 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("pending_approval");
   const [paymentFilter, setPaymentFilter] = useState("All");
+  const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
@@ -107,9 +108,10 @@ export default function AdminOrders() {
     }
   }, [user, authLoading, navigate]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (showFullLoading = true) => {
     if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
-    setLoading(true);
+    if (showFullLoading) setLoading(true);
+    else setTransitioning(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
@@ -128,6 +130,7 @@ export default function AdminOrders() {
       toast.error("Failed to fetch orders");
     }
     setLoading(false);
+    setTransitioning(false);
   };
 
   // Fetch all approved orders for revenue tally
@@ -146,7 +149,14 @@ export default function AdminOrders() {
   };
 
   useEffect(() => {
-    if (ADMIN_EMAILS.includes(user?.email || "")) fetchOrders();
+    if (ADMIN_EMAILS.includes(user?.email || "")) {
+      // After first load, use soft transition for filter changes
+      if (orders.length > 0 || !loading) {
+        fetchOrders(false);
+      } else {
+        fetchOrders(true);
+      }
+    }
   }, [user, statusFilter]);
 
   useEffect(() => {
@@ -379,7 +389,7 @@ export default function AdminOrders() {
         const order = orders.find(o => o.id === orderId);
         if (!order) {
           toast.error("Order not found");
-          setActionLoading(null);
+          setActionLoading(prev => { const n = new Set(prev); n.delete(orderId); return n; });
           return;
         }
         const res = await fetch(
@@ -406,7 +416,13 @@ export default function AdminOrders() {
         const json = await res.json();
         if (res.ok) {
           toast.success(json.message);
-          fetchOrders();
+          // Optimistic update instead of full refetch
+          const newStatus = action === "approve" ? "approved" : "rejected";
+          setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+          if (action === "approve") {
+            const order = orders.find(o => o.id === orderId);
+            if (order) setApprovedOrders(prev => [...prev, { ...order, status: "approved" }]);
+          }
         } else {
           toast.error(json.error || "Action failed");
         }
@@ -513,8 +529,11 @@ export default function AdminOrders() {
       const json = await res.json();
       if (res.ok) {
         toast.success("Order items updated");
+        const updatedId = editingOrder.id;
+        const updatedItems = [...editItems];
+        const updatedTotal = editTotal;
         setEditingOrder(null);
-        fetchOrders();
+        setOrders(prev => prev.map(o => o.id === updatedId ? { ...o, order_items: updatedItems, total_amount: updatedTotal } : o));
       } else {
         toast.error(json.error || "Failed to update");
       }
@@ -564,7 +583,7 @@ export default function AdminOrders() {
             <h1 className="text-2xl font-bold tracking-tight">Order Management</h1>
             <p className="text-sm text-muted-foreground mt-1">Approve or reject pending orders</p>
           </div>
-          <Button variant="outline" size="sm" onClick={fetchOrders} disabled={loading}>
+          <Button variant="outline" size="sm" onClick={() => fetchOrders()} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
         </div>
@@ -841,7 +860,7 @@ export default function AdminOrders() {
             <p className="text-muted-foreground">No orders found</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className={`space-y-4 transition-opacity duration-200 ${transitioning ? "opacity-50" : "opacity-100"}`}>
             {filteredOrders.map((order) => {
               const items = (Array.isArray(order.order_items) ? order.order_items : []) as OrderItem[];
               const date = new Date(order.created_at);
@@ -1045,8 +1064,9 @@ export default function AdminOrders() {
                   const json = await res.json();
                   if (res.ok) {
                     toast.success(json.message);
+                    const rejectedId = rejectingOrder.id;
                     setRejectingOrder(null);
-                    fetchOrders();
+                    setOrders(prev => prev.map(o => o.id === rejectedId ? { ...o, status: "rejected" } : o));
                   } else {
                     toast.error(json.error || "Failed to reject");
                   }
