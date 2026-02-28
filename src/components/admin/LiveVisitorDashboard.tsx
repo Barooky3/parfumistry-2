@@ -4,11 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Eye, ShoppingCart, CreditCard, Globe, Monitor, Smartphone, Tablet,
-  RefreshCw, MapPin, Clock, Users, Mail, Store
+  RefreshCw, MapPin, Clock, Users, Mail
 } from 'lucide-react';
 import { products } from '@/data/products';
 import { bestsellerIds } from '@/data/products';
-import StoreVisualization from './StoreVisualization';
 
 interface VisitorSession {
   id: string;
@@ -135,7 +134,6 @@ export default function LiveVisitorDashboard() {
   const [sessions, setSessions] = useState<VisitorSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [showStore, setShowStore] = useState(false);
 
   const fetchSessions = async () => {
     try {
@@ -200,15 +198,6 @@ export default function LiveVisitorDashboard() {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant={showStore ? "default" : "outline"}
-            size="sm"
-            onClick={() => setShowStore(!showStore)}
-            className="gap-1.5"
-          >
-            <Store className="h-3.5 w-3.5" />
-            {showStore ? 'Hide Store' : '3D Store'}
-          </Button>
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`text-xs px-3 py-1.5 rounded-md border transition-colors ${
@@ -224,13 +213,6 @@ export default function LiveVisitorDashboard() {
           </Button>
         </div>
       </div>
-
-      {/* 3D Store Visualization */}
-      {showStore && (
-        <div className="border rounded-lg overflow-hidden bg-card" style={{ height: '500px' }}>
-          <StoreVisualization sessions={sessions} />
-        </div>
-      )}
 
       {/* Key Metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
