@@ -1059,10 +1059,10 @@ export const products: Product[] = [
     accentColor: '#87CEEB',
     image: 'https://profparfums.store/cdn/shop/files/image_6261aa49-3221-4a96-91e9-c8d120107fc0.png?v=1768493348&width=800',
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
-    inStock: false,
+    inStock: true,
     variants: [
-      { ml: 50, price: 34.00, originalPrice: 225.00, inStock: false },
-      { ml: 100, price: 54.99, originalPrice: 290.00, inStock: false },
+      { ml: 50, price: 34.00, originalPrice: 225.00, inStock: true },
+      { ml: 100, price: 54.99, originalPrice: 290.00, inStock: true },
     ],
   },
   {
@@ -1236,9 +1236,9 @@ export const products: Product[] = [
     accentColor: '#E8C8A0',
     image: 'https://profparfums.store/cdn/shop/files/image_f5380ed8-72f9-4429-ae98-588f5395b6ba.png?v=1768493348&width=800',
     affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
-    inStock: true,
+    inStock: false,
     variants: [
-      { ml: 100, price: 36.99, originalPrice: 415.00, inStock: true },
+      { ml: 100, price: 36.99, originalPrice: 415.00, inStock: false },
     ],
   },
   {
