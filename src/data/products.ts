@@ -145,7 +145,7 @@ export const products: Product[] = [
     price: 16.49,
     originalPrice: 74.50,
     category: 'unisex',
-    description: 'Fresh and invigorating with a unique blend of citrus and mint balanced by precious oud.',
+    description: 'Aoud Lemon Mint is a vibrant citrus-oud fragrance where zesty lemon and spicy coriander meet jasmine, oud, leather, vanilla, and vetiver for a creamy, woody, unisex trail.',
     scentNotes: {
       top: ['Lemon', 'Mint'],
       heart: ['Oud', 'Rose'],
@@ -212,7 +212,7 @@ export const products: Product[] = [
     price: 25.99,
     originalPrice: 207.00,
     category: 'men',
-    description: 'The intensified version of the legendary Aventus. Deeper, richer, and even more captivating.',
+    description: 'This is the older brother of Creed Aventus, sexier, more mature, rich and complex with adventurous spice and sophisticated woods. This has a much deeper drydown than its younger brother.',
     scentNotes: {
       top: ['Grapefruit', 'Bergamot', 'Pink Pepper', 'Pineapple'],
       heart: ['Ginger', 'Cinnamon', 'Cardamom', 'Rose'],
@@ -257,7 +257,7 @@ export const products: Product[] = [
     price: 18.99,
     originalPrice: 92.50,
     category: 'unisex',
-    description: 'Dark, mysterious, and sensual. Tom Ford Black Orchid is a luxurious blend of black truffle, orchid, and dark chocolate. A daring and captivating scent that leaves a lasting impression.',
+    description: 'Tom Ford Black Orchid smells dark, rich, and a bit gothic – like earthy truffle and dark florals over chocolate, patchouli, and vanilla, it can smell weird to SOME people.',
     scentNotes: {
       top: ['Black Truffle', 'Ylang-Ylang'],
       heart: ['Black Orchid', 'Spicy Notes'],
@@ -325,7 +325,7 @@ export const products: Product[] = [
     price: 16.99,
     originalPrice: 38.50,
     category: 'men',
-    description: 'Valentino Uomo Born in Roma smells like a modern, slightly sweet woody scent with fresh violet leaf, sage, and ginger over smoked vetiver. It feels clean, a bit sexy, and easy to wear, sitting somewhere between a fresh everyday fragrance and a clubbing scent.',
+    description: 'Valentino Uomo Born in Roma smells like a modern, slightly sweet woody scent with fresh violet leaf, sage, and ginger over smoked vetiver, the intense version is much better in my opinion. It feels clean, a bit sexy, and easy to wear, sitting somewhere between a fresh everyday fragrance and a clubbing scent, so it works for both daytime and nights out.',
     scentNotes: {
       top: ['Mineral Notes', 'Violet Leaf', 'Salt'],
       heart: ['Sage', 'Ginger'],
@@ -347,7 +347,7 @@ export const products: Product[] = [
     price: 16.49,
     originalPrice: 74.50,
     category: 'men',
-    description: 'A crowd-pleaser fragrance. Cedrat Boisé opens with fresh citrus and black currant, developing into spicy leather notes over a deep cedar and white musk base. Versatile and long-lasting.',
+    description: 'This is similar to creed aventus, a vibrant and sparkling citrus-woody fragrance that opens with fresh Sicilian lemon, blackcurrant, and spices. Features a sensual heart of jasmine and patchouli, finishing with woody, vanilla, and leathery notes for a long-lasting, sophisticated sillage.',
     scentNotes: {
       top: ['Citrus', 'Black Currant'],
       heart: ['Leather', 'Spicy Notes'],
@@ -458,7 +458,7 @@ export const products: Product[] = [
     price: 16.99,
     originalPrice: 53.50,
     category: 'men',
-    description: 'The fiery counterpart to Eros. Passionate, bold, and irresistible.',
+    description: 'The sexiest of the eros line. It opens with bright citrus and black pepper, then turns warmer and smoother with rose, woods, vanilla, and tonka – basically a spicy, cozy twist on the original Eros.',
     scentNotes: {
       top: ['Mandarin Orange', 'Black Pepper', 'Lemon', 'Rosemary'],
       heart: ['Geranium', 'Rose', 'Pepperwood'],
@@ -525,7 +525,7 @@ export const products: Product[] = [
     price: 17.99,
     originalPrice: 74.50,
     category: 'unisex',
-    description: 'A sunny and fresh fragrance that captures the essence of the French Riviera. Elegant and refined.',
+    description: 'A fresh, citrusy unisex fragrance that evokes the sophistication and charm of the Mediterranean coast. Bursts with citrus (lemon, orange, tangerine), marine notes, and floral touches, finishing with a warm base of musk and amber for a breezy, coastal elegance.',
     scentNotes: {
       top: ['Bergamot', 'Lemon'],
       heart: ['Jasmine', 'Rose'],
@@ -547,7 +547,7 @@ export const products: Product[] = [
     price: 20.99,
     originalPrice: 86.50,
     category: 'men',
-    description: 'A sophisticated and woody fragrance with iris and amber. Perfect for the modern gentleman.',
+    description: 'This fragrance was voted one of the most attractive men\'s fragrances. It smells like powdery iris and lavender over warm vanilla and woods, with a soft cocoa-like sweetness in the background. It has that "makeup bag" vibe from the iris, smoothed out by ambrette and pear, then dries down into a velvety mix of vanilla, cedar, and vetiver that feels elegant, cozy, and a bit dressy.',
     scentNotes: {
       top: ['Lavender'],
       heart: ['Iris', 'Ambrette', 'Pear'],
@@ -614,7 +614,7 @@ export const products: Product[] = [
     price: 23.99,
     originalPrice: 66.97,
     category: 'unisex',
-    description: 'A coffee-inspired fragrance with rich, warm, and addictive notes. Perfect for coffee lovers.',
+    description: 'Khamrah Qahwa is much better than the OG. Its a rich coffee-gourmand that smells like a spiced latte: warm cinnamon and cardamom over sweet praline and candied fruits, drying down to creamy coffee, vanilla, tonka, and soft musk. It smells slightly less annoyingly sweet and is just better trust me.',
     scentNotes: {
       top: ['Coffee', 'Saffron'],
       heart: ['Rose', 'Praline'],
@@ -867,7 +867,7 @@ export const products: Product[] = [
     price: 12.99,
     originalPrice: 56.50,
     category: 'men',
-    description: 'A fresh and tropical fragrance with coconut and bergamot. Light, airy, and perfect for summer.',
+    description: 'This is Le beau le parfum\'s younger brother. It smells similar but significantly less creamy, and much fresher. To be honest this one smells much worse than the le parfum, but its much more versatile and is a decent summer scent regardless.',
     scentNotes: {
       top: ['Bergamot', 'Grapefruit'],
       heart: ['Coconut', 'Tonka Bean'],
@@ -889,7 +889,7 @@ export const products: Product[] = [
     price: 16.49,
     originalPrice: 68.50,
     category: 'men',
-    description: 'The ultimate expression of Le Male. An opulent and addictive fragrance with honey, lavender, and vanilla.',
+    description: 'This is like le male elixir but less sweet, a tiny bit more mature, and honestly i think its better. Its much less popular so you wont smell like everyone else. Its le male elixir and le male le parfum combined. It opens with plum, which is incredibly unique, and it dries down similar to le male elixir but less annoyingly sweet.',
     scentNotes: {
       top: ['Plum', 'Cinnamon', 'Cardamom', 'Bergamot'],
       heart: ['Lavender', 'Davana', 'Artemisia'],
@@ -911,7 +911,7 @@ export const products: Product[] = [
     price: 12.99,
     originalPrice: 56.50,
     category: 'women',
-    description: 'A bold and daring floral with lavender and orange blossom. Free-spirited and absolutely captivating.',
+    description: 'YSL Libre smells like sweet orange blossom and jasmine mixed with clean lavender and vanilla. This is a girl boss scent. It starts a bit citrusy and aromatic, then dries down to a warm, slightly musky vanilla-floral that feels smooth and modern rather than old-school.',
     scentNotes: {
       top: ['Mandarin', 'Lavender'],
       heart: ['Orange Blossom', 'Jasmine'],
@@ -935,7 +935,7 @@ export const products: Product[] = [
     price: 11.99,
     originalPrice: 37.96,
     category: 'women',
-    description: 'A romantic and passionate fragrance. Sweet strawberry meets white flowers for an irresistible combination.',
+    description: 'A romantic and modern fruity floral fragrance. Sweet berries and white florals create a lively and feminine opening. Soft patchouli and musks add warmth and depth in the base. Elegant and sensual, it\'s designed to feel passionate yet refined.',
     scentNotes: {
       top: ['Strawberry', 'Raspberry', 'Pear'],
       heart: ['Peony', 'Datura', 'Jasmine'],
@@ -958,7 +958,7 @@ export const products: Product[] = [
     price: 12.99,
     originalPrice: 41.96,
     category: 'men',
-    description: 'A refined and elegant fragrance that celebrates individuality. Floral and woody with a modern twist.',
+    description: 'YSL MYSLF EDP is such a good daily scent. It smells like fresh citrus and soft white florals over a clean, woody base. You get a bright bergamot opening, then smooth Tunisian orange blossom, drying down to a modern mix of Ambrofix and patchouli that feels like clean skin and fresh laundry rather than heavy cologne.',
     scentNotes: {
       top: ['Bergamot', 'Orange Blossom'],
       heart: ['Lavender', 'Rose'],
@@ -1027,7 +1027,7 @@ export const products: Product[] = [
     price: 23.99,
     originalPrice: 68.50,
     category: 'unisex',
-    description: 'Naxos smells like a warm, creamy tobacco‑vanilla pastry with a honeyed, slightly boozy sweetness. Think lavender‑laced honey cake with a cigar‑box base – rich, sweet, and undeniably cozy.',
+    description: 'Xerjoff Naxos is in my opinion one of the worst fragrances but heres the description anyway. It is a sweet, warm scent that starts with bright citrus and lavender, then shifts into noticeable honey and light spice, before settling into soft tobacco, vanilla and tonka bean. It comes across as a cozy, slightly spicy unisex fragrance that many people find suitable for cooler weather or evenings.',
     scentNotes: {
       top: ['Lavender', 'Bergamot', 'Cinnamon'],
       heart: ['Honey', 'Cashmeran'],
@@ -1072,7 +1072,7 @@ export const products: Product[] = [
     price: 17.99,
     originalPrice: 68.50,
     category: 'men',
-    description: 'A sophisticated and modern fragrance. Woody and aromatic with a refined elegance.',
+    description: 'This is basic designer fragrance but done to perfection. It opens warm and woody (Peru balsam, benzoin, guaiac wood), then brings in green bourbon geranium and Calabrian bergamot with airy musks, so it feels smooth, modern, and dressed-up without being loud.',
     scentNotes: {
       top: ['Bergamot', 'Lavender'],
       heart: ['Iris', 'Geranium'],
@@ -1094,7 +1094,7 @@ export const products: Product[] = [
     price: 17.49,
     originalPrice: 74.50,
     category: 'unisex',
-    description: 'A bold and spicy fragrance with tobacco, saffron, and jasmine. Warm, sensual, and unforgettable.',
+    description: 'A warm and intoxicating fragrance that blends smoky tobacco and sweet spices with a touch of fruity freshness. Rich, complex spice notes with creamy vanilla, amber, and woody undertones create a luxurious and sensual experience.',
     scentNotes: {
       top: ['Saffron', 'Cinnamon'],
       heart: ['Jasmine', 'Rose'],
@@ -1139,7 +1139,7 @@ export const products: Product[] = [
     brand: 'Creed',
     price: 23.99,
     category: 'unisex',
-    description: 'A crisp and invigorating scent inspired by the Swiss Alps. Fresh, clean, and eternally elegant.',
+    description: 'Creed Silver Mountain Water smells like a mix of cold citrus, green tea, and blackcurrant over soft musk and sandalwood. It comes across clean, slightly soapy, and airy, like fresh laundry and cool mountain air rather than a heavy, sweet perfume.',
     scentNotes: {
       top: ['Bergamot', 'Mandarin', 'Neroli'],
       heart: ['Green Tea', 'Black Currant'],
@@ -1161,7 +1161,7 @@ export const products: Product[] = [
     price: 14.99,
     originalPrice: 53.50,
     category: 'men',
-    description: 'A warm and enveloping amber fragrance. Sweet, spicy, and incredibly comforting.',
+    description: 'A radiant and cozy fragrance that reimagines the Stronger With You DNA with a richer amber twist, slightly more mature than Intensely in my opinion, but not as mature as the parfum version.',
     scentNotes: {
       top: ['Cinnamon', 'Pink Pepper'],
       heart: ['Lavender', 'Amber'],
@@ -1183,7 +1183,7 @@ export const products: Product[] = [
     price: 16.99,
     originalPrice: 50.50,
     category: 'men',
-    description: 'The most intense version of Stronger With You. Deep, addictive, and absolutely irresistible.',
+    description: 'The best SWY. Smells like sweet rum poured over roasted chestnuts, with vanilla and woods in the background, its a slightly more mature and grown up version of intensely, oh, and you wont smell like everyone else.',
     scentNotes: {
       top: ['Juniper', 'Pink Pepper'],
       heart: ['Lavender', 'Cinnamon'],
@@ -1205,7 +1205,7 @@ export const products: Product[] = [
     price: 13.99,
     originalPrice: 53.50,
     category: 'men',
-    description: 'The parfum concentration of the beloved Stronger With You. Richer, deeper, and longer-lasting.',
+    description: 'In my opinion this is the WORST stronger with you, i wont even describe it for you, its so bad i didnt bother stocking a 50ml version, just dont buy it.',
     scentNotes: {
       top: ['Pink Pepper', 'Violet'],
       heart: ['Toffee', 'Lavender'],
@@ -1248,7 +1248,7 @@ export const products: Product[] = [
     price: 16.00,
     originalPrice: 62.50,
     category: 'men',
-    description: 'An intense and seductive fragrance. Warm spices meet sweet notes for an addictive combination.',
+    description: 'This fragrance starts off slightly spicy and then becomes incredibly sweet, but not the juvenile or boring kind of sweet, this is a masculine kind of sweet thats playful but can be taken seriously at the same time. You smell like you go to the gym but meow back at cats at the same time. One of my favourite sweet fragrances.',
     scentNotes: {
       top: ['Cardamom'],
       heart: ['Toffee'],
@@ -1261,6 +1261,50 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 16.00, originalPrice: 62.50, inStock: true },
       { ml: 100, price: 23.99, originalPrice: 87.50, inStock: true },
+    ],
+  },
+  {
+    id: 'tonka-cola',
+    name: 'Tonka Cola',
+    brand: 'Mancera',
+    price: 16.49,
+    originalPrice: 74.50,
+    category: 'unisex',
+    description: 'This is a really weird fragrance because it smells like cola, specifically the cola gummies. It smells incredible, but i would struggle to think of a time to wear it. Opens with cherry and cinnamon sparkle, blends with cola and orange blossom in the heart, and finishes with creamy tonka bean, vanilla, and warm amber for a fun yet elegant scent.',
+    scentNotes: {
+      top: ['Cherry', 'Cinnamon', 'Bergamot'],
+      heart: ['Cola', 'Orange Blossom', 'Rose'],
+      base: ['Tonka Bean', 'Vanilla', 'Amber'],
+    },
+    accentColor: '#8B4513',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-tonka-cola-5797937.png?v=1768068488&width=800',
+    affiliateUrl: '/product/tonka-cola',
+    inStock: true,
+    variants: [
+      { ml: 60, price: 16.49, originalPrice: 74.50, inStock: true },
+      { ml: 120, price: 23.49, originalPrice: 109.50, inStock: true },
+    ],
+  },
+  {
+    id: 'xplicit-vanilla',
+    name: 'Xplicit Vanilla',
+    brand: 'Mancera',
+    price: 18.49,
+    originalPrice: 74.50,
+    category: 'unisex',
+    description: 'Xplicit Vanilla is a bold, earthy vanilla that blends creamy Mexican vanilla and dark chocolate with warm woods and amber for a rich, unisex, and addictive trail.',
+    scentNotes: {
+      top: ['Bergamot', 'Pink Pepper'],
+      heart: ['Vanilla', 'Dark Chocolate'],
+      base: ['Amber', 'Sandalwood', 'Musk'],
+    },
+    accentColor: '#6B3A2A',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-xplicit-vanilla-7508759.png?v=1768068488&width=800',
+    affiliateUrl: '/product/xplicit-vanilla',
+    inStock: true,
+    variants: [
+      { ml: 60, price: 18.49, originalPrice: 74.50, inStock: true },
+      { ml: 120, price: 25.49, originalPrice: 109.50, inStock: true },
     ],
   },
 ];
