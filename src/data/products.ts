@@ -107,7 +107,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B6914',
     image: 'https://profparfums.store/cdn/shop/files/mancera-amore-caffe-1050170.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/mancera-amore-caffe',
+    affiliateUrl: '/product/amore-caffe',
     inStock: false,
     featured: true,
     variants: [
@@ -130,7 +130,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4A76A',
     image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-althair-7480525.png?v=1768068548&width=800',
-    affiliateUrl: 'https://profparfums.store/products/parfums-de-marly-althair',
+    affiliateUrl: '/product/althair',
     inStock: true,
     featured: true,
     variants: [
@@ -153,7 +153,7 @@ export const products: Product[] = [
     },
     accentColor: '#C8D96F',
     image: 'https://profparfums.store/cdn/shop/files/mancera-aoud-lemon-mint-3807519.png?v=1767903748&width=800',
-    affiliateUrl: 'https://profparfums.store/products/mancera-aoud-lemon-mint',
+    affiliateUrl: '/product/aoud-lemon-mint',
     inStock: true,
     variants: [
       { ml: 60, price: 16.49, originalPrice: 74.50, inStock: true },
@@ -175,7 +175,7 @@ export const products: Product[] = [
     },
     accentColor: '#C9A050',
     image: 'https://profparfums.store/cdn/shop/files/mancera-aoud-vanille-5716076.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/mancera-aoud-vanille',
+    affiliateUrl: '/product/aoud-vanille',
     inStock: true,
     variants: [
       { ml: 60, price: 17.49, originalPrice: 74.50, inStock: true },
@@ -197,7 +197,7 @@ export const products: Product[] = [
     },
     accentColor: '#2D2D2D',
     image: 'https://profparfums.store/cdn/shop/files/creed-aventus-1140157.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/creed-aventus',
+    affiliateUrl: '/product/aventus',
     inStock: true,
     featured: true,
     variants: [
@@ -220,7 +220,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A1A2E',
     image: 'https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=800',
-    affiliateUrl: 'https://profparfums.store/products/creed-aventus-absolu',
+    affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
       { ml: 50, price: 25.99, originalPrice: 207.00, inStock: true },
@@ -265,7 +265,7 @@ export const products: Product[] = [
     },
     accentColor: '#4A1942',
     image: 'https://profparfums.store/cdn/shop/files/tom-ford-black-orchid-1912271.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/tom-ford-black-orchid',
+    affiliateUrl: '/product/black-orchid',
     inStock: true,
     variants: [
       { ml: 50, price: 18.99, originalPrice: 92.50, inStock: true },
@@ -355,7 +355,7 @@ export const products: Product[] = [
     },
     accentColor: '#B8860B',
     image: 'https://profparfums.store/cdn/shop/files/mancera-cedrat-boise-8376726.png?v=1768068547&width=800',
-    affiliateUrl: 'https://profparfums.store/products/mancera-cedrat-boise',
+    affiliateUrl: '/product/cedrat-boise',
     inStock: false,
     variants: [
       { ml: 60, price: 16.49, originalPrice: 74.50, inStock: false },
@@ -377,7 +377,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8A0BF',
     image: 'https://profparfums.store/cdn/shop/files/second_image_matched_dimensions_smaller.png?v=1768068548&width=800',
-    affiliateUrl: 'https://profparfums.store/products/parfums-de-marly-delina',
+    affiliateUrl: '/product/delina',
     inStock: true,
     featured: true,
     variants: [
@@ -400,7 +400,7 @@ export const products: Product[] = [
     },
     accentColor: '#DAA520',
     image: 'https://profparfums.store/cdn/shop/files/xerjoff-erba-gold-9327888.png?v=1768068546&width=800',
-    affiliateUrl: 'https://profparfums.store/products/xerjoff-erba-gold',
+    affiliateUrl: '/product/erba-gold',
     inStock: true,
     variants: [
       { ml: 50, price: 22.99, originalPrice: 63.97, inStock: true },
@@ -422,7 +422,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8B84B',
     image: 'https://profparfums.store/cdn/shop/files/xerjoff-erba-pura-8755466.png?v=1768068547&width=800',
-    affiliateUrl: 'https://profparfums.store/products/xerjoff-erba-pura',
+    affiliateUrl: '/product/erba-pura',
     inStock: true,
     variants: [
       { ml: 50, price: 24.99, originalPrice: 69.97, inStock: true },
@@ -444,7 +444,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4C72E',
     image: 'https://profparfums.store/cdn/shop/files/yellow_resized_to_red_d0d3284b-0228-4acd-8b37-3765a0c838d8.png?v=1768068547&width=800',
-    affiliateUrl: 'https://profparfums.store/products/versace-eros-flame',
+    affiliateUrl: '/product/eros-energy',
     inStock: true,
     variants: [
       { ml: 50, price: 16.99, originalPrice: 44.50, inStock: true },
@@ -466,7 +466,7 @@ export const products: Product[] = [
     },
     accentColor: '#C0392B',
     image: 'https://profparfums.store/cdn/shop/files/A2B6CEE1-52D5-4900-AE35-97311C0903DF_transparent_1.png?v=1768068490&width=800',
-    affiliateUrl: 'https://profparfums.store/products/versace-eros-flame-1',
+    affiliateUrl: '/product/eros-flame',
     inStock: true,
     variants: [
       { ml: 50, price: 16.99, originalPrice: 53.50, inStock: true },
@@ -488,7 +488,7 @@ export const products: Product[] = [
     },
     accentColor: '#1E90FF',
     image: 'https://profparfums.store/cdn/shop/files/versace-eros-2404971.png?v=1768068489&width=800',
-    affiliateUrl: 'https://profparfums.store/products/versace-eros',
+    affiliateUrl: '/product/eros-parfum',
     inStock: false,
     variants: [
       { ml: 50, price: 13.99, originalPrice: 44.50, inStock: false },
@@ -533,7 +533,7 @@ export const products: Product[] = [
     },
     accentColor: '#5DADE2',
     image: 'https://profparfums.store/cdn/shop/files/mancera-french-riviera-9959440.png?v=1768068547&width=800',
-    affiliateUrl: 'https://profparfums.store/products/mancera-french-riviera',
+    affiliateUrl: '/product/french-riviera',
     inStock: false,
     variants: [
       { ml: 60, price: 17.99, originalPrice: 74.50, inStock: false },
@@ -555,7 +555,7 @@ export const products: Product[] = [
     },
     accentColor: '#4A4A4A',
     image: 'https://profparfums.store/cdn/shop/files/dior-homme-intense-7103864.png?v=1768068547&width=800',
-    affiliateUrl: 'https://profparfums.store/products/dior-homme-intense',
+    affiliateUrl: '/product/homme-intense',
     inStock: true,
     variants: [
       { ml: 50, price: 20.99, originalPrice: 86.50, inStock: true },
@@ -600,7 +600,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B4513',
     image: 'https://profparfums.store/cdn/shop/files/lattafa-khamrah-6018164.png?v=1768068489&width=800',
-    affiliateUrl: 'https://profparfums.store/products/lattafa-khamrah',
+    affiliateUrl: '/product/khamrah-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -622,7 +622,7 @@ export const products: Product[] = [
     },
     accentColor: '#6B3A2A',
     image: 'https://profparfums.store/cdn/shop/files/lataffa-khamrah-qahwa-4225237.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/lattafa-khamrah-qahwa',
+    affiliateUrl: '/product/khamrah-qahwa',
     inStock: false,
     variants: [
       { ml: 100, price: 23.99, originalPrice: 66.97, inStock: false },
@@ -642,7 +642,7 @@ export const products: Product[] = [
     },
     accentColor: '#6A5ACD',
     image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-layton-9771652.png?v=1768068489&width=800',
-    affiliateUrl: 'https://profparfums.store/products/parfums-de-marly-layton',
+    affiliateUrl: '/product/layton',
     inStock: true,
     featured: true,
     variants: [
@@ -666,7 +666,7 @@ export const products: Product[] = [
     },
     accentColor: '#C0392B',
     image: 'https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=800',
-    affiliateUrl: 'https://profparfums.store/products/stronger-with-you-intensly',
+    affiliateUrl: '/product/stronger-with-you-intensely',
     inStock: true,
     featured: true,
     variants: [
@@ -690,7 +690,7 @@ export const products: Product[] = [
     },
     accentColor: '#003B5C',
     image: 'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800',
-    affiliateUrl: 'https://profparfums.store/products/jpg-le-beau-le-parfum',
+    affiliateUrl: '/product/le-beau-le-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -713,7 +713,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B0000',
     image: 'https://profparfums.store/cdn/shop/files/spicebomb.png?v=1768410549&width=800',
-    affiliateUrl: 'https://profparfums.store/products/spicebomb-extreme',
+    affiliateUrl: '/product/spicebomb-extreme',
     inStock: false,
     featured: true,
     variants: [
@@ -782,7 +782,7 @@ export const products: Product[] = [
     },
     accentColor: '#C58917',
     image: 'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/jean-paul-gaultier-le-male-elixir',
+    affiliateUrl: '/product/le-male-elixir',
     inStock: true,
     featured: true,
     variants: [
@@ -805,7 +805,7 @@ export const products: Product[] = [
     },
     accentColor: '#C9A96E',
     image: 'https://profparfums.store/cdn/shop/files/product_3_matched_1.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/azzaro-the-most-wanted-edp-intense-1',
+    affiliateUrl: '/product/the-most-wanted-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -828,7 +828,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/ysl-black-opium',
+    affiliateUrl: '/product/black-opium',
     inStock: true,
     variants: [
       { ml: 30, price: 12.99, originalPrice: 53.50, inStock: true },
@@ -851,7 +851,7 @@ export const products: Product[] = [
     },
     accentColor: '#000000',
     image: 'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800',
-    affiliateUrl: 'https://profparfums.store/products/xerjoff-alexandria-ii-anniversary',
+    affiliateUrl: '/product/le-male-le-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -875,7 +875,7 @@ export const products: Product[] = [
     },
     accentColor: '#7EC8E3',
     image: 'https://profparfums.store/cdn/shop/files/jpg_le_beau_edt_bg_removed_1_1.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/jpg-le-beau-edt',
+    affiliateUrl: '/product/le-beau-edt',
     inStock: false,
     variants: [
       { ml: 75, price: 12.99, originalPrice: 56.50, inStock: false },
@@ -897,7 +897,7 @@ export const products: Product[] = [
     },
     accentColor: '#DAA520',
     image: 'https://profparfums.store/cdn/shop/files/gold_resized_to_match_black_object_1.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/jpg-le-male-elixir-absolu',
+    affiliateUrl: '/product/le-male-elixir-absolu',
     inStock: true,
     variants: [
       { ml: 75, price: 16.49, originalPrice: 68.50, inStock: true },
@@ -919,7 +919,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=800',
-    affiliateUrl: 'https://profparfums.store/products/ysl-libre',
+    affiliateUrl: '/product/libre',
     inStock: true,
     featured: true,
     variants: [
@@ -943,7 +943,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4548E',
     image: 'https://profparfums.store/cdn/shop/files/yves-saint-laurent-mon-paris-7356496.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/yves-saint-laurent-mon-paris',
+    affiliateUrl: '/product/mon-paris',
     inStock: true,
     variants: [
       { ml: 30, price: 11.99, originalPrice: 37.96, inStock: true },
@@ -966,7 +966,7 @@ export const products: Product[] = [
     },
     accentColor: '#3A3A8C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-myslf-eau-de-parfum-1896916.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/ysl-myslf-le-parfum',
+    affiliateUrl: '/product/myself-edp',
     inStock: true,
     variants: [
       { ml: 40, price: 12.99, originalPrice: 41.96, inStock: true },
@@ -1035,7 +1035,7 @@ export const products: Product[] = [
     },
     accentColor: '#C19A5B',
     image: 'https://profparfums.store/cdn/shop/files/xerjoff-naxos-3352432.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/xerjoff-naxos',
+    affiliateUrl: '/product/naxos',
     inStock: true,
     featured: true,
     variants: [
@@ -1080,7 +1080,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/prada_resized_uniform_54c5598a-9a6e-47d7-8803-0a385e54b9c6.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/givenchy-gentleman-reserve-privee',
+    affiliateUrl: '/product/paradigme',
     inStock: true,
     variants: [
       { ml: 50, price: 17.99, originalPrice: 68.50, inStock: true },
@@ -1102,7 +1102,7 @@ export const products: Product[] = [
     },
     accentColor: '#B22222',
     image: 'https://profparfums.store/cdn/shop/files/mancera-red-tobacco-3937206.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/mancera-red-tobacco',
+    affiliateUrl: '/product/red-tobacco',
     inStock: true,
     variants: [
       { ml: 60, price: 17.49, originalPrice: 74.50, inStock: true },
@@ -1124,7 +1124,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C3E50',
     image: 'https://profparfums.store/cdn/shop/files/dior-sauvage-3604373.png?v=1768068546&width=800',
-    affiliateUrl: 'https://profparfums.store/products/dior-sauvage',
+    affiliateUrl: '/product/sauvage-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -1147,7 +1147,7 @@ export const products: Product[] = [
     },
     accentColor: '#C0C0C0',
     image: 'https://profparfums.store/cdn/shop/files/creed-silver-mountain-water-3465174.png?v=1768068487&width=800',
-    affiliateUrl: 'https://profparfums.store/products/creed-silver-mountain-water',
+    affiliateUrl: '/product/silver-mountain-water',
     inStock: true,
     variants: [
       { ml: 50, price: 23.99, inStock: true },
@@ -1169,7 +1169,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4A76A',
     image: 'https://profparfums.store/cdn/shop/files/1C01C9E5-CAD8-4745-8AED-B06A573E591B_converted_1.png?v=1768068489&width=800',
-    affiliateUrl: 'https://profparfums.store/products/stronger-with-you-amber',
+    affiliateUrl: '/product/stronger-with-you-amber',
     inStock: true,
     variants: [
       { ml: 50, price: 14.99, originalPrice: 53.50, inStock: true },
@@ -1191,7 +1191,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A1A',
     image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/stronger-with-you-absolute',
+    affiliateUrl: '/product/stronger-with-you-absolutely',
     inStock: true,
     variants: [
       { ml: 50, price: 16.99, originalPrice: 50.50, inStock: true },
@@ -1213,7 +1213,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B6EA8',
     image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-parfum-2174125.png?v=1768068547&width=800',
-    affiliateUrl: 'https://profparfums.store/products/stronger-with-you-parfum',
+    affiliateUrl: '/product/stronger-with-you-parfum',
     inStock: true,
     variants: [
       { ml: 50, price: 13.99, originalPrice: 53.50, inStock: true },
@@ -1256,7 +1256,7 @@ export const products: Product[] = [
     },
     accentColor: '#B8860B',
     image: 'https://profparfums.store/cdn/shop/files/product_2_matched_1.png?v=1768068488&width=800',
-    affiliateUrl: 'https://profparfums.store/products/azzaro-the-most-wanted-edp-intense',
+    affiliateUrl: '/product/the-most-wanted-edp-intense',
     inStock: true,
     variants: [
       { ml: 50, price: 16.00, originalPrice: 62.50, inStock: true },
