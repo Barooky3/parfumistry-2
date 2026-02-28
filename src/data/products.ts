@@ -1047,7 +1047,7 @@ export const products: Product[] = [
     id: 'pacific-chill',
     name: 'Pacific Chill',
     brand: 'Louis Vuitton',
-    price: 34.00,
+    price: 31.00,
     originalPrice: 225.00,
     category: 'unisex',
     description: 'A refreshing and invigorating scent inspired by the Pacific coast. Citrusy, aquatic, and deeply relaxing.',
@@ -1061,8 +1061,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
-      { ml: 50, price: 34.00, originalPrice: 225.00, inStock: true },
-      { ml: 100, price: 54.99, originalPrice: 290.00, inStock: true },
+      { ml: 50, price: 31.00, originalPrice: 225.00, inStock: true },
+      { ml: 100, price: 51.99, originalPrice: 290.00, inStock: true },
     ],
   },
   {
@@ -1224,7 +1224,7 @@ export const products: Product[] = [
     id: 'symphony',
     name: 'Symphony',
     brand: 'Louis Vuitton',
-    price: 36.99,
+    price: 33.99,
     originalPrice: 345.50,
     category: 'unisex',
     description: 'A harmonious and luxurious composition. Floral, fruity, and utterly refined.',
@@ -1238,7 +1238,7 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
     inStock: false,
     variants: [
-      { ml: 100, price: 36.99, originalPrice: 415.00, inStock: false },
+      { ml: 100, price: 33.99, originalPrice: 415.00, inStock: false },
     ],
   },
   {
