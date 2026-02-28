@@ -70,7 +70,7 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("pending_approval");
   const [paymentFilter, setPaymentFilter] = useState("All");
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [approvedOrders, setApprovedOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
@@ -334,12 +334,12 @@ export default function AdminOrders() {
   };
 
   const handleDismiss = async (orderId: string) => {
-    setActionLoading(orderId + "-dismiss");
+    setActionLoading(prev => new Set(prev).add(orderId + "-dismiss"));
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error("Not authenticated");
-        setActionLoading(null);
+        setActionLoading(prev => { const n = new Set(prev); n.delete(orderId + "-dismiss"); return n; });
         return;
       }
       const res = await fetch(
@@ -361,17 +361,17 @@ export default function AdminOrders() {
     } catch {
       toast.error("Failed to remove order");
     } finally {
-      setActionLoading(null);
+      setActionLoading(prev => { const n = new Set(prev); n.delete(orderId + "-dismiss"); return n; });
     }
   };
 
   const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof") => {
-    setActionLoading(orderId);
+    setActionLoading(prev => new Set(prev).add(orderId));
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error("Not authenticated");
-        setActionLoading(null);
+        setActionLoading(prev => { const n = new Set(prev); n.delete(orderId); return n; });
         return;
       }
 
@@ -414,7 +414,7 @@ export default function AdminOrders() {
     } catch {
       toast.error("Action failed");
     }
-    setActionLoading(null);
+    setActionLoading(prev => { const n = new Set(prev); n.delete(orderId); return n; });
   };
 
   // Edit helpers
@@ -967,15 +967,15 @@ export default function AdminOrders() {
                       size="sm"
                       className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={() => handleAction(order.id, "approve")}
-                      disabled={!!actionLoading}
+                      disabled={actionLoading.has(order.id)}
                     >
-                      <Check className="h-4 w-4 mr-1" /> {order.status === "approved" ? "Re-Approve" : "Approve"}
+                      <Check className="h-4 w-4 mr-1" /> {actionLoading.has(order.id) ? "Processing..." : order.status === "approved" ? "Re-Approve" : "Approve"}
                     </Button>
                     <Button
                       size="sm"
                       variant="destructive"
                       onClick={() => { setRejectingOrder(order); setRejectionNotes(""); }}
-                      disabled={!!actionLoading}
+                      disabled={actionLoading.has(order.id)}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
                     </Button>
@@ -983,7 +983,7 @@ export default function AdminOrders() {
                       size="sm"
                       variant="outline"
                       onClick={() => handleAction(order.id, "request_proof")}
-                      disabled={!!actionLoading}
+                      disabled={actionLoading.has(order.id)}
                     >
                       <Mail className="h-4 w-4 mr-1" /> Request Proof
                     </Button>
@@ -992,9 +992,9 @@ export default function AdminOrders() {
                       variant="ghost"
                       className="text-muted-foreground"
                       onClick={() => handleDismiss(order.id)}
-                      disabled={!!actionLoading}
+                      disabled={actionLoading.has(order.id + "-dismiss")}
                     >
-                      <Trash2 className="h-4 w-4 mr-1" /> Remove
+                      <Trash2 className="h-4 w-4 mr-1" /> {actionLoading.has(order.id + "-dismiss") ? "Removing..." : "Remove"}
                     </Button>
                   </div>
                 </div>
