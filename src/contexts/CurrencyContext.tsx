@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 
 export type Currency = 
   | 'EUR' | 'GBP' | 'USD' | 'CHF' | 'SEK' | 'DKK' | 'NOK' | 'ISK'
-  | 'PLN' | 'CZK' | 'HUF' | 'RON' | 'BGN' | 'HRK' | 'TRY' | 'RUB' | 'UAH'
+  | 'PLN' | 'CZK' | 'HUF' | 'RON' | 'HRK' | 'TRY' | 'RUB' | 'UAH'
   | 'CAD' | 'MXN' | 'BRL' | 'ARS' | 'CLP' | 'COP' | 'PEN'
   | 'JPY' | 'KRW' | 'CNY' | 'INR' | 'THB' | 'VND' | 'IDR' | 'MYR' | 'SGD' | 'PHP' | 'AED' | 'SAR'
   | 'AUD' | 'NZD' | 'ZAR' | 'EGP' | 'MAD' | 'NGN';
@@ -27,7 +27,7 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: 'CZK', symbol: 'Kč', rate: 25.2, locale: 'cs-CZ' },
   { code: 'HUF', symbol: 'Ft', rate: 395, locale: 'hu-HU' },
   { code: 'RON', symbol: 'lei', rate: 4.97, locale: 'ro-RO' },
-  { code: 'BGN', symbol: 'лв', rate: 1.96, locale: 'bg-BG' },
+  
   { code: 'HRK', symbol: 'kn', rate: 7.53, locale: 'hr-HR' },
   { code: 'ISK', symbol: 'kr', rate: 149, locale: 'is-IS' },
   { code: 'TRY', symbol: '₺', rate: 34.5, locale: 'tr-TR' },
@@ -75,7 +75,7 @@ const COUNTRY_CODE_CURRENCY_MAP: Record<string, Currency> = {
   RS: 'EUR', XK: 'EUR', ME: 'EUR', BA: 'EUR', AD: 'EUR', MC: 'EUR', SM: 'EUR',
   // Europe - other currencies
   GB: 'GBP', CH: 'CHF', SE: 'SEK', DK: 'DKK', NO: 'NOK', IS: 'ISK',
-  PL: 'PLN', CZ: 'CZK', HU: 'HUF', RO: 'RON', BG: 'BGN',
+  PL: 'PLN', CZ: 'CZK', HU: 'HUF', RO: 'RON', BG: 'EUR',
   TR: 'TRY', RU: 'RUB', UA: 'UAH',
   // North America
   US: 'USD', CA: 'CAD', MX: 'MXN',
@@ -102,7 +102,7 @@ export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Switzerland': 'CHF',
   'Sweden': 'SEK', 'Denmark': 'DKK', 'Norway': 'NOK', 'Iceland': 'ISK',
   'Poland': 'PLN', 'Czech Republic': 'CZK', 'Hungary': 'HUF',
-  'Romania': 'RON', 'Bulgaria': 'BGN',
+  'Romania': 'RON', 'Bulgaria': 'EUR',
   'Serbia': 'EUR',
   'Kosovo': 'EUR', 'Belarus': 'EUR', 'Georgia': 'EUR', 'Armenia': 'EUR', 'Azerbaijan': 'EUR', 'San Marino': 'EUR',
   'Turkey': 'TRY', 'Russia': 'RUB', 'Ukraine': 'UAH',
