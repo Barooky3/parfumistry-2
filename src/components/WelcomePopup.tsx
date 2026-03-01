@@ -70,7 +70,7 @@ export const WelcomePopup = () => {
             size="lg"
             className="w-full h-14 text-xs font-medium tracking-[0.15em] uppercase rounded-none"
           >
-            Create Account & Get 10% Off
+            Create Account & Get 15% Off
           </Button>
 
           <button
