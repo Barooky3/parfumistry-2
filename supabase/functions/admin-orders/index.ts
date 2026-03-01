@@ -88,20 +88,11 @@ serve(async (req) => {
       }
 
       if (orderAction === "approve") {
-        // Atomic check-and-update to prevent duplicate invoices
-        const { data: updated } = await adminClient
+        // Update status to approved (allow re-approval with duplicate emails)
+        await adminClient
           .from("orders")
           .update({ status: "approved", email_sent: true })
-          .eq("id", orderId)
-          .eq("email_sent", false)
-          .select("id")
-          .maybeSingle();
-
-        if (!updated) {
-          return new Response(JSON.stringify({ success: true, message: "Order already approved — no duplicate emails sent." }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
+          .eq("id", orderId);
 
         // Send confirmation to customer via send-order-confirmation function
         const confRes = await fetch(supabaseUrl + "/functions/v1/send-order-confirmation", {
