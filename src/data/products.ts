@@ -919,7 +919,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=800',
-    affiliateUrl: '/product/libre',
+    affiliateUrl: 'https://litbuy.com/product/0/873128790811?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
     variants: [
@@ -943,7 +943,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4548E',
     image: 'https://profparfums.store/cdn/shop/files/yves-saint-laurent-mon-paris-7356496.png?v=1768068487&width=800',
-    affiliateUrl: '/product/mon-paris',
+    affiliateUrl: 'https://litbuy.com/product/0/762497810755?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
       { ml: 30, price: 11.99, originalPrice: 37.96, inStock: true },

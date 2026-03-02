@@ -87,6 +87,8 @@ const PRODUCT_LINKS: Record<string, string> = {
   "prada-paradoxe": "https://litbuy.com/product/0/953992936772?inviteCode=4W9SCOLDU",
   "phantom": "https://litbuy.com/product/0/966979827880?inviteCode=4W9SCOLDU",
   "ysl-y": "https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU",
+  "libre": "https://litbuy.com/product/0/873128790811?inviteCode=4W9SCOLDU",
+  "mon-paris": "https://litbuy.com/product/0/762497810755?inviteCode=4W9SCOLDU",
   "xerjoff": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7662173327&affcode=c5v3b",
   "eros": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7665241752&affcode=c5v3b",
   "dior": "https://m.kakobuy.com/pages/goods-detail/goods-detail?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7661870378&affcode=c5v3b",
@@ -112,6 +114,8 @@ function getProductLink(name: string, brand: string, itemAffiliateUrl?: string):
   if (n.includes("prada paradoxe") || n.includes("paradoxe")) return PRODUCT_LINKS["prada-paradoxe"];
   if (n.includes("phantom")) return PRODUCT_LINKS["phantom"];
   if (n.includes("ysl y ") || n.includes("y edp") || n.includes("y eau de parfum")) return PRODUCT_LINKS["ysl-y"];
+  if (n.includes("libre")) return PRODUCT_LINKS["libre"];
+  if (n.includes("mon paris")) return PRODUCT_LINKS["mon-paris"];
   if (n.includes("aventus")) return PRODUCT_LINKS["aventus"];
   if (n.includes("born in roma intense")) return PRODUCT_LINKS["born-in-roma-intense"];
   if (n.includes("born in roma green stravaganza")) return PRODUCT_LINKS["born-in-roma-green-stravaganza"];
@@ -169,7 +173,6 @@ function buildItemRow(item: OrderItem, origin: string, noLinks: boolean = false)
   const itemTotal = (item.price * item.quantity).toFixed(2);
 
   if (noLinks) {
-    // Rewarble orders: images only, no links
     return [
       '<tr>',
       '<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">',
@@ -206,10 +209,111 @@ function buildItemRow(item: OrderItem, origin: string, noLinks: boolean = false)
     '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">' + item.brand + '</div>',
     '<a href="' + productLink + '" style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; display: block; text-decoration: none;">' + item.name + mlLabel + '</a>',
     '<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
-    '<a href="' + productLink + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500;">&#128279; View your seller link</a>' + bonusHtml,
     '</td></tr></table>',
     '</td></tr>',
   ].join("\n");
+}
+
+// Build a single row for a group of items sharing the same seller link
+function buildGroupedItemRow(items: OrderItem[], origin: string, sellerLink: string): string {
+  // Build images side by side
+  const imageCells = items.map((item) => {
+    const rawImage = item.image.startsWith("http")
+      ? item.image
+      : origin + (item.image.startsWith("/") ? "" : "/") + item.image;
+    const imageUrl = resolveProductImage(item.name, rawImage);
+    return '<td style="padding-right: 8px; vertical-align: top;">' +
+      '<a href="' + sellerLink + '" style="text-decoration: none;">' +
+      '<img src="' + imageUrl + '" alt="' + item.name + '" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />' +
+      '</a></td>';
+  }).join("");
+
+  // Build product details stacked
+  const detailRows = items.map((item) => {
+    const mlLabel = item.selectedMl ? " \u2014 " + item.selectedMl + "ml" : "";
+    const itemTotal = (item.price * item.quantity).toFixed(2);
+    return '<div style="margin-bottom: 8px;">' +
+      '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 2px;">' + item.brand + '</div>' +
+      '<a href="' + sellerLink + '" style="font-size: 15px; font-weight: 500; color: #1a1a1a; display: block; text-decoration: none; margin-bottom: 2px;">' + item.name + mlLabel + '</a>' +
+      '<div style="font-size: 13px; color: #666;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>' +
+      '</div>';
+  }).join("");
+
+  // Collect all bundle bonus links from all items in the group
+  const allBonusLinks = items.flatMap((item) => getBundleBonusLinks(item.name));
+  const bonusHtml = allBonusLinks.map((b) =>
+    '<a href="' + b.url + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500; display: inline-block; margin-left: 12px;">&#128279; ' + b.label + '</a>'
+  ).join("");
+
+  return [
+    '<tr>',
+    '<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">',
+    '<table cellpadding="0" cellspacing="0" border="0">',
+    '<tr>' + imageCells + '</tr>',
+    '</table>',
+    '<div style="padding-top: 12px; font-family: Helvetica Neue, Arial, sans-serif;">',
+    detailRows,
+    '<a href="' + sellerLink + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500;">&#128279; View your seller link</a>' + bonusHtml,
+    '</div>',
+    '</td></tr>',
+  ].join("\n");
+}
+
+function buildItemsHtml(items: OrderItem[], origin: string, noLinks: boolean = false): string {
+  if (noLinks) {
+    return items.map((item) => buildItemRow(item, origin, true)).join("");
+  }
+
+  // Group items by their resolved seller link
+  const groups: Map<string, OrderItem[]> = new Map();
+  const groupOrder: string[] = [];
+  
+  for (const item of items) {
+    const link = getProductLink(item.name, item.brand, item.affiliateUrl);
+    if (!groups.has(link)) {
+      groups.set(link, []);
+      groupOrder.push(link);
+    }
+    groups.get(link)!.push(item);
+  }
+
+  return groupOrder.map((link) => {
+    const groupItems = groups.get(link)!;
+    if (groupItems.length === 1) {
+      // Single item — render normally with its own "View your seller link"
+      const item = groupItems[0];
+      const productLink = link;
+      const rawImage = item.image.startsWith("http") ? item.image : origin + (item.image.startsWith("/") ? "" : "/") + item.image;
+      const imageUrl = resolveProductImage(item.name, rawImage);
+      const mlLabel = item.selectedMl ? " \u2014 " + item.selectedMl + "ml" : "";
+      const itemTotal = (item.price * item.quantity).toFixed(2);
+      const bonusLinks = getBundleBonusLinks(item.name);
+      const bonusHtml = bonusLinks.map((b) =>
+        '<a href="' + b.url + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500; display: inline-block; margin-left: 12px;">&#128279; ' + b.label + '</a>'
+      ).join("");
+
+      return [
+        '<tr>',
+        '<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">',
+        '<table cellpadding="0" cellspacing="0" border="0"><tr>',
+        '<td style="width: 80px; vertical-align: top;">',
+        '<a href="' + productLink + '" style="text-decoration: none;">',
+        '<img src="' + imageUrl + '" alt="' + item.name + '" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />',
+        '</a>',
+        '</td>',
+        '<td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">',
+        '<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">' + item.brand + '</div>',
+        '<a href="' + productLink + '" style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; display: block; text-decoration: none;">' + item.name + mlLabel + '</a>',
+        '<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ' + item.quantity + ' &middot; &euro;' + itemTotal + '</div>',
+        '<a href="' + productLink + '" style="font-size: 13px; color: #c9a96e; text-decoration: underline; font-weight: 500;">&#128279; View your seller link</a>' + bonusHtml,
+        '</td></tr></table>',
+        '</td></tr>',
+      ].join("\n");
+    } else {
+      // Multiple items with same link — group them
+      return buildGroupedItemRow(groupItems, origin, link);
+    }
+  }).join("");
 }
 
 function buildEmailHtml(
@@ -482,7 +586,7 @@ serve(async (req) => {
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
     const origin = "https://profparfums.lovable.app";
-    const itemsHtml = normalizedItems.map((item: OrderItem) => buildItemRow(item, origin, false)).join("");
+    const itemsHtml = buildItemsHtml(normalizedItems, origin, false);
 
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, false, discountCode, discountPercent);
 
