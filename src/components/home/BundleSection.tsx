@@ -14,17 +14,7 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
   const { user } = useAuth();
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || '');
   const paddingOverride = useProductPadding(bundle.id);
-  const { containerStyle, imageScale, hasOverride, negativeInsets } = computePaddingAndScale(paddingOverride);
-
-  const bundleWrapperStyle: React.CSSProperties = {
-    transform: `scale(${imageScale})`,
-    ...(negativeInsets && {
-      top: negativeInsets.top ? `${negativeInsets.top}rem` : undefined,
-      right: negativeInsets.right ? `${negativeInsets.right}rem` : undefined,
-      bottom: negativeInsets.bottom ? `${negativeInsets.bottom}rem` : undefined,
-      left: negativeInsets.left ? `${negativeInsets.left}rem` : undefined,
-    }),
-  };
+  const { wrapperStyle, hasOverride } = computePaddingAndScale(paddingOverride);
 
   return (
     <motion.div 
@@ -38,14 +28,13 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
       <Link to={`/product/${bundle.id}`} className="block">
         <div 
           className={cn(
-            "aspect-square bg-secondary overflow-hidden flex items-center justify-center relative",
+            "aspect-square bg-secondary flex items-center justify-center relative",
             !hasOverride && bundle.imagePadding
           )}
-          style={containerStyle}
         >
           {isAdmin && <PaddingAdjuster productId={bundle.id} productName={bundle.name} />}
           {bundle.bundleImages && bundle.bundleImages.length > 0 ? (
-            <div className="relative w-full h-full" style={hasOverride ? bundleWrapperStyle : undefined}>
+            <div className="relative w-full h-full" style={wrapperStyle || undefined}>
               <img
                 src={bundle.bundleImages[0]}
                 alt={`${bundle.name} item 1`}
@@ -73,7 +62,7 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
                 "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
                 hasOverride && "object-contain"
               )}
-              style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
+              style={wrapperStyle || undefined}
               loading="lazy"
             />
           )}
