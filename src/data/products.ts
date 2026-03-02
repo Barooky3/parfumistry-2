@@ -94,7 +94,7 @@ export const products: Product[] = [
     id: 'jpg-bundle',
     name: 'Fragrance Bundle "The JPG Collection"',
     brand: 'Profparfums',
-    price: 29.99,
+    price: 23.99,
     originalPrice: 120.00,
     category: 'bundle',
     description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion.',
@@ -113,8 +113,8 @@ export const products: Product[] = [
       { name: 'Le Beau Le Parfum', topNote: 'Coconut', heartNote: 'Tonka Bean', baseNote: 'Sandalwood', accentColor: '#003B5C' },
     ],
     variants: [
-      { ml: 50, price: 29.99, originalPrice: 120.00, inStock: true },
-      { ml: 100, price: 34.99, originalPrice: 210.00, inStock: true },
+      { ml: 75, price: 23.99, originalPrice: 120.00, inStock: true, label: 'All 75ml' },
+      { ml: 125, price: 29.99, originalPrice: 210.00, inStock: true, label: 'All 125ml' },
     ],
   },
 

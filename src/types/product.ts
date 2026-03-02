@@ -5,6 +5,7 @@ export interface ProductVariant {
   price: number;
   originalPrice?: number;
   inStock: boolean;
+  label?: string;
 }
 
 export interface BundleFragrance {
