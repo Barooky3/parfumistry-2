@@ -68,20 +68,24 @@ export const computePaddingAndScale = (override: PaddingOverride | null) => {
   const hasAny = override.padding_top !== 0 || override.padding_right !== 0 || override.padding_bottom !== 0 || override.padding_left !== 0 || override.scale !== 1;
   if (!hasAny) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
 
-  const posTop = Math.max(0, override.padding_top);
-  const posRight = Math.max(0, override.padding_right);
-  const posBottom = Math.max(0, override.padding_bottom);
-  const posLeft = Math.max(0, override.padding_left);
+  // Allow all values (positive = padding, negative = negative margin effect via inset)
+  const containerStyle: React.CSSProperties = {
+    paddingTop: `${Math.max(0, override.padding_top)}rem`,
+    paddingRight: `${Math.max(0, override.padding_right)}rem`,
+    paddingBottom: `${Math.max(0, override.padding_bottom)}rem`,
+    paddingLeft: `${Math.max(0, override.padding_left)}rem`,
+  };
 
   // Use the dedicated scale value directly
   const imageScale = override.scale;
 
-  const containerStyle = (posTop > 0 || posRight > 0 || posBottom > 0 || posLeft > 0) ? {
-    paddingTop: `${posTop}rem`,
-    paddingRight: `${posRight}rem`,
-    paddingBottom: `${posBottom}rem`,
-    paddingLeft: `${posLeft}rem`,
-  } : undefined;
+  // For negative values, store them separately so components can use them
+  const negativeInsets = {
+    top: Math.min(0, override.padding_top),
+    right: Math.min(0, override.padding_right),
+    bottom: Math.min(0, override.padding_bottom),
+    left: Math.min(0, override.padding_left),
+  };
 
-  return { containerStyle, imageScale, hasOverride: true };
+  return { containerStyle, imageScale, hasOverride: true, negativeInsets };
 };
