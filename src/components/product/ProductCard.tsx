@@ -137,18 +137,31 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               >
                 {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
-                  <div className="flex items-end justify-center gap-0.5 px-2 pt-4 pb-1 h-full">
-                    {product.bundleImages.map((img, imgIdx) => (
-                      <motion.img
-                        key={imgIdx}
-                        src={img}
-                        alt={`${product.name} item ${imgIdx + 1}`}
-                        className="h-[65%] w-auto object-contain drop-shadow-md"
-                        loading="lazy"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      />
-                    ))}
+                  <div className="relative w-full h-full">
+                    <motion.img
+                      src={product.bundleImages[0]}
+                      alt={`${product.name} item 1`}
+                      className="absolute top-[8%] left-[2%] h-[60%] w-auto object-contain drop-shadow-md z-10"
+                      loading="lazy"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <motion.img
+                      src={product.bundleImages[2]}
+                      alt={`${product.name} item 3`}
+                      className="absolute top-[8%] right-[2%] h-[60%] w-auto object-contain drop-shadow-md z-10"
+                      loading="lazy"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <motion.img
+                      src={product.bundleImages[1]}
+                      alt={`${product.name} item 2`}
+                      className="absolute bottom-[4%] left-1/2 -translate-x-1/2 h-[65%] w-auto object-contain drop-shadow-lg z-20"
+                      loading="lazy"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.5 }}
+                    />
                   </div>
                 ) : (
                   <motion.img
