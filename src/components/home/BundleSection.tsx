@@ -24,7 +24,7 @@ export const BundleSection = () => {
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {bundles.map((bundle, index) => (
             <motion.div 
               key={bundle.id}
@@ -35,13 +35,27 @@ export const BundleSection = () => {
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
               <Link to={`/product/${bundle.id}`} className="block">
-                <div className="aspect-square bg-secondary overflow-hidden">
-                  <img
-                    src={bundle.image}
-                    alt={bundle.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
+                <div className="aspect-square bg-secondary overflow-hidden flex items-center justify-center">
+                  {bundle.bundleImages && bundle.bundleImages.length > 0 ? (
+                    <div className="flex items-end justify-center gap-1 px-3 pt-6 pb-2 h-full">
+                      {bundle.bundleImages.map((img, imgIdx) => (
+                        <img
+                          key={imgIdx}
+                          src={img}
+                          alt={`${bundle.name} item ${imgIdx + 1}`}
+                          className="h-[70%] w-auto object-contain drop-shadow-md"
+                          loading="lazy"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <img
+                      src={bundle.image}
+                      alt={bundle.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  )}
                 </div>
                 
                 <div className="p-5">

@@ -157,12 +157,18 @@ const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
     { label: "Stronger With You Absolutely", url: PRODUCT_LINKS["stronger-with-you-absolutely"] },
     { label: "1 Million Elixir", url: PRODUCT_LINKS["1-million-elixir"] },
   ],
+  "jpg-collection": [
+    { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["le-male-elixir"] },
+    { label: "JPG Le Male Le Parfum", url: PRODUCT_LINKS["jean-paul-gaultier"] },
+    { label: "JPG Le Beau Le Parfum", url: PRODUCT_LINKS["jean-paul-gaultier"] },
+  ],
 };
 
 function getBundleBonusLinks(name: string): { label: string; url: string }[] {
   const n = name.toLowerCase();
   if (n.includes("evening sweetheart")) return BUNDLE_BONUS_LINKS["evening-sweetheart"];
   if (n.includes("young playboy")) return BUNDLE_BONUS_LINKS["young-playboy"];
+  if (n.includes("jpg") || n.includes("jpg collection")) return BUNDLE_BONUS_LINKS["jpg-collection"];
   return [];
 }
 

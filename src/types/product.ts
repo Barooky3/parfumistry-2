@@ -38,7 +38,8 @@ export interface Product {
   variants?: ProductVariant[]; // ML options
   isBundle?: boolean;
   bundleContents?: BundleFragrance[]; // Fragrances in a bundle
-  imagePadding?: string; // Tailwind padding class for image sizing
+  imagePadding?: string;
+  bundleImages?: string[]; // Multiple product images for composite bundle display
 }
 
 export interface CartItem {

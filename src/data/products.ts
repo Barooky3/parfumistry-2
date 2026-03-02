@@ -90,6 +90,33 @@ export const products: Product[] = [
       { ml: 100, price: 36.99, originalPrice: 225.42, inStock: true },
     ],
   },
+  {
+    id: 'jpg-bundle',
+    name: 'Fragrance Bundle "The JPG Collection"',
+    brand: 'Profparfums',
+    price: 29.99,
+    originalPrice: 120.00,
+    category: 'bundle',
+    description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion. Edit this description.',
+    image: '',
+    bundleImages: [
+      'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800',
+      'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800',
+      'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800',
+    ],
+    affiliateUrl: '/product/jpg-bundle',
+    inStock: true,
+    isBundle: true,
+    bundleContents: [
+      { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917', affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU' },
+      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
+      { name: 'Le Beau Le Parfum', topNote: 'Coconut', heartNote: 'Tonka Bean', baseNote: 'Sandalwood', accentColor: '#003B5C' },
+    ],
+    variants: [
+      { ml: 50, price: 29.99, originalPrice: 120.00, inStock: true },
+      { ml: 100, price: 34.99, originalPrice: 210.00, inStock: true },
+    ],
+  },
 
   // ===== FRAGRANCES =====
   {

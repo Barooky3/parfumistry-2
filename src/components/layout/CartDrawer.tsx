@@ -61,11 +61,19 @@ export const CartDrawer = () => {
                         onClick={closeCart}
                         className={cn("w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden", item.product.imagePadding && "p-1")}
                       >
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className={cn("w-full h-full", item.product.imagePadding ? "object-contain" : "object-cover")}
-                        />
+                        {item.product.bundleImages && item.product.bundleImages.length > 0 ? (
+                          <div className="flex items-end justify-center gap-0.5 h-full p-1">
+                            {item.product.bundleImages.map((img, imgIdx) => (
+                              <img key={imgIdx} src={img} alt="" className="h-[70%] w-auto object-contain" />
+                            ))}
+                          </div>
+                        ) : (
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className={cn("w-full h-full", item.product.imagePadding ? "object-contain" : "object-cover")}
+                          />
+                        )}
                       </Link>
 
                       <div className="flex-1 min-w-0">

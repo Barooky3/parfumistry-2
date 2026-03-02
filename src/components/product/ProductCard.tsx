@@ -136,16 +136,32 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                 style={containerStyle}
               >
                 {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
-                <motion.img
-                  src={product.image}
-                  alt={product.name}
-                  className={cn("w-full", (product.imagePadding || hasOverride) ? "h-full object-contain object-bottom" : "h-full object-cover")}
-                  loading="lazy"
-                  initial={{ scale: imageScale }}
-                  animate={{ scale: imageScale }}
-                  whileHover={{ scale: 1.08 * imageScale }}
-                  transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                />
+                {product.bundleImages && product.bundleImages.length > 0 ? (
+                  <div className="flex items-end justify-center gap-0.5 px-2 pt-4 pb-1 h-full">
+                    {product.bundleImages.map((img, imgIdx) => (
+                      <motion.img
+                        key={imgIdx}
+                        src={img}
+                        alt={`${product.name} item ${imgIdx + 1}`}
+                        className="h-[65%] w-auto object-contain drop-shadow-md"
+                        loading="lazy"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <motion.img
+                    src={product.image}
+                    alt={product.name}
+                    className={cn("w-full", (product.imagePadding || hasOverride) ? "h-full object-contain object-bottom" : "h-full object-cover")}
+                    loading="lazy"
+                    initial={{ scale: imageScale }}
+                    animate={{ scale: imageScale }}
+                    whileHover={{ scale: 1.08 * imageScale }}
+                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  />
+                )}
               </div>
             );
           })()}
