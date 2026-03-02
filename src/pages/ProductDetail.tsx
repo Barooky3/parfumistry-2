@@ -94,7 +94,16 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.4 }}
           >
             {(() => {
-              const { containerStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
+              const { containerStyle, imageScale, hasOverride, negativeInsets } = computePaddingAndScale(paddingOverride);
+              const bundleWrapperStyle: React.CSSProperties = {
+                transform: `scale(${imageScale})`,
+                ...(negativeInsets && {
+                  top: negativeInsets.top ? `${negativeInsets.top}rem` : undefined,
+                  right: negativeInsets.right ? `${negativeInsets.right}rem` : undefined,
+                  bottom: negativeInsets.bottom ? `${negativeInsets.bottom}rem` : undefined,
+                  left: negativeInsets.left ? `${negativeInsets.left}rem` : undefined,
+                }),
+              };
               return (
                 <div 
                   className={cn(
@@ -105,7 +114,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
-                    <div className="relative w-full h-full">
+                    <div className="relative w-full h-full" style={hasOverride ? bundleWrapperStyle : undefined}>
                       <img
                         src={product.bundleImages[0]}
                         alt={`${product.name} item 1`}

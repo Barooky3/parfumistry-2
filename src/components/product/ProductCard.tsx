@@ -126,7 +126,16 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           onClick={handleCardClick}
         >
           {(() => {
-            const { containerStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
+            const { containerStyle, imageScale, hasOverride, negativeInsets } = computePaddingAndScale(paddingOverride);
+            const bundleWrapperStyle: React.CSSProperties = {
+              transform: `scale(${imageScale})`,
+              ...(negativeInsets && {
+                top: negativeInsets.top ? `${negativeInsets.top}rem` : undefined,
+                right: negativeInsets.right ? `${negativeInsets.right}rem` : undefined,
+                bottom: negativeInsets.bottom ? `${negativeInsets.bottom}rem` : undefined,
+                left: negativeInsets.left ? `${negativeInsets.left}rem` : undefined,
+              }),
+            };
             return (
               <div 
                 className={cn(
@@ -137,7 +146,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               >
                 {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
-                  <div className="relative w-full h-full">
+                  <div className="relative w-full h-full" style={hasOverride ? bundleWrapperStyle : undefined}>
                     <motion.img
                       src={product.bundleImages[0]}
                       alt={`${product.name} item 1`}
