@@ -97,7 +97,7 @@ export const products: Product[] = [
     price: 29.99,
     originalPrice: 120.00,
     category: 'bundle',
-    description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion. Edit this description.',
+    description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion.',
     image: '',
     bundleImages: [
       'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800',
