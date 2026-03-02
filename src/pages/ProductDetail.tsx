@@ -130,7 +130,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       <img
                         src={product.bundleImages[1]}
                         alt={`${product.name} item 2`}
-                        className="absolute bottom-[6%] left-[48%] -translate-x-1/2 h-[62%] w-auto object-contain drop-shadow-lg z-20"
+                        className="absolute bottom-[6%] left-1/2 -translate-x-1/2 h-[62%] w-auto object-contain drop-shadow-lg z-20"
                         loading="eager"
                       />
                     </div>
