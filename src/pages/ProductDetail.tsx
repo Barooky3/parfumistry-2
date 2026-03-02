@@ -105,16 +105,25 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
-                    <div className="flex items-end justify-center gap-2 px-4 pt-8 pb-4 h-full">
-                      {product.bundleImages.map((img, imgIdx) => (
-                        <img
-                          key={imgIdx}
-                          src={img}
-                          alt={`${product.name} item ${imgIdx + 1}`}
-                          className="h-[75%] w-auto object-contain drop-shadow-md"
-                          loading="eager"
-                        />
-                      ))}
+                    <div className="relative w-full h-full">
+                      <img
+                        src={product.bundleImages[0]}
+                        alt={`${product.name} item 1`}
+                        className="absolute top-[8%] left-[4%] h-[58%] w-auto object-contain drop-shadow-md z-10"
+                        loading="eager"
+                      />
+                      <img
+                        src={product.bundleImages[2]}
+                        alt={`${product.name} item 3`}
+                        className="absolute top-[8%] right-[4%] h-[58%] w-auto object-contain drop-shadow-md z-10"
+                        loading="eager"
+                      />
+                      <img
+                        src={product.bundleImages[1]}
+                        alt={`${product.name} item 2`}
+                        className="absolute bottom-[6%] left-1/2 -translate-x-1/2 h-[62%] w-auto object-contain drop-shadow-lg z-20"
+                        loading="eager"
+                      />
                     </div>
                   ) : (
                     <img 
