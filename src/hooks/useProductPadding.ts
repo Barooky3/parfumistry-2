@@ -63,29 +63,22 @@ export const useProductPadding = (productId: string): PaddingOverride | null => 
 };
 
 export const computePaddingAndScale = (override: PaddingOverride | null) => {
-  if (!override) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
+  if (!override) return { wrapperStyle: undefined, imageScale: 1, hasOverride: false };
   
   const hasAny = override.padding_top !== 0 || override.padding_right !== 0 || override.padding_bottom !== 0 || override.padding_left !== 0 || override.scale !== 1;
-  if (!hasAny) return { containerStyle: undefined, imageScale: 1, hasOverride: false };
+  if (!hasAny) return { wrapperStyle: undefined, imageScale: 1, hasOverride: false };
 
-  // Allow all values (positive = padding, negative = negative margin effect via inset)
-  const containerStyle: React.CSSProperties = {
-    paddingTop: `${Math.max(0, override.padding_top)}rem`,
-    paddingRight: `${Math.max(0, override.padding_right)}rem`,
-    paddingBottom: `${Math.max(0, override.padding_bottom)}rem`,
-    paddingLeft: `${Math.max(0, override.padding_left)}rem`,
-  };
-
-  // Use the dedicated scale value directly
   const imageScale = override.scale;
 
-  // For negative values, store them separately so components can use them
-  const negativeInsets = {
-    top: Math.min(0, override.padding_top),
-    right: Math.min(0, override.padding_right),
-    bottom: Math.min(0, override.padding_bottom),
-    left: Math.min(0, override.padding_left),
+  // Use transform to translate + scale the content wrapper
+  // Padding values are treated as translation offsets (positive = inward, negative = outward)
+  const translateX = (override.padding_left - override.padding_right) / 2;
+  const translateY = (override.padding_top - override.padding_bottom) / 2;
+
+  const wrapperStyle: React.CSSProperties = {
+    transform: `scale(${imageScale}) translate(${translateX}rem, ${translateY}rem)`,
+    transformOrigin: 'center center',
   };
 
-  return { containerStyle, imageScale, hasOverride: true, negativeInsets };
+  return { wrapperStyle, imageScale, hasOverride: true };
 };

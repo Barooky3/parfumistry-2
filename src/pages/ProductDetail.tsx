@@ -94,27 +94,17 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.4 }}
           >
             {(() => {
-              const { containerStyle, imageScale, hasOverride, negativeInsets } = computePaddingAndScale(paddingOverride);
-              const bundleWrapperStyle: React.CSSProperties = {
-                transform: `scale(${imageScale})`,
-                ...(negativeInsets && {
-                  top: negativeInsets.top ? `${negativeInsets.top}rem` : undefined,
-                  right: negativeInsets.right ? `${negativeInsets.right}rem` : undefined,
-                  bottom: negativeInsets.bottom ? `${negativeInsets.bottom}rem` : undefined,
-                  left: negativeInsets.left ? `${negativeInsets.left}rem` : undefined,
-                }),
-              };
+              const { wrapperStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
               return (
                 <div 
                   className={cn(
-                    "aspect-square md:aspect-[3/4] bg-secondary overflow-hidden flex items-end justify-center relative",
+                    "aspect-square md:aspect-[3/4] bg-secondary flex items-end justify-center relative",
                     !hasOverride && product.imagePadding
                   )}
-                  style={containerStyle}
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
-                    <div className="relative w-full h-full" style={hasOverride ? bundleWrapperStyle : undefined}>
+                    <div className="relative w-full h-full" style={wrapperStyle || undefined}>
                       <img
                         src={product.bundleImages[0]}
                         alt={`${product.name} item 1`}
@@ -139,7 +129,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       src={product.image} 
                       alt={product.name} 
                       className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
-                      style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
+                      style={wrapperStyle || undefined}
                       loading="eager"
                     />
                   )}
