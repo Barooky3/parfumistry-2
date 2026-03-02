@@ -782,7 +782,7 @@ export const products: Product[] = [
     },
     accentColor: '#C58917',
     image: 'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800',
-    affiliateUrl: '/product/le-male-elixir',
+    affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
     variants: [
