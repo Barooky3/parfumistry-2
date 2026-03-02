@@ -104,7 +104,7 @@ export const products: Product[] = [
       'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800',
       'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800',
     ],
-    affiliateUrl: '/product/jpg-bundle',
+    affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
     isBundle: true,
     bundleContents: [
@@ -717,7 +717,7 @@ export const products: Product[] = [
     },
     accentColor: '#003B5C',
     image: 'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800',
-    affiliateUrl: '/product/le-beau-le-parfum',
+    affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
     variants: [
