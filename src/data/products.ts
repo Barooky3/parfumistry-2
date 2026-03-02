@@ -37,8 +37,8 @@ export const products: Product[] = [
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
     variants: [
-      { ml: 50, price: 31.99, originalPrice: 155.50, inStock: true },
-      { ml: 100, price: 37.99, originalPrice: 274.50, inStock: true },
+      { ml: 50, price: 31.99, originalPrice: 155.50, inStock: true, label: 'All 50ml (75ml for JPG)' },
+      { ml: 100, price: 37.99, originalPrice: 274.50, inStock: true, label: 'All 100ml (125ml for JPG)' },
     ],
   },
   {
@@ -62,8 +62,8 @@ export const products: Product[] = [
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520', affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU' },
     ],
     variants: [
-      { ml: 50, price: 32.99, originalPrice: 140.00, inStock: true },
-      { ml: 100, price: 37.99, originalPrice: 247.00, inStock: true },
+      { ml: 50, price: 32.99, originalPrice: 140.00, inStock: true, label: 'All 50ml (75ml for JPG)' },
+      { ml: 100, price: 37.99, originalPrice: 247.00, inStock: true, label: 'All 100ml (125ml for JPG)' },
     ],
   },
   {
