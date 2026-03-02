@@ -104,13 +104,27 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   style={containerStyle}
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
-                    style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
-                    loading="eager"
-                  />
+                  {product.bundleImages && product.bundleImages.length > 0 ? (
+                    <div className="flex items-end justify-center gap-2 px-4 pt-8 pb-4 h-full">
+                      {product.bundleImages.map((img, imgIdx) => (
+                        <img
+                          key={imgIdx}
+                          src={img}
+                          alt={`${product.name} item ${imgIdx + 1}`}
+                          className="h-[75%] w-auto object-contain drop-shadow-md"
+                          loading="eager"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                      style={imageScale !== 1 ? { transform: `scale(${imageScale})` } : undefined}
+                      loading="eager"
+                    />
+                  )}
                 </div>
               );
             })()}
