@@ -28,7 +28,7 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
       <Link to={`/product/${bundle.id}`} className="block">
         <div 
           className={cn(
-            "aspect-square bg-secondary flex items-center justify-center relative",
+            "aspect-[3/4] bg-secondary rounded-sm flex items-end justify-center relative",
             !hasOverride && bundle.imagePadding
           )}
         >
