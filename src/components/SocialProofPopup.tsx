@@ -166,15 +166,23 @@ export const SocialProofPopup = () => {
             <div className="w-[72px] h-[82px] rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-border/50"
               style={{ background: 'hsl(30 20% 94%)' }}
             >
-              <img
-                src={notification.product.image}
-                alt={notification.product.name}
-                className={`w-full h-full ${
-                  ['born-in-roma-intense', 'born-in-roma-green-stravaganza', 'ysl-y-edp'].includes(notification.product.id)
-                    ? 'object-contain p-1'
-                    : 'object-cover'
-                }`}
-              />
+              {notification.product.bundleImages && notification.product.bundleImages.length > 0 ? (
+                <div className="flex items-end justify-center gap-0.5 h-full p-1">
+                  {notification.product.bundleImages.map((img, imgIdx) => (
+                    <img key={imgIdx} src={img} alt="" className="h-[70%] w-auto object-contain" />
+                  ))}
+                </div>
+              ) : (
+                <img
+                  src={notification.product.image}
+                  alt={notification.product.name}
+                  className={`w-full h-full ${
+                    ['born-in-roma-intense', 'born-in-roma-green-stravaganza', 'ysl-y-edp'].includes(notification.product.id)
+                      ? 'object-contain p-1'
+                      : 'object-cover'
+                  }`}
+                />
+              )}
             </div>
 
             <div className="flex-1 min-w-0">
