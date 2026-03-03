@@ -34,11 +34,18 @@ export const WelcomePopup = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-md p-0 overflow-hidden border-none bg-card gap-0">
+      <DialogContent className="max-w-md p-0 overflow-hidden border-none bg-card gap-0 [&>button]:hidden">
         <DialogTitle className="sr-only">Welcome Offer</DialogTitle>
         
         {/* Header */}
         <div className="bg-foreground px-6 py-8 text-center relative">
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute top-3 right-3 p-1 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/40 transition-colors z-10"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5 text-primary-foreground" />
+          </button>
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent/20 mb-4">
             <Gift className="w-7 h-7 text-accent" />
           </div>
