@@ -89,9 +89,11 @@ function resolveProductImage(name: string, originalImage: string): string {
     if (n.includes(key.replace(/-/g, " "))) return url;
   }
   // Fallback: if the original image is already from profparfums.store or lovable.app, use it
-  if (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app")) return originalImage;
+  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app"))) return originalImage;
   // Last resort: try to make local paths work via site URL
-  if (originalImage.startsWith("/")) return SITE_URL + originalImage;
+  if (originalImage && originalImage.startsWith("/")) return SITE_URL + originalImage;
+  // If no image at all, return a placeholder
+  if (!originalImage) return SITE_URL + "/placeholder.svg";
   return originalImage;
 }
 
