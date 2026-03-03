@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { BundleFragrance } from '@/types/product';
 
 interface BundleContentsProps {
@@ -21,11 +20,7 @@ export const BundleContents = ({ contents }: BundleContentsProps) => {
                 style={{ backgroundColor: frag.accentColor }}
               />
               {frag.affiliateUrl ? (
-                frag.affiliateUrl.startsWith('/') ? (
-                  <Link to={frag.affiliateUrl} className="font-medium text-sm text-foreground underline hover:text-accent transition-colors">{frag.name}</Link>
-                ) : (
-                  <a href={frag.affiliateUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-sm text-foreground underline hover:text-accent transition-colors">{frag.name}</a>
-                )
+                <a href={frag.affiliateUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-sm text-foreground underline hover:text-accent transition-colors">{frag.name}</a>
               ) : (
                 <span className="font-medium text-sm text-foreground">{frag.name}</span>
               )}
