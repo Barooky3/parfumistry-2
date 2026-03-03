@@ -33,7 +33,7 @@ export const products: Product[] = [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
       { name: 'Born in Roma Intense', topNote: 'Vanilla', heartNote: 'Lavender', baseNote: 'Vetiver', accentColor: '#8B1A3A' },
       { name: 'The Most Wanted Parfum', topNote: 'Ginger', heartNote: 'Woody Notes', baseNote: 'Bourbon Vanilla', accentColor: '#C9A96E' },
-      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
+      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000', affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH' },
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
     variants: [
@@ -109,7 +109,7 @@ export const products: Product[] = [
     isBundle: true,
     bundleContents: [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917', affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU' },
-      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
+      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000', affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH' },
       { name: 'Le Beau Le Parfum', topNote: 'Coconut', heartNote: 'Tonka Bean', baseNote: 'Sandalwood', accentColor: '#003B5C' },
     ],
     variants: [
@@ -878,7 +878,7 @@ export const products: Product[] = [
     },
     accentColor: '#000000',
     image: 'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800',
-    affiliateUrl: '/product/le-male-le-parfum',
+    affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH',
     inStock: true,
     featured: true,
     variants: [
