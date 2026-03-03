@@ -8,64 +8,90 @@ const corsHeaders = {
 
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
+const SITE_URL = "https://profparfums.lovable.app";
+
 // Actual perfume bottle images from profparfums.store
+// IMPORTANT: More specific keys MUST come before less specific ones to avoid prefix matching bugs
 const PRODUCT_IMAGES: Record<string, string> = {
+  // Specific variants first (before their base names)
+  "aventus-absolu": "https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=800",
+  "born-in-roma-coral-fantasy": "https://profparfums.store/cdn/shop/files/valentino.png?v=1768493347&width=800",
+  "born-in-roma-green-stravaganza": "https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=800",
+  "born-in-roma-intense": "https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=800",
+  "stronger-with-you-absolutely": "https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=800",
+  "stronger-with-you-amber": "https://profparfums.store/cdn/shop/files/1C01C9E5-CAD8-4745-8AED-B06A573E591B_converted_1.png?v=1768068489&width=800",
+  "stronger-with-you-intensely": "https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=800",
+  "stronger-with-you-parfum": "https://profparfums.store/cdn/shop/files/stronger-with-you-parfum-2174125.png?v=1768068547&width=800",
+  "le-male-elixir-absolu": "https://profparfums.store/cdn/shop/files/gold_resized_to_match_black_object_1.png?v=1768068488&width=800",
+  "le-male-elixir": "https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800",
+  "le-male-le-parfum": "https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800",
+  "le-beau-le-parfum": "https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800",
+  "le-beau-edt": "https://profparfums.store/cdn/shop/files/jpg_le_beau_edt_bg_removed_1_1.png?v=1768068487&width=800",
+  "the-most-wanted-edp-intense": "https://profparfums.store/cdn/shop/files/product_2_matched_1.png?v=1768068488&width=800",
+  "the-most-wanted-parfum": "https://profparfums.store/cdn/shop/files/product_3_matched_1.png?v=1768068488&width=800",
+  "eros-energy": "https://profparfums.store/cdn/shop/files/yellow_resized_to_red_d0d3284b-0228-4acd-8b37-3765a0c838d8.png?v=1768068547&width=800",
+  "eros-flame": "https://profparfums.store/cdn/shop/files/A2B6CEE1-52D5-4900-AE35-97311C0903DF_transparent_1.png?v=1768068490&width=800",
+  "eros-parfum": "https://profparfums.store/cdn/shop/files/versace-eros-2404971.png?v=1768068489&width=800",
+  "1-million-elixir": SITE_URL + "/images/scent-notes/1-million-elixir.png",
+  "1-million-parfum": SITE_URL + "/images/scent-notes/1-million-parfum.png",
+  // Base names (after their specific variants)
   "amore-caffe": "https://profparfums.store/cdn/shop/files/mancera-amore-caffe-1050170.png?v=1768068487&width=800",
   "althair": "https://profparfums.store/cdn/shop/files/parfums-de-marly-althair-7480525.png?v=1768068548&width=800",
   "aoud-lemon-mint": "https://profparfums.store/cdn/shop/files/mancera-aoud-lemon-mint-3807519.png?v=1767903748&width=800",
   "aoud-vanille": "https://profparfums.store/cdn/shop/files/mancera-aoud-vanille-5716076.png?v=1768068487&width=800",
   "aventus": "https://profparfums.store/cdn/shop/files/creed-aventus-1140157.png?v=1768068488&width=800",
-  "aventus-absolu": "https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=800",
   "black-orchid": "https://profparfums.store/cdn/shop/files/tom-ford-black-orchid-1912271.png?v=1768068487&width=800",
+  "black-opium": "https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=800",
   "born-in-roma": "https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=800",
-  "born-in-roma-coral-fantasy": "https://profparfums.store/cdn/shop/files/valentino.png?v=1768493347&width=800",
   "cedrat-boise": "https://profparfums.store/cdn/shop/files/mancera-cedrat-boise-8376726.png?v=1768068547&width=800",
   "delina": "https://profparfums.store/cdn/shop/files/second_image_matched_dimensions_smaller.png?v=1768068548&width=800",
   "erba-gold": "https://profparfums.store/cdn/shop/files/xerjoff-erba-gold-9327888.png?v=1768068546&width=800",
   "erba-pura": "https://profparfums.store/cdn/shop/files/xerjoff-erba-pura-8755466.png?v=1768068547&width=800",
-  "eros-energy": "https://profparfums.store/cdn/shop/files/yellow_resized_to_red_d0d3284b-0228-4acd-8b37-3765a0c838d8.png?v=1768068547&width=800",
-  "eros-flame": "https://profparfums.store/cdn/shop/files/A2B6CEE1-52D5-4900-AE35-97311C0903DF_transparent_1.png?v=1768068490&width=800",
-  "eros-parfum": "https://profparfums.store/cdn/shop/files/versace-eros-2404971.png?v=1768068489&width=800",
   "french-riviera": "https://profparfums.store/cdn/shop/files/mancera-french-riviera-9959440.png?v=1768068547&width=800",
+  "khamrah-qahwa": "https://profparfums.store/cdn/shop/files/lataffa-khamrah-qahwa-4225237.png?v=1768068488&width=800",
   "khamrah-parfum": "https://profparfums.store/cdn/shop/files/lattafa-khamrah-6018164.png?v=1768068489&width=800",
   "imagination": "https://profparfums.store/cdn/shop/files/product_4_matched_1.png?v=1768068548&width=800",
   "layton": "https://profparfums.store/cdn/shop/files/parfums-de-marly-layton-9771652.png?v=1768068489&width=800",
-  "le-beau-le-parfum": "https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800",
-  "le-male-le-parfum": "https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800",
-  "le-male-elixir": "https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800",
   "libre": "https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=800",
   "mon-paris": "https://profparfums.store/cdn/shop/files/yves-saint-laurent-mon-paris-7356496.png?v=1768068487&width=800",
-  "black-opium": "https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=800",
   "myself-edp": "https://profparfums.store/cdn/shop/files/ysl-myslf-eau-de-parfum-1896916.png?v=1768068488&width=800",
   "naxos": "https://profparfums.store/cdn/shop/files/xerjoff-naxos-3352432.png?v=1768068487&width=800",
   "paradigme": "https://profparfums.store/cdn/shop/files/prada_resized_uniform_54c5598a-9a6e-47d7-8803-0a385e54b9c6.png?v=1768068488&width=800",
-  "pacific-hill": "https://profparfums.store/cdn/shop/files/image_6261aa49-3221-4a96-91e9-c8d120107fc0.png?v=1768493348&width=800",
+  "paradoxe": SITE_URL + "/images/scent-notes/prada-paradoxe.png",
+  "pacific": "https://profparfums.store/cdn/shop/files/image_6261aa49-3221-4a96-91e9-c8d120107fc0.png?v=1768493348&width=800",
+  "phantom": SITE_URL + "/images/scent-notes/phantom-parfum.png",
   "red-tobacco": "https://profparfums.store/cdn/shop/files/mancera-red-tobacco-3937206.png?v=1768068488&width=800",
   "sauvage-parfum": "https://profparfums.store/cdn/shop/files/dior-sauvage-3604373.png?v=1768068546&width=800",
   "silver-mountain-water": "https://profparfums.store/cdn/shop/files/creed-silver-mountain-water-3465174.png?v=1768068487&width=800",
   "spicebomb-extreme": "https://profparfums.store/cdn/shop/files/spicebomb.png?v=1768410549&width=800",
-  "stronger-with-you-absolutely": "https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=800",
-  "stronger-with-you-amber": "https://profparfums.store/cdn/shop/files/1C01C9E5-CAD8-4745-8AED-B06A573E591B_converted_1.png?v=1768068489&width=800",
-  "stronger-with-you-intensely": "https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=800",
-  "stronger-with-you-parfum": "https://profparfums.store/cdn/shop/files/stronger-with-you-parfum-2174125.png?v=1768068547&width=800",
   "symphony": "https://profparfums.store/cdn/shop/files/image_f5380ed8-72f9-4429-ae98-588f5395b6ba.png?v=1768493348&width=800",
-  "the-most-wanted-edp-intense": "https://profparfums.store/cdn/shop/files/product_2_matched_1.png?v=1768068488&width=800",
-  "the-most-wanted-parfum": "https://profparfums.store/cdn/shop/files/product_3_matched_1.png?v=1768068488&width=800",
   "homme-intense": "https://profparfums.store/cdn/shop/files/dior-homme-intense-7103864.png?v=1768068547&width=800",
   "elixir-absolu": "https://profparfums.store/cdn/shop/files/gold_resized_to_match_black_object_1.png?v=1768068488&width=800",
+  "tonka-cola": "https://profparfums.store/cdn/shop/files/mancera-tonka-cola-5797937.png?v=1768068488&width=800",
+  "xplicit-vanilla": "https://profparfums.store/cdn/shop/files/mancera-xplicit-vanilla-7508759.png?v=1768068488&width=800",
+  "y-eau-de-parfum": SITE_URL + "/images/scent-notes/ysl-y-edp.png",
+  "ysl-y": SITE_URL + "/images/scent-notes/ysl-y-edp.png",
   // Bundles
   "evening-sweetheart": "https://profparfums.store/cdn/shop/files/fragrance-bundle-evening-sweetheart-9560408.png?v=1768068549&width=800",
   "young-playboy": "https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800",
   "sleek-and-clean": "https://profparfums.store/cdn/shop/files/fragrance-bundle-sleek-and-clean-3751514.png?v=1768068487&width=800",
+  "jpg-collection": "https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800",
 };
 
+// Strip accents for matching (é→e, ô→o, etc.)
+function stripAccents(str: string): string {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 function resolveProductImage(name: string, originalImage: string): string {
-  const n = name.toLowerCase();
+  const n = stripAccents(name.toLowerCase());
   for (const [key, url] of Object.entries(PRODUCT_IMAGES)) {
     if (n.includes(key.replace(/-/g, " "))) return url;
   }
-  // Fallback: if the original image is already from profparfums.store, use it
-  if (originalImage.includes("profparfums.store")) return originalImage;
+  // Fallback: if the original image is already from profparfums.store or lovable.app, use it
+  if (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app")) return originalImage;
+  // Last resort: try to make local paths work via site URL
+  if (originalImage.startsWith("/")) return SITE_URL + originalImage;
   return originalImage;
 }
 
