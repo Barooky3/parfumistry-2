@@ -129,8 +129,8 @@ const PRODUCT_LINKS: Record<string, string> = {
 };
 
 function getProductLink(name: string, brand: string, itemAffiliateUrl?: string): string {
-  // Always prefer the affiliate URL passed from the product data
-  if (itemAffiliateUrl) return itemAffiliateUrl;
+  // Prefer the affiliate URL passed from the product data, but skip internal routes
+  if (itemAffiliateUrl && itemAffiliateUrl.startsWith("http")) return itemAffiliateUrl;
   const n = name.toLowerCase();
   const b = brand.toLowerCase();
   if (n.includes("stronger with you absolutely")) return PRODUCT_LINKS["stronger-with-you-absolutely"];
@@ -179,11 +179,17 @@ const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
     { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["le-male-elixir"] },
     { label: "Valentino Born in Roma Intense", url: PRODUCT_LINKS["valentino"] },
     { label: "Azzaro The Most Wanted Parfum", url: PRODUCT_LINKS["azzaro"] },
+    { label: "JPG Le Male Le Parfum", url: PRODUCT_LINKS["jean-paul-gaultier"] },
   ],
   "young-playboy": [
     { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["le-male-elixir"] },
     { label: "Stronger With You Absolutely", url: PRODUCT_LINKS["stronger-with-you-absolutely"] },
     { label: "1 Million Elixir", url: PRODUCT_LINKS["1-million-elixir"] },
+  ],
+  "sleek-and-clean": [
+    { label: "YSL Myself EDP", url: PRODUCT_LINKS["ysl-y"] },
+    { label: "YSL Y EDP", url: PRODUCT_LINKS["ysl-y"] },
+    { label: "Dior Sauvage Parfum", url: PRODUCT_LINKS["dior"] },
   ],
   "jpg-collection": [
     { label: "JPG Le Male Elixir", url: PRODUCT_LINKS["le-male-elixir"] },
@@ -196,6 +202,7 @@ function getBundleBonusLinks(name: string): { label: string; url: string }[] {
   const n = name.toLowerCase();
   if (n.includes("evening sweetheart")) return BUNDLE_BONUS_LINKS["evening-sweetheart"];
   if (n.includes("young playboy")) return BUNDLE_BONUS_LINKS["young-playboy"];
+  if (n.includes("sleek") && n.includes("clean")) return BUNDLE_BONUS_LINKS["sleek-and-clean"];
   if (n.includes("jpg") || n.includes("jpg collection")) return BUNDLE_BONUS_LINKS["jpg-collection"];
   return [];
 }
