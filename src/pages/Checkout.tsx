@@ -1082,7 +1082,7 @@ const Checkout = () => {
                   >
                     <span className="flex items-center gap-2">
                       🎁
-                      <span>Pay with Card, Apple/Google Pay, Paysafe</span>
+                      <span>Pay with Rewarble</span>
                     </span>
                   </Button>
                   {/* Payment method logos */}
