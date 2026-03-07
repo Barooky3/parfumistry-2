@@ -32,36 +32,24 @@ const TermsOfService = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">3. No Refund Policy</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                All sales are final. No refunds or exchanges will be provided once an order has been placed and confirmed. Please ensure you are satisfied with your selection before completing your transaction.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="font-display text-2xl mb-4">4. Account Responsibilities</h2>
+              <h2 className="font-display text-2xl mb-4">3. Returns & Refund Policy</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                If you create an account with us:
+                We want you to be happy with your purchase. Refunds or returns may be granted under the following conditions:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>You are responsible for maintaining the confidentiality of your account</li>
-                <li>You must provide accurate and complete information</li>
-                <li>You are responsible for all activities under your account</li>
-                <li>You must notify us immediately of any unauthorized use</li>
+                <li>There is a verified issue with delivery (e.g. lost, damaged, or incorrect item)</li>
+                <li>The product has been used minimally — less than 5ml of the fragrance has been consumed</li>
+                <li>The return request is submitted within 14 days of receiving your order</li>
               </ul>
-            </section>
-
-            <section>
-              <h2 className="font-display text-2xl mb-4">5. Intellectual Property</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                All content on ProfParfums, including but not limited to text, graphics, logos, images, and software, is the property of ProfParfums or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or create derivative works without our express written permission.
+              <p className="text-muted-foreground leading-relaxed mt-4">
+                To request a return or refund, please contact us through our Contact page with your order number and a brief description of the issue. Refunds are processed within 5-10 business days once approved.
               </p>
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">6. Third-Party Links</h2>
+              <h2 className="font-display text-2xl mb-4">4. Shipping & Delivery</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Our service provides links to third-party sellers. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services. Your interactions with third-party sellers are solely between you and the seller.
+                Delivery times vary depending on your location. We aim to process and dispatch all orders within 1-3 business days. ProfParfums is not liable for delays caused by postal or courier services, customs, or other factors outside our control.
               </p>
             </section>
 
