@@ -145,7 +145,7 @@ const PaypalEneba = () => {
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a Rewarble voucher on Eneba</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a voucher closest to your order amount ({orderTotal ? `€${orderTotal}${currency !== 'EUR' && orderTotalNum > 0 ? ` (≈ ${formatPrice(orderTotalNum)})` : ''}` : 'see checkout'}). At Eneba checkout, select <strong>PayPal</strong> as your payment method.
+                  {orderTotalNum > 0 ? `€${orderTotal} is your cart total, so your card should be ${getCardRecommendation(orderTotalNum, currency)}.` : 'Buy a voucher closest to your order amount (see checkout).'} At Eneba checkout, select <strong>PayPal</strong> as your payment method.
                 </p>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
                   onClick={() => window.open('https://www.eneba.com/rewarble-rewarble-revolut-5-gbp-voucher-global', '_blank')}>
