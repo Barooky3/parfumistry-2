@@ -53,7 +53,7 @@ export const ReviewsSection = ({ reviews }: ReviewsSectionProps) => {
     return result;
   })();
 
-  const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  const avgRating = sortedReviews.reduce((sum, r) => sum + r.rating, 0) / sortedReviews.length;
 
   return (
     <div className="py-6 border-t border-border">
