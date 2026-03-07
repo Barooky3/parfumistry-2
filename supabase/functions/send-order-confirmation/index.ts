@@ -211,27 +211,19 @@ function buildItemRow(item: OrderItem, origin: string, showImage: boolean): stri
   const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
   const lineTotal = (item.price * item.quantity).toFixed(2);
   const imageUrl = resolveProductImage(item.name, item.image);
-  const bundleLinks = getBundleBonusLinks(item.name);
-  const bundleLinksHtml = bundleLinks.length > 0
-    ? `<div style="margin-top:6px;font-size:11px;color:#999;">Seller links: ${bundleLinks.map(l => `<a href="${l.url}" style="color:#c9a96e;text-decoration:none;">${l.label}</a>`).join(" · ")}</div>`
-    : "";
-  const productLink = getProductLink(item.name, item.brand, item.affiliateUrl);
 
-  return `<tr style="border-bottom: 1px solid #f0ede8;">
-    ${showImage ? `<td style="padding: 16px 12px; width: 80px; vertical-align: top;">
-      <img src="${imageUrl}" alt="${item.name}" style="width: 70px; height: 70px; object-fit: contain; border-radius: 4px;" />
-    </td>` : ""}
-    <td style="padding: 16px 12px; vertical-align: top;">
-      <p style="font-size: 14px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px 0;">${item.brand}</p>
-      <p style="font-size: 13px; color: #666; margin: 0 0 4px 0;">${item.name}${mlLabel}</p>
-      <p style="font-size: 12px; color: #999; margin: 0;">Qty: ${item.quantity}</p>
-      ${bundleLinksHtml}
-    </td>
-    <td style="padding: 16px 12px; vertical-align: top; text-align: right;">
-      <p style="font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0;">€${lineTotal}</p>
-      <a href="${productLink}" style="font-size: 11px; color: #c9a96e; text-decoration: none; margin-top: 4px; display: inline-block;">View seller ›</a>
-    </td>
-  </tr>`;
+  return `<tr>
+<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">
+<table cellpadding="0" cellspacing="0" border="0"><tr>
+${showImage ? `<td style="width: 80px; vertical-align: top;">
+<img src="${imageUrl}" alt="${item.name}" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />
+</td>` : ""}
+<td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">
+<div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">${item.brand}</div>
+<div style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px;">${item.name}${mlLabel}</div>
+<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ${item.quantity} · €${lineTotal}</div>
+</td></tr></table>
+</td></tr>`;
 }
 
 function buildItemsHtml(items: OrderItem[], origin: string): string {
