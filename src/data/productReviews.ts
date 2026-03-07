@@ -66,14 +66,14 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'vinceNT', text: 'Tested this at Sephora last winter and immediately bought a bottle. The chestnut-toffee combo is genuinely cozy and addictive. My girlfriend keeps stealing sprays off my neck.', verified: true, rating: 5, date: '2 days ago' },
     { id: 2, name: 'marcosR', text: 'My girlfriend literally stole my bottle. Had to buy another one. That is the review.', verified: true, rating: 5, date: '5 days ago' },
     { id: 3, name: 'K_wells', text: 'Nice warm scent. Sits close to the skin after 2 hours which is fine for the office. Not a room-filler but people nearby notice. Adequate.', verified: true, rating: 4, date: '1 week ago' },
-    { id: 4, name: 'pfragrance', text: 'Smells great for the first 3 hours but then just... disappears on me. The vanilla-toffee combo is nice but the longevity is nowhere near what YouTube reviewers claim. Maybe 5 hours max on my skin. Expected more.', verified: true, rating: 3, date: '1 week ago' },
+    { id: 4, name: 'pfragrance', text: 'Its OK but extremely overhyped online. The toffee-chestnut thing is nice but not groundbreaking. Smells like something you\'d find at a department store sale, not the "top 5 masculine" people claim it is. Decent, not legendary.', verified: true, rating: 3, date: '1 week ago' },
     { id: 5, name: 'JamieL_', text: 'Wore it to a dinner date and she kept leaning in closer the whole evening. Very cozy, slightly boozy. Perfect for cold nights.', verified: true, rating: 5, date: '2 weeks ago' },
     { id: 6, name: 'oud_head', text: 'Its OK but if you already have Spicebomb or Ultra Male you\'re covering similar territory. The chestnut note is the only differentiator and it fades fast. Longevity is mid. Wouldn\'t repurchase.', verified: true, rating: 3.5, date: '2 weeks ago' },
     { id: 7, name: 'SimonDK', text: 'The sage in the opening saves this from being another generic sweet designer. Balances the sweetness well. Solid overall, not life-changing.', verified: true, rating: 4, date: '3 weeks ago' },
     { id: 8, name: 'Leo_paris', text: 'Decent scent, not great. Does the sweet gourmand thing fine but its pretty linear — smells the same from open to dry down. Gets cloying above 15°C so strictly cold weather for me.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 9, name: 'toffee_king', text: 'Ive gone through 3 bottles since 2019. Signature cold weather scent for me. Nothing else in my 40+ collection gets as many compliments.', verified: true, rating: 5, date: '1 month ago' },
     { id: 10, name: 'nadiaBE', text: 'Bought for my husband and now I wear it more than he does. On women it gives this warm cozy vibe. Only issue is you need to reapply after 4-5 hours which is annoying.', verified: true, rating: 4, date: '6 weeks ago' },
-    { id: 11, name: 'DaveFrags', text: 'Very overhyped. Its a decent vanilla-toffee scent but at this price there are better options. Projection dies after the first hour and becomes a skin scent really fast. Expected a beast, got something tame.', verified: true, rating: 2.5, date: '2 months ago' },
+    { id: 11, name: 'DaveFrags', text: 'Very overhyped. Its a decent vanilla-toffee scent but at this price there are better options. Gets unbearably sweet and cloying in any temperature above 15°C. Strictly a cold weather scent and even then its not special.', verified: true, rating: 2.5, date: '2 months ago' },
     { id: 12, name: 'alicja_PL', text: 'The chestnut note is a bit odd tbh. Like roasted nuts mixed with caramel. Not bad exactly but not something I\'d reach for. Smelled better on paper strips than on skin.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
@@ -99,7 +99,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 4, name: 'tyler_nyc', text: 'I own the whole Le Male line and this is probably the least exciting. Its good but sits in this awkward middle ground — not as fresh as the OG, not as bold as Elixir. Just kind of... there.', verified: true, rating: 3.5, date: '3 weeks ago' },
     { id: 5, name: 'sofia_rose', text: 'Bought for my partner and he gets compliments constantly. The iris gives it a powdery elegance thats really attractive on men.', verified: true, rating: 5, date: '1 month ago' },
     { id: 6, name: 'noseBerlin', text: 'Performance is decent, about 6-7 hours. Not a nuclear projector but does its job. The spiced vanilla dry down is pleasant and inoffensive. Fine.', verified: true, rating: 4, date: '1 month ago' },
-    { id: 7, name: 'ahmed_uae', text: 'For the price I expected more. Nice vanilla-spice scent but it doesn\'t do anything 10 other fragrances in my collection don\'t already do. Longevity was disappointing too, maybe 5 hours.', verified: true, rating: 3, date: '6 weeks ago' },
+    { id: 7, name: 'ahmed_uae', text: 'For the price I expected more. Nice vanilla-spice scent but it doesn\'t do anything 10 other fragrances in my collection don\'t already do. The iris note gives it a powdery quality that feels dated rather than modern.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 8, name: 'laura_IT', text: 'It smells fine on my boyfriend. Has a warm quality but the sillage is moderate at best. Don\'t expect to be noticed from across the room.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
@@ -118,9 +118,9 @@ export const productReviews: Record<string, ProductReview[]> = {
   // 8 reviews: 3×5★, 2×4★, 2×3.5★, 1×3★
   'le-beau-le-parfum': [
     { id: 1, name: 'tropicVibes', text: 'Smells like being on holiday. Coconut, vanilla, something green up top. Not complicated, just really really nice. My summer go-to.', verified: true, rating: 5, date: '3 days ago' },
-    { id: 2, name: 'samG_', text: 'The longevity lets it down badly. I get maybe 4-5 hours before it becomes a skin scent. The coconut phase is lovely but too brief. Disappointing for the price.', verified: true, rating: 3.5, date: '1 week ago' },
+    { id: 2, name: 'samG_', text: 'Smells nice but its basically "coconut body lotion: the fragrance." Very one-dimensional — the tropical phase is pleasant but there\'s zero complexity or development. You smell the same thing for hours.', verified: true, rating: 3.5, date: '1 week ago' },
     { id: 3, name: 'Lucas_BE', text: 'Blind bought based on a friend\'s rec and I\'m glad I did. Easygoing, clean, slightly sweet. My kind of warm weather fragrance.', verified: true, rating: 5, date: '2 weeks ago' },
-    { id: 4, name: 'noseknows22', text: 'Pleasant but one-dimensional. The coconut is the best bit but takes 30 mins to appear, and by then projection is already dying. Wish they made it stronger.', verified: true, rating: 3, date: '3 weeks ago' },
+    { id: 4, name: 'noseknows22', text: 'Pleasant but smells cheap compared to the original retail. The pineapple note has a synthetic edge that the real JPG doesn\'t have. Passable if you\'re not comparing side by side but once you notice it you can\'t unnotice.', verified: true, rating: 3, date: '3 weeks ago' },
     { id: 5, name: 'RyanT', text: 'Wore this every day last summer. The pineapple-coconut combo works without being tacky. Gets me compliments from people who normally don\'t comment.', verified: true, rating: 5, date: '1 month ago' },
     { id: 6, name: 'H_berg', text: 'Nice tropical vibe with some depth from the tonka. Not the most unique scent but well executed for what it is.', verified: true, rating: 4, date: '6 weeks ago' },
     { id: 7, name: 'dani_IT', text: 'The green note in the opening is interesting but disappears fast. After 30 mins its basically just sweet coconut-vanilla which you can get from cheaper fragrances. Fine but not special.', verified: true, rating: 3.5, date: '2 months ago' },
@@ -159,7 +159,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 7, name: 'LenaDE', text: 'Quite generic tbh. Smells like something Zara could make for €20. Pleasant? Yes. Special? Absolutely not. Longevity is decent though, about 7 hours.', verified: true, rating: 3, date: '1 month ago' },
     { id: 8, name: 'omar_scents', text: 'The amberwood base is nice but not enough to save it from being "another blue fragrance." After the apple fades its pretty standard woody-amber territory.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 9, name: 'carloIT', text: 'Wore it to a job interview. Clean and professional without being invisible. Does the job well even if its not exciting.', verified: true, rating: 3.5, date: '6 weeks ago' },
-    { id: 10, name: 'dani_bln', text: 'Smells fine up close but the projection is non-existent after the first hour. I had to reapply three times during a night out. For the hype this gets online I expected way more from the performance.', verified: true, rating: 2.5, date: '2 months ago' },
+    { id: 10, name: 'dani_bln', text: 'The definition of "safe pick." Smells exactly like what an algorithm would design if you asked it for "mass-appealing masculine fragrance." Zero personality, zero risk, zero reason to remember it. Aggressively mid.', verified: true, rating: 2.5, date: '2 months ago' },
   ],
 
   // 8 reviews: 3×5★, 2×4★, 2×3.5★, 1×3★ (+ 1×2.5★ since popular)
@@ -179,8 +179,8 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'emma_scent', text: 'Bold and confident. The lavender in a feminine fragrance is unique and just works. Makes me feel powerful every time.', verified: true, rating: 5, date: '4 days ago' },
     { id: 2, name: 'olivia_AU', text: 'Orange blossom and vanilla executed well. Gets me compliments at work. Modern and elegant.', verified: true, rating: 4, date: '1 week ago' },
     { id: 3, name: 'ava_NYC', text: 'YSL nailed the balance between fresh and warm. I reach for this more than anything else in my collection.', verified: true, rating: 5, date: '2 weeks ago' },
-    { id: 4, name: 'claireIE', text: 'The lavender fades really quickly on me and then it just becomes generic sweet vanilla. Opening is spectacular but the dry down is underwhelming for the price.', verified: true, rating: 3, date: '3 weeks ago' },
-    { id: 5, name: 'mia_CH', text: 'I get maybe 4-5 hours which for an EDP is disappointing. The scent is lovely — clean, slightly spicy, warm — but I wish it lasted without respraying.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 4, name: 'claireIE', text: 'The lavender-vanilla formula has been done to death. Libre does it competently but there\'s nothing here that makes me think "I need THIS over a dozen similar scents." Very replaceable.', verified: true, rating: 3, date: '3 weeks ago' },
+    { id: 5, name: 'mia_CH', text: 'On my skin the orange blossom turns soapy and generic within an hour. The opening is lovely but something in my chemistry kills the interesting notes and leaves me with "nice hand soap." Frustrating.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 6, name: 'sophie_DK', text: 'Wore it to an interview and got complimented by the interviewer. It gives this aura of quiet confidence. Not too much, not too little.', verified: true, rating: 4, date: '6 weeks ago' },
     { id: 7, name: 'amelie_FR', text: 'Very safe gift choice but thats kind of the problem — its inoffensive to the point of being forgettable. Pleasant while it lasts but doesn\'t leave a lasting impression.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
@@ -190,7 +190,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'marieFR', text: 'Romantic and sweet without being juvenile. The strawberry note is so well done — smells real, not like candy. Wore this on my wedding day.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'claire_bx', text: 'The strawberry-patchouli combo shouldn\'t work but it does. Playful up top, grounded in the base. Well balanced for a fruity floral.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'julie_94', text: 'Gives main character energy walking through Paris in autumn. Soft, sweet, and pretty.', verified: true, rating: 5, date: '3 weeks ago' },
-    { id: 4, name: 'hannahDE', text: 'Its cute but very linear. Smells exactly the same from start to finish which gets monotonous. Also the longevity is about 4 hours which isn\'t great for the price.', verified: true, rating: 3, date: '1 month ago' },
+    { id: 4, name: 'hannahDE', text: 'Its cute but painfully linear. Smells exactly the same from opening to dry down with zero development. No surprises, no evolution, just strawberry-sweet on repeat for hours. Gets boring fast.', verified: true, rating: 3, date: '1 month ago' },
     { id: 5, name: 'rebecaNO', text: 'Too sweet for everyday wear. Great for a night out but I can\'t imagine wearing this to the office without it being too much. Very occasion-specific.', verified: true, rating: 3.5, date: '6 weeks ago' },
     { id: 6, name: 'lisa_mel', text: 'Got this as a birthday gift and its fine. The pear and peony are soft but the sillage is weak — nobody ever notices when I wear it, which defeats the purpose.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
@@ -248,7 +248,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 2, name: 'EmmK', text: 'Coffee note is realistic which I appreciate. Only issue is projection dies after the first hour. Becomes very intimate very quickly. Fine if you like that but I wanted more.', verified: true, rating: 3.5, date: '1 week ago' },
     { id: 3, name: 'Noor_S', text: 'Really cozy and comforting. Reminds me of a vanilla latte. Wore it to work and two people complimented it which basically never happens to me.', verified: true, rating: 5, date: '2 weeks ago' },
     { id: 4, name: 'isabellaR', text: 'Kind of one-note. Coffee and vanilla from start to finish, no development. If you love gourmands you\'ll enjoy it but it can feel repetitive after a while. Nothing changes over 8 hours.', verified: true, rating: 3, date: '3 weeks ago' },
-    { id: 5, name: 'lucasW', text: 'Great scent but poor longevity. Maybe 4 hours before its gone. The coffee-vanilla combo is well done but I expected Mancera to do better on performance.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 5, name: 'lucasW', text: 'Great scent but the coffee note turns almost burnt and acrid on my skin after 2 hours. Smells amazing on paper and on my friend but my body chemistry does something weird. Frustrating when a scent works on everyone except you.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 6, name: 'danieleM', text: 'The espresso note isn\'t bitter at all, blends into this sweet creamy thing. One of the better Mancera releases. Decent daily for cold weather.', verified: true, rating: 4, date: '2 months ago' },
   ],
 
@@ -269,7 +269,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'LeoIT', text: 'Clean but sexy. The violet leaf gives it a fresh quality that works for daytime. Goes from office to dinner seamlessly.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'CalebSA', text: 'The violet-vetiver combo is decent but nothing groundbreaking. Works as a daily driver, won\'t turn heads.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'OwenIE', text: 'Nothing spectacular but nothing bad. Does the clean-masculine thing competently. Won\'t wow anyone though.', verified: true, rating: 3.5, date: '1 month ago' },
-    { id: 4, name: 'sergioES', text: 'Really forgettable honestly. Wore it for a week and not a single person noticed. The opening is pleasant but it dries down to basically nothing after 3-4 hours.', verified: true, rating: 3, date: '6 weeks ago' },
+    { id: 4, name: 'sergioES', text: 'Really forgettable honestly. Wore it for a week and not a single person noticed. The violet-sage combo is pleasant but lacks any personality or DNA that makes it distinctly "Valentino." Could be any brand.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 5, name: 'anna_milan', text: 'I love this on men. Fresh, modern, and just attractive without being overwhelming. Perfect for someone who wants to smell put-together.', verified: true, rating: 5, date: '2 months ago' },
     { id: 6, name: 'fredrikNO', text: 'Good all-rounder but fades fast on me. The sage is nice at first but by hour 3 its just a faint woody skin scent. Expected more from Valentino.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
@@ -280,7 +280,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 2, name: 'jakobDK', text: 'Interesting herbal take on the BIR DNA. Works in spring and summer. Not a winter scent though.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'chris_MEL', text: 'Too "green" for my taste. Smells like freshly cut grass mixed with herbs. If you\'re into that its probably great, not for me.', verified: true, rating: 3, date: '3 weeks ago' },
     { id: 4, name: 'elenaMD', text: 'Surprisingly versatile for how fresh it smells. The vetiver base grounds it nicely. Underrated in the line.', verified: true, rating: 5, date: '1 month ago' },
-    { id: 5, name: 'paul_frag', text: 'Longevity is disappointing. Maybe 3-4 hours on skin before completely gone. Lovely scent but at this price I expect more staying power.', verified: true, rating: 3.5, date: '6 weeks ago' },
+    { id: 5, name: 'paul_frag', text: 'Smells like someone blended a mojito with a garden salad. The green-herbal thing is fine conceptually but on my skin it becomes weirdly vegetal. Not what I\'d call attractive. Very niche taste.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // 6 reviews: 2×5★, 1×4★, 2×3.5★, 1×3★
@@ -290,7 +290,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 3, name: 'AlessandroNA', text: 'Good balance between fresh and sweet. Valentino nailed the formula here. Solid.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 4, name: 'matteoMI', text: 'Contemporary and fresh but nothing groundbreaking. After an hour becomes a generic citrus-vanilla skin scent. The opening 30 minutes are great, then it disappoints.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 5, name: 'oliver_AMS', text: 'Pleasant but unmemorable. In a lineup of citrus fragrances this wouldn\'t stand out. Fine for everyday but don\'t expect to be noticed.', verified: true, rating: 3, date: '6 weeks ago' },
-    { id: 6, name: 'KarinaSE', text: 'Bought for my boyfriend and the coral/grapefruit note is refreshing. But it fades very quickly — 3-4 hours max. He has to reapply mid-day which is annoying.', verified: true, rating: 3.5, date: '2 months ago' },
+    { id: 6, name: 'KarinaSE', text: 'Bought for my boyfriend and the opening is nice. But the dry down is identical to every other Valentino flanker he owns. At some point these "new releases" just start cannibalising each other. Get one BIR and skip the rest.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
   // 7 reviews: 2×5★, 2×4★, 2×3.5★, 1×3★
@@ -369,7 +369,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'pedroLIS', text: 'Salty and sweet simultaneously. The solar notes give this a unique quality. Perfect for beach days and summer nights.', verified: true, rating: 5, date: '5 days ago' },
     { id: 2, name: 'markDUB', text: 'Better than the original Million but less interesting than the Elixir. Sits in a weird middle ground. The salt accord is unique at least.', verified: true, rating: 4, date: '1 week ago' },
     { id: 3, name: 'SofiaGR', text: 'My boyfriend wears this and it smells nice in summer. Fresh with warmth underneath. Decent.', verified: true, rating: 5, date: '2 weeks ago' },
-    { id: 4, name: 'tobiasCH', text: 'Longevity is disappointing for a "Parfum." Maybe 5 hours on skin. I expect more staying power when they call it parfum concentration. Misleading.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 4, name: 'tobiasCH', text: 'The salt accord is polarizing — on my skin it goes almost metallic and synthetic. My wife said it smells like "pool water mixed with cologne." Interesting concept, poor execution on certain skin types.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 5, name: 'annaWRS', text: 'Smells like sunscreen to me honestly. The solar-salt thing is interesting on paper but on skin it just becomes "beach product." Not what I wanted from a cologne.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 6, name: 'yasinTR', text: 'The amber base saves it from being just another fresh scent. Gives it depth. About 7 hours, moderate projection. Fine daily summer driver, nothing more.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
@@ -401,7 +401,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 4, name: 'EvelynAU', text: 'Elegant but overpriced. Similar rose-lychee fragrances exist from Montale for a fraction. PDM tax is real. You\'re paying for the brand name.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 5, name: 'sofiaBA', text: 'The lychee note is a bit synthetic and screechy in the opening. Calms down after 30 minutes but that initial blast is strong and almost headache-inducing for me.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 6, name: 'juliaVIE', text: 'Been my signature for 2 years. The rhubarb adds tartness that balances sweetness. Well constructed.', verified: true, rating: 4, date: '2 months ago' },
-    { id: 7, name: 'rachelTLV', text: 'Beautiful fragrance but longevity is hit or miss. Some days 8 hours, others it fades after 3. Inconsistent performance which is frustrating at this price.', verified: true, rating: 3.5, date: '2 months ago' },
+    { id: 7, name: 'rachelTLV', text: 'Beautiful fragrance but the lychee gives it a very "young girl" quality. At 38 I feel like I\'m borrowing my daughter\'s perfume. Would work better for someone in their 20s. Not age-appropriate for me.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
   // 4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
@@ -544,7 +544,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'tylerLA', text: 'Super refreshing. The grapefruit and green tea is like a spa day in a bottle. Louis Vuitton does fresh scents differently — class and depth that cheap ones lack.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'BrandonSF', text: 'Smells like premium sparkling water in a nice way. Fresh, clean, slightly fruity. Decent for hot days.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'alexTYO', text: 'The LV price tag is impossible to justify for a citrus-aquatic. Its well done but not 5x better than other fresh fragrances. You\'re paying for the label, not the juice.', verified: true, rating: 3, date: '1 month ago' },
-    { id: 4, name: 'helenCPH', text: 'Only about 4 hours of longevity which for LV money is unacceptable. Gorgeous scent but having to reapply a luxury fragrance multiple times per day is ridiculous.', verified: true, rating: 3.5, date: '6 weeks ago' },
+    { id: 4, name: 'helenCPH', text: 'Pleasant but completely lacks identity. Remove the LV label and this could be any drugstore citrus-aquatic. Nothing about the scent itself says "luxury" — all the luxury is in the price tag and packaging.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // 4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
@@ -569,7 +569,7 @@ export const productReviews: Record<string, ProductReview[]> = {
   'silver-mountain-water': [
     { id: 1, name: 'PatrickBOS', text: 'Fresh and clean like actual mountain air. Creed does fresh scents better than anyone. The green tea and blackcurrant are elegant.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'RichardLDN', text: 'Green tea vibes with an almost metallic quality. Unique and refreshing. Nothing else in my collection smells like this.', verified: true, rating: 5, date: '2 weeks ago' },
-    { id: 3, name: 'ThomasZH', text: 'Beautiful scent but for Creed prices I expect better longevity. About 4-5 hours max. The birch and tea are gorgeous while they last... which isn\'t long enough.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 3, name: 'ThomasZH', text: 'Beautiful scent but you can get 90% of this experience from Armaf Club de Nuit Sillage for a fraction of the cost. The Creed name doesn\'t justify the 5x markup when cheaper alternatives exist. Smart shoppers know better.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 4, name: 'mariaESP', text: 'Incredible on my husband, too "soapy" on me. Very clean and fresh but almost to the point of smelling like fancy hand wash. Works better on men.', verified: true, rating: 4, date: '6 weeks ago' },
     { id: 5, name: 'danDUB', text: 'You can get fragrances that smell 85% like this for a fraction of the price. Armaf does a decent version. Unless you need the Creed name on your shelf, save your money.', verified: true, rating: 3, date: '2 months ago' },
   ],
@@ -607,7 +607,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'VictoriaLDN', text: 'Sweet and fruity with LV quality. The rose-peony heart is beautifully done. Harmonious, balanced, elegant.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'CatherineGVA', text: 'The mandarin-grapefruit opening is bright and joyful. Transitions into soft florals. Uplifting and positive.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'ElizabethDC', text: 'Pure luxury but the price is insane. Beautiful floral but not $300+ beautiful. You can find lovely florals from other houses for much less. LV tax at its peak.', verified: true, rating: 3, date: '1 month ago' },
-    { id: 4, name: 'ameliePRS', text: 'Gorgeous scent but barely projects after the first hour. For LV money I want people to notice when I walk in. This is a personal bubble scent at best. Disappointing.', verified: true, rating: 3.5, date: '6 weeks ago' },
+    { id: 4, name: 'ameliePRS', text: 'Gorgeous scent but very similar to other high-end florals I already own. The rose-peony is well done but not unique enough to justify adding when I have Delina and Miss Dior covering the same territory.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // 4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
