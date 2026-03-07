@@ -589,8 +589,9 @@ const Checkout = () => {
   const isFormValidRef = useRef(isFormValid());
   isFormValidRef.current = isFormValid();
 
-  // Calculate current total
-  const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
+  // Calculate shipping and current total
+  const shippingCost = formData.country ? getShippingCost(formData.country) : 0;
+  const currentTotal = (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice) + shippingCost;
 
   // PayPal SDK - TEMPORARILY DISABLED
   // To re-enable: uncomment the useEffect below and the PayPal UI sections
