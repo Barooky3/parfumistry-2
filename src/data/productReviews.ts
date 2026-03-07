@@ -150,7 +150,7 @@ export const productReviews: Record<string, ProductReview[]> = {
 
   // 10 reviews: 3×5★, 2×4★, 3×3.5★, 1×3★, 1×2.5★
   'ysl-y-edp': [
-    { id: 1, name: 'marlon_fan', text: 'The "marlon" fragrance lives up to the hype. Fresh apple and ginger up top, warm and woody dry down. Everyone around you goes "that smells good."', verified: true, rating: 5, date: '2 days ago' },
+    { id: 1, name: 'alex_ffr', text: 'This immediately became my daily driver. The apple-ginger opening is fresh and punchy, then it settles into this smooth woody base that just works. Compliment magnet.', verified: true, rating: 5, date: '2 days ago' },
     { id: 2, name: 'lukasz_PL', text: 'Blind bought after seeing it on TikTok. Its good. Not mind-blowing but very solid. Safe, versatile, gets compliments. Sometimes thats all you need.', verified: true, rating: 4, date: '5 days ago' },
     { id: 3, name: 'samirUAE', text: 'In hot weather this is great. The apple note is crisp and the ginger gives it enough spice. 3 sprays and you\'re good for 8 hours.', verified: true, rating: 5, date: '1 week ago' },
     { id: 4, name: 'nina_K', text: 'Bought for my brother and he wears it daily. Clean, masculine, pleasant. Not too sweet, not too sharp.', verified: true, rating: 5, date: '1 week ago' },
