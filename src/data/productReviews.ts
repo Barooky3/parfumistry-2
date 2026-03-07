@@ -28,10 +28,22 @@ export const productReviews: Record<string, ProductReview[]> = {
 
   // Individual Fragrances
   'amore-caffe': [
-    { id: 1, name: 'Sophie', text: 'Smells exactly like a vanilla latte from a fancy coffee shop. Obsessed!', verified: true, rating: 5, date: '5 days ago' },
-    { id: 2, name: 'Emma', text: 'Everyone asks what I\'m wearing. It\'s sweet but sophisticated.', verified: true, rating: 5, date: '1 week ago' },
-    { id: 3, name: 'Lucas', text: 'The coffee note is perfect - not too strong, not too weak. Chef\'s kiss.', verified: true, rating: 4.5, date: '2 weeks ago' },
-    { id: 4, name: 'Isabella', text: 'Cozy, warm, and absolutely addictive. My favorite winter scent now.', verified: true, rating: 4, date: '3 weeks ago' },
+    { id: 1, name: 'caffelatte', text: 'Smells like walking into an Italian coffee shop. Warm espresso, a bit of vanilla, just lovely. I reach for this constantly in autumn.', verified: true, rating: 5, date: '3 days ago' },
+    { id: 2, name: 'EmmK', text: 'The coffee note is realistic which I appreciate. Not synthetic at all. Only downside is it doesn\'t project much after the first hour — becomes very intimate.', verified: true, rating: 3.5, date: '1 week ago' },
+    { id: 3, name: 'Noor_S', text: 'Really cozy and comforting. Reminds me of a vanilla latte. I wore it to work and two people complimented it which almost never happens.', verified: true, rating: 5, date: '2 weeks ago' },
+    { id: 4, name: 'isabellaR', text: 'It\'s nice but a bit one-note for me. Coffee and vanilla from start to finish, not much development. If you love gourmands you\'ll enjoy it, otherwise it can feel repetitive.', verified: true, rating: 3, date: '3 weeks ago' },
+    { id: 5, name: 'lucasW', text: 'Great scent, poor longevity. I get maybe 4 hours before it\'s gone. The coffee-vanilla combo is well done though, smells natural and warm.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 6, name: 'ScentJunkie', text: 'This is my comfort scent. Nothing fancy, just a warm hug in a bottle. Perfect for lazy weekends and cold evenings.', verified: true, rating: 4.5, date: '6 weeks ago' },
+    { id: 7, name: 'danieleM', text: 'Honestly surprised by how much I like this. The espresso note isn\'t bitter at all, it blends into this sweet creamy thing that\'s really addictive.', verified: true, rating: 5, date: '2 months ago' },
+  ],
+  'born-in-roma-intense': [
+    { id: 1, name: 'roma_kid', text: 'The smoked vanilla here is gorgeous. It\'s darker and richer than the original Born in Roma. Easily my favourite from the line.', verified: true, rating: 5, date: '5 days ago' },
+    { id: 2, name: 'JayFrag', text: 'Warm spicy opening, then settles into this deep vanilla-woody thing. Lasts well too — 8+ hours on my skin. Really impressed.', verified: true, rating: 5, date: '1 week ago' },
+    { id: 3, name: 'MikeB_90', text: 'It\'s good but almost too sweet for my taste. The vanilla is heavy and after a few hours it starts to feel a bit cloying. Works better in small doses.', verified: true, rating: 3, date: '2 weeks ago' },
+    { id: 4, name: 'scent_sophie', text: 'Wore this on a night out and got asked about it twice. It has that warm spicy vibe that works really well in colder months. Not great for summer though.', verified: true, rating: 4, date: '3 weeks ago' },
+    { id: 5, name: 'TobiasL', text: 'The ginger note gives it a nice kick up top. Dries down into a smoky vanilla that\'s quite different from anything else I own. Solid pickup.', verified: true, rating: 5, date: '1 month ago' },
+    { id: 6, name: 'alessio_fr', text: 'Decent but I expected more complexity from the "Intense" version. It\'s basically the original but louder and sweeter. If that\'s what you want, great, but it\'s not more refined or anything.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 7, name: 'ChrisW_UK', text: 'Really enjoy this for evening wear. The amber and vanilla combo gives it a luxurious feel without being too niche or challenging. Crowd pleaser for sure.', verified: true, rating: 4.5, date: '2 months ago' },
   ],
   'althair': [
     { id: 1, name: 'Thomas', text: 'The vanilla in this is absolutely divine. Creamy and luxurious.', verified: true, rating: 5, date: '3 days ago' },
