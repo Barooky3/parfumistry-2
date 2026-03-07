@@ -890,7 +890,63 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Country Dropdown with Search */}
+              {/* Phone Number */}
+              <div className="space-y-2">
+                <Label className="text-xs font-medium tracking-wider text-foreground">
+                  PHONE NUMBER
+                </Label>
+                <div className="flex gap-2">
+                  <div className="w-[130px] shrink-0">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="w-full h-12 justify-between bg-background border-border rounded-md font-normal text-sm px-3"
+                        >
+                          {formData.phoneCode || '+00'}
+                          <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Search..." />
+                          <CommandList>
+                            <CommandEmpty>No country found.</CommandEmpty>
+                            <CommandGroup>
+                              {COUNTRIES.map((country) => (
+                                COUNTRY_PHONE_CODES[country] && (
+                                  <CommandItem
+                                    key={country}
+                                    value={country}
+                                    onSelect={() => {
+                                      setFormData(prev => ({ ...prev, phoneCode: COUNTRY_PHONE_CODES[country] }));
+                                    }}
+                                  >
+                                    <Check className={cn("mr-2 h-4 w-4", formData.phoneCode === COUNTRY_PHONE_CODES[country] ? "opacity-100" : "opacity-0")} />
+                                    {COUNTRY_PHONE_CODES[country]} {country}
+                                  </CommandItem>
+                                )
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="tel"
+                      placeholder="612345678"
+                      value={formData.phone}
+                      onChange={(e) => updateFormData('phone', e.target.value)}
+                      className="pl-12 h-12 bg-background border-border rounded-md"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label className="text-xs font-medium tracking-wider text-foreground">
                   COUNTRY <span className="text-accent">*</span>
