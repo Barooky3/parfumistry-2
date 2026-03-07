@@ -242,6 +242,10 @@ const Rewarble = () => {
               <Plus className="h-4 w-4 mr-2" />
               Add another code
             </Button>
+            <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 px-3.5 py-2.5 mt-1.5">
+              <p className="text-xs font-medium text-amber-800 dark:text-amber-300 mb-0.5">⚠ Send the gift card code, not the order number</p>
+              <p className="text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">The gift card code contains <strong>letters and numbers</strong>. The Rewarble order number (digits only, starting with #) cannot be used.</p>
+            </div>
             <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
               Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your delivery.
             </p>
