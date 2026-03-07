@@ -126,17 +126,17 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           onClick={handleCardClick}
         >
          {(() => {
-            const { wrapperStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
+            const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
             return (
               <div 
                 className={cn(
-                  "aspect-[3/4] bg-secondary rounded-sm flex items-end justify-center relative",
+                  "aspect-[3/4] bg-secondary rounded-sm flex items-end justify-center relative overflow-hidden",
                   !hasOverride && product.imagePadding
                 )}
               >
                 {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
-                  <div className="relative w-full h-full" style={wrapperStyle || undefined}>
+                  <div className="relative w-full h-full" style={innerStyle || undefined}>
                     <motion.img
                       src={product.bundleImages[0]}
                       alt={`${product.name} item 1`}
@@ -163,17 +163,16 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                     />
                   </div>
                 ) : (
-                  <motion.img
-                    src={product.image}
-                    alt={product.name}
-                    className={cn("w-full", (product.imagePadding || hasOverride) ? "h-full object-contain object-bottom" : "h-full object-cover")}
-                    loading="lazy"
-                    style={wrapperStyle || undefined}
-                    initial={{ scale: imageScale }}
-                    animate={{ scale: imageScale }}
-                    whileHover={{ scale: 1.08 * imageScale }}
-                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  />
+                  <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center">
+                    <motion.img
+                      src={product.image}
+                      alt={product.name}
+                      className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                      loading="lazy"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    />
+                  </div>
                 )}
               </div>
             );

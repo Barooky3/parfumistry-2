@@ -14,7 +14,7 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
   const { user } = useAuth();
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || '');
   const paddingOverride = useProductPadding(bundle.id);
-  const { wrapperStyle, hasOverride } = computePaddingAndScale(paddingOverride);
+  const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
 
   return (
     <motion.div 
@@ -28,13 +28,13 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
       <Link to={`/product/${bundle.id}`} className="block">
         <div 
           className={cn(
-            "aspect-[3/4] bg-secondary rounded-sm flex items-end justify-center relative",
+            "aspect-[3/4] bg-secondary rounded-sm flex items-end justify-center relative overflow-hidden",
             !hasOverride && bundle.imagePadding
           )}
         >
           {isAdmin && <PaddingAdjuster productId={bundle.id} productName={bundle.name} />}
           {bundle.bundleImages && bundle.bundleImages.length > 0 ? (
-            <div className="relative w-full h-full" style={wrapperStyle || undefined}>
+            <div className="relative w-full h-full" style={innerStyle || undefined}>
               <img
                 src={bundle.bundleImages[0]}
                 alt={`${bundle.name} item 1`}
@@ -55,16 +55,17 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
               />
             </div>
           ) : (
-            <img
-              src={bundle.image}
-              alt={bundle.name}
-              className={cn(
-                "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
-                hasOverride && "object-contain"
-              )}
-              style={wrapperStyle || undefined}
-              loading="lazy"
-            />
+            <div style={innerStyle || undefined} className="w-full h-full">
+              <img
+                src={bundle.image}
+                alt={bundle.name}
+                className={cn(
+                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  hasOverride && "object-contain"
+                )}
+                loading="lazy"
+              />
+            </div>
           )}
         </div>
         

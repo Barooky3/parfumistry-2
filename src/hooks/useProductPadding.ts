@@ -63,22 +63,22 @@ export const useProductPadding = (productId: string): PaddingOverride | null => 
 };
 
 export const computePaddingAndScale = (override: PaddingOverride | null) => {
-  if (!override) return { wrapperStyle: undefined, imageScale: 1, hasOverride: false };
+  if (!override) return { innerStyle: undefined, hasOverride: false };
   
   const hasAny = override.padding_top !== 0 || override.padding_right !== 0 || override.padding_bottom !== 0 || override.padding_left !== 0 || override.scale !== 1;
-  if (!hasAny) return { wrapperStyle: undefined, imageScale: 1, hasOverride: false };
+  if (!hasAny) return { innerStyle: undefined, hasOverride: false };
 
   const imageScale = override.scale;
-
-  // Use transform to translate + scale the content wrapper
-  // Padding values are treated as translation offsets (positive = inward, negative = outward)
   const translateX = (override.padding_left - override.padding_right) / 2;
   const translateY = (override.padding_top - override.padding_bottom) / 2;
 
-  const wrapperStyle: React.CSSProperties = {
+  // Applied to an inner wrapper div that sits inside the overflow-hidden container
+  const innerStyle: React.CSSProperties = {
     transform: `scale(${imageScale}) translate(${translateX}rem, ${translateY}rem)`,
-    transformOrigin: 'center center',
+    transformOrigin: 'center bottom',
+    width: '100%',
+    height: '100%',
   };
 
-  return { wrapperStyle, imageScale, hasOverride: true };
+  return { innerStyle, hasOverride: true };
 };
