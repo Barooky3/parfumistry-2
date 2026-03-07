@@ -607,7 +607,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'VictoriaLDN', text: 'Sweet and fruity with LV quality. The rose-peony heart is beautifully done. Harmonious, balanced, elegant.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'CatherineGVA', text: 'The mandarin-grapefruit opening is bright and joyful. Transitions into soft florals. Uplifting and positive.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'ElizabethDC', text: 'Pure luxury but the price is insane. Beautiful floral but not $300+ beautiful. You can find lovely florals from other houses for much less. LV tax at its peak.', verified: true, rating: 3, date: '1 month ago' },
-    { id: 4, name: 'ameliePRS', text: 'Gorgeous scent but barely projects after the first hour. For LV money I want people to notice when I walk in. This is a personal bubble scent at best. Disappointing.', verified: true, rating: 3.5, date: '6 weeks ago' },
+    { id: 4, name: 'ameliePRS', text: 'Gorgeous scent but very similar to other high-end florals I already own. The rose-peony is well done but not unique enough to justify adding when I have Delina and Miss Dior covering the same territory.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // 4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
