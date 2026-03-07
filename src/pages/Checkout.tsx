@@ -1106,8 +1106,8 @@ const Checkout = () => {
                     }}
                   >
                     <span className="flex items-center gap-2">
-                      🎁
-                      <span>Pay with Rewarble</span>
+                      💳
+                      <span>Pay with Visa / Mastercard</span>
                     </span>
                   </Button>
                   {/* Payment method logos */}
