@@ -54,6 +54,26 @@ const TermsOfService = () => {
             </section>
 
             <section>
+              <h2 className="font-display text-2xl mb-4">5. Account Responsibilities</h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                If you create an account with us:
+              </p>
+              <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
+                <li>You are responsible for maintaining the confidentiality of your account</li>
+                <li>You must provide accurate and complete information</li>
+                <li>You are responsible for all activities under your account</li>
+                <li>You must notify us immediately of any unauthorized use</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl mb-4">6. Intellectual Property</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                All content on ProfParfums, including but not limited to text, graphics, logos, images, and software, is the property of ProfParfums or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or create derivative works without our express written permission.
+              </p>
+            </section>
+
+            <section>
               <h2 className="font-display text-2xl mb-4">7. Limitation of Liability</h2>
               <p className="text-muted-foreground leading-relaxed">
                 ProfParfums shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service. This includes damages for loss of profits, data, or other intangible losses.
