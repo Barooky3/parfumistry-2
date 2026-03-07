@@ -138,6 +138,19 @@ const COUNTRIES = [
   'Mauritius',
 ].sort();
 
+const EU_UK_COUNTRIES = new Set([
+  'Netherlands', 'Belgium', 'Germany', 'France', 'United Kingdom', 'Spain', 'Italy',
+  'Austria', 'Switzerland', 'Portugal', 'Poland', 'Sweden', 'Denmark', 'Norway', 'Finland',
+  'Ireland', 'Luxembourg', 'Czech Republic', 'Greece', 'Hungary', 'Romania', 'Bulgaria',
+  'Croatia', 'Slovakia', 'Slovenia', 'Estonia', 'Latvia', 'Lithuania', 'Iceland', 'Cyprus',
+  'Malta', 'Monaco', 'Liechtenstein', 'Andorra', 'San Marino',
+]);
+
+const getShippingCost = (country: string): number => {
+  if (!country) return 0;
+  return EU_UK_COUNTRIES.has(country) ? 1.99 : 2.99;
+};
+
 // Interface for PDOK API response (Netherlands)
 interface PDOKSuggestion {
   weergavenaam: string;
