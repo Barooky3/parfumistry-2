@@ -275,7 +275,7 @@ const Rewarble = () => {
                 <span className="font-semibold text-red-500 block mb-2">
                   Orders confirmed with invalid Rewarble codes will be rejected upon review.
                 </span>
-                Your Rewarble code{allCodes.length > 1 ? 's' : ''} will be verified before your order is processed. If any code is invalid or has already been used, your order will be rejected. Are you sure you have valid Rewarble code{allCodes.length > 1 ? 's' : ''}?
+                Your Rewarble code{allCodes.length > 1 ? 's' : ''} will be verified before your order is processed. If any code is invalid or has already been used, your order will be rejected.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
