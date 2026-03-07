@@ -19,7 +19,7 @@ const EmailPreview = () => {
 <h2 style="color: #c9a96e; font-size: 22px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: 1px;">Thank you for your purchase!</h2>
 <h2 style="color: #ffffff; font-size: 20px; font-weight: 600; margin: 0 0 14px 0;">🎁 Special Offer!</h2>
 <p style="color: #ffffff; font-size: 16px; margin: 0 0 6px 0; line-height: 1.5;">Use code <span style="background-color: #c9a96e; color: #1a1a1a; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 18px; letter-spacing: 1px;">Parfumz50</span> for <strong>50% off</strong> your next order</p>
-<p style="color: #ccc; font-size: 13px; margin: 8px 0 0 0; line-height: 1.5;">Valid for 24 hours only ⏰<br><span style="color: #999; font-size: 11px;">(Valid for short time only in order to avoid order hoarding. Code can be used for multiple orders)</span></p>
+<p style="color: #ccc; font-size: 13px; margin: 8px 0 0 0; line-height: 1.5;">Valid for 24 hours only ⏰<br><span style="color: #bbb; font-size: 13px;">(Valid for short time only in order to avoid order hoarding. Code can be used for multiple orders)</span></p>
 </div>
 
 <div style="padding: 32px 32px 0 32px;">
