@@ -27,6 +27,32 @@ const RatingStars = ({ rating }: { rating: number }) => {
 export const ReviewsSection = ({ reviews }: ReviewsSectionProps) => {
   if (!reviews || reviews.length === 0) return null;
 
+  // Interleave reviews: first is always 3-4★, then alternate low/high evenly
+  const sortedReviews = (() => {
+    const low = reviews.filter(r => r.rating <= 4).sort((a, b) => a.rating - b.rating);
+    const high = reviews.filter(r => r.rating > 4).sort((a, b) => b.rating - a.rating);
+    
+    // Pick the first 3-4★ review as lead
+    const first = low.shift();
+    if (!first) return reviews;
+    
+    const result: ProductReview[] = [first];
+    let pickLow = false; // alternate starting with high after first low
+    while (low.length > 0 || high.length > 0) {
+      if (pickLow && low.length > 0) {
+        result.push(low.shift()!);
+      } else if (!pickLow && high.length > 0) {
+        result.push(high.shift()!);
+      } else if (low.length > 0) {
+        result.push(low.shift()!);
+      } else {
+        result.push(high.shift()!);
+      }
+      pickLow = !pickLow;
+    }
+    return result;
+  })();
+
   const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
 
   return (
