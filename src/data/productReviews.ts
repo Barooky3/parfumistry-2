@@ -99,7 +99,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 4, name: 'tyler_nyc', text: 'I own the whole Le Male line and this is probably the least exciting. Its good but sits in this awkward middle ground — not as fresh as the OG, not as bold as Elixir. Just kind of... there.', verified: true, rating: 3.5, date: '3 weeks ago' },
     { id: 5, name: 'sofia_rose', text: 'Bought for my partner and he gets compliments constantly. The iris gives it a powdery elegance thats really attractive on men.', verified: true, rating: 5, date: '1 month ago' },
     { id: 6, name: 'noseBerlin', text: 'Performance is decent, about 6-7 hours. Not a nuclear projector but does its job. The spiced vanilla dry down is pleasant and inoffensive. Fine.', verified: true, rating: 4, date: '1 month ago' },
-    { id: 7, name: 'ahmed_uae', text: 'For the price I expected more. Nice vanilla-spice scent but it doesn\'t do anything 10 other fragrances in my collection don\'t already do. Longevity was disappointing too, maybe 5 hours.', verified: true, rating: 3, date: '6 weeks ago' },
+    { id: 7, name: 'ahmed_uae', text: 'For the price I expected more. Nice vanilla-spice scent but it doesn\'t do anything 10 other fragrances in my collection don\'t already do. The iris note gives it a powdery quality that feels dated rather than modern.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 8, name: 'laura_IT', text: 'It smells fine on my boyfriend. Has a warm quality but the sillage is moderate at best. Don\'t expect to be noticed from across the room.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
