@@ -9,6 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { getCardRecommendation } from '@/utils/cardRecommendation';
 
 const Rewarble = () => {
   const { toast } = useToast();
@@ -141,7 +142,7 @@ const Rewarble = () => {
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a Rewarble gift card</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a card closest to your order amount ({orderTotal ? `€${orderTotal}${currency !== 'EUR' && orderTotalNum > 0 ? ` (≈ ${formatPrice(orderTotalNum)})` : ''}` : 'see checkout'}) using one of the many supported payment methods.
+                  {orderTotalNum > 0 ? `€${orderTotal} is your cart total, so your card should be ${getCardRecommendation(orderTotalNum, currency)}.` : 'Buy a card closest to your order amount (see checkout).'} Purchase using one of the many supported payment methods.
                 </p>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>
