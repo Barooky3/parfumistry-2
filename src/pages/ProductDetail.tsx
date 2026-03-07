@@ -96,17 +96,17 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.4 }}
           >
             {(() => {
-              const { wrapperStyle, imageScale, hasOverride } = computePaddingAndScale(paddingOverride);
+              const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
               return (
                 <div 
                   className={cn(
-                    "aspect-square md:aspect-[3/4] bg-secondary flex items-end justify-center relative",
+                    "aspect-square md:aspect-[3/4] bg-secondary flex items-end justify-center relative overflow-hidden",
                     !hasOverride && product.imagePadding
                   )}
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
-                    <div className="relative w-full h-full" style={wrapperStyle || undefined}>
+                    <div className="relative w-full h-full" style={innerStyle || undefined}>
                       <img
                         src={product.bundleImages[0]}
                         alt={`${product.name} item 1`}
@@ -127,13 +127,14 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       />
                     </div>
                   ) : (
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
-                      style={wrapperStyle || undefined}
-                      loading="eager"
-                    />
+                    <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center">
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                        loading="eager"
+                      />
+                    </div>
                   )}
                 </div>
               );
