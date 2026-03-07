@@ -25,7 +25,9 @@ const EmailPreview = () => {
 <div style="padding: 32px 32px 0 32px;">
 <p style="font-size: 13px; color: #999; margin: 0 0 8px 0;">Order Number: <strong style="color: #1a1a1a; font-size: 15px;">#1042</strong></p>
 <p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>John</strong>,</p>
-<p style="font-size: 15px; color: #333; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed and is being prepared for shipment. You can expect to receive your <strong>DHL</strong> shipping confirmation within <strong>3 business days</strong>.</p>
+<div style="background-color: #faf9f6; border: 2px solid #c9a96e; padding: 16px 24px; border-radius: 8px; text-align: center; margin-bottom: 24px;">
+<p style="font-size: 16px; color: #1a1a1a; margin: 0; font-weight: 500; line-height: 1.6;">📦 Your order has been confirmed and is being prepared for shipment. You will receive your <strong>DHL</strong> tracking number within <strong>2 business days</strong>.</p>
+</div>
 </div>
 
 <div style="padding: 0 32px;">
@@ -74,7 +76,7 @@ const EmailPreview = () => {
 
 <div style="padding: 0 32px; margin-bottom: 24px;">
 <div style="background-color: #f0f7f0; border: 1px solid #d4e8d4; padding: 16px 24px; border-radius: 8px; text-align: center;">
-<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">🚚 Shipping via DHL — Estimated delivery: 3 business days</p>
+<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">🚚 Shipping via DHL — Estimated delivery: 4–6 business days</p>
 </div></div>
 
 <div style="padding: 0 32px 32px 32px;">
