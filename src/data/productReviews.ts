@@ -19,21 +19,44 @@ export interface ProductReview {
 //  4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
 
 export const productReviews: Record<string, ProductReview[]> = {
-  // ===== BUNDLES (kept short) =====
+  // ===== BUNDLES =====
+  // Ratio: 35% 5★, 20% 4-4.5★, 25% 3-3.5★ w/ niche gripes, 15% 3★ w/ real drawbacks, 5% 2-2.5★
   'evening-sweetheart-bundle': [
-    { id: 1, name: 'Jordan', text: 'Perfect bundle for date nights. Every scent in here is a compliment getter.', verified: true, rating: 5, date: '1 week ago' },
-    { id: 2, name: 'Marcus', text: 'Bought this for evenings out and haven\'t been disappointed once.', verified: true, rating: 4.5, date: '2 weeks ago' },
-    { id: 3, name: 'Ryan', text: 'Great value. These fragrances work amazing together as a rotation.', verified: true, rating: 5, date: '3 weeks ago' },
+    { id: 1, name: 'Marcus', text: 'Got this expecting date night perfection but honestly two of the five smell really similar on my skin. The Le Male and Born in Roma blend into each other after an hour. Still decent value but not the variety I hoped for.', verified: true, rating: 3.5, date: '2 weeks ago' },
+    { id: 2, name: 'Jordan', text: 'The SWY Intensely and Le Male Elixir alone are worth the price of the whole bundle. Wore the Elixir on a first date and got multiple compliments. These are legit quality oils.', verified: true, rating: 5, date: '1 week ago' },
+    { id: 3, name: 'Dimi_frag', text: 'For the price this is unbeatable. I\'ve tried similar bundles from other oil houses and these are noticeably better in terms of accuracy. Le Male Elixir is almost 1:1. The Most Wanted is a bit weaker than the original though.', verified: true, rating: 4, date: '3 weeks ago' },
+    { id: 4, name: 'NightOwl22', text: 'Three of the five are absolute bangers. Born in Roma Intense and SWY Intensely are the standouts. Le Male Le Parfum was a little synthetic smelling on first spray but settled nicely.', verified: true, rating: 4.5, date: '1 month ago' },
+    { id: 5, name: 'Ryan', text: 'Solid bundle but honestly the "evening" theme is a stretch. Le Male Le Parfum is pretty versatile and not specifically an evening scent. Felt like they just grouped popular ones together. Still smells great though.', verified: true, rating: 3.5, date: '3 weeks ago' },
+    { id: 6, name: 'ScentCollector', text: 'Bought all four bundles from this site and Evening Sweetheart is the best one by far. Every single fragrance in here is a compliment magnet. My girlfriend literally stole the Born in Roma from me.', verified: true, rating: 5, date: '5 days ago' },
+    { id: 7, name: 'Tomek_PL', text: 'Longevity on the Le Male Elixir is insane, like 10+ hours on clothes. The others are more moderate, maybe 4-6 hours skin. For oils at this price point that\'s perfectly fine.', verified: true, rating: 5, date: '2 months ago' },
+    { id: 8, name: 'LukasB', text: 'I already had SWY Intensely individually so having it again in the bundle felt redundant. Wish there was an option to swap one out. The other four are great though, especially the Most Wanted.', verified: true, rating: 3, date: '1 month ago' },
   ],
   'young-playboy-bundle': [
-    { id: 1, name: 'Tyler', text: 'This bundle is fire. Fresh, bold, and versatile - exactly what I needed.', verified: true, rating: 5, date: '1 week ago' },
-    { id: 2, name: 'Jake', text: 'Perfect starter pack. Every bottle hits different but they all slap.', verified: true, rating: 4.5, date: '2 weeks ago' },
-    { id: 3, name: 'Chris', text: 'Bought this as my first real collection. No regrets, all bangers.', verified: true, rating: 5, date: '1 month ago' },
+    { id: 1, name: 'Tyler', text: 'The Sauvage in here is good but honestly it doesn\'t have that same sharp pepper note as the original. Smells more "smooth" which I guess some people prefer. The 1 Million Elixir is the real star of this set.', verified: true, rating: 3.5, date: '1 week ago' },
+    { id: 2, name: 'Jake', text: 'Perfect starter pack if you\'re getting into fragrances. Every bottle hits different but they all work. Eros and Le Male Elixir are my daily rotation now.', verified: true, rating: 5, date: '2 weeks ago' },
+    { id: 3, name: 'Chris', text: 'Bought this as my first real collection. The SWY Absolutely is amazing for casual wear. Only complaint is the Sauvage longevity could be better, maybe 4 hours on my skin.', verified: true, rating: 4, date: '1 month ago' },
+    { id: 4, name: 'FragBro99', text: 'This bundle screams "I\'m 19 and going clubbing" which is exactly what I wanted lol. All five are crowd pleasers. None of them are subtle or unique but they don\'t need to be.', verified: true, rating: 4.5, date: '3 weeks ago' },
+    { id: 5, name: 'DannyK', text: 'Honestly some of these are a bit too similar. Eros and 1 Million Elixir both give that sweet-fresh vibe. Would\'ve preferred something more contrasting in the lineup. Quality is fine though.', verified: true, rating: 3, date: '2 months ago' },
+    { id: 6, name: 'MaxScents', text: 'The Le Male Elixir in this set is identical to the one sold individually on this site. Creamy, warm, long lasting. The bundle pricing makes it a no-brainer vs buying separately.', verified: true, rating: 5, date: '1 week ago' },
+    { id: 7, name: 'AdrianFR', text: 'Got this for my younger brother\'s birthday. He went absolutely crazy for it. Said the Eros gets him the most compliments at uni. Mission accomplished.', verified: true, rating: 5, date: '6 days ago' },
+    { id: 8, name: 'pfraghead', text: 'The name is kinda cringe but the fragrances are solid. 1 Million Elixir is gourmand heaven and the SWY Absolutely has that fresh masculine thing going. Sauvage is just okay in oil form.', verified: true, rating: 3.5, date: '1 month ago' },
   ],
   'sleek-and-clean-bundle': [
-    { id: 1, name: 'Alex', text: 'Perfect for the office. Clean and professional without being boring.', verified: true, rating: 5, date: '1 week ago' },
-    { id: 2, name: 'Michael', text: 'These are my go-to daily drivers now. Fresh and versatile.', verified: true, rating: 4.5, date: '3 weeks ago' },
-    { id: 3, name: 'Daniel', text: 'Great bundle for anyone who wants clean, masculine scents.', verified: true, rating: 4, date: '1 month ago' },
+    { id: 1, name: 'Alex', text: 'Got this for office wear but honestly the YSL Y is the only one that feels truly "clean" to me. Myself has a sweetness that\'s more date night, and the Armani Code is straight up evening wear. Misleading theme.', verified: true, rating: 3, date: '1 week ago' },
+    { id: 2, name: 'Michael', text: 'These are my go-to daily drivers now. All five work perfectly in professional settings. The Sauvage and YSL Y combo alone covers 90% of my needs. Incredible value.', verified: true, rating: 5, date: '3 weeks ago' },
+    { id: 3, name: 'Daniel', text: 'Quality surprised me for the price. The YSL Myself is really well done, that bergamot-lavender opening is almost identical to my retail bottle. Projection is a bit less but for an oil that\'s expected.', verified: true, rating: 4, date: '1 month ago' },
+    { id: 4, name: 'ScentMinimal', text: 'Clean, fresh, and professional. Exactly what was advertised. I reach for the Acqua di Gio most mornings. The whole set has become my work rotation and I haven\'t bought a single retail bottle since.', verified: true, rating: 5, date: '2 weeks ago' },
+    { id: 5, name: 'OfficeFrag', text: 'YSL Y and Sauvage are the strongest performers here, easily 6-7 hours. The Acqua di Gio is more of a 3-hour scent which is disappointing. Myself sits right in the middle.', verified: true, rating: 3.5, date: '5 weeks ago' },
+    { id: 6, name: 'Tom_H', text: 'Ordered this and the Evening Sweetheart. This one is more versatile for sure. Every scent works day or night. Only gripe is Armani Code smells a bit synthetic compared to retail.', verified: true, rating: 4.5, date: '2 months ago' },
+    { id: 7, name: 'ReviewerDE', text: 'Nice set but feels like it\'s trying to be too safe. Every fragrance here is a "mass appealer" which means nothing really stands out or surprises you. Good for beginners I guess.', verified: true, rating: 3.5, date: '1 month ago' },
+  ],
+  'jpg-bundle': [
+    { id: 1, name: 'GaultierFan', text: 'Only three bottles for the price feels a bit light compared to the 5-piece bundles. The Le Male Elixir is phenomenal but Le Beau Le Parfum is quite different from what I expected. More coconut-forward than the original.', verified: true, rating: 3.5, date: '2 weeks ago' },
+    { id: 2, name: 'Pierre_M', text: 'If you love JPG this is a must. Le Male Elixir and Le Male Le Parfum are the best representations of the originals I\'ve found in oil form. The Elixir especially is spot on with that honey-vanilla DNA.', verified: true, rating: 5, date: '1 week ago' },
+    { id: 3, name: 'FragCollection', text: 'Great trio. Le Male Le Parfum is the most versatile of the three, works any season. Le Beau is specifically summer. And the Elixir is fall/winter beast mode. Smart curation.', verified: true, rating: 4.5, date: '3 weeks ago' },
+    { id: 4, name: 'JuanFR', text: 'The value isn\'t as strong as the other bundles since you only get 3 fragrances. Quality is there though, especially the Elixir. Le Beau is nice but I wouldn\'t have chosen it over Scandal or Ultra Male.', verified: true, rating: 3, date: '1 month ago' },
+    { id: 5, name: 'DarkHorse', text: 'Le Male Elixir alone makes this worth it. That creamy lavender-honey combo is addictive. My wife literally asks me to wear it every time we go out. The other two are solid bonuses.', verified: true, rating: 5, date: '4 days ago' },
+    { id: 6, name: 'NoseKnows', text: 'Decent set but all three are in the same sweet-masculine family so there\'s not a huge range. If you want variety this isn\'t it. If you want three variations of "warm sweet guy" then go for it.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // ===== INDIVIDUAL FRAGRANCES =====
