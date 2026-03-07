@@ -549,7 +549,14 @@ const Checkout = () => {
   );
 
   const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      // Auto-set phone code when country changes
+      if (field === 'country' && COUNTRY_PHONE_CODES[value] && !prev.phone) {
+        updated.phoneCode = COUNTRY_PHONE_CODES[value];
+      }
+      return updated;
+    });
     
     // Address autocomplete disabled - users enter manually
   };
