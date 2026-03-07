@@ -999,6 +999,13 @@ const Checkout = () => {
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="text-green-600 font-medium">Free</span>
                 </div>
+
+                {/* Estimated Delivery Info */}
+                <div className="bg-secondary/50 border border-border rounded-md p-3 mt-1">
+                  <p className="text-xs font-semibold text-foreground mb-1">🚚 Estimated Delivery via DHL</p>
+                  <p className="text-xs text-muted-foreground">EU & UK: <span className="font-medium text-foreground">4–6 business days</span></p>
+                  <p className="text-xs text-muted-foreground">Rest of World: <span className="font-medium text-foreground">6–8 business days</span></p>
+                </div>
               </div>
 
               {/* Total */}
