@@ -69,8 +69,10 @@ const EmailPreview = () => {
 
 <div style="padding: 0 32px 24px 32px;">
 <div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px;">
-<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; margin: 0 0 8px 0;">Shipping Address</p>
-<p style="font-size: 14px; color: #333; margin: 0; line-height: 1.5;">123 Main Street, Amsterdam, 1012AB, Netherlands</p>
+<p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; margin: 0 0 12px 0;">Shipping Address</p>
+<p style="font-size: 14px; color: #333; margin: 0 0 4px 0; line-height: 1.5;">123 Main Street</p>
+<p style="font-size: 14px; color: #333; margin: 0 0 4px 0; line-height: 1.5;">Amsterdam, 1012AB</p>
+<p style="font-size: 14px; color: #333; margin: 0; line-height: 1.5;">Netherlands</p>
 </div>
 </div>
 
