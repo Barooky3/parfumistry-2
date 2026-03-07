@@ -14,7 +14,7 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
   const { user } = useAuth();
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || '');
   const paddingOverride = useProductPadding(bundle.id);
-  const { wrapperStyle, hasOverride } = computePaddingAndScale(paddingOverride);
+  const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
 
   return (
     <motion.div 
