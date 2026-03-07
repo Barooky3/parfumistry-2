@@ -159,7 +159,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 7, name: 'LenaDE', text: 'Quite generic tbh. Smells like something Zara could make for €20. Pleasant? Yes. Special? Absolutely not. Longevity is decent though, about 7 hours.', verified: true, rating: 3, date: '1 month ago' },
     { id: 8, name: 'omar_scents', text: 'The amberwood base is nice but not enough to save it from being "another blue fragrance." After the apple fades its pretty standard woody-amber territory.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 9, name: 'carloIT', text: 'Wore it to a job interview. Clean and professional without being invisible. Does the job well even if its not exciting.', verified: true, rating: 3.5, date: '6 weeks ago' },
-    { id: 10, name: 'dani_bln', text: 'Smells fine up close but the projection is non-existent after the first hour. I had to reapply three times during a night out. For the hype this gets online I expected way more from the performance.', verified: true, rating: 2.5, date: '2 months ago' },
+    { id: 10, name: 'dani_bln', text: 'The definition of "safe pick." Smells exactly like what an algorithm would design if you asked it for "mass-appealing masculine fragrance." Zero personality, zero risk, zero reason to remember it. Aggressively mid.', verified: true, rating: 2.5, date: '2 months ago' },
   ],
 
   // 8 reviews: 3×5★, 2×4★, 2×3.5★, 1×3★ (+ 1×2.5★ since popular)
