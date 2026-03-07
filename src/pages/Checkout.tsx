@@ -138,6 +138,19 @@ const COUNTRIES = [
   'Mauritius',
 ].sort();
 
+const EU_UK_COUNTRIES = new Set([
+  'Netherlands', 'Belgium', 'Germany', 'France', 'United Kingdom', 'Spain', 'Italy',
+  'Austria', 'Switzerland', 'Portugal', 'Poland', 'Sweden', 'Denmark', 'Norway', 'Finland',
+  'Ireland', 'Luxembourg', 'Czech Republic', 'Greece', 'Hungary', 'Romania', 'Bulgaria',
+  'Croatia', 'Slovakia', 'Slovenia', 'Estonia', 'Latvia', 'Lithuania', 'Iceland', 'Cyprus',
+  'Malta', 'Monaco', 'Liechtenstein', 'Andorra', 'San Marino',
+]);
+
+const getShippingCost = (country: string): number => {
+  if (!country) return 0;
+  return EU_UK_COUNTRIES.has(country) ? 1.99 : 2.99;
+};
+
 // Interface for PDOK API response (Netherlands)
 interface PDOKSuggestion {
   weergavenaam: string;
@@ -576,8 +589,9 @@ const Checkout = () => {
   const isFormValidRef = useRef(isFormValid());
   isFormValidRef.current = isFormValid();
 
-  // Calculate current total
-  const currentTotal = appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice;
+  // Calculate shipping and current total
+  const shippingCost = formData.country ? getShippingCost(formData.country) : 0;
+  const currentTotal = (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice) + shippingCost;
 
   // PayPal SDK - TEMPORARILY DISABLED
   // To re-enable: uncomment the useEffect below and the PayPal UI sections
@@ -639,7 +653,7 @@ const Checkout = () => {
           if (error || captureData?.error) throw new Error(error?.message || captureData?.error);
           const fd = formDataRef.current;
           const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-          const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+           const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
           await supabase.functions.invoke('send-order-confirmation', { body: { orderItems: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, totalAmount: finalTotal.toFixed(2) } });
           setCompletedPaymentMethod('paypal');
           setIsCompleted(true);
@@ -997,7 +1011,11 @@ const Checkout = () => {
 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="text-green-600 font-medium">Free</span>
+                  {formData.country ? (
+                    <span className="text-foreground font-medium">{formatPrice(shippingCost)}</span>
+                  ) : (
+                    <span className="text-muted-foreground text-xs italic">Select country</span>
+                  )}
                 </div>
 
                 {/* Estimated Delivery Info */}
@@ -1012,8 +1030,8 @@ const Checkout = () => {
               <div className="flex items-center justify-between mb-6">
                 <span className="font-display text-lg text-foreground">Total</span>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-foreground">{formatPrice(appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice)}</span>
-                  <p className="text-xs text-muted-foreground">Taxes included</p>
+                  <span className="text-xl font-bold text-foreground">{formatPrice(currentTotal)}</span>
+                  <p className="text-xs text-muted-foreground">Taxes & shipping included</p>
                 </div>
               </div>
 
@@ -1074,7 +1092,7 @@ const Checkout = () => {
                       }
                       const fd = formDataRef.current;
                       const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.bundleImages?.[1] || item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl, affiliateUrl: item.product.affiliateUrl }));
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
                       sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
                         cartItems,
                         email: fd.email,
@@ -1136,7 +1154,7 @@ const Checkout = () => {
                       }
                       const fd = formDataRef.current;
                       const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.bundleImages?.[1] || item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl, affiliateUrl: item.product.affiliateUrl }));
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
                       sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
                         cartItems,
                         email: fd.email,
@@ -1175,7 +1193,7 @@ const Checkout = () => {
                       }
                       const fd = formDataRef.current;
                       const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.bundleImages?.[1] || item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl, affiliateUrl: item.product.affiliateUrl }));
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
                       sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
                         cartItems,
                         email: fd.email,
