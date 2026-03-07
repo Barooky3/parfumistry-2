@@ -1075,7 +1075,7 @@ const Checkout = () => {
 
                 <p className="text-xs text-center text-muted-foreground mb-2">
                   If you're looking for other payment methods, simply hit us up on{' '}
-                  <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
+                  <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
                   and we'll help you out!
                 </p>
 

@@ -25,7 +25,7 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 );
 
 const socialLinks = [
-  { icon: TikTokIcon, href: 'https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma', label: 'TikTok' },
+  { icon: TikTokIcon, href: 'https://www.tiktok.com/@profparfumz', label: 'TikTok' },
   
 ];
 
