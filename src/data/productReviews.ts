@@ -248,7 +248,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 2, name: 'EmmK', text: 'Coffee note is realistic which I appreciate. Only issue is projection dies after the first hour. Becomes very intimate very quickly. Fine if you like that but I wanted more.', verified: true, rating: 3.5, date: '1 week ago' },
     { id: 3, name: 'Noor_S', text: 'Really cozy and comforting. Reminds me of a vanilla latte. Wore it to work and two people complimented it which basically never happens to me.', verified: true, rating: 5, date: '2 weeks ago' },
     { id: 4, name: 'isabellaR', text: 'Kind of one-note. Coffee and vanilla from start to finish, no development. If you love gourmands you\'ll enjoy it but it can feel repetitive after a while. Nothing changes over 8 hours.', verified: true, rating: 3, date: '3 weeks ago' },
-    { id: 5, name: 'lucasW', text: 'Great scent but poor longevity. Maybe 4 hours before its gone. The coffee-vanilla combo is well done but I expected Mancera to do better on performance.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 5, name: 'lucasW', text: 'Great scent but the coffee note turns almost burnt and acrid on my skin after 2 hours. Smells amazing on paper and on my friend but my body chemistry does something weird. Frustrating when a scent works on everyone except you.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 6, name: 'danieleM', text: 'The espresso note isn\'t bitter at all, blends into this sweet creamy thing. One of the better Mancera releases. Decent daily for cold weather.', verified: true, rating: 4, date: '2 months ago' },
   ],
 
