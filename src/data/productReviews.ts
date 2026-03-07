@@ -280,7 +280,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 2, name: 'jakobDK', text: 'Interesting herbal take on the BIR DNA. Works in spring and summer. Not a winter scent though.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'chris_MEL', text: 'Too "green" for my taste. Smells like freshly cut grass mixed with herbs. If you\'re into that its probably great, not for me.', verified: true, rating: 3, date: '3 weeks ago' },
     { id: 4, name: 'elenaMD', text: 'Surprisingly versatile for how fresh it smells. The vetiver base grounds it nicely. Underrated in the line.', verified: true, rating: 5, date: '1 month ago' },
-    { id: 5, name: 'paul_frag', text: 'Longevity is disappointing. Maybe 3-4 hours on skin before completely gone. Lovely scent but at this price I expect more staying power.', verified: true, rating: 3.5, date: '6 weeks ago' },
+    { id: 5, name: 'paul_frag', text: 'Smells like someone blended a mojito with a garden salad. The green-herbal thing is fine conceptually but on my skin it becomes weirdly vegetal. Not what I\'d call attractive. Very niche taste.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // 6 reviews: 2×5★, 1×4★, 2×3.5★, 1×3★
