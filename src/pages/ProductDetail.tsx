@@ -223,10 +223,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               <DeliveryInfo />
             </div>
 
-            {/* Reviews */}
-            {reviews.length > 0 && (
-              <ReviewsSection reviews={reviews} />
-            )}
 
             {product.scentNotes && (
               <div className="py-6 border-t border-border">
@@ -252,8 +248,12 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               <p className="text-[15px] md:text-base text-foreground/80 leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
-              
             </div>
+
+            {/* Reviews */}
+            {reviews.length > 0 && (
+              <ReviewsSection reviews={reviews} />
+            )}
           </motion.div>
         </div>
 
