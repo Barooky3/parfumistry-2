@@ -217,7 +217,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               </Button>
             </div>
 
-            {/* Scent Notes Visual */}
+            {/* Delivery Timeline */}
+            <div className="mt-5">
+              <DeliveryInfo />
+            </div>
+
             {product.scentNotes && (
               <div className="py-6 border-t border-border">
                 <ScentNotesVisual 
