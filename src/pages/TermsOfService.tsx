@@ -21,20 +21,20 @@ const TermsOfService = () => {
             <section>
               <h2 className="font-display text-2xl mb-4">2. Nature of Products</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                ProfParfums sells digital products in the form of links to third-party fragrance sellers. When you make a purchase:
+                ProfParfums offers a curated selection of premium fragrances. When you make a purchase:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>You receive access to seller links, not physical products</li>
-                <li>The actual fragrance purchase is made directly with third-party sellers</li>
-                <li>ProfParfums is not responsible for products sold by third-party sellers</li>
-                <li>Delivery times and policies are determined by the third-party sellers</li>
+                <li>You are purchasing fragrances from our collection</li>
+                <li>All products are sourced from trusted suppliers</li>
+                <li>Delivery times may vary depending on your location</li>
+                <li>Product descriptions and images are for reference purposes</li>
               </ul>
             </section>
 
             <section>
               <h2 className="font-display text-2xl mb-4">3. No Refund Policy</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Due to the digital nature of our products, all sales are final. Once you receive access to seller links, no refunds or exchanges will be provided. Please ensure you understand what you are purchasing before completing your transaction.
+                All sales are final. No refunds or exchanges will be provided once an order has been placed and confirmed. Please ensure you are satisfied with your selection before completing your transaction.
               </p>
             </section>
 

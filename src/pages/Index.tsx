@@ -17,24 +17,24 @@ const features = [
 
 const faqs = [
   {
-    question: 'What am I buying?',
-    answer: 'You are purchasing access to exclusive fragrance seller links from our verified partners.',
+    question: 'What kind of fragrances do you sell?',
+    answer: 'We offer a curated selection of premium fragrances from top brands, handpicked for quality and lasting performance.',
   },
   {
     question: 'How do I receive my purchase?',
-    answer: 'After completing your order, you will receive your purchase via email instantly. Digital delivery is immediate.',
+    answer: 'After completing your order, you will receive a confirmation email with all the details. Orders are processed and shipped promptly.',
   },
   {
     question: "What's your refund policy?",
-    answer: 'Due to the digital nature of our products, all sales are final. No refunds or exchanges are available once seller links have been delivered.',
+    answer: 'All sales are final. Please ensure you are happy with your selection before completing your purchase. Contact us if you have any concerns.',
   },
   {
-    question: 'What kind of fragrances do you sell?',
-    answer: 'We offer high-quality 1:1 inspired fragrances sourced from trusted sellers. These are not original brand products.',
+    question: 'How long does delivery take?',
+    answer: 'Delivery times vary depending on your location. Most orders are processed within 1-3 business days.',
   },
   {
-    question: 'How do I contact the sellers?',
-    answer: 'After purchase, you\'ll receive the seller link via email with all necessary contact information.',
+    question: 'How can I get in touch?',
+    answer: 'You can reach us through our Contact page. We typically respond within 24-48 hours.',
   },
 ];
 
@@ -128,7 +128,7 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.9 }}
             >
-              Exclusive seller links. Instant delivery. Unmatched elegance.
+              Premium fragrances. Fast delivery. Unmatched elegance.
             </motion.p>
             
             <motion.div 
