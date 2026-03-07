@@ -150,7 +150,7 @@ export const productReviews: Record<string, ProductReview[]> = {
 
   // 10 reviews: 3×5★, 2×4★, 3×3.5★, 1×3★, 1×2.5★
   'ysl-y-edp': [
-    { id: 1, name: 'marlon_fan', text: 'The "marlon" fragrance lives up to the hype. Fresh apple and ginger up top, warm and woody dry down. Everyone around you goes "that smells good."', verified: true, rating: 5, date: '2 days ago' },
+    { id: 1, name: 'alex_ffr', text: 'This immediately became my daily driver. The apple-ginger opening is fresh and punchy, then it settles into this smooth woody base that just works. Compliment magnet.', verified: true, rating: 5, date: '2 days ago' },
     { id: 2, name: 'lukasz_PL', text: 'Blind bought after seeing it on TikTok. Its good. Not mind-blowing but very solid. Safe, versatile, gets compliments. Sometimes thats all you need.', verified: true, rating: 4, date: '5 days ago' },
     { id: 3, name: 'samirUAE', text: 'In hot weather this is great. The apple note is crisp and the ginger gives it enough spice. 3 sprays and you\'re good for 8 hours.', verified: true, rating: 5, date: '1 week ago' },
     { id: 4, name: 'nina_K', text: 'Bought for my brother and he wears it daily. Clean, masculine, pleasant. Not too sweet, not too sharp.', verified: true, rating: 5, date: '1 week ago' },
@@ -159,7 +159,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 7, name: 'LenaDE', text: 'Quite generic tbh. Smells like something Zara could make for €20. Pleasant? Yes. Special? Absolutely not. Longevity is decent though, about 7 hours.', verified: true, rating: 3, date: '1 month ago' },
     { id: 8, name: 'omar_scents', text: 'The amberwood base is nice but not enough to save it from being "another blue fragrance." After the apple fades its pretty standard woody-amber territory.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 9, name: 'carloIT', text: 'Wore it to a job interview. Clean and professional without being invisible. Does the job well even if its not exciting.', verified: true, rating: 3.5, date: '6 weeks ago' },
-    { id: 10, name: 'nina_reviews', text: 'Got this for my partner thinking it would be his new signature scent. Its pleasant up close for maybe 45 minutes then just vanishes completely. He reapplied twice in one evening. For something so hyped I expected way more projection and longevity.', verified: true, rating: 2.5, date: '2 months ago' },
+    { id: 10, name: 'dani_bln', text: 'Smells fine up close but the projection is non-existent after the first hour. I had to reapply three times during a night out. For the hype this gets online I expected way more from the performance.', verified: true, rating: 2.5, date: '2 months ago' },
   ],
 
   // 8 reviews: 3×5★, 2×4★, 2×3.5★, 1×3★ (+ 1×2.5★ since popular)
