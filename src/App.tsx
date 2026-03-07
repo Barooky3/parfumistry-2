@@ -25,6 +25,7 @@ import PaypalEneba from "./pages/PaypalEneba";
 import RevolutApp from "./pages/RevolutApp";
 import ResetPassword from "./pages/ResetPassword";
 import ProofUpload from "./pages/ProofUpload";
+import EmailPreview from "./pages/EmailPreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
