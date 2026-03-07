@@ -63,6 +63,7 @@ const App = () => (
               <Route path="/revolut" element={<RevolutApp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/proof" element={<ProofUpload />} />
+              <Route path="/email-preview" element={<EmailPreview />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
