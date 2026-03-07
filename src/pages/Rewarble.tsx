@@ -169,7 +169,7 @@ const Rewarble = () => {
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
               <div>
                 <p className="text-sm font-medium text-foreground">Confirm your payment</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released once you receive your products.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released once delivery to your address is complete.</p>
               </div>
             </div>
             <div className="mt-2 pt-3 border-t border-border">
@@ -233,16 +233,17 @@ const Rewarble = () => {
                 </div>
               </div>
             ))}
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={addCodeSlot}
-              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors pt-1"
+              className="w-full h-10 text-sm font-medium border-[#7C3AED]/30 text-[#7C3AED] hover:bg-[#7C3AED]/10 hover:text-[#7C3AED] transition-colors"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4 mr-2" />
               Add another code
-            </button>
+            </Button>
             <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
-              Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your products.
+              Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your delivery.
             </p>
             <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-border/60">
               <Shield className="h-3.5 w-3.5 text-[#7C3AED]" />
