@@ -133,10 +133,10 @@ const PaypalEneba = () => {
           </div>
         )}
 
-        {/* How it works */}
+        {/* Payment instructions */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
           <div className="px-5 py-3.5 border-b border-border bg-muted/30">
-            <h2 className="text-sm font-semibold text-foreground tracking-wide">How it works</h2>
+            <h2 className="text-sm font-semibold text-foreground tracking-wide">Payment instructions</h2>
           </div>
           <div className="px-5 py-4 space-y-4">
             <div className="flex gap-3">
@@ -165,6 +165,14 @@ const PaypalEneba = () => {
                 <p className="text-sm font-medium text-foreground">Confirm your payment</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released once you receive your products.</p>
               </div>
+            </div>
+            <div className="mt-2 pt-3 border-t border-border">
+              <p className="text-xs text-muted-foreground">
+                Confused or need help?{' '}
+                <a href="https://www.tiktok.com/@vendoreu2344?_r=1&_t=ZG-93eFNaYYZma" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">
+                  Contact us on TikTok
+                </a>
+              </p>
             </div>
           </div>
         </div>
