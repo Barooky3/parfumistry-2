@@ -413,7 +413,7 @@ function buildAdminInvoiceHtml(
   <div style="padding:0 40px 28px;">
     <div style="background:#faf9f6;border-left:3px solid #c9a96e;padding:16px 20px;">
       <p style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin:0 0 6px;font-weight:600;">Notes & Terms</p>
-      <p style="font-size:12px;color:#666;margin:0;line-height:1.7;">Digital product — no physical shipment. This invoice serves as proof of transaction for dispute purposes. Customer agreed to terms of service at checkout. All order timestamps and details are logged server-side.</p>
+      <p style="font-size:12px;color:#666;margin:0;line-height:1.7;">Shipped via DHL. This invoice serves as proof of transaction for dispute purposes. Customer agreed to terms of service at checkout. All order timestamps and details are logged server-side.</p>
     </div>
   </div>
 
