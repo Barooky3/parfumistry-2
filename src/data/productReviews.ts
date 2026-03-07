@@ -269,7 +269,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'LeoIT', text: 'Clean but sexy. The violet leaf gives it a fresh quality that works for daytime. Goes from office to dinner seamlessly.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'CalebSA', text: 'The violet-vetiver combo is decent but nothing groundbreaking. Works as a daily driver, won\'t turn heads.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'OwenIE', text: 'Nothing spectacular but nothing bad. Does the clean-masculine thing competently. Won\'t wow anyone though.', verified: true, rating: 3.5, date: '1 month ago' },
-    { id: 4, name: 'sergioES', text: 'Really forgettable honestly. Wore it for a week and not a single person noticed. The opening is pleasant but it dries down to basically nothing after 3-4 hours.', verified: true, rating: 3, date: '6 weeks ago' },
+    { id: 4, name: 'sergioES', text: 'Really forgettable honestly. Wore it for a week and not a single person noticed. The violet-sage combo is pleasant but lacks any personality or DNA that makes it distinctly "Valentino." Could be any brand.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 5, name: 'anna_milan', text: 'I love this on men. Fresh, modern, and just attractive without being overwhelming. Perfect for someone who wants to smell put-together.', verified: true, rating: 5, date: '2 months ago' },
     { id: 6, name: 'fredrikNO', text: 'Good all-rounder but fades fast on me. The sage is nice at first but by hour 3 its just a faint woody skin scent. Expected more from Valentino.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
