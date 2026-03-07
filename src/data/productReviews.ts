@@ -544,7 +544,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'tylerLA', text: 'Super refreshing. The grapefruit and green tea is like a spa day in a bottle. Louis Vuitton does fresh scents differently — class and depth that cheap ones lack.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'BrandonSF', text: 'Smells like premium sparkling water in a nice way. Fresh, clean, slightly fruity. Decent for hot days.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'alexTYO', text: 'The LV price tag is impossible to justify for a citrus-aquatic. Its well done but not 5x better than other fresh fragrances. You\'re paying for the label, not the juice.', verified: true, rating: 3, date: '1 month ago' },
-    { id: 4, name: 'helenCPH', text: 'Only about 4 hours of longevity which for LV money is unacceptable. Gorgeous scent but having to reapply a luxury fragrance multiple times per day is ridiculous.', verified: true, rating: 3.5, date: '6 weeks ago' },
+    { id: 4, name: 'helenCPH', text: 'Pleasant but completely lacks identity. Remove the LV label and this could be any drugstore citrus-aquatic. Nothing about the scent itself says "luxury" — all the luxury is in the price tag and packaging.', verified: true, rating: 3.5, date: '6 weeks ago' },
   ],
 
   // 4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
