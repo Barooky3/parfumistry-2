@@ -25,7 +25,7 @@ const EmailPreview = () => {
 <div style="padding: 32px 32px 0 32px;">
 <p style="font-size: 13px; color: #999; margin: 0 0 8px 0;">Order Number: <strong style="color: #1a1a1a; font-size: 15px;">#1042</strong></p>
 <p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>John</strong>,</p>
-<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed and is being prepared for shipment. You can expect delivery via <strong>DHL</strong> within <strong>3 business days</strong>.</p>
+<p style="font-size: 15px; color: #333; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed and is being prepared for shipment. You can expect to receive your <strong>DHL</strong> shipping confirmation within <strong>3 business days</strong>.</p>
 </div>
 
 <div style="padding: 0 32px;">
