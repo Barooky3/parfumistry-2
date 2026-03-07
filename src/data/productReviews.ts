@@ -369,7 +369,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'pedroLIS', text: 'Salty and sweet simultaneously. The solar notes give this a unique quality. Perfect for beach days and summer nights.', verified: true, rating: 5, date: '5 days ago' },
     { id: 2, name: 'markDUB', text: 'Better than the original Million but less interesting than the Elixir. Sits in a weird middle ground. The salt accord is unique at least.', verified: true, rating: 4, date: '1 week ago' },
     { id: 3, name: 'SofiaGR', text: 'My boyfriend wears this and it smells nice in summer. Fresh with warmth underneath. Decent.', verified: true, rating: 5, date: '2 weeks ago' },
-    { id: 4, name: 'tobiasCH', text: 'Longevity is disappointing for a "Parfum." Maybe 5 hours on skin. I expect more staying power when they call it parfum concentration. Misleading.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 4, name: 'tobiasCH', text: 'The salt accord is polarizing — on my skin it goes almost metallic and synthetic. My wife said it smells like "pool water mixed with cologne." Interesting concept, poor execution on certain skin types.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 5, name: 'annaWRS', text: 'Smells like sunscreen to me honestly. The solar-salt thing is interesting on paper but on skin it just becomes "beach product." Not what I wanted from a cologne.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 6, name: 'yasinTR', text: 'The amber base saves it from being just another fresh scent. Gives it depth. About 7 hours, moderate projection. Fine daily summer driver, nothing more.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
