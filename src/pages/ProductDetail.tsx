@@ -223,6 +223,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               <DeliveryInfo />
             </div>
 
+            {/* Reviews */}
+            {reviews.length > 0 && (
+              <ReviewsSection reviews={reviews} />
+            )}
+
             {product.scentNotes && (
               <div className="py-6 border-t border-border">
                 <ScentNotesVisual 
