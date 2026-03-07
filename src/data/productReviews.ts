@@ -190,7 +190,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 1, name: 'marieFR', text: 'Romantic and sweet without being juvenile. The strawberry note is so well done — smells real, not like candy. Wore this on my wedding day.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'claire_bx', text: 'The strawberry-patchouli combo shouldn\'t work but it does. Playful up top, grounded in the base. Well balanced for a fruity floral.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 3, name: 'julie_94', text: 'Gives main character energy walking through Paris in autumn. Soft, sweet, and pretty.', verified: true, rating: 5, date: '3 weeks ago' },
-    { id: 4, name: 'hannahDE', text: 'Its cute but very linear. Smells exactly the same from start to finish which gets monotonous. Also the longevity is about 4 hours which isn\'t great for the price.', verified: true, rating: 3, date: '1 month ago' },
+    { id: 4, name: 'hannahDE', text: 'Its cute but painfully linear. Smells exactly the same from opening to dry down with zero development. No surprises, no evolution, just strawberry-sweet on repeat for hours. Gets boring fast.', verified: true, rating: 3, date: '1 month ago' },
     { id: 5, name: 'rebecaNO', text: 'Too sweet for everyday wear. Great for a night out but I can\'t imagine wearing this to the office without it being too much. Very occasion-specific.', verified: true, rating: 3.5, date: '6 weeks ago' },
     { id: 6, name: 'lisa_mel', text: 'Got this as a birthday gift and its fine. The pear and peony are soft but the sillage is weak — nobody ever notices when I wear it, which defeats the purpose.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
