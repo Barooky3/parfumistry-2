@@ -27,7 +27,33 @@ const RatingStars = ({ rating }: { rating: number }) => {
 export const ReviewsSection = ({ reviews }: ReviewsSectionProps) => {
   if (!reviews || reviews.length === 0) return null;
 
-  const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  // Interleave reviews: first is always 3-4★, then alternate low/high evenly
+  const sortedReviews = (() => {
+    const low = reviews.filter(r => r.rating <= 4).sort((a, b) => a.rating - b.rating);
+    const high = reviews.filter(r => r.rating > 4).sort((a, b) => b.rating - a.rating);
+    
+    // Pick the first 3-4★ review as lead
+    const first = low.shift();
+    if (!first) return reviews;
+    
+    const result: ProductReview[] = [first];
+    let pickLow = false; // alternate starting with high after first low
+    while (low.length > 0 || high.length > 0) {
+      if (pickLow && low.length > 0) {
+        result.push(low.shift()!);
+      } else if (!pickLow && high.length > 0) {
+        result.push(high.shift()!);
+      } else if (low.length > 0) {
+        result.push(low.shift()!);
+      } else {
+        result.push(high.shift()!);
+      }
+      pickLow = !pickLow;
+    }
+    return result;
+  })();
+
+  const avgRating = sortedReviews.reduce((sum, r) => sum + r.rating, 0) / sortedReviews.length;
 
   return (
     <div className="py-6 border-t border-border">
@@ -38,13 +64,13 @@ export const ReviewsSection = ({ reviews }: ReviewsSectionProps) => {
         <div className="flex items-center gap-2">
           <RatingStars rating={Math.round(avgRating * 2) / 2} />
           <span className="text-sm text-muted-foreground">
-            ({reviews.length})
+            ({sortedReviews.length})
           </span>
         </div>
       </div>
 
       <div className="space-y-5">
-        {reviews.map((review) => (
+        {sortedReviews.map((review) => (
           <div key={review.id} className="flex gap-3">
             <Avatar className="h-8 w-8 shrink-0">
               <AvatarFallback className="bg-secondary text-foreground text-xs font-medium">
