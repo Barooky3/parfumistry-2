@@ -128,7 +128,7 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.9 }}
             >
-              Exclusive seller links. Instant delivery. Unmatched elegance.
+              Premium fragrances. Fast delivery. Unmatched elegance.
             </motion.p>
             
             <motion.div 
