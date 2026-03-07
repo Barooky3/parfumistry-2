@@ -290,7 +290,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 3, name: 'AlessandroNA', text: 'Good balance between fresh and sweet. Valentino nailed the formula here. Solid.', verified: true, rating: 4, date: '2 weeks ago' },
     { id: 4, name: 'matteoMI', text: 'Contemporary and fresh but nothing groundbreaking. After an hour becomes a generic citrus-vanilla skin scent. The opening 30 minutes are great, then it disappoints.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 5, name: 'oliver_AMS', text: 'Pleasant but unmemorable. In a lineup of citrus fragrances this wouldn\'t stand out. Fine for everyday but don\'t expect to be noticed.', verified: true, rating: 3, date: '6 weeks ago' },
-    { id: 6, name: 'KarinaSE', text: 'Bought for my boyfriend and the coral/grapefruit note is refreshing. But it fades very quickly — 3-4 hours max. He has to reapply mid-day which is annoying.', verified: true, rating: 3.5, date: '2 months ago' },
+    { id: 6, name: 'KarinaSE', text: 'Bought for my boyfriend and the opening is nice. But the dry down is identical to every other Valentino flanker he owns. At some point these "new releases" just start cannibalising each other. Get one BIR and skip the rest.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
   // 7 reviews: 2×5★, 2×4★, 2×3.5★, 1×3★
