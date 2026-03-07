@@ -76,7 +76,7 @@ const EmailPreview = () => {
 
 <div style="padding: 0 32px; margin-bottom: 24px;">
 <div style="background-color: #f0f7f0; border: 1px solid #d4e8d4; padding: 16px 24px; border-radius: 8px; text-align: center;">
-<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">🚚 Shipping via DHL — Estimated delivery: 4–6 business days</p>
+<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">🚚 Shipping via DHL<br>EU &amp; UK: 4–6 business days · Rest of World: 6–8 business days</p>
 </div></div>
 
 <div style="padding: 0 32px 32px 32px;">
