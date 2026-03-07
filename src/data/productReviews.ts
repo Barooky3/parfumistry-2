@@ -569,7 +569,7 @@ export const productReviews: Record<string, ProductReview[]> = {
   'silver-mountain-water': [
     { id: 1, name: 'PatrickBOS', text: 'Fresh and clean like actual mountain air. Creed does fresh scents better than anyone. The green tea and blackcurrant are elegant.', verified: true, rating: 5, date: '1 week ago' },
     { id: 2, name: 'RichardLDN', text: 'Green tea vibes with an almost metallic quality. Unique and refreshing. Nothing else in my collection smells like this.', verified: true, rating: 5, date: '2 weeks ago' },
-    { id: 3, name: 'ThomasZH', text: 'Beautiful scent but for Creed prices I expect better longevity. About 4-5 hours max. The birch and tea are gorgeous while they last... which isn\'t long enough.', verified: true, rating: 3.5, date: '1 month ago' },
+    { id: 3, name: 'ThomasZH', text: 'Beautiful scent but you can get 90% of this experience from Armaf Club de Nuit Sillage for a fraction of the cost. The Creed name doesn\'t justify the 5x markup when cheaper alternatives exist. Smart shoppers know better.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 4, name: 'mariaESP', text: 'Incredible on my husband, too "soapy" on me. Very clean and fresh but almost to the point of smelling like fancy hand wash. Works better on men.', verified: true, rating: 4, date: '6 weeks ago' },
     { id: 5, name: 'danDUB', text: 'You can get fragrances that smell 85% like this for a fraction of the price. Armaf does a decent version. Unless you need the Creed name on your shelf, save your money.', verified: true, rating: 3, date: '2 months ago' },
   ],
