@@ -897,42 +897,20 @@ const Checkout = () => {
                 </Label>
                 <div className="flex gap-2">
                   <div className="w-[130px] shrink-0">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="w-full h-12 justify-between bg-background border-border rounded-md font-normal text-sm px-3"
-                        >
-                          {formData.phoneCode || '+00'}
-                          <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0" align="start">
-                        <Command>
-                          <CommandInput placeholder="Search..." />
-                          <CommandList>
-                            <CommandEmpty>No country found.</CommandEmpty>
-                            <CommandGroup>
-                              {COUNTRIES.map((country) => (
-                                COUNTRY_PHONE_CODES[country] && (
-                                  <CommandItem
-                                    key={country}
-                                    value={country}
-                                    onSelect={() => {
-                                      setFormData(prev => ({ ...prev, phoneCode: COUNTRY_PHONE_CODES[country] }));
-                                    }}
-                                  >
-                                    <Check className={cn("mr-2 h-4 w-4", formData.phoneCode === COUNTRY_PHONE_CODES[country] ? "opacity-100" : "opacity-0")} />
-                                    {COUNTRY_PHONE_CODES[country]} {country}
-                                  </CommandItem>
-                                )
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <select
+                      value={formData.phoneCode || ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, phoneCode: e.target.value }))}
+                      className="w-full h-12 bg-background border border-border rounded-md text-sm px-2 text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    >
+                      <option value="" disabled>Code</option>
+                      {COUNTRIES.map((country) => (
+                        COUNTRY_PHONE_CODES[country] ? (
+                          <option key={country} value={COUNTRY_PHONE_CODES[country]}>
+                            {COUNTRY_PHONE_CODES[country]} {country}
+                          </option>
+                        ) : null
+                      ))}
+                    </select>
                   </div>
                   <div className="relative flex-1">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
