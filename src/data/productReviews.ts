@@ -401,7 +401,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 4, name: 'EvelynAU', text: 'Elegant but overpriced. Similar rose-lychee fragrances exist from Montale for a fraction. PDM tax is real. You\'re paying for the brand name.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 5, name: 'sofiaBA', text: 'The lychee note is a bit synthetic and screechy in the opening. Calms down after 30 minutes but that initial blast is strong and almost headache-inducing for me.', verified: true, rating: 3, date: '6 weeks ago' },
     { id: 6, name: 'juliaVIE', text: 'Been my signature for 2 years. The rhubarb adds tartness that balances sweetness. Well constructed.', verified: true, rating: 4, date: '2 months ago' },
-    { id: 7, name: 'rachelTLV', text: 'Beautiful fragrance but longevity is hit or miss. Some days 8 hours, others it fades after 3. Inconsistent performance which is frustrating at this price.', verified: true, rating: 3.5, date: '2 months ago' },
+    { id: 7, name: 'rachelTLV', text: 'Beautiful fragrance but the lychee gives it a very "young girl" quality. At 38 I feel like I\'m borrowing my daughter\'s perfume. Would work better for someone in their 20s. Not age-appropriate for me.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
   // 4 reviews: 1×5★, 1×4★, 1×3.5★, 1×3★
