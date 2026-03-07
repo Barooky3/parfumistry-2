@@ -243,51 +243,6 @@ const Index = () => {
       {/* Bundle Section */}
       <BundleSection />
 
-      {/* FAQ Section */}
-      <section className="py-14 md:py-20 bg-background">
-        <div className="container">
-          <div className="max-w-2xl mx-auto">
-            <motion.div 
-              className="text-center mb-8 md:mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="text-[10px] md:text-xs tracking-[0.3em] text-muted-foreground font-medium mb-2 uppercase">
-                Questions
-              </p>
-              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
-                Frequently Asked
-              </h2>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              <Accordion type="single" collapsible className="w-full space-y-2">
-                {faqs.map((faq, index) => (
-                  <AccordionItem 
-                    key={index} 
-                    value={`item-${index}`} 
-                    className="border border-border bg-secondary px-4 md:px-5"
-                  >
-                    <AccordionTrigger className="text-left text-sm font-medium text-foreground hover:text-accent hover:no-underline py-4">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* Newsletter Section */}
       <section className="py-14 md:py-20 bg-secondary">
