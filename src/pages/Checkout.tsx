@@ -1011,7 +1011,11 @@ const Checkout = () => {
 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="text-green-600 font-medium">Free</span>
+                  {formData.country ? (
+                    <span className="text-foreground font-medium">{formatPrice(shippingCost)}</span>
+                  ) : (
+                    <span className="text-muted-foreground text-xs italic">Select country</span>
+                  )}
                 </div>
 
                 {/* Estimated Delivery Info */}
@@ -1026,8 +1030,8 @@ const Checkout = () => {
               <div className="flex items-center justify-between mb-6">
                 <span className="font-display text-lg text-foreground">Total</span>
                 <div className="text-right">
-                  <span className="text-xl font-bold text-foreground">{formatPrice(appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice)}</span>
-                  <p className="text-xs text-muted-foreground">Taxes included</p>
+                  <span className="text-xl font-bold text-foreground">{formatPrice(currentTotal)}</span>
+                  <p className="text-xs text-muted-foreground">Taxes & shipping included</p>
                 </div>
               </div>
 
