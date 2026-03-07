@@ -19,7 +19,7 @@ export const DeliveryInfo = () => {
   const today = new Date();
 
   const orderDate = today;
-  const orderReadyEnd = addBusinessDays(today, 2);
+  const orderReadyEnd = addBusinessDays(today, 1);
   const deliveryStart = addBusinessDays(today, 4);
   const deliveryEnd = addBusinessDays(today, 6);
 
