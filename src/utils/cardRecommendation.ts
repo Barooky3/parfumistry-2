@@ -10,7 +10,8 @@ const CARD_SYMBOLS: Record<string, string> = {
 
 function nearestCard(amount: number): number {
   const lower = Math.floor(amount / 5) * 5;
-  return (amount - lower) > 4 ? lower + 5 : lower;
+  // Round down unless within ~0.01 of the next multiple of 5
+  return (amount - lower) >= 4.99 ? lower + 5 : lower;
 }
 
 /**
