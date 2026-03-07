@@ -73,7 +73,7 @@ export const productReviews: Record<string, ProductReview[]> = {
     { id: 8, name: 'Leo_paris', text: 'Decent scent, not great. Does the sweet gourmand thing fine but its pretty linear — smells the same from open to dry down. Gets cloying above 15°C so strictly cold weather for me.', verified: true, rating: 3.5, date: '1 month ago' },
     { id: 9, name: 'toffee_king', text: 'Ive gone through 3 bottles since 2019. Signature cold weather scent for me. Nothing else in my 40+ collection gets as many compliments.', verified: true, rating: 5, date: '1 month ago' },
     { id: 10, name: 'nadiaBE', text: 'Bought for my husband and now I wear it more than he does. On women it gives this warm cozy vibe. Only issue is you need to reapply after 4-5 hours which is annoying.', verified: true, rating: 4, date: '6 weeks ago' },
-    { id: 11, name: 'DaveFrags', text: 'Very overhyped. Its a decent vanilla-toffee scent but at this price there are better options. Projection dies after the first hour and becomes a skin scent really fast. Expected a beast, got something tame.', verified: true, rating: 2.5, date: '2 months ago' },
+    { id: 11, name: 'DaveFrags', text: 'Very overhyped. Its a decent vanilla-toffee scent but at this price there are better options. Gets unbearably sweet and cloying in any temperature above 15°C. Strictly a cold weather scent and even then its not special.', verified: true, rating: 2.5, date: '2 months ago' },
     { id: 12, name: 'alicja_PL', text: 'The chestnut note is a bit odd tbh. Like roasted nuts mixed with caramel. Not bad exactly but not something I\'d reach for. Smelled better on paper strips than on skin.', verified: true, rating: 3.5, date: '2 months ago' },
   ],
 
