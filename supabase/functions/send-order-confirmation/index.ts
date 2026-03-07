@@ -217,15 +217,22 @@ function buildEmailHtml(
   totalAmount: string,
   shippingAddress: { line1: string; city: string; postalCode: string; country: string },
   orderNumber?: number | null,
-  noLinks: boolean = false,
   discountCode?: string | null,
   discountPercent?: number | null,
 ): string {
   const year = new Date().getFullYear();
-  const orderNumDisplay = orderNumber ? `#${orderNumber}` : "";
   const orderNumSection = orderNumber
     ? `<p style="font-size: 13px; color: #999; margin: 0 0 8px 0;">Order Number: <strong style="color: #1a1a1a; font-size: 15px;">#${orderNumber}</strong></p>`
     : "";
+  const addressText = [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ");
+  const shippingSection = addressText ? `
+    <div style="padding: 0 32px 24px 32px;">
+      <div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px;">
+        <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; margin: 0 0 8px 0;">Shipping Address</p>
+        <p style="font-size: 14px; color: #333; margin: 0; line-height: 1.5;">${addressText}</p>
+      </div>
+    </div>` : "";
+
   return [
     '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>',
     '<body style="margin: 0; padding: 0; background-color: #f4f3ef; font-family: Helvetica Neue, Arial, sans-serif;">',
@@ -237,7 +244,7 @@ function buildEmailHtml(
     '</div>',
 
     '<div style="background: linear-gradient(135deg, #c9a96e 0%, #b8944f 100%); padding: 28px 32px; text-align: center;">',
-    '<h2 style="color: #ffffff; font-size: 22px; font-weight: 400; margin: 0; letter-spacing: 1px;">Your Order Has Been Approved! &#127881;</h2>',
+    '<h2 style="color: #ffffff; font-size: 22px; font-weight: 400; margin: 0; letter-spacing: 1px;">Your Order Has Been Confirmed! &#127881;</h2>',
     '</div>',
 
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center; border-bottom: 3px solid #c9a96e;">',
@@ -250,9 +257,8 @@ function buildEmailHtml(
     '<div style="padding: 32px 32px 0 32px;">',
     orderNumSection,
     '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
-    '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed! Below you\'ll find your products.' + (noLinks ? '' : ' Click on any product to access it.') + '</p>',
+    '<p style="font-size: 14px; color: #666; margin: 0 0 24px 0; line-height: 1.6;">Your order has been confirmed and is being prepared for shipment. You can expect delivery via <strong>DHL</strong> within <strong>3 business days</strong>.</p>',
     '</div>',
-
 
     '<div style="padding: 0 32px;">',
     '<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #999; padding-bottom: 12px; border-bottom: 2px solid #1a1a1a; margin-bottom: 0;">Your Products</div>',
@@ -271,6 +277,13 @@ function buildEmailHtml(
     '<span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #999;">Total Paid: </span>',
     '<span style="font-size: 22px; font-weight: 600; color: #1a1a1a;">&euro;' + totalAmount + '</span>',
     '</div>',
+
+    shippingSection,
+
+    '<div style="padding: 0 32px; margin-bottom: 24px;">',
+    '<div style="background-color: #f0f7f0; border: 1px solid #d4e8d4; padding: 16px 24px; border-radius: 8px; text-align: center;">',
+    '<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">&#128666; Shipping via DHL &mdash; Estimated delivery: 3 business days</p>',
+    '</div></div>',
 
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
