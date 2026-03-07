@@ -1193,7 +1193,7 @@ const Checkout = () => {
                       }
                       const fd = formDataRef.current;
                       const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.bundleImages?.[1] || item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl, affiliateUrl: item.product.affiliateUrl }));
-                      const finalTotal = appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice;
+                      const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
                       sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
                         cartItems,
                         email: fd.email,
