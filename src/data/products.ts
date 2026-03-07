@@ -33,7 +33,7 @@ export const products: Product[] = [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
       { name: 'Born in Roma Intense', topNote: 'Vanilla', heartNote: 'Lavender', baseNote: 'Vetiver', accentColor: '#8B1A3A' },
       { name: 'The Most Wanted Parfum', topNote: 'Ginger', heartNote: 'Woody Notes', baseNote: 'Bourbon Vanilla', accentColor: '#C9A96E' },
-      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000', affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH' },
+      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
     variants: [
@@ -58,8 +58,8 @@ export const products: Product[] = [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
       { name: 'Dior Sauvage Parfum', topNote: 'Bergamot', heartNote: 'Sandalwood', baseNote: 'Vanilla', accentColor: '#2C3E50' },
       { name: 'Versace Eros', topNote: 'Mint', heartNote: 'Ambroxan', baseNote: 'Vanilla', accentColor: '#1E90FF' },
-      { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A', affiliateUrl: 'https://litbuy.com/product/1688/993578833339?inviteCode=QMYK3RAL2' },
-      { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520', affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU' },
+      { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A' },
+      { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
     ],
     variants: [
       { ml: 50, price: 32.99, originalPrice: 140.00, inStock: true, label: 'All 50ml (75ml for JPG)' },
