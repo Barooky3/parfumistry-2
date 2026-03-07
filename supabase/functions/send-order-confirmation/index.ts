@@ -207,6 +207,33 @@ function getBundleBonusLinks(name: string): { label: string; url: string }[] {
   return [];
 }
 
+function buildItemRow(item: OrderItem, origin: string, showImage: boolean): string {
+  const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
+  const lineTotal = (item.price * item.quantity).toFixed(2);
+  const imageUrl = resolveProductImage(item.name, item.image);
+  const bundleLinks = getBundleBonusLinks(item.name);
+  const bundleLinksHtml = bundleLinks.length > 0
+    ? `<div style="margin-top:6px;font-size:11px;color:#999;">Seller links: ${bundleLinks.map(l => `<a href="${l.url}" style="color:#c9a96e;text-decoration:none;">${l.label}</a>`).join(" · ")}</div>`
+    : "";
+  const productLink = getProductLink(item.name, item.brand, item.affiliateUrl);
+
+  return `<tr style="border-bottom: 1px solid #f0ede8;">
+    ${showImage ? `<td style="padding: 16px 12px; width: 80px; vertical-align: top;">
+      <img src="${imageUrl}" alt="${item.name}" style="width: 70px; height: 70px; object-fit: contain; border-radius: 4px;" />
+    </td>` : ""}
+    <td style="padding: 16px 12px; vertical-align: top;">
+      <p style="font-size: 14px; font-weight: 600; color: #1a1a1a; margin: 0 0 2px 0;">${item.brand}</p>
+      <p style="font-size: 13px; color: #666; margin: 0 0 4px 0;">${item.name}${mlLabel}</p>
+      <p style="font-size: 12px; color: #999; margin: 0;">Qty: ${item.quantity}</p>
+      ${bundleLinksHtml}
+    </td>
+    <td style="padding: 16px 12px; vertical-align: top; text-align: right;">
+      <p style="font-size: 15px; font-weight: 600; color: #1a1a1a; margin: 0;">€${lineTotal}</p>
+      <a href="${productLink}" style="font-size: 11px; color: #c9a96e; text-decoration: none; margin-top: 4px; display: inline-block;">View seller ›</a>
+    </td>
+  </tr>`;
+}
+
 function buildItemsHtml(items: OrderItem[], origin: string): string {
   return items.map((item) => buildItemRow(item, origin, true)).join("");
 }
