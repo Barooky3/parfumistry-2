@@ -105,7 +105,9 @@ const Shop = () => {
     }
     
     // Filter by category from URL params
-    if (category && category !== 'all') {
+    if (category === 'men') {
+      result = result.filter(p => p.category !== 'women' && p.category !== 'bundle');
+    } else if (category && category !== 'all') {
       result = result.filter(p => p.category === category);
     }
     
