@@ -33,7 +33,7 @@ export const products: Product[] = [
       { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
       { name: 'Born in Roma Intense', topNote: 'Vanilla', heartNote: 'Lavender', baseNote: 'Vetiver', accentColor: '#8B1A3A' },
       { name: 'The Most Wanted Parfum', topNote: 'Ginger', heartNote: 'Woody Notes', baseNote: 'Bourbon Vanilla', accentColor: '#C9A96E' },
-      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000', affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH' },
+      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
     variants: [
