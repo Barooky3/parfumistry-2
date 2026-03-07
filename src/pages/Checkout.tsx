@@ -432,6 +432,8 @@ const Checkout = () => {
       confirmEmail: '',
       firstName: '',
       lastName: '',
+      phone: '',
+      phoneCode: '',
       country: '',
       streetAddress: '',
       postalCode: '',
