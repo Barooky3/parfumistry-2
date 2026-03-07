@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock, Phone } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -137,6 +137,38 @@ const COUNTRIES = [
   'Ethiopia',
   'Mauritius',
 ].sort();
+
+const COUNTRY_PHONE_CODES: Record<string, string> = {
+  'Albania': '+355', 'Algeria': '+213', 'Andorra': '+376', 'Argentina': '+54',
+  'Armenia': '+374', 'Australia': '+61', 'Austria': '+43', 'Azerbaijan': '+994',
+  'Bahrain': '+973', 'Bangladesh': '+880', 'Barbados': '+1-246', 'Belarus': '+375',
+  'Belgium': '+32', 'Bolivia': '+591', 'Bosnia and Herzegovina': '+387', 'Brazil': '+55',
+  'Bulgaria': '+359', 'Cambodia': '+855', 'Cameroon': '+237', 'Canada': '+1',
+  'Chile': '+56', 'China': '+86', 'Colombia': '+57', 'Croatia': '+385',
+  'Curaçao': '+599', 'Cyprus': '+357', 'Czech Republic': '+420', 'Denmark': '+45',
+  'Dominican Republic': '+1-809', 'Ecuador': '+593', 'Egypt': '+20', 'Estonia': '+372',
+  'Ethiopia': '+251', 'Finland': '+358', 'France': '+33', 'Georgia': '+995',
+  'Germany': '+49', 'Ghana': '+233', 'Greece': '+30', 'Hong Kong': '+852',
+  'Hungary': '+36', 'Iceland': '+354', 'India': '+91', 'Indonesia': '+62',
+  'Ireland': '+353', 'Israel': '+972', 'Italy': '+39', 'Ivory Coast': '+225',
+  'Jamaica': '+1-876', 'Japan': '+81', 'Jordan': '+962', 'Kenya': '+254',
+  'Kosovo': '+383', 'Kuwait': '+965', 'Latvia': '+371', 'Lebanon': '+961',
+  'Liechtenstein': '+423', 'Lithuania': '+370', 'Luxembourg': '+352', 'Macao': '+853',
+  'Malaysia': '+60', 'Malta': '+356', 'Mauritius': '+230', 'Mexico': '+52',
+  'Moldova': '+373', 'Monaco': '+377', 'Montenegro': '+382', 'Morocco': '+212',
+  'Myanmar': '+95', 'Nepal': '+977', 'Netherlands': '+31', 'New Zealand': '+64',
+  'Nigeria': '+234', 'North Macedonia': '+389', 'Norway': '+47', 'Oman': '+968',
+  'Pakistan': '+92', 'Paraguay': '+595', 'Peru': '+51', 'Philippines': '+63',
+  'Poland': '+48', 'Portugal': '+351', 'Qatar': '+974', 'Romania': '+40',
+  'Russia': '+7', 'San Marino': '+378', 'Saudi Arabia': '+966', 'Senegal': '+221',
+  'Serbia': '+381', 'Singapore': '+65', 'Slovakia': '+421', 'Slovenia': '+386',
+  'South Africa': '+27', 'South Korea': '+82', 'Spain': '+34', 'Sri Lanka': '+94',
+  'Suriname': '+597', 'Sweden': '+46', 'Switzerland': '+41', 'Taiwan': '+886',
+  'Tanzania': '+255', 'Thailand': '+66', 'Trinidad and Tobago': '+1-868',
+  'Tunisia': '+216', 'Turkey': '+90', 'Ukraine': '+380', 'United Arab Emirates': '+971',
+  'United Kingdom': '+44', 'United States': '+1', 'Uruguay': '+598',
+  'Venezuela': '+58', 'Vietnam': '+84',
+};
 
 const EU_UK_COUNTRIES = new Set([
   'Netherlands', 'Belgium', 'Germany', 'France', 'United Kingdom', 'Spain', 'Italy',
@@ -400,6 +432,8 @@ const Checkout = () => {
       confirmEmail: '',
       firstName: '',
       lastName: '',
+      phone: '',
+      phoneCode: '',
       country: '',
       streetAddress: '',
       postalCode: '',
@@ -515,7 +549,14 @@ const Checkout = () => {
   );
 
   const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      // Auto-set phone code when country changes
+      if (field === 'country' && COUNTRY_PHONE_CODES[value] && !prev.phone) {
+        updated.phoneCode = COUNTRY_PHONE_CODES[value];
+      }
+      return updated;
+    });
     
     // Address autocomplete disabled - users enter manually
   };
@@ -849,7 +890,63 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Country Dropdown with Search */}
+              {/* Phone Number */}
+              <div className="space-y-2">
+                <Label className="text-xs font-medium tracking-wider text-foreground">
+                  PHONE NUMBER
+                </Label>
+                <div className="flex gap-2">
+                  <div className="w-[130px] shrink-0">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="w-full h-12 justify-between bg-background border-border rounded-md font-normal text-sm px-3"
+                        >
+                          {formData.phoneCode || '+00'}
+                          <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Search..." />
+                          <CommandList>
+                            <CommandEmpty>No country found.</CommandEmpty>
+                            <CommandGroup>
+                              {COUNTRIES.map((country) => (
+                                COUNTRY_PHONE_CODES[country] && (
+                                  <CommandItem
+                                    key={country}
+                                    value={country}
+                                    onSelect={() => {
+                                      setFormData(prev => ({ ...prev, phoneCode: COUNTRY_PHONE_CODES[country] }));
+                                    }}
+                                  >
+                                    <Check className={cn("mr-2 h-4 w-4", formData.phoneCode === COUNTRY_PHONE_CODES[country] ? "opacity-100" : "opacity-0")} />
+                                    {COUNTRY_PHONE_CODES[country]} {country}
+                                  </CommandItem>
+                                )
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="tel"
+                      placeholder="612345678"
+                      value={formData.phone}
+                      onChange={(e) => updateFormData('phone', e.target.value)}
+                      className="pl-12 h-12 bg-background border-border rounded-md"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label className="text-xs font-medium tracking-wider text-foreground">
                   COUNTRY <span className="text-accent">*</span>
