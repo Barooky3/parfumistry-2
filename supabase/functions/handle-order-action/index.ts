@@ -87,12 +87,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   } else {
     reason = "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
   }
-  const giftCardTip = isGiftCard
-    ? `<div style="background:#fef3c7;border:1px solid #f59e0b;padding:16px 20px;border-radius:8px;margin:16px 0;">
-        <p style="font-size:14px;font-weight:600;color:#92400e;margin:0 0 8px;">Important: Send the Gift Card Code, NOT the Order Number</p>
-        <p style="font-size:13px;color:#92400e;line-height:1.6;margin:0;">Please make sure you send us the <strong>actual Rewarble gift card code</strong>. The gift card code is <strong>16 characters long and contains letters</strong>. The Rewarble <strong>order number</strong> (e.g. a number starting with #, containing only digits) is <strong>not</strong> the gift card code and cannot be used to redeem your purchase.</p>
-      </div>`
-    : "";
+  const giftCardTip = "";
   let nextStep: string;
   if (isGiftCard) {
     nextStep = "If you believe this is an error, please contact us and we'll be happy to assist you.";
