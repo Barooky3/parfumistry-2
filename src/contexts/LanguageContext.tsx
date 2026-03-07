@@ -167,7 +167,7 @@ const translations: Record<Language, Record<string, string>> = {
     'checkout.thankYouPatience': 'This usually takes a short while. Thank you for your patience.',
 
     // Footer
-    'footer.description': 'Discover exclusive fragrance seller links. Premium quality, instant digital delivery.',
+    'footer.description': 'Premium fragrances for men and women. Quality scents at unbeatable prices.',
     'footer.shop': 'Shop',
     'footer.menCollection': "Men's Collection",
     'footer.womenCollection': "Women's Collection",

@@ -31,7 +31,7 @@ const PrivacyPolicy = () => {
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
                 <li>Process and fulfill your orders</li>
-                <li>Deliver digital products (seller links) to you</li>
+                <li>Deliver your orders and products to you</li>
                 <li>Send order confirmations and updates</li>
                 <li>Respond to customer service inquiries</li>
                 <li>Improve our website and services</li>

@@ -40,7 +40,7 @@ export const Footer = () => {
               <img src={logo} alt="ProfParfums" className="h-14 w-auto brightness-0 invert" />
             </Link>
             <p className="text-sm text-primary-foreground/70 leading-relaxed mb-6">
-              Discover exclusive fragrance seller links. Premium quality, instant digital delivery.
+              Premium fragrances for men and women. Quality scents at unbeatable prices.
             </p>
             {/* Social Icons */}
             <div className="flex gap-3">
