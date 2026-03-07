@@ -64,13 +64,13 @@ export const ReviewsSection = ({ reviews }: ReviewsSectionProps) => {
         <div className="flex items-center gap-2">
           <RatingStars rating={Math.round(avgRating * 2) / 2} />
           <span className="text-sm text-muted-foreground">
-            ({reviews.length})
+            ({sortedReviews.length})
           </span>
         </div>
       </div>
 
       <div className="space-y-5">
-        {reviews.map((review) => (
+        {sortedReviews.map((review) => (
           <div key={review.id} className="flex gap-3">
             <Avatar className="h-8 w-8 shrink-0">
               <AvatarFallback className="bg-secondary text-foreground text-xs font-medium">
