@@ -118,7 +118,7 @@ export const productReviews: Record<string, ProductReview[]> = {
   // 8 reviews: 3×5★, 2×4★, 2×3.5★, 1×3★
   'le-beau-le-parfum': [
     { id: 1, name: 'tropicVibes', text: 'Smells like being on holiday. Coconut, vanilla, something green up top. Not complicated, just really really nice. My summer go-to.', verified: true, rating: 5, date: '3 days ago' },
-    { id: 2, name: 'samG_', text: 'The longevity lets it down badly. I get maybe 4-5 hours before it becomes a skin scent. The coconut phase is lovely but too brief. Disappointing for the price.', verified: true, rating: 3.5, date: '1 week ago' },
+    { id: 2, name: 'samG_', text: 'Smells nice but its basically "coconut body lotion: the fragrance." Very one-dimensional — the tropical phase is pleasant but there\'s zero complexity or development. You smell the same thing for hours.', verified: true, rating: 3.5, date: '1 week ago' },
     { id: 3, name: 'Lucas_BE', text: 'Blind bought based on a friend\'s rec and I\'m glad I did. Easygoing, clean, slightly sweet. My kind of warm weather fragrance.', verified: true, rating: 5, date: '2 weeks ago' },
     { id: 4, name: 'noseknows22', text: 'Pleasant but one-dimensional. The coconut is the best bit but takes 30 mins to appear, and by then projection is already dying. Wish they made it stronger.', verified: true, rating: 3, date: '3 weeks ago' },
     { id: 5, name: 'RyanT', text: 'Wore this every day last summer. The pineapple-coconut combo works without being tacky. Gets me compliments from people who normally don\'t comment.', verified: true, rating: 5, date: '1 month ago' },
