@@ -54,16 +54,16 @@ const translations: Record<Language, Record<string, string>> = {
     'home.shopByBrand': 'Shop by Brand',
 
     // FAQ
-    'faq.q1': 'What am I buying?',
-    'faq.a1': 'You are purchasing access to exclusive fragrance seller links from our verified partners.',
+    'faq.q1': 'What kind of fragrances do you sell?',
+    'faq.a1': 'We offer a curated selection of premium fragrances from top brands, handpicked for quality and lasting performance.',
     'faq.q2': 'How do I receive my purchase?',
-    'faq.a2': 'After completing your order, you will receive your purchase via email instantly. Digital delivery is immediate.',
+    'faq.a2': 'After completing your order, you will receive a confirmation email with all the details. Orders are processed and shipped promptly.',
     'faq.q3': "What's your refund policy?",
-    'faq.a3': 'Due to the digital nature of our products, all sales are final. No refunds or exchanges are available once seller links have been delivered.',
-    'faq.q4': 'What kind of fragrances do you sell?',
-    'faq.a4': 'We offer high-quality 1:1 inspired fragrances sourced from trusted sellers. These are not original brand products.',
-    'faq.q5': 'How do I contact the sellers?',
-    'faq.a5': "After purchase, you'll receive the seller link via email with all necessary contact information.",
+    'faq.a3': 'All sales are final. Please ensure you are happy with your selection before completing your purchase. Contact us if you have any concerns.',
+    'faq.q4': 'How long does delivery take?',
+    'faq.a4': 'Delivery times vary depending on your location. Most orders are processed within 1-3 business days.',
+    'faq.q5': 'How can I get in touch?',
+    'faq.a5': "You can reach us through our Contact page. We typically respond within 24-48 hours.",
 
     // Shop
     'shop.title': 'Shop',
