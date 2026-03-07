@@ -9,6 +9,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
+import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { BundleContents } from '@/components/product/BundleContents';
 import { getProductReviews } from '@/data/productReviews';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
