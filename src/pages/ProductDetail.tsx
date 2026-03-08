@@ -249,10 +249,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               </p>
             </div>
 
-            {/* Reviews */}
-            {reviews.length > 0 && (
-              <ReviewsSection reviews={reviews} />
-            )}
           </motion.div>
         </div>
 
