@@ -412,6 +412,7 @@ const Checkout = () => {
     'professor15': 15,
     'parfum10': 10,
     'parfumz20': 20,
+    'parfumo30': 30,
     'parfuma90': 90,
     'parfumz50': 50,
   };
