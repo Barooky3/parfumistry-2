@@ -46,7 +46,7 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">5. Cookies</h2>
+              <h2 className="font-display text-2xl mb-4">4. Cookies</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We use cookies to enhance your browsing experience, remember your preferences (such as currency selection), and maintain your shopping cart. You can disable cookies in your browser settings, though this may affect some website functionality.
               </p>
