@@ -53,7 +53,7 @@ const ReturnPolicy = () => {
                   <li className="flex items-start gap-2.5">
                     <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
                     <span className="text-sm text-muted-foreground">
-                      <strong className="text-foreground">Less than 5ml used</strong> — The product must have been minimally used, with less than 5ml of the fragrance consumed. Products that have been significantly used are not eligible for a return.
+                      <strong className="text-foreground">Less than 5ml used (~50 sprays)</strong> — The product must have been minimally used, with less than 5ml (approximately 50 sprays) of the fragrance consumed. Products that have been significantly used are not eligible for a return.
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
@@ -101,6 +101,9 @@ const ReturnPolicy = () => {
                 <h2 className="text-lg font-semibold text-foreground mb-2">Refund Process</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                   Once your return is received and inspected, or once proof of damage is verified, we will notify you of the approval or rejection of your refund. Approved refunds will be processed back to your original payment method within <strong className="text-foreground">1–2 business days</strong>.
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground">We cover return shipping costs</strong> — you will not be charged for shipping when returning an eligible product. We will provide you with a prepaid return label or reimburse your shipping costs.
                 </p>
               </div>
             </div>
