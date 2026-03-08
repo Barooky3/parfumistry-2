@@ -1164,7 +1164,8 @@ export const products: Product[] = [
     id: 'silver-mountain-water',
     name: 'Silver Mountain Water',
     brand: 'Creed',
-    price: 23.99,
+    price: 33.99,
+    originalPrice: 195.00,
     category: 'unisex',
     description: 'Creed Silver Mountain Water smells like a mix of cold citrus, green tea, and blackcurrant over soft musk and sandalwood. It comes across clean, slightly soapy, and airy, like fresh laundry and cool mountain air rather than a heavy, sweet perfume.',
     scentNotes: {
@@ -1177,8 +1178,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/silver-mountain-water',
     inStock: true,
     variants: [
-      { ml: 50, price: 28.99, inStock: true },
-      { ml: 100, price: 35.99, inStock: true },
+      { ml: 50, price: 33.99, originalPrice: 195.00, inStock: true },
+      { ml: 100, price: 40.99, originalPrice: 250.00, inStock: true },
     ],
   },
   {

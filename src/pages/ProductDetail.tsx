@@ -28,7 +28,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const product = id ? getProductById(id) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
-  const reviews = id ? getProductReviews(id) : [];
+  
 
   // ML variant selection state
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
