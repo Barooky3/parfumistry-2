@@ -94,7 +94,7 @@ export const products: Product[] = [
     id: 'jpg-bundle',
     name: 'Fragrance Bundle "The JPG Collection"',
     brand: 'Profparfums',
-    price: 23.99,
+    price: 28.99,
     originalPrice: 120.00,
     category: 'bundle',
     description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion.',
