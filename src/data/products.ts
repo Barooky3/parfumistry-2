@@ -213,7 +213,7 @@ export const products: Product[] = [
     id: 'aventus',
     name: 'Aventus',
     brand: 'Creed',
-    price: 24.99,
+    price: 29.99,
     originalPrice: 195.00,
     category: 'men',
     description: 'A legendary fragrance known for its bold and confident character, everyone and their mother has smelt this. Aventus opens with vibrant pineapple and bergamot, delivering an instantly recognizable freshness. Smoky woods and musk develop in the base, creating a powerful and masculine finish. Versatile and iconic, its suitable for both casual and formal wear.',
