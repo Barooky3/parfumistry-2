@@ -74,7 +74,7 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">8. Contact Us</h2>
+              <h2 className="font-display text-2xl mb-4">7. Contact Us</h2>
               <p className="text-muted-foreground leading-relaxed">
                 If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us through our Contact page. We will respond to your inquiry within 30 days.
               </p>
