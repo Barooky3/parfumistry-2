@@ -20,7 +20,7 @@ export const products: Product[] = [
     id: 'evening-sweetheart-bundle',
     name: 'Fragrance Bundle "Evening Sweetheart"',
     brand: 'Profparfums',
-    price: 31.99,
+    price: 36.99,
     originalPrice: 155.50,
     category: 'bundle',
     description: '"Evening Sweetheart" Bundle – top-tier sweet bangers for the night. Got a date? A party? These fragrances will make you unforgettable.',
