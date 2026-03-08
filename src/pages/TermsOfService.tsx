@@ -27,7 +27,7 @@ const TermsOfService = () => {
                 <li>You are purchasing fragrances from our collection</li>
                 <li>All products are sourced from trusted suppliers</li>
                 <li>Delivery times may vary depending on your location</li>
-                <li>Product descriptions and images are for reference purposes</li>
+                
               </ul>
             </section>
 
