@@ -891,40 +891,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Phone Number */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium tracking-wider text-foreground">
-                  PHONE NUMBER
-                </Label>
-                <div className="flex gap-2">
-                  <div className="w-[130px] shrink-0">
-                    <select
-                      value={formData.phoneCode || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, phoneCode: e.target.value }))}
-                      className="w-full h-12 bg-background border border-border rounded-md text-sm px-2 text-foreground appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                    >
-                      <option value="" disabled>Code</option>
-                      {COUNTRIES.map((country) => (
-                        COUNTRY_PHONE_CODES[country] ? (
-                          <option key={country} value={COUNTRY_PHONE_CODES[country]}>
-                            {COUNTRY_PHONE_CODES[country]} {country}
-                          </option>
-                        ) : null
-                      ))}
-                    </select>
-                  </div>
-                  <div className="relative flex-1">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="tel"
-                      placeholder="612345678"
-                      value={formData.phone}
-                      onChange={(e) => updateFormData('phone', e.target.value)}
-                      className="pl-12 h-12 bg-background border-border rounded-md"
-                    />
-                  </div>
-                </div>
-              </div>
+
 
               <div className="space-y-2">
                 <Label className="text-xs font-medium tracking-wider text-foreground">
