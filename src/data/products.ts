@@ -250,8 +250,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
-      { ml: 50, price: 25.99, originalPrice: 207.00, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 265.00, inStock: true },
+      { ml: 50, price: 30.99, originalPrice: 207.00, inStock: true },
+      { ml: 100, price: 37.99, originalPrice: 265.00, inStock: true },
     ],
   },
   {
