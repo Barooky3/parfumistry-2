@@ -59,6 +59,7 @@ const App = () => (
               <Route path="/account" element={<Account />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/return-policy" element={<ReturnPolicy />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/rewarble" element={<Rewarble />} />
               <Route path="/paypal" element={<PaypalEneba />} />
