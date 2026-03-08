@@ -9,10 +9,8 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
-import { ReviewsSection } from '@/components/product/ReviewsSection';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { BundleContents } from '@/components/product/BundleContents';
-import { getProductReviews } from '@/data/productReviews';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 
@@ -30,7 +28,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const product = id ? getProductById(id) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
-  const reviews = id ? getProductReviews(id) : [];
+  
 
   // ML variant selection state
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -251,10 +249,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               </p>
             </div>
 
-            {/* Reviews */}
-            {reviews.length > 0 && (
-              <ReviewsSection reviews={reviews} />
-            )}
           </motion.div>
         </div>
 

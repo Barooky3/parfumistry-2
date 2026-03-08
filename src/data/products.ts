@@ -213,7 +213,7 @@ export const products: Product[] = [
     id: 'aventus',
     name: 'Aventus',
     brand: 'Creed',
-    price: 29.99,
+    price: 34.99,
     originalPrice: 195.00,
     category: 'men',
     description: 'A legendary fragrance known for its bold and confident character, everyone and their mother has smelt this. Aventus opens with vibrant pineapple and bergamot, delivering an instantly recognizable freshness. Smoky woods and musk develop in the base, creating a powerful and masculine finish. Versatile and iconic, its suitable for both casual and formal wear.',
@@ -228,15 +228,15 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 29.99, originalPrice: 195.00, inStock: true },
-      { ml: 100, price: 36.99, originalPrice: 250.00, inStock: true },
+      { ml: 50, price: 34.99, originalPrice: 195.00, inStock: true },
+      { ml: 100, price: 41.99, originalPrice: 250.00, inStock: true },
     ],
   },
   {
     id: 'aventus-absolu',
     name: 'Aventus Absolu',
     brand: 'Creed',
-    price: 30.99,
+    price: 35.99,
     originalPrice: 207.00,
     category: 'men',
     description: 'This is the older brother of Creed Aventus, sexier, more mature, rich and complex with adventurous spice and sophisticated woods. This has a much deeper drydown than its younger brother.',
@@ -250,8 +250,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
-      { ml: 50, price: 30.99, originalPrice: 207.00, inStock: true },
-      { ml: 100, price: 37.99, originalPrice: 265.00, inStock: true },
+      { ml: 50, price: 35.99, originalPrice: 207.00, inStock: true },
+      { ml: 100, price: 42.99, originalPrice: 265.00, inStock: true },
     ],
   },
   {
@@ -593,7 +593,7 @@ export const products: Product[] = [
     id: 'imagination',
     name: 'Imagination',
     brand: 'Louis Vuitton',
-    price: 33.99,
+    price: 38.99,
     originalPrice: 225.00,
     category: 'men',
     description: 'This is probably the MOST talked about fragrance in the world, and the most agreed upon top #1 fragrance. This fragrance is said to be the most versatile fragrance that can be used in any season and anywhere, its a fresh and clean tea scent.',
@@ -608,8 +608,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 100, price: 33.99, originalPrice: 225.00, inStock: true },
-      { ml: 200, price: 39.99, originalPrice: 290.00, inStock: true },
+      { ml: 100, price: 38.99, originalPrice: 225.00, inStock: true },
+      { ml: 200, price: 44.99, originalPrice: 290.00, inStock: true },
     ],
   },
   {
@@ -1074,7 +1074,7 @@ export const products: Product[] = [
     id: 'pacific-chill',
     name: 'Pacific Chill',
     brand: 'Louis Vuitton',
-    price: 36.00,
+    price: 41.00,
     originalPrice: 225.00,
     category: 'unisex',
     description: 'A refreshing and invigorating scent inspired by the Pacific coast. Citrusy, aquatic, and deeply relaxing.',
@@ -1088,8 +1088,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
-      { ml: 50, price: 36.00, originalPrice: 225.00, inStock: true },
-      { ml: 100, price: 56.99, originalPrice: 290.00, inStock: true },
+      { ml: 50, price: 41.00, originalPrice: 225.00, inStock: true },
+      { ml: 100, price: 61.99, originalPrice: 290.00, inStock: true },
     ],
   },
   {
@@ -1164,7 +1164,8 @@ export const products: Product[] = [
     id: 'silver-mountain-water',
     name: 'Silver Mountain Water',
     brand: 'Creed',
-    price: 23.99,
+    price: 33.99,
+    originalPrice: 195.00,
     category: 'unisex',
     description: 'Creed Silver Mountain Water smells like a mix of cold citrus, green tea, and blackcurrant over soft musk and sandalwood. It comes across clean, slightly soapy, and airy, like fresh laundry and cool mountain air rather than a heavy, sweet perfume.',
     scentNotes: {
@@ -1177,8 +1178,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/silver-mountain-water',
     inStock: true,
     variants: [
-      { ml: 50, price: 28.99, inStock: true },
-      { ml: 100, price: 35.99, inStock: true },
+      { ml: 50, price: 33.99, originalPrice: 195.00, inStock: true },
+      { ml: 100, price: 40.99, originalPrice: 250.00, inStock: true },
     ],
   },
   {
@@ -1251,7 +1252,7 @@ export const products: Product[] = [
     id: 'symphony',
     name: 'Symphony',
     brand: 'Louis Vuitton',
-    price: 38.99,
+    price: 43.99,
     originalPrice: 345.50,
     category: 'unisex',
     description: 'A harmonious and luxurious composition. Floral, fruity, and utterly refined.',
@@ -1265,7 +1266,7 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
     inStock: false,
     variants: [
-      { ml: 100, price: 38.99, originalPrice: 415.00, inStock: false },
+      { ml: 100, price: 43.99, originalPrice: 415.00, inStock: false },
     ],
   },
   {
