@@ -20,6 +20,7 @@ import Account from "./pages/Account";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
+import ReturnPolicy from "./pages/ReturnPolicy";
 import Rewarble from "./pages/Rewarble";
 import PaypalEneba from "./pages/PaypalEneba";
 import IdealPayment from "./pages/IdealPayment";
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/account" element={<Account />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/return-policy" element={<ReturnPolicy />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/rewarble" element={<Rewarble />} />
               <Route path="/paypal" element={<PaypalEneba />} />

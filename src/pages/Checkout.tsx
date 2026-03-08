@@ -1299,6 +1299,11 @@ const Checkout = () => {
                 <p className="text-[11px] text-muted-foreground/60 text-center">
                   By completing this purchase you agree to our terms and conditions
                 </p>
+                <p className="text-[11px] text-center">
+                  <Link to="/return-policy" className="text-accent hover:underline font-medium">
+                    Please read our return and refund policy
+                  </Link>
+                </p>
 
                 {/* Trust badges */}
                 <div className="flex flex-col items-center gap-2 pt-3 border-t border-border/50">
