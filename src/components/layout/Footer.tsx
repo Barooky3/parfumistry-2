@@ -12,6 +12,7 @@ const footerLinks = {
   support: [
     { label: 'Contact Us', href: '/contact' },
     { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Returns & Refunds', href: '/return-policy' },
     { label: 'Terms of Service', href: '/terms-of-service' },
     { label: 'FAQ', href: '/#faq' },
   ],
