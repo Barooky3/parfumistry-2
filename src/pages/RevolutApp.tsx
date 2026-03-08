@@ -64,11 +64,7 @@ const RevolutApp = () => {
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('revolutIdempotencyKey');
-      if (data?.orderNumber) {
-        navigate(`/proof?order=${data.orderNumber}&method=revolut_app`);
-      } else {
-        navigate(`/checkout?completed=revolut_app`);
-      }
+      navigate(`/checkout?completed=revolut_app`);
     } catch (err: any) {
       console.error('Revolut app order error:', err);
       toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
