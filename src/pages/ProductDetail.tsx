@@ -27,7 +27,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
   const product = id ? getProductById(id) : undefined;
   const paddingOverride = useProductPadding(id || '');
-  const relatedProducts = getFeaturedProducts().filter(p => p.id !== id).slice(0, 4);
+  const relatedProducts = (() => {
+    const all = getFeaturedProducts().filter(p => p.id !== id);
+    const shuffled = [...all].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4);
+  })();
   
 
   // ML variant selection state
