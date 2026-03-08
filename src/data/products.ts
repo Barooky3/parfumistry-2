@@ -593,7 +593,7 @@ export const products: Product[] = [
     id: 'imagination',
     name: 'Imagination',
     brand: 'Louis Vuitton',
-    price: 28.99,
+    price: 33.99,
     originalPrice: 225.00,
     category: 'men',
     description: 'This is probably the MOST talked about fragrance in the world, and the most agreed upon top #1 fragrance. This fragrance is said to be the most versatile fragrance that can be used in any season and anywhere, its a fresh and clean tea scent.',
