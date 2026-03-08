@@ -22,6 +22,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
 import Rewarble from "./pages/Rewarble";
 import PaypalEneba from "./pages/PaypalEneba";
+import IdealPayment from "./pages/IdealPayment";
 import RevolutApp from "./pages/RevolutApp";
 import ResetPassword from "./pages/ResetPassword";
 import ProofUpload from "./pages/ProofUpload";
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/rewarble" element={<Rewarble />} />
               <Route path="/paypal" element={<PaypalEneba />} />
+              <Route path="/ideal" element={<IdealPayment />} />
               <Route path="/revolut" element={<RevolutApp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/proof" element={<ProofUpload />} />

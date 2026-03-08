@@ -1256,6 +1256,42 @@ const Checkout = () => {
                   </Button>
                 </div>
 
+                {/* Pay with iDEAL */}
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    disabled={!isFormValid() || isProcessing}
+                    className="w-full h-[52px] rounded-lg text-sm font-bold tracking-wide bg-[#CC0066] hover:bg-[#A30052] text-white shadow-lg border border-white/10 relative overflow-hidden"
+                    onClick={() => {
+                      if (!isFormValid()) {
+                        toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+                        return;
+                      }
+                      const fd = formDataRef.current;
+                      const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.bundleImages?.[1] || item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl, affiliateUrl: item.product.affiliateUrl }));
+                      const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
+                      sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+                        cartItems,
+                        email: fd.email,
+                        customerName: `${fd.firstName} ${fd.lastName}`,
+                        shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
+                        totalAmount: finalTotal.toFixed(2),
+                        discountCode: appliedDiscountRef.current?.code || null,
+                        discountPercent: appliedDiscountRef.current?.percent || 0,
+                      }));
+                      navigate(`/ideal?total=${finalTotal.toFixed(2)}`);
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="white"/>
+                        <text x="12" y="16" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#CC0066" fontFamily="sans-serif">iD</text>
+                      </svg>
+                      <span>Pay with iDEAL</span>
+                    </span>
+                  </Button>
+                </div>
+
                 {/* Pay with PayPal (via Eneba) */}
                 <div className="space-y-2">
                   <Button
