@@ -81,7 +81,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   const year = new Date().getFullYear();
   let reason: string;
   if (isGiftCard) {
-    reason = "Unfortunately, the Rewarble code you provided for your recent order could not be verified and is invalid. Your order has been cancelled.";
+    reason = "Unfortunately, the Rewarble code you provided for your recent order could not be verified and is invalid. Your order has been cancelled.<br><br><strong>Reminder:</strong> The gift card code should be a 16-character alphanumeric code (e.g. <code style=\"background:#f0f0f0;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13px;\">9YVMBH7H4CXHCX7J</code>), not the Rewarble order number.";
   } else if (isBankTransfer) {
     reason = "Unfortunately, your bank transfer could not be verified or was bounced back by the receiving bank. Your order has been cancelled.<br><br><strong>If you did send the payment, don't worry -- your money is already on its way back to your account.</strong> Depending on your bank, it may take 1-3 business days to appear in your balance.";
   } else {
