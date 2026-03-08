@@ -236,7 +236,7 @@ export const products: Product[] = [
     id: 'aventus-absolu',
     name: 'Aventus Absolu',
     brand: 'Creed',
-    price: 30.99,
+    price: 35.99,
     originalPrice: 207.00,
     category: 'men',
     description: 'This is the older brother of Creed Aventus, sexier, more mature, rich and complex with adventurous spice and sophisticated woods. This has a much deeper drydown than its younger brother.',
