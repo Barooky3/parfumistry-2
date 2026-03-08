@@ -38,7 +38,8 @@ const PAYMENT_METHODS = [
 const ALL_COUNTRIES = Object.keys(NAMES_BY_COUNTRY);
 const inStockProducts = products.filter(p => p.inStock);
 
-function pickRandomProduct(): typeof products[0] {
+function pickRandomProduct(): typeof products[0] | null {
+  if (inStockProducts.length === 0) return null;
   const rand = Math.random();
   if (rand < 0.50) {
     const bundles = inStockProducts.filter(p => p.isBundle);
