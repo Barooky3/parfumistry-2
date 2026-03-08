@@ -22,6 +22,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
 import Rewarble from "./pages/Rewarble";
 import PaypalEneba from "./pages/PaypalEneba";
+import IdealPayment from "./pages/IdealPayment";
 import RevolutApp from "./pages/RevolutApp";
 import ResetPassword from "./pages/ResetPassword";
 import ProofUpload from "./pages/ProofUpload";
