@@ -60,7 +60,7 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">7. Your Rights</h2>
+              <h2 className="font-display text-2xl mb-4">6. Your Rights</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 Under GDPR and other applicable laws, you have the right to:
               </p>
