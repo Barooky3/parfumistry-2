@@ -20,6 +20,7 @@ import Account from "./pages/Account";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AdminOrders from "./pages/AdminOrders";
+import ReturnPolicy from "./pages/ReturnPolicy";
 import Rewarble from "./pages/Rewarble";
 import PaypalEneba from "./pages/PaypalEneba";
 import IdealPayment from "./pages/IdealPayment";
