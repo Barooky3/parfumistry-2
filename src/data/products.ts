@@ -45,7 +45,7 @@ export const products: Product[] = [
     id: 'young-playboy-bundle',
     name: 'Fragrance Bundle "Young Playboy"',
     brand: 'Profparfums',
-    price: 32.99,
+    price: 37.99,
     originalPrice: 140.00,
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
