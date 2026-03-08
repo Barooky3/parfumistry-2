@@ -1074,7 +1074,7 @@ export const products: Product[] = [
     id: 'pacific-chill',
     name: 'Pacific Chill',
     brand: 'Louis Vuitton',
-    price: 31.00,
+    price: 36.00,
     originalPrice: 225.00,
     category: 'unisex',
     description: 'A refreshing and invigorating scent inspired by the Pacific coast. Citrusy, aquatic, and deeply relaxing.',
