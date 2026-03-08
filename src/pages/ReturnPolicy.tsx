@@ -53,7 +53,7 @@ const ReturnPolicy = () => {
                   <li className="flex items-start gap-2.5">
                     <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
                     <span className="text-sm text-muted-foreground">
-                      <strong className="text-foreground">Less than 5ml used</strong> — The product must have been minimally used, with less than 5ml of the fragrance consumed. Products that have been significantly used are not eligible for a return.
+                      <strong className="text-foreground">Less than 5ml used (~50 sprays)</strong> — The product must have been minimally used, with less than 5ml (approximately 50 sprays) of the fragrance consumed. Products that have been significantly used are not eligible for a return.
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
