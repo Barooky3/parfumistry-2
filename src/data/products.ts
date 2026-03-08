@@ -1177,8 +1177,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/silver-mountain-water',
     inStock: true,
     variants: [
-      { ml: 50, price: 23.99, inStock: true },
-      { ml: 100, price: 30.99, inStock: true },
+      { ml: 50, price: 28.99, inStock: true },
+      { ml: 100, price: 35.99, inStock: true },
     ],
   },
   {
