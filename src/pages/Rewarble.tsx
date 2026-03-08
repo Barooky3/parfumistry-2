@@ -246,9 +246,12 @@ const Rewarble = () => {
               <p className="text-xs font-medium text-amber-800 dark:text-amber-300 mb-0.5">⚠ Send the gift card code, not the order number</p>
               <p className="text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">The gift card code contains <strong>letters and numbers</strong> and should look something like this: <strong className="font-mono">9YVMBH7H4CXHCX7J</strong>. The Rewarble order number (digits only, starting with #) cannot be used.</p>
             </div>
-            <p className="text-[11px] text-muted-foreground leading-relaxed mt-1.5">
-              Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released to us after you have received your delivery.
-            </p>
+            <div className="flex items-center gap-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 px-3.5 py-3 mt-2">
+              <Lock className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <p className="text-xs font-medium text-emerald-800 dark:text-emerald-300 leading-relaxed">
+                Once you paste your code and confirm, it is sent to Rewarble for validation. The code is only released after you have received your delivery.
+              </p>
+            </div>
             <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-border/60">
               <Shield className="h-3.5 w-3.5 text-[#7C3AED]" />
               <span className="text-xs text-muted-foreground">Secure verification powered by</span>
