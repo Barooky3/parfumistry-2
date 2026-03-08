@@ -122,6 +122,7 @@ export const SocialProofPopup = () => {
     const last = names.last[Math.floor(Math.random() * names.last.length)];
 
     const product = pickRandomProduct();
+    if (!product) { scheduleNext(showNotification); return; }
     const timeAgo = randomMinutesAgo();
     const paymentMethod = pickRandomPaymentMethod();
     setNotification({ product, customerName: `${first} ${last.charAt(0)}.`, country, timeAgo, paymentMethod });
