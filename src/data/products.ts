@@ -62,8 +62,8 @@ export const products: Product[] = [
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
     ],
     variants: [
-      { ml: 50, price: 32.99, originalPrice: 140.00, inStock: true, label: 'All 50ml (75ml for JPG)' },
-      { ml: 100, price: 37.99, originalPrice: 247.00, inStock: true, label: 'All 100ml (125ml for JPG)' },
+      { ml: 50, price: 37.99, originalPrice: 140.00, inStock: true, label: 'All 50ml (75ml for JPG)' },
+      { ml: 100, price: 42.99, originalPrice: 247.00, inStock: true, label: 'All 100ml (125ml for JPG)' },
     ],
   },
   {
