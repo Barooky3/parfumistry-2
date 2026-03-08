@@ -39,14 +39,7 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">3. Digital Products</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                ProfParfums sells digital products in the form of links to third-party sellers. Once you complete a purchase, you will receive access to these links. As these are digital products, all sales are final and no refunds are available. We do not control the third-party sellers and are not responsible for their products or services.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="font-display text-2xl mb-4">4. Data Security</h2>
+              <h2 className="font-display text-2xl mb-4">3. Data Security</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We implement industry-standard security measures to protect your personal information. Payment processing is handled by trusted third-party providers who comply with PCI DSS standards. We do not store your complete payment card information on our servers.
               </p>
