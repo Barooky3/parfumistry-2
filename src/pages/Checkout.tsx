@@ -1296,13 +1296,13 @@ const Checkout = () => {
                 </div>
 
 
+                <div className="rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-center">
+                  <Link to="/return-policy" className="text-sm font-semibold text-accent hover:underline">
+                    📋 Please read our return and refund policy
+                  </Link>
+                </div>
                 <p className="text-[11px] text-muted-foreground/60 text-center">
                   By completing this purchase you agree to our terms and conditions
-                </p>
-                <p className="text-[11px] text-center">
-                  <Link to="/return-policy" className="text-accent hover:underline font-medium">
-                    Please read our return and refund policy
-                  </Link>
                 </p>
 
                 {/* Trust badges */}
