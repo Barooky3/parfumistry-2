@@ -38,7 +38,8 @@ const PAYMENT_METHODS = [
 const ALL_COUNTRIES = Object.keys(NAMES_BY_COUNTRY);
 const inStockProducts = products.filter(p => p.inStock);
 
-function pickRandomProduct(): typeof products[0] {
+function pickRandomProduct(): typeof products[0] | null {
+  if (inStockProducts.length === 0) return null;
   const rand = Math.random();
   if (rand < 0.50) {
     const bundles = inStockProducts.filter(p => p.isBundle);
@@ -121,6 +122,7 @@ export const SocialProofPopup = () => {
     const last = names.last[Math.floor(Math.random() * names.last.length)];
 
     const product = pickRandomProduct();
+    if (!product) { scheduleNext(showNotification); return; }
     const timeAgo = randomMinutesAgo();
     const paymentMethod = pickRandomPaymentMethod();
     setNotification({ product, customerName: `${first} ${last.charAt(0)}.`, country, timeAgo, paymentMethod });
