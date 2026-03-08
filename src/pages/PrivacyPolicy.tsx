@@ -53,7 +53,7 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">6. Third-Party Services</h2>
+              <h2 className="font-display text-2xl mb-4">5. Third-Party Services</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We may share your information with third-party service providers who assist us in operating our website, processing payments, and delivering our services. These providers are contractually obligated to protect your information.
               </p>
