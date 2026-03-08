@@ -1088,8 +1088,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
-      { ml: 50, price: 36.00, originalPrice: 225.00, inStock: true },
-      { ml: 100, price: 56.99, originalPrice: 290.00, inStock: true },
+      { ml: 50, price: 41.00, originalPrice: 225.00, inStock: true },
+      { ml: 100, price: 61.99, originalPrice: 290.00, inStock: true },
     ],
   },
   {
