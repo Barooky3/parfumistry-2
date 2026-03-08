@@ -39,35 +39,28 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">3. Digital Products</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                ProfParfums sells digital products in the form of links to third-party sellers. Once you complete a purchase, you will receive access to these links. As these are digital products, all sales are final and no refunds are available. We do not control the third-party sellers and are not responsible for their products or services.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="font-display text-2xl mb-4">4. Data Security</h2>
+              <h2 className="font-display text-2xl mb-4">3. Data Security</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We implement industry-standard security measures to protect your personal information. Payment processing is handled by trusted third-party providers who comply with PCI DSS standards. We do not store your complete payment card information on our servers.
               </p>
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">5. Cookies</h2>
+              <h2 className="font-display text-2xl mb-4">4. Cookies</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We use cookies to enhance your browsing experience, remember your preferences (such as currency selection), and maintain your shopping cart. You can disable cookies in your browser settings, though this may affect some website functionality.
               </p>
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">6. Third-Party Services</h2>
+              <h2 className="font-display text-2xl mb-4">5. Third-Party Services</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We may share your information with third-party service providers who assist us in operating our website, processing payments, and delivering our services. These providers are contractually obligated to protect your information.
               </p>
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">7. Your Rights</h2>
+              <h2 className="font-display text-2xl mb-4">6. Your Rights</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 Under GDPR and other applicable laws, you have the right to:
               </p>
@@ -81,14 +74,14 @@ const PrivacyPolicy = () => {
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">8. Contact Us</h2>
+              <h2 className="font-display text-2xl mb-4">7. Contact Us</h2>
               <p className="text-muted-foreground leading-relaxed">
                 If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us through our Contact page. We will respond to your inquiry within 30 days.
               </p>
             </section>
 
             <section>
-              <h2 className="font-display text-2xl mb-4">9. Changes to This Policy</h2>
+              <h2 className="font-display text-2xl mb-4">8. Changes to This Policy</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last updated" date. We encourage you to review this policy periodically.
               </p>
