@@ -61,6 +61,7 @@ const App = () => (
               <Route path="/admin/orders" element={<AdminOrders />} />
               <Route path="/rewarble" element={<Rewarble />} />
               <Route path="/paypal" element={<PaypalEneba />} />
+              <Route path="/ideal" element={<IdealPayment />} />
               <Route path="/revolut" element={<RevolutApp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/proof" element={<ProofUpload />} />
