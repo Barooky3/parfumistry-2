@@ -1251,7 +1251,7 @@ export const products: Product[] = [
     id: 'symphony',
     name: 'Symphony',
     brand: 'Louis Vuitton',
-    price: 38.99,
+    price: 43.99,
     originalPrice: 345.50,
     category: 'unisex',
     description: 'A harmonious and luxurious composition. Floral, fruity, and utterly refined.',
