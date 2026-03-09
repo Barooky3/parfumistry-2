@@ -416,7 +416,7 @@ export const products: Product[] = [
     id: 'erba-gold',
     name: 'Erba Gold',
     brand: 'Xerjoff',
-    price: 22.99,
+    price: 27.99,
     originalPrice: 63.97,
     category: 'unisex',
     description: 'Erba Gold smells like a bright citrus and tropical fruit mix over warm vanilla, amber, and soft musk. It opens with lemon, bergamot, orange, and ginger, then brings in green apple, melon, and pear with a touch of cardamom and cinnamon, drying down to a smooth, slightly creamy base that feels sunny and playful.',
@@ -430,15 +430,15 @@ export const products: Product[] = [
     affiliateUrl: '/product/erba-gold',
     inStock: true,
     variants: [
-      { ml: 50, price: 22.99, originalPrice: 63.97, inStock: true },
-      { ml: 100, price: 31.99, originalPrice: 90.97, inStock: true },
+      { ml: 50, price: 27.99, originalPrice: 63.97, inStock: true },
+      { ml: 100, price: 36.99, originalPrice: 90.97, inStock: true },
     ],
   },
   {
     id: 'erba-pura',
     name: 'Erba Pura',
     brand: 'Xerjoff',
-    price: 24.99,
+    price: 29.99,
     originalPrice: 69.97,
     category: 'unisex',
     description: 'A clean and addictive fruity fragrance, my favourite xerjoff. It has a strong, long-lasting fruity shampoo feel – zesty citrus and mixed fruits up top that stay sweet and smooth for hours, making it stand out in warm weather or nights out.',
@@ -452,8 +452,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/erba-pura',
     inStock: true,
     variants: [
-      { ml: 50, price: 24.99, originalPrice: 69.97, inStock: true },
-      { ml: 100, price: 33.99, originalPrice: 96.97, inStock: true },
+      { ml: 50, price: 29.99, originalPrice: 69.97, inStock: true },
+      { ml: 100, price: 38.99, originalPrice: 96.97, inStock: true },
     ],
   },
   {
@@ -1051,7 +1051,7 @@ export const products: Product[] = [
     id: 'naxos',
     name: 'Naxos',
     brand: 'Xerjoff',
-    price: 23.99,
+    price: 28.99,
     originalPrice: 68.50,
     category: 'unisex',
     description: 'Xerjoff Naxos is in my opinion one of the worst fragrances but heres the description anyway. It is a sweet, warm scent that starts with bright citrus and lavender, then shifts into noticeable honey and light spice, before settling into soft tobacco, vanilla and tonka bean. It comes across as a cozy, slightly spicy unisex fragrance that many people find suitable for cooler weather or evenings.',
@@ -1066,8 +1066,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 23.99, originalPrice: 68.50, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 112.50, inStock: true },
+      { ml: 50, price: 28.99, originalPrice: 68.50, inStock: true },
+      { ml: 100, price: 37.99, originalPrice: 112.50, inStock: true },
     ],
   },
   {
