@@ -1066,8 +1066,8 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
     variants: [
-      { ml: 50, price: 23.99, originalPrice: 68.50, inStock: true },
-      { ml: 100, price: 32.99, originalPrice: 112.50, inStock: true },
+      { ml: 50, price: 28.99, originalPrice: 68.50, inStock: true },
+      { ml: 100, price: 37.99, originalPrice: 112.50, inStock: true },
     ],
   },
   {
