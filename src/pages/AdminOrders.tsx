@@ -51,6 +51,7 @@ interface Order {
   discount_code: string | null;
   discount_percent: number | null;
   proof_url: string | null;
+  rejection_notes: string | null;
 }
 
 function getPaymentMethod(ref: string): string {

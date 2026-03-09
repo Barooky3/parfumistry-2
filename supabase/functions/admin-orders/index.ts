@@ -275,7 +275,7 @@ serve(async (req) => {
         });
 
       } else if (orderAction === "reject") {
-        await adminClient.from("orders").update({ status: "rejected" }).eq("id", orderId);
+        await adminClient.from("orders").update({ status: "rejected", rejection_notes: body.rejectionNotes || null }).eq("id", orderId);
         const { rejectionNotes } = body;
 
         // Send rejection email to customer
