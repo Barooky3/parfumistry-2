@@ -1034,7 +1034,7 @@ export default function AdminOrders() {
                     toast.success(json.message);
                     const rejectedId = rejectingOrder.id;
                     setRejectingOrder(null);
-                    setAllOrders(prev => prev.map(o => o.id === rejectedId ? { ...o, status: "rejected" } : o));
+                    setAllOrders(prev => prev.map(o => o.id === rejectedId ? { ...o, status: "rejected", rejection_notes: rejectionNotes || null } : o));
                   } else {
                     toast.error(json.error || "Failed to reject");
                   }
