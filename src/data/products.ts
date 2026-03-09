@@ -452,8 +452,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/erba-pura',
     inStock: true,
     variants: [
-      { ml: 50, price: 24.99, originalPrice: 69.97, inStock: true },
-      { ml: 100, price: 33.99, originalPrice: 96.97, inStock: true },
+      { ml: 50, price: 29.99, originalPrice: 69.97, inStock: true },
+      { ml: 100, price: 38.99, originalPrice: 96.97, inStock: true },
     ],
   },
   {
