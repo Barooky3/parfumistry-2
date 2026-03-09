@@ -533,7 +533,8 @@ export default function AdminOrders() {
       o.customer_name.toLowerCase().includes(query) ||
       o.customer_email.toLowerCase().includes(query) ||
       (o.order_number && o.order_number.toString().includes(query));
-    return matchesStatus && matchesPayment && matchesSearch;
+    const matchesCustomer = !customerEmailFilter || o.customer_email.toLowerCase() === customerEmailFilter;
+    return matchesStatus && matchesPayment && matchesSearch && matchesCustomer;
   });
 
   return (
