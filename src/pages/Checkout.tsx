@@ -1310,7 +1310,7 @@ const Checkout = () => {
                       if you're confused!
                     </p>
                     <p className="mt-2 font-medium">
-                      As soon as I'm able to open a bank account, normal payment methods (card payments, iDEAL, etc.) will be added right away.
+                      As soon as I'm able to open a bank account, normal payment methods (card payments, direct PayPal, cash on delivery, etc.) will be added right away.
                     </p>
                   </div>
                 </details>
