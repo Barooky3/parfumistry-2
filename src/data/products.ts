@@ -1051,7 +1051,7 @@ export const products: Product[] = [
     id: 'naxos',
     name: 'Naxos',
     brand: 'Xerjoff',
-    price: 23.99,
+    price: 28.99,
     originalPrice: 68.50,
     category: 'unisex',
     description: 'Xerjoff Naxos is in my opinion one of the worst fragrances but heres the description anyway. It is a sweet, warm scent that starts with bright citrus and lavender, then shifts into noticeable honey and light spice, before settling into soft tobacco, vanilla and tonka bean. It comes across as a cozy, slightly spicy unisex fragrance that many people find suitable for cooler weather or evenings.',
