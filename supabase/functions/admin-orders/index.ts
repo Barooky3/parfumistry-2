@@ -284,8 +284,8 @@ serve(async (req) => {
           const isGiftCard = order.checkout_reference?.startsWith("rewarble");
           const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
           const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
-          const reason = isGiftCard
-            ? "Unfortunately, the Rewarble code you provided could not be verified. Please make sure you sent the <strong>actual gift card code</strong> — it is <strong>16 characters long and contains letters</strong>. The Rewarble <strong>order number</strong> (only digits, starting with #) is <strong>not</strong> the gift card code. Your order has been cancelled."
+            const reason = isGiftCard
+            ? "Unfortunately, the Rewarble code you provided could not be verified. Please make sure you sent the <strong>actual gift card code</strong> — it is <strong>16 characters long and contains letters and numbers</strong>. It should look something like this: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>. The Rewarble <strong>order number</strong> (only digits, starting with #) is <strong>not</strong> the gift card code. Your order has been cancelled."
             : isRevolutApp
             ? "Unfortunately, your Revolut payment could not be verified. Your order has been cancelled."
             : isBankTransfer
