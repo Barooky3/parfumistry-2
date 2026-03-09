@@ -1297,7 +1297,7 @@ const Checkout = () => {
 
 
                 <details className="text-center group">
-                  <summary className="text-xs text-muted-foreground/70 hover:text-muted-foreground cursor-pointer underline underline-offset-2 list-none inline">
+                  <summary className="text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer underline underline-offset-4 list-none inline transition-colors">
                     Why are the payment methods like this?
                   </summary>
                   <div className="mt-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-3 text-xs text-muted-foreground text-left leading-relaxed">
