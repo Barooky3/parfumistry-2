@@ -14,19 +14,6 @@ const ReturnPolicy = () => {
         <p className="text-muted-foreground mb-10">Last updated: March 2026</p>
 
         <div className="space-y-8">
-          {/* Overview */}
-          <div className="rounded-xl border border-border bg-card p-6">
-            <div className="flex items-start gap-3 mb-4">
-              <Shield className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <h2 className="text-lg font-semibold text-foreground mb-2">Our Commitment</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  At Prof Parfums, your satisfaction is our priority. We stand behind the quality of every product we sell. If something isn't right with your order, we're here to make it right.
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* 30-Day Return Window */}
           <div className="rounded-xl border border-border bg-card p-6">
             <div className="flex items-start gap-3 mb-4">
