@@ -430,8 +430,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/erba-gold',
     inStock: true,
     variants: [
-      { ml: 50, price: 22.99, originalPrice: 63.97, inStock: true },
-      { ml: 100, price: 31.99, originalPrice: 90.97, inStock: true },
+      { ml: 50, price: 27.99, originalPrice: 63.97, inStock: true },
+      { ml: 100, price: 36.99, originalPrice: 90.97, inStock: true },
     ],
   },
   {
