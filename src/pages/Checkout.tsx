@@ -1305,7 +1305,9 @@ const Checkout = () => {
                       Since I'm currently under 17, I don't have access to a proper bank account yet. This means I'm unable to set up traditional payment processing (like credit card terminals or direct bank transfers).
                     </p>
                     <p className="mt-2">
-                      For now, gift card codes and app-based payments are the only way I can securely accept payments. I know it's not the most convenient — and I truly appreciate your patience and trust! 🙏
+                      For now, Rewarble codes and app-based payments are the only way I can securely accept payments. I know it's not the most convenient — but there's not much I can do. If you're in doubt, please do some research on Rewarble, and please don't hesitate to ask me questions on{' '}
+                      <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
+                      if you're confused!
                     </p>
                     <p className="mt-2 font-medium">
                       As soon as I'm able to open a bank account, normal payment methods (card payments, iDEAL, etc.) will be added right away.
