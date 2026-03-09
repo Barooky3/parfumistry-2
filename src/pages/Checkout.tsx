@@ -1317,7 +1317,7 @@ const Checkout = () => {
 
                 <div className="rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-center">
                   <Link to="/return-policy" className="text-sm font-semibold text-accent hover:underline">
-                    📋 Please read our return and refund policy
+                    📋 Please read our return and refund policy before purchasing
                   </Link>
                 </div>
                 <p className="text-[11px] text-muted-foreground/60 text-center">
