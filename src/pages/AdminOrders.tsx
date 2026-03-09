@@ -814,6 +814,21 @@ export default function AdminOrders() {
           )}
         </div>
 
+        {customerEmailFilter && (
+          <div className="mb-4 flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5">
+            <Users className="h-4 w-4 text-amber-700 shrink-0" />
+            <p className="text-sm text-amber-800 flex-1">
+              Showing all orders from <strong>{allOrders.find(o => o.customer_email.toLowerCase() === customerEmailFilter)?.customer_name || customerEmailFilter}</strong> ({emailOrderCounts[customerEmailFilter] || 0} orders total)
+            </p>
+            <button
+              onClick={() => setCustomerEmailFilter("")}
+              className="text-xs text-amber-700 hover:text-amber-900 font-medium underline"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
+
         {loading ? (
           <div className="text-center py-16 text-muted-foreground">Loading orders...</div>
         ) : filteredOrders.length === 0 ? (
