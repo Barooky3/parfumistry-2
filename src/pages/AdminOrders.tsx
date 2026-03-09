@@ -844,7 +844,13 @@ export default function AdminOrders() {
                         {(() => {
                           const count = emailOrderCounts[order.customer_email.toLowerCase()] || 0;
                           return count > 1 ? (
-                            <Badge className="bg-amber-100 text-amber-800 border-amber-300 gap-1">
+                            <Badge 
+                              className="bg-amber-100 text-amber-800 border-amber-300 gap-1 cursor-pointer hover:bg-amber-200 transition-colors"
+                              onClick={() => {
+                                setCustomerEmailFilter(order.customer_email.toLowerCase());
+                                setStatusFilter("all");
+                              }}
+                            >
                               <Users className="h-3 w-3" />
                               Repeat ({count} orders)
                             </Badge>
