@@ -1296,6 +1296,23 @@ const Checkout = () => {
                 </div>
 
 
+                <details className="text-center group">
+                  <summary className="text-xs text-muted-foreground/70 hover:text-muted-foreground cursor-pointer underline underline-offset-2 list-none inline">
+                    Why are the payment methods like this?
+                  </summary>
+                  <div className="mt-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-3 text-xs text-muted-foreground text-left leading-relaxed">
+                    <p>
+                      Since I'm currently under 17, I don't have access to a proper bank account yet. This means I'm unable to set up traditional payment processing (like credit card terminals or direct bank transfers).
+                    </p>
+                    <p className="mt-2">
+                      For now, gift card codes and app-based payments are the only way I can securely accept payments. I know it's not the most convenient — and I truly appreciate your patience and trust! 🙏
+                    </p>
+                    <p className="mt-2 font-medium">
+                      As soon as I'm able to open a bank account, normal payment methods (card payments, iDEAL, etc.) will be added right away.
+                    </p>
+                  </div>
+                </details>
+
                 <div className="rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-center">
                   <Link to="/return-policy" className="text-sm font-semibold text-accent hover:underline">
                     📋 Please read our return and refund policy
