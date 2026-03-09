@@ -75,6 +75,7 @@ export default function AdminOrders() {
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
+  const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
@@ -532,7 +533,8 @@ export default function AdminOrders() {
       o.customer_name.toLowerCase().includes(query) ||
       o.customer_email.toLowerCase().includes(query) ||
       (o.order_number && o.order_number.toString().includes(query));
-    return matchesStatus && matchesPayment && matchesSearch;
+    const matchesCustomer = !customerEmailFilter || o.customer_email.toLowerCase() === customerEmailFilter;
+    return matchesStatus && matchesPayment && matchesSearch && matchesCustomer;
   });
 
   return (
@@ -812,6 +814,21 @@ export default function AdminOrders() {
           )}
         </div>
 
+        {customerEmailFilter && (
+          <div className="mb-4 flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5">
+            <Users className="h-4 w-4 text-amber-700 shrink-0" />
+            <p className="text-sm text-amber-800 flex-1">
+              Showing all orders from <strong>{allOrders.find(o => o.customer_email.toLowerCase() === customerEmailFilter)?.customer_name || customerEmailFilter}</strong> ({emailOrderCounts[customerEmailFilter] || 0} orders total)
+            </p>
+            <button
+              onClick={() => setCustomerEmailFilter("")}
+              className="text-xs text-amber-700 hover:text-amber-900 font-medium underline"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
+
         {loading ? (
           <div className="text-center py-16 text-muted-foreground">Loading orders...</div>
         ) : filteredOrders.length === 0 ? (
@@ -842,7 +859,13 @@ export default function AdminOrders() {
                         {(() => {
                           const count = emailOrderCounts[order.customer_email.toLowerCase()] || 0;
                           return count > 1 ? (
-                            <Badge className="bg-amber-100 text-amber-800 border-amber-300 gap-1">
+                            <Badge 
+                              className="bg-amber-100 text-amber-800 border-amber-300 gap-1 cursor-pointer hover:bg-amber-200 transition-colors"
+                              onClick={() => {
+                                setCustomerEmailFilter(order.customer_email.toLowerCase());
+                                setStatusFilter("all");
+                              }}
+                            >
                               <Users className="h-3 w-3" />
                               Repeat ({count} orders)
                             </Badge>
