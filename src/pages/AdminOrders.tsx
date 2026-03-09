@@ -941,6 +941,14 @@ export default function AdminOrders() {
                     )}
                   </div>
 
+                  {/* Rejection Notes */}
+                  {order.status === "rejected" && order.rejection_notes && (
+                    <div className="mt-3 border-t pt-3">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Rejection Notes Sent</p>
+                      <p className="text-sm bg-red-50 text-red-800 border border-red-200 rounded px-3 py-2 whitespace-pre-wrap">{order.rejection_notes}</p>
+                    </div>
+                  )}
+
                   <div className="mt-4 flex gap-3 flex-wrap">
                     <Button
                       size="sm"
