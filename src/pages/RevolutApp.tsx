@@ -228,25 +228,7 @@ const RevolutApp = () => {
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Why are payment methods like this */}
-        <details className="text-center group mt-6">
-          <summary className="text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer underline underline-offset-4 list-none inline transition-colors">
-            Why are the payment methods like this?
-          </summary>
-          <div className="mt-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-3 text-xs text-muted-foreground text-left leading-relaxed">
-            <p>
-              Since I'm currently under 17, I don't have access to a proper bank account yet. This means I'm unable to set up traditional payment processing (like credit card terminals or direct bank transfers).
-            </p>
-            <p className="mt-2">
-              For now, Rewarble codes and app-based payments are the only way I can securely accept payments. I know it's not the most convenient — but there's not much I can do. If you're in doubt or don't trust it, please do some research on Rewarble, and don't hesitate to ask me questions on{' '}
-              <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
-              if you're confused!
-            </p>
-            <p className="mt-2 font-medium">
-              As soon as I'm able to open a bank account, normal payment methods (card payments, direct PayPal, cash on delivery, etc.) will be added right away.
-            </p>
-          </div>
-        </details>
+
 
         {/* Trust badges */}
         <div className="flex flex-col items-center gap-2 pt-4 mt-4 border-t border-border/50">
