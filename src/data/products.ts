@@ -438,7 +438,7 @@ export const products: Product[] = [
     id: 'erba-pura',
     name: 'Erba Pura',
     brand: 'Xerjoff',
-    price: 24.99,
+    price: 29.99,
     originalPrice: 69.97,
     category: 'unisex',
     description: 'A clean and addictive fruity fragrance, my favourite xerjoff. It has a strong, long-lasting fruity shampoo feel – zesty citrus and mixed fruits up top that stay sweet and smooth for hours, making it stand out in warm weather or nights out.',
