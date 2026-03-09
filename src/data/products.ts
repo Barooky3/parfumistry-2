@@ -416,7 +416,7 @@ export const products: Product[] = [
     id: 'erba-gold',
     name: 'Erba Gold',
     brand: 'Xerjoff',
-    price: 22.99,
+    price: 27.99,
     originalPrice: 63.97,
     category: 'unisex',
     description: 'Erba Gold smells like a bright citrus and tropical fruit mix over warm vanilla, amber, and soft musk. It opens with lemon, bergamot, orange, and ginger, then brings in green apple, melon, and pear with a touch of cardamom and cinnamon, drying down to a smooth, slightly creamy base that feels sunny and playful.',
