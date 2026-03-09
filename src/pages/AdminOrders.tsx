@@ -75,6 +75,7 @@ export default function AdminOrders() {
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
+  const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
