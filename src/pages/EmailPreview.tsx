@@ -107,7 +107,7 @@ const EmailPreview = () => {
   );
 
   const rejectMismatchHtml = rejectionWrapper(
-    'Unfortunately, the value of the Rewarble gift card you provided <strong>does not match your cart total</strong>.<br><br><div style="background:#fef3c7;border:1px solid #f59e0b;padding:12px 16px;border-radius:8px;margin:8px 0;font-size:14px;">Code value: <strong>€15.00</strong><br>Cart value: <strong>€24.99</strong><br>Missing amount: <strong>€9.99</strong></div><br>To complete your purchase, please <strong>redo your order using two codes</strong>: the <strong>same code</strong> you already used, plus a <strong>new Rewarble gift card</strong> to cover the missing amount. We recommend purchasing a <strong>€10 Rewarble gift card</strong> to cover the difference. Your current order has been cancelled.',
+    'Unfortunately, the value of the Rewarble gift card you provided <strong>does not match your cart total</strong>.<br><br><div style="background:#fef3c7;border:1px solid #f59e0b;padding:12px 16px;border-radius:8px;margin:8px 0;font-size:14px;">Code value: <strong>€15.00</strong><br>Cart value: <strong>€24.99</strong><br>Missing amount: <strong>€9.99</strong></div><br>To complete your purchase, please <strong>redo your order using two codes</strong>: the <strong>same code</strong> you already used, plus a <strong>new Rewarble gift card</strong> to cover the missing amount. The code you should use to cover the difference is a <strong>€10 Rewarble gift card</strong>. Your current order has been cancelled.',
     "Once you have both codes ready, simply place a new order on our website and enter both gift card codes."
   );
 
