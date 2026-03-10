@@ -25,6 +25,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <SocialProofPopup />
       <WelcomePopup />
       <VisitorTracker />
+      <RejectionNotificationPopup />
     </div>
   );
 };
