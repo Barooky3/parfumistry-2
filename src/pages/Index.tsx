@@ -6,40 +6,19 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { ProductCard } from '@/components/product';
 import { getBestsellers } from '@/data/products';
 import { BrandNavigation, BundleSection } from '@/components/home';
+import { useLanguage } from '@/contexts/LanguageContext';
 import heroImage from '@/assets/hero-perfumes.jpg';
 import logo from '@/assets/logo.png';
 
-const features = [
-  { label: 'Instant Delivery' },
-  { label: 'Verified Sellers' },
-  { label: 'Premium Quality' },
-];
-
-const faqs = [
-  {
-    question: 'What kind of fragrances do you sell?',
-    answer: 'We offer a curated selection of premium fragrances from top brands, handpicked for quality and lasting performance.',
-  },
-  {
-    question: 'How do I receive my purchase?',
-    answer: 'After completing your order, you will receive a confirmation email with all the details. Orders are processed and shipped promptly.',
-  },
-  {
-    question: "What's your refund policy?",
-    answer: 'All sales are final. Please ensure you are happy with your selection before completing your purchase. Contact us if you have any concerns.',
-  },
-  {
-    question: 'How long does delivery take?',
-    answer: 'Delivery times vary depending on your location. Most orders are processed within 1-3 business days.',
-  },
-  {
-    question: 'How can I get in touch?',
-    answer: 'You can reach us through our Contact page. We typically respond within 24-48 hours.',
-  },
-];
-
 const Index = () => {
   const bestsellers = getBestsellers();
+  const { t } = useLanguage();
+
+  const features = [
+    { label: t('hero.instantDelivery') },
+    { label: t('hero.verifiedSellers') },
+    { label: t('hero.premiumQuality') },
+  ];
 
   return (
     <div className="min-h-screen">
@@ -128,7 +107,7 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.9 }}
             >
-              Premium fragrances. Fast delivery. Unmatched elegance.
+              {t('hero.tagline')}
             </motion.p>
             
             <motion.div 
@@ -143,7 +122,7 @@ const Index = () => {
                 asChild
               >
                 <Link to="/shop">
-                  Shop Now
+                  {t('hero.shopNow')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>
@@ -154,7 +133,7 @@ const Index = () => {
                 asChild
               >
                 <Link to="/shop/women">
-                  For Her
+                  {t('hero.forHer')}
                 </Link>
               </Button>
             </motion.div>
@@ -200,7 +179,7 @@ const Index = () => {
             transition={{ duration: 0.5 }}
           >
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
-              Current Best Sellers
+              {t('home.currentBestSellers')}
             </h2>
           </motion.div>
           
@@ -232,7 +211,7 @@ const Index = () => {
               asChild
             >
               <Link to="/shop">
-                View All Products
+                {t('home.viewAllProducts')}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
@@ -256,26 +235,26 @@ const Index = () => {
           >
             <img src={logo} alt="ProfParfums" className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
-              Join the ProfParfums Family
+              {t('home.joinFamily')}
             </h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Get exclusive offers, new arrivals & insider deals
+              {t('home.exclusiveOffers')}
             </p>
             <form className="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('home.enterEmail')}
                 className="flex-1 h-11 px-4 bg-background text-foreground text-sm border border-border focus:outline-none focus:border-foreground placeholder:text-muted-foreground transition-colors"
               />
               <Button 
                 type="submit" 
                 className="h-11 px-6 text-[11px] font-medium tracking-[0.1em] uppercase bg-primary hover:bg-primary/90 text-primary-foreground rounded-none active:scale-[0.98] transition-all"
               >
-                Subscribe
+                {t('home.subscribe')}
               </Button>
             </form>
             <p className="text-xs text-muted-foreground mt-4">
-              No spam, ever. Unsubscribe anytime.
+              {t('home.noSpam')}
             </p>
           </motion.div>
         </div>

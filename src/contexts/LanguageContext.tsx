@@ -1989,7 +1989,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: string): string => {
-    return translations[language]?.[key] || translations['EN']?.[key] || key;
+    return translations[language]?.[key] || extraTranslations[language]?.[key] || translations['EN']?.[key] || extraTranslations['EN']?.[key] || key;
   };
 
   return (
