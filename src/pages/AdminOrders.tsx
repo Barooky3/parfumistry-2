@@ -1221,13 +1221,6 @@ export default function AdminOrders() {
                     {item.brand} — {item.name}
                     {item.quantity > 1 ? ` x${item.quantity}` : ""}
                       </p>
-                      {order.shipping_address && (() => {
-                        const addr = order.shipping_address;
-                        const parts = [addr.line1, addr.city, addr.postalCode, addr.country].filter(Boolean);
-                        return parts.length > 0 ? (
-                          <p className="text-xs text-muted-foreground mt-0.5">📍 {parts.join(", ")}</p>
-                        ) : null;
-                      })()}
 
                   {/* Variant selector */}
                   {catalogueProduct?.variants && catalogueProduct.variants.length > 0 ? (
