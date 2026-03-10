@@ -132,6 +132,10 @@ const Rewarble = () => {
         )}
 
         {/* Step 1: Purchase */}
+        <div className="rounded-lg border border-amber-500/30 bg-amber-50 dark:bg-amber-950/20 px-4 py-3 mb-4 flex items-start gap-2.5">
+          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <p className="text-xs font-medium text-amber-800 dark:text-amber-300 leading-relaxed">Please follow the payment instructions carefully to avoid delays with your order.</p>
+        </div>
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
           <div className="px-5 py-3.5 border-b border-border bg-muted/30">
             <h2 className="text-sm font-semibold text-foreground tracking-wide">Payment instructions</h2>
