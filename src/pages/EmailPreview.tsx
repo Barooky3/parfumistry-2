@@ -1,10 +1,6 @@
 import { useState } from "react";
-
-const EmailPreview = () => {
-  const year = new Date().getFullYear();
-  const [activeTab, setActiveTab] = useState<"confirmation" | "reject_invalid" | "reject_mismatch" | "reject_order_number">("confirmation");
-
-  const confirmationHtml = `
+import { AlertTriangle, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="margin: 0; padding: 20px; background-color: #f4f3ef; font-family: Helvetica Neue, Arial, sans-serif;">
 <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
