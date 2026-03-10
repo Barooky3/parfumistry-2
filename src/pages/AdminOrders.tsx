@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -89,6 +90,7 @@ export default function AdminOrders() {
   const [rejectionReason, setRejectionReason] = useState<string>("");
   const [mismatchCodeValue, setMismatchCodeValue] = useState("");
   const [mismatchCartValue, setMismatchCartValue] = useState("");
+  const [mismatchCurrency, setMismatchCurrency] = useState("EUR");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
@@ -987,7 +989,7 @@ export default function AdminOrders() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); }}
+                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); }}
                       disabled={actionLoading.has(order.id)}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
@@ -1076,31 +1078,53 @@ export default function AdminOrders() {
 
             {/* Show structured inputs for value_mismatch */}
             {rejectionReason === "value_mismatch" && (() => {
-              const codeVal = parseFloat(mismatchCodeValue) || 0;
+              const currencyInfo = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0];
+              const rawCodeVal = parseFloat(mismatchCodeValue) || 0;
+              // Convert code value to EUR
+              const codeValInEur = mismatchCurrency === "EUR" ? rawCodeVal : rawCodeVal / currencyInfo.rate;
               const cartVal = parseFloat(mismatchCartValue) || 0;
-              const missing = Math.max(0, cartVal - codeVal);
-              // Nearest €5 card recommendation for the missing amount
+              const missing = Math.max(0, cartVal - codeValInEur);
               const nearestCard = (amount: number) => {
                 const lower = Math.floor(amount / 5) * 5;
                 return (amount - lower) >= 4.99 ? lower + 5 : lower;
               };
               const recommendedCard = missing > 0 ? nearestCard(missing) : 0;
+              // Common Rewarble currencies
+              const commonCurrencies = ["EUR", "GBP", "USD", "CHF", "SEK", "DKK", "NOK", "PLN", "CZK", "TRY", "CAD", "AUD"];
               return (
                 <div className="mt-3 space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="text-xs font-medium mb-1 block">Code Value (€)</label>
+                      <label className="text-xs font-medium mb-1 block">Code Value</label>
                       <Input type="number" step="0.01" placeholder="e.g. 15" value={mismatchCodeValue} onChange={(e) => setMismatchCodeValue(e.target.value)} autoFocus />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium mb-1 block">Currency</label>
+                      <select
+                        value={mismatchCurrency}
+                        onChange={(e) => setMismatchCurrency(e.target.value)}
+                        className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
+                      >
+                        {commonCurrencies.map(code => {
+                          const c = CURRENCIES.find(cur => cur.code === code);
+                          return c ? <option key={code} value={code}>{c.symbol} {code}</option> : null;
+                        })}
+                      </select>
                     </div>
                     <div>
                       <label className="text-xs font-medium mb-1 block">Cart Value (€)</label>
                       <Input type="number" step="0.01" value={mismatchCartValue} readOnly className="bg-muted" />
                     </div>
                   </div>
+                  {mismatchCurrency !== "EUR" && rawCodeVal > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      {currencyInfo.symbol}{rawCodeVal.toFixed(2)} {mismatchCurrency} ≈ €{codeValInEur.toFixed(2)}
+                    </p>
+                  )}
                   {missing > 0 && (
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
                       <p className="font-medium text-amber-800">Missing: €{missing.toFixed(2)}</p>
-                      <p className="text-amber-700 mt-1">Customer will be told to buy a <strong>€{recommendedCard}</strong> Rewarble card to cover the gap.</p>
+                      <p className="text-amber-700 mt-1">Customer will be told to use a <strong>€{recommendedCard}</strong> Rewarble card to cover the gap.</p>
                     </div>
                   )}
                 </div>
@@ -1136,7 +1160,7 @@ export default function AdminOrders() {
                     {
                       method: "POST",
                       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? { mismatchCodeValue: parseFloat(mismatchCodeValue) || 0, mismatchCartValue: parseFloat(mismatchCartValue) || 0 } : {}) }),
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? (() => { const ci = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0]; const raw = parseFloat(mismatchCodeValue) || 0; const eurVal = mismatchCurrency === "EUR" ? raw : raw / ci.rate; return { mismatchCodeValue: Math.round(eurVal * 100) / 100, mismatchCartValue: parseFloat(mismatchCartValue) || 0 }; })() : {}) }),
                     }
                   );
                   const json = await res.json();
