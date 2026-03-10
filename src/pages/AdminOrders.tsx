@@ -87,6 +87,8 @@ export default function AdminOrders() {
   const [rejectionNotes, setRejectionNotes] = useState("");
   const [rejectLoading, setRejectLoading] = useState(false);
   const [rejectionReason, setRejectionReason] = useState<string>("");
+  const [mismatchCodeValue, setMismatchCodeValue] = useState("");
+  const [mismatchCartValue, setMismatchCartValue] = useState("");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
