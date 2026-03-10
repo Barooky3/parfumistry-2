@@ -79,7 +79,7 @@ function randomMinutesAgo(): string {
 }
 
 function randomInterval(): number {
-  return (Math.floor(Math.random() * 16) + 15) * 1000; // 15-30 seconds
+  return (Math.floor(Math.random() * 16) + 20) * 1000; // 20-35 seconds
 }
 
 export const SocialProofPopup = () => {
