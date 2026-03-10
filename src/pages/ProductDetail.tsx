@@ -291,8 +291,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           onClick={handleBuyNow} 
           disabled={!isInStock}
         >
-          <CreditCard className="h-4 w-4 mr-2" />
-          Buy Now
+            <CreditCard className="h-4 w-4 mr-2" />
+            {t('productDetail.buyNow')}
         </Button>
       </div>
     </div>

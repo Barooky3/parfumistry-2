@@ -241,7 +241,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           {/* Out of Stock Overlay */}
           {!product.inStock && (
             <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
-              <span className="text-[10px] font-medium tracking-[0.1em] uppercase text-foreground">Sold Out</span>
+              <span className="text-[10px] font-medium tracking-[0.1em] uppercase text-foreground">{t('product.soldOut')}</span>
             </div>
           )}
         </Link>
