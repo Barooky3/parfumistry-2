@@ -1071,6 +1071,7 @@ const Checkout = () => {
                   <p className="text-xs font-semibold text-foreground mb-1">🚚 Estimated Delivery via DHL</p>
                   <p className="text-xs text-muted-foreground">EU & UK: <span className="font-medium text-foreground">4–6 business days</span></p>
                   <p className="text-xs text-muted-foreground">Rest of World: <span className="font-medium text-foreground">6–8 business days</span></p>
+                  <p className="text-xs text-muted-foreground mt-1.5">📧 DHL tracking number sent automatically by email</p>
                 </div>
               </div>
 
