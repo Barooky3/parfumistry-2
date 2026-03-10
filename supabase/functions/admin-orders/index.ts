@@ -326,10 +326,10 @@ serve(async (req) => {
             ? "If you'd like to try again, please place a new order and make sure to include your email address in the payment reference so we can match your transfer. If you have any questions, don't hesitate to reach out."
             : "Please try again or contact us for assistance.";
 
-          const adminNotesHtml = (rejectionReason !== "value_mismatch" && combinedNotes)
+          const adminNotesHtml = (rejectionReason !== "value_mismatch" && notesForDb)
             ? `<div style="background:#fef2f2;border:1px solid #fca5a5;padding:16px 20px;border-radius:8px;margin:16px 0;">
                 <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#991b1b;margin-bottom:6px;font-weight:600;">Additional Notes</div>
-                <p style="font-size:14px;color:#991b1b;line-height:1.6;margin:0;">${combinedNotes.replace(/\n/g, '<br>')}</p>
+                <p style="font-size:14px;color:#991b1b;line-height:1.6;margin:0;">${notesForDb.replace(/\n/g, '<br>')}</p>
               </div>`
             : "";
 
