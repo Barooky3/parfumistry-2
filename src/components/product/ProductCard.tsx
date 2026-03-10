@@ -20,6 +20,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
     const { addItem, toggleCart } = useCart();
     const { formatPrice } = useCurrency();
+    const { t } = useLanguage();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [showButtons, setShowButtons] = useState(false);
