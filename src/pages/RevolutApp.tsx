@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Shield, Copy, Check, CheckCircle, AlertTriangle, Loader2, Info, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
