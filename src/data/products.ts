@@ -394,7 +394,7 @@ export const products: Product[] = [
     name: 'Delina',
     brand: 'Parfums de Marly',
     price: 20.99,
-    originalPrice: 57.97,
+    originalPrice: 115.94,
     category: 'women',
     description: 'A luxurious floral fragrance with a contemporary twist. Delina opens with fresh rose, lychee, and rhubarb, creating a vibrant and slightly tart introduction. Soft vanilla and musk smooth the composition, adding warmth and longevity. Feminine and confident, its both romantic and modern.',
     scentNotes: {
@@ -660,6 +660,7 @@ export const products: Product[] = [
     name: 'Layton',
     brand: 'Parfums de Marly',
     price: 24.49,
+    originalPrice: 64.97,
     category: 'men',
     description: 'My favourite PDM. It smells like sweet spiced apple over creamy vanilla and woods. You get a fresh mix of apple, bergamot, and lavender at the start, then it dries down into warm vanilla, cardamom, and sandalwood, it can be used any time of the year.',
     scentNotes: {
