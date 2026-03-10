@@ -344,7 +344,7 @@ export default function AdminOrders() {
     }
   };
 
-  const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof") => {
+  const handleAction = async (orderId: string, action: "approve" | "reject" | "request_proof", rejectionNotesOverride?: string) => {
     setActionLoading(prev => new Set(prev).add(orderId));
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -379,7 +379,7 @@ export default function AdminOrders() {
               Authorization: `Bearer ${session.access_token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ orderId, action, ...(action === "reject" ? { rejectionNotes: "" } : {}) }),
+            body: JSON.stringify({ orderId, action, ...(action === "reject" ? { rejectionNotes: rejectionNotesOverride ?? "" } : {}) }),
           }
         );
         const json = await res.json();
@@ -989,7 +989,15 @@ export default function AdminOrders() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); }}
+                      onClick={() => {
+                        const payMethod = getPaymentMethod(order.checkout_reference);
+                        if (payMethod === "Revolut") {
+                          // Revolut has no codes — just reject with simple message
+                          handleAction(order.id, "reject", "Payment not received.");
+                        } else {
+                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR");
+                        }
+                      }}
                       disabled={actionLoading.has(order.id)}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
