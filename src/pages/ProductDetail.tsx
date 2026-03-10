@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
