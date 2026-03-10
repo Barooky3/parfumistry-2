@@ -1150,7 +1150,7 @@ const Checkout = () => {
                   >
                     <span className="flex items-center gap-2">
                       💳
-                      <span>Pay with Visa / Mastercard</span>
+                      <span>Pay with Card / Apple Pay / Google Pay</span>
                     </span>
                   </Button>
                   {/* Payment method logos */}
