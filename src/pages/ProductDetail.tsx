@@ -283,9 +283,9 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           onClick={handleAddToCart} 
           disabled={!isInStock}
         >
-          <ShoppingBag className="h-4 w-4 mr-2" />
-          Add
-        </Button>
+            <ShoppingBag className="h-4 w-4 mr-2" />
+            {t('productDetail.add')}
+          </Button>
         <Button 
           className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98] transition-all" 
           onClick={handleBuyNow} 
