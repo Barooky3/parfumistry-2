@@ -1090,11 +1090,11 @@ export default function AdminOrders() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs font-medium mb-1 block">Code Value (€)</label>
-                      <Input type="number" step="0.01" placeholder="e.g. 15" value={mismatchCodeValue} onChange={(e) => setMismatchCodeValue(e.target.value)} />
+                      <Input type="number" step="0.01" placeholder="e.g. 15" value={mismatchCodeValue} onChange={(e) => setMismatchCodeValue(e.target.value)} autoFocus />
                     </div>
                     <div>
                       <label className="text-xs font-medium mb-1 block">Cart Value (€)</label>
-                      <Input type="number" step="0.01" placeholder="e.g. 24.99" value={mismatchCartValue} onChange={(e) => setMismatchCartValue(e.target.value)} />
+                      <Input type="number" step="0.01" value={mismatchCartValue} readOnly className="bg-muted" />
                     </div>
                   </div>
                   {missing > 0 && (
