@@ -660,6 +660,7 @@ export const products: Product[] = [
     name: 'Layton',
     brand: 'Parfums de Marly',
     price: 24.49,
+    originalPrice: 64.97,
     category: 'men',
     description: 'My favourite PDM. It smells like sweet spiced apple over creamy vanilla and woods. You get a fresh mix of apple, bergamot, and lavender at the start, then it dries down into warm vanilla, cardamom, and sandalwood, it can be used any time of the year.',
     scentNotes: {
