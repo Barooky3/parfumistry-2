@@ -248,7 +248,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {/* Description */}
             <div className="space-y-3 py-6 border-t border-border">
               <h3 className="text-lg font-semibold text-foreground">
-                {product.isBundle ? 'About This Bundle' : 'About This Fragrance'}
+                {product.isBundle ? t('productDetail.aboutBundle') : t('productDetail.aboutFragrance')}
               </h3>
               <p className="text-[15px] md:text-base text-foreground/80 leading-relaxed whitespace-pre-line">
                 {product.description}
