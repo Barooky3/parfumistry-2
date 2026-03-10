@@ -208,7 +208,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 disabled={!isInStock}
               >
                 <ShoppingBag className="h-4 w-4 mr-2" />
-                Add to Cart
+                {t('productDetail.addToCart')}
               </Button>
 
               <Button 
