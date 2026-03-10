@@ -219,7 +219,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 disabled={!isInStock}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
-                Buy Now
+                {t('productDetail.buyNow')}
               </Button>
             </div>
 
