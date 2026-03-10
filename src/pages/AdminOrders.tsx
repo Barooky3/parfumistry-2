@@ -985,7 +985,7 @@ export default function AdminOrders() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); }}
+                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); }}
                       disabled={actionLoading.has(order.id)}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
