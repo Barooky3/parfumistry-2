@@ -87,6 +87,8 @@ export default function AdminOrders() {
   const [rejectionNotes, setRejectionNotes] = useState("");
   const [rejectLoading, setRejectLoading] = useState(false);
   const [rejectionReason, setRejectionReason] = useState<string>("");
+  const [mismatchCodeValue, setMismatchCodeValue] = useState("");
+  const [mismatchCartValue, setMismatchCartValue] = useState("");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
@@ -985,7 +987,7 @@ export default function AdminOrders() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); }}
+                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); }}
                       disabled={actionLoading.has(order.id)}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
@@ -1046,7 +1048,7 @@ export default function AdminOrders() {
                 type="button"
                 onClick={() => {
                   setRejectionReason("value_mismatch");
-                  setRejectionNotes("Code value: €  |  Cart value: €  |  Missing amount: €");
+                  setRejectionNotes("");
                 }}
                 className={`text-left p-3 rounded-lg border-2 transition-colors ${
                   rejectionReason === "value_mismatch"
@@ -1072,20 +1074,40 @@ export default function AdminOrders() {
               </button>
             </div>
 
-            {/* Show editable notes for value_mismatch */}
-            {rejectionReason === "value_mismatch" && (
-              <div className="mt-3">
-                <label className="text-sm font-medium mb-1 block">Fill in the values:</label>
-                <Textarea
-                  value={rejectionNotes}
-                  onChange={(e) => setRejectionNotes(e.target.value)}
-                  rows={3}
-                  className="font-mono text-sm"
-                />
-              </div>
-            )}
+            {/* Show structured inputs for value_mismatch */}
+            {rejectionReason === "value_mismatch" && (() => {
+              const codeVal = parseFloat(mismatchCodeValue) || 0;
+              const cartVal = parseFloat(mismatchCartValue) || 0;
+              const missing = Math.max(0, cartVal - codeVal);
+              // Nearest €5 card recommendation for the missing amount
+              const nearestCard = (amount: number) => {
+                const lower = Math.floor(amount / 5) * 5;
+                return (amount - lower) >= 4.99 ? lower + 5 : lower;
+              };
+              const recommendedCard = missing > 0 ? nearestCard(missing) : 0;
+              return (
+                <div className="mt-3 space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-medium mb-1 block">Code Value (€)</label>
+                      <Input type="number" step="0.01" placeholder="e.g. 15" value={mismatchCodeValue} onChange={(e) => setMismatchCodeValue(e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium mb-1 block">Cart Value (€)</label>
+                      <Input type="number" step="0.01" placeholder="e.g. 24.99" value={mismatchCartValue} onChange={(e) => setMismatchCartValue(e.target.value)} />
+                    </div>
+                  </div>
+                  {missing > 0 && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+                      <p className="font-medium text-amber-800">Missing: €{missing.toFixed(2)}</p>
+                      <p className="text-amber-700 mt-1">Customer will be told to buy a <strong>€{recommendedCard}</strong> Rewarble card to cover the gap.</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
-            {/* Custom notes for any reason */}
+            {/* Custom notes for non-mismatch reasons */}
             {rejectionReason && rejectionReason !== "value_mismatch" && (
               <div className="mt-3">
                 <label className="text-sm font-medium mb-1 block">Additional Notes (optional)</label>
@@ -1114,7 +1136,7 @@ export default function AdminOrders() {
                     {
                       method: "POST",
                       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes }),
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? { mismatchCodeValue: parseFloat(mismatchCodeValue) || 0, mismatchCartValue: parseFloat(mismatchCartValue) || 0 } : {}) }),
                     }
                   );
                   const json = await res.json();
