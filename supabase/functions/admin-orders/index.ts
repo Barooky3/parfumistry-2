@@ -275,31 +275,51 @@ serve(async (req) => {
         });
 
       } else if (orderAction === "reject") {
-        await adminClient.from("orders").update({ status: "rejected", rejection_notes: body.rejectionNotes || null }).eq("id", orderId);
-        const { rejectionNotes } = body;
+        const { rejectionNotes, rejectionReason } = body;
+        
+        // Build the rejection message based on the reason
+        let reason = "";
+        const isGiftCard = order.checkout_reference?.startsWith("rewarble");
+        const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
+        const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
 
-        // Send rejection email to customer
-        const apiKey = Deno.env.get("RESEND_API_KEY");
-        if (apiKey) {
-          const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-          const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
-          const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
-            const reason = isGiftCard
+        if (rejectionReason === "code_invalid") {
+          reason = "Unfortunately, the Rewarble code you provided could not be verified. The code appears to be <strong>invalid, fake, or already used</strong>. Please make sure you sent the <strong>actual gift card code</strong> — it is <strong>16 characters long and contains letters and numbers</strong>. It should look something like this: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>. The Rewarble <strong>order number</strong> (only digits, starting with #) is <strong>not</strong> the gift card code. Your order has been cancelled.";
+        } else if (rejectionReason === "value_mismatch") {
+          const mismatchDetails = rejectionNotes || "";
+          reason = "Unfortunately, the value of the Rewarble gift card you provided <strong>does not match your cart total</strong>.<br><br>" +
+            "<div style=\"background:#fef3c7;border:1px solid #f59e0b;padding:12px 16px;border-radius:8px;margin:8px 0;font-size:14px;\">" + 
+            mismatchDetails.replace(/\|/g, '<br>').replace(/\n/g, '<br>') + "</div><br>" +
+            "To complete your purchase, please <strong>redo your order using two codes</strong>: the <strong>same code</strong> you already used, plus a <strong>new Rewarble gift card</strong> to cover the missing amount. Your current order has been cancelled.";
+        } else if (rejectionReason === "order_number") {
+          reason = "It looks like you provided the <strong>Rewarble order number</strong> instead of the <strong>gift card code</strong>. The order number is a number starting with <strong>#</strong> (e.g. #123456) and is <strong>not</strong> what we need.<br><br>The actual gift card code is <strong>16 characters long</strong> and contains <strong>letters and numbers</strong>, for example: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>.<br><br>Please place a new order and enter the correct gift card code. Your current order has been cancelled.";
+        } else {
+          // Fallback to legacy behavior
+          reason = isGiftCard
             ? "Unfortunately, the Rewarble code you provided could not be verified. Please make sure you sent the <strong>actual gift card code</strong> — it is <strong>16 characters long and contains letters and numbers</strong>. It should look something like this: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>. The Rewarble <strong>order number</strong> (only digits, starting with #) is <strong>not</strong> the gift card code. Your order has been cancelled."
             : isRevolutApp
             ? "Unfortunately, your Revolut payment could not be verified. Your order has been cancelled."
             : isBankTransfer
             ? "Unfortunately, your bank transfer could not be verified or was bounced back by the receiving bank. Your order has been cancelled.<br><br><strong>If you did send the payment, don't worry -- your money is already on its way back to your account.</strong> Depending on your bank, it may take 1-3 business days to appear in your balance."
             : "Unfortunately, your payment could not be verified. No money has been taken from your account.";
+        }
 
-          const nextStep = isBankTransfer
+        const combinedNotes = rejectionNotes && rejectionNotes.trim() ? rejectionNotes.trim() : null;
+        await adminClient.from("orders").update({ status: "rejected", rejection_notes: combinedNotes }).eq("id", orderId);
+
+        // Send rejection email to customer
+        const apiKey = Deno.env.get("RESEND_API_KEY");
+        if (apiKey) {
+          const nextStep = rejectionReason === "value_mismatch"
+            ? "Once you have both codes ready, simply place a new order on our website and enter both gift card codes."
+            : isBankTransfer
             ? "If you'd like to try again, please place a new order and make sure to include your email address in the payment reference so we can match your transfer. If you have any questions, don't hesitate to reach out."
             : "Please try again or contact us for assistance.";
 
-          const adminNotesHtml = rejectionNotes && rejectionNotes.trim()
+          const adminNotesHtml = (rejectionReason !== "value_mismatch" && combinedNotes)
             ? `<div style="background:#fef2f2;border:1px solid #fca5a5;padding:16px 20px;border-radius:8px;margin:16px 0;">
-                <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#991b1b;margin-bottom:6px;font-weight:600;">Reason for Rejection</div>
-                <p style="font-size:14px;color:#991b1b;line-height:1.6;margin:0;">${rejectionNotes.trim().replace(/\n/g, '<br>')}</p>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#991b1b;margin-bottom:6px;font-weight:600;">Additional Notes</div>
+                <p style="font-size:14px;color:#991b1b;line-height:1.6;margin:0;">${combinedNotes.replace(/\n/g, '<br>')}</p>
               </div>`
             : "";
 
