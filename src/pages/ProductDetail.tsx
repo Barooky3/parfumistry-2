@@ -47,8 +47,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-xl font-semibold text-foreground mb-4">Product Not Found</h1>
-          <Button asChild className="rounded-none"><Link to="/shop">Back to Shop</Link></Button>
+          <h1 className="text-xl font-semibold text-foreground mb-4">{t('productDetail.notFound')}</h1>
+          <Button asChild className="rounded-none"><Link to="/shop">{t('productDetail.backToShop')}</Link></Button>
         </div>
       </div>
     );
