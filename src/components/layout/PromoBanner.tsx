@@ -31,32 +31,23 @@ export const PromoBanner = () => {
   }, [isVisible]);
 
   useEffect(() => {
-    // Use a fixed end date stored in localStorage so it persists across refreshes
-    const STORAGE_KEY = 'promo-banner-end-date-v2';
-    let endDate: Date;
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && new Date(stored).getTime() > Date.now()) {
-      endDate = new Date(stored);
-    } else {
-      endDate = new Date();
-      endDate.setTime(endDate.getTime() + (2 * 24 + 21) * 60 * 60 * 1000 + 59 * 1000);
-      localStorage.setItem(STORAGE_KEY, endDate.toISOString());
-    }
+    // Fixed cycle: every 2 days 20 hours, the timer resets.
+    // All users see the same countdown regardless of device or session.
+    const CYCLE_MS = (2 * 24 + 20) * 60 * 60 * 1000; // 2 days 20 hours
+    // Fixed epoch anchor — all timers cycle from this point
+    const EPOCH = new Date('2025-01-01T00:00:00Z').getTime();
 
     const calculateTimeLeft = () => {
       const now = Date.now();
-      const distance = endDate.getTime() - now;
+      const elapsed = (now - EPOCH) % CYCLE_MS;
+      const remaining = CYCLE_MS - elapsed;
 
-      if (distance > 0) {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          mins: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          secs: Math.floor((distance % (1000 * 60)) / 1000),
-        });
-      } else {
-        setIsVisible(false);
-      }
+      setTimeLeft({
+        days: Math.floor(remaining / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        mins: Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60)),
+        secs: Math.floor((remaining % (1000 * 60)) / 1000),
+      });
     };
 
     calculateTimeLeft();
