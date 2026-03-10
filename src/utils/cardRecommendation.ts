@@ -10,27 +10,36 @@ const CARD_SYMBOLS: Record<string, string> = {
 
 function nearestCard(amount: number): number {
   const lower = Math.floor(amount / 5) * 5;
-  // Round down unless within ~0.01 of the next multiple of 5
   return (amount - lower) >= 4.99 ? lower + 5 : lower;
 }
 
 /**
- * Given an order total in EUR and the user's selected currency,
- * returns a recommendation string like "a €10 card" or "a $15 card".
+ * Given an order total in EUR, finds the card denomination across EUR/USD/GBP
+ * that is closest to the actual EUR total (to minimise over/underpay).
+ * Returns a recommendation string like "a €15 card" or "a $15 card".
  */
-export function getCardRecommendation(eurTotal: number, userCurrency: Currency): string {
-  // Determine which card currency to recommend
-  let targetCurrency: string = 'EUR';
+export function getCardRecommendation(eurTotal: number, _userCurrency: Currency): string {
+  let bestCurrency = 'EUR';
+  let bestDenom = nearestCard(eurTotal);
+  let bestDiffEur = Math.abs(eurTotal - bestDenom); // difference in EUR terms
 
-  if (CARD_CURRENCIES.includes(userCurrency as any)) {
-    targetCurrency = userCurrency;
+  for (const cc of CARD_CURRENCIES) {
+    const info = CURRENCIES.find(c => c.code === cc);
+    if (!info) continue;
+
+    const convertedAmount = eurTotal * info.rate;
+    const denom = nearestCard(convertedAmount);
+    // Convert denomination back to EUR to compare fairly
+    const denomInEur = denom / info.rate;
+    const diff = Math.abs(eurTotal - denomInEur);
+
+    if (diff < bestDiffEur) {
+      bestDiffEur = diff;
+      bestDenom = denom;
+      bestCurrency = cc;
+    }
   }
 
-  const currencyInfo = CURRENCIES.find(c => c.code === targetCurrency);
-  const rate = currencyInfo?.rate || 1;
-  const convertedAmount = eurTotal * rate;
-  const recommended = nearestCard(convertedAmount);
-  const symbol = CARD_SYMBOLS[targetCurrency];
-
-  return `${symbol}${recommended}`;
+  const symbol = CARD_SYMBOLS[bestCurrency];
+  return `${symbol}${bestDenom}`;
 }
