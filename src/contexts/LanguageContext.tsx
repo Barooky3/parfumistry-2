@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { extraTranslations } from '@/data/extraTranslations';
 
 export type Language = 'EN' | 'NL' | 'DE' | 'FR' | 'ES' | 'IT' | 'CS' | 'PL' | 'PT' | 'SV' | 'DA' | 'RO' | 'TR' | 'RU' | 'NO' | 'HU' | 'EL' | 'BG' | 'HR' | 'SK';
 
