@@ -90,6 +90,7 @@ export default function AdminOrders() {
   const [rejectionReason, setRejectionReason] = useState<string>("");
   const [mismatchCodeValue, setMismatchCodeValue] = useState("");
   const [mismatchCartValue, setMismatchCartValue] = useState("");
+  const [mismatchCurrency, setMismatchCurrency] = useState("EUR");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
