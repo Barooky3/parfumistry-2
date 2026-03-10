@@ -1160,7 +1160,7 @@ export default function AdminOrders() {
                     {
                       method: "POST",
                       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? { mismatchCodeValue: parseFloat(mismatchCodeValue) || 0, mismatchCartValue: parseFloat(mismatchCartValue) || 0 } : {}) }),
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? (() => { const ci = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0]; const raw = parseFloat(mismatchCodeValue) || 0; const eurVal = mismatchCurrency === "EUR" ? raw : raw / ci.rate; return { mismatchCodeValue: Math.round(eurVal * 100) / 100, mismatchCartValue: parseFloat(mismatchCartValue) || 0 }; })() : {}) }),
                     }
                   );
                   const json = await res.json();
