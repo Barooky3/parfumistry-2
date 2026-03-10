@@ -307,6 +307,9 @@ serve(async (req) => {
         const combinedNotes = rejectionNotes && rejectionNotes.trim() ? rejectionNotes.trim() : null;
         await adminClient.from("orders").update({ status: "rejected", rejection_notes: combinedNotes }).eq("id", orderId);
 
+        // Send rejection email to customer
+        const apiKey = Deno.env.get("RESEND_API_KEY");
+        if (apiKey) {
           const nextStep = rejectionReason === "value_mismatch"
             ? "Once you have both codes ready, simply place a new order on our website and enter both gift card codes."
             : isBankTransfer
