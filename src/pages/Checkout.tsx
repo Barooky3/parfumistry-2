@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, ShoppingBag, Tag, Mail, MapPin, User, CheckSquare, Loader2, ChevronsUpDown, Check, Shield, AlertTriangle, Lock } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -1302,24 +1303,7 @@ const Checkout = () => {
                 </div>
 
 
-                <details className="text-center group">
-                  <summary className="text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer underline underline-offset-4 list-none inline transition-colors">
-                    Why are the payment methods like this?
-                  </summary>
-                  <div className="mt-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-3 text-xs text-muted-foreground text-left leading-relaxed">
-                    <p>
-                      Since I'm currently under 17, I don't have access to a proper bank account yet. This means I'm unable to set up traditional payment processing (like credit card terminals or direct bank transfers).
-                    </p>
-                    <p className="mt-2">
-                      For now, Rewarble codes and app-based payments are the only way I can securely accept payments. I know it's not the most convenient — but there's not much I can do. If you're in doubt or don't trust it, please do some research on Rewarble, and don't hesitate to ask me questions on{' '}
-                      <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">TikTok</a>{' '}
-                      if you're confused!
-                    </p>
-                    <p className="mt-2 font-medium">
-                      As soon as I'm able to open a bank account, normal payment methods (card payments, direct PayPal, cash on delivery, etc.) will be added right away.
-                    </p>
-                  </div>
-                </details>
+                <PaymentMethodExplainer />
 
                 <Link to="/return-policy" className="flex items-center justify-center gap-2 rounded-lg border border-accent bg-accent/10 px-4 py-3 text-sm font-semibold text-accent transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:shadow-md active:scale-[0.98]">
                   📋 Please read our return and refund policy before purchasing →
