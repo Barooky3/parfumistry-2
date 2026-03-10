@@ -6,6 +6,7 @@ import { CartDrawer } from './CartDrawer';
 import { SocialProofPopup } from '@/components/SocialProofPopup';
 import { WelcomePopup } from '@/components/WelcomePopup';
 import { VisitorTracker } from '@/components/VisitorTracker';
+import { RejectionNotificationPopup } from '@/components/RejectionNotificationPopup';
 
 interface LayoutProps {
   children: ReactNode;
@@ -24,6 +25,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <SocialProofPopup />
       <WelcomePopup />
       <VisitorTracker />
+      <RejectionNotificationPopup />
     </div>
   );
 };

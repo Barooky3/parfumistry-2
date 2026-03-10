@@ -558,6 +558,11 @@ const Checkout = () => {
       }
       return updated;
     });
+
+    // Persist customer email for rejection notification matching
+    if (field === 'email' && value.includes('@')) {
+      localStorage.setItem('pp_customer_email', value.toLowerCase().trim());
+    }
     
     // Address autocomplete disabled - users enter manually
   };
