@@ -1020,27 +1020,91 @@ export default function AdminOrders() {
 
       {/* Rejection Notes Dialog */}
       <Dialog open={!!rejectingOrder} onOpenChange={(open) => { if (!open) setRejectingOrder(null); }}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Reject Order — #{rejectingOrder?.order_number || '—'}</DialogTitle>
-            <DialogDescription>Add optional notes to include in the rejection email sent to the customer.</DialogDescription>
+            <DialogDescription>Select a rejection reason to send to the customer.</DialogDescription>
           </DialogHeader>
-          <div className="py-2">
-            <label className="text-sm font-medium mb-2 block">Reason for Rejection (optional)</label>
-            <Textarea
-              placeholder="e.g. The gift card code was invalid, please double-check and resend..."
-              value={rejectionNotes}
-              onChange={(e) => setRejectionNotes(e.target.value)}
-              rows={4}
-            />
+          <div className="py-2 space-y-3">
+            <label className="text-sm font-medium mb-1 block">Rejection Reason</label>
+            <div className="grid gap-2">
+              {/* Option 1: Code Invalid */}
+              <button
+                type="button"
+                onClick={() => { setRejectionReason("code_invalid"); setRejectionNotes(""); }}
+                className={`text-left p-3 rounded-lg border-2 transition-colors ${
+                  rejectionReason === "code_invalid"
+                    ? "border-red-500 bg-red-50"
+                    : "border-input bg-background hover:bg-accent"
+                }`}
+              >
+                <span className="font-medium text-sm">❌ Code Invalid</span>
+                <p className="text-xs text-muted-foreground mt-1">The gift card code is fake, already used, or otherwise invalid.</p>
+              </button>
+              {/* Option 2: Value Mismatch */}
+              <button
+                type="button"
+                onClick={() => {
+                  setRejectionReason("value_mismatch");
+                  setRejectionNotes("Code value: €  |  Cart value: €  |  Missing amount: €");
+                }}
+                className={`text-left p-3 rounded-lg border-2 transition-colors ${
+                  rejectionReason === "value_mismatch"
+                    ? "border-red-500 bg-red-50"
+                    : "border-input bg-background hover:bg-accent"
+                }`}
+              >
+                <span className="font-medium text-sm">💰 Code Value & Cart Value Mismatch</span>
+                <p className="text-xs text-muted-foreground mt-1">The gift card value doesn't cover the full order total.</p>
+              </button>
+              {/* Option 3: Order Number Provided */}
+              <button
+                type="button"
+                onClick={() => { setRejectionReason("order_number"); setRejectionNotes(""); }}
+                className={`text-left p-3 rounded-lg border-2 transition-colors ${
+                  rejectionReason === "order_number"
+                    ? "border-red-500 bg-red-50"
+                    : "border-input bg-background hover:bg-accent"
+                }`}
+              >
+                <span className="font-medium text-sm">🔢 Order Number Provided Instead</span>
+                <p className="text-xs text-muted-foreground mt-1">Customer sent the Rewarble order number instead of the actual gift card code.</p>
+              </button>
+            </div>
+
+            {/* Show editable notes for value_mismatch */}
+            {rejectionReason === "value_mismatch" && (
+              <div className="mt-3">
+                <label className="text-sm font-medium mb-1 block">Fill in the values:</label>
+                <Textarea
+                  value={rejectionNotes}
+                  onChange={(e) => setRejectionNotes(e.target.value)}
+                  rows={3}
+                  className="font-mono text-sm"
+                />
+              </div>
+            )}
+
+            {/* Custom notes for any reason */}
+            {rejectionReason && rejectionReason !== "value_mismatch" && (
+              <div className="mt-3">
+                <label className="text-sm font-medium mb-1 block">Additional Notes (optional)</label>
+                <Textarea
+                  placeholder="Any extra details..."
+                  value={rejectionNotes}
+                  onChange={(e) => setRejectionNotes(e.target.value)}
+                  rows={2}
+                />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectingOrder(null)}>Cancel</Button>
             <Button
               variant="destructive"
-              disabled={rejectLoading}
+              disabled={rejectLoading || !rejectionReason}
               onClick={async () => {
-                if (!rejectingOrder) return;
+                if (!rejectingOrder || !rejectionReason) return;
                 setRejectLoading(true);
                 try {
                   const { data: { session } } = await supabase.auth.getSession();
@@ -1050,7 +1114,7 @@ export default function AdminOrders() {
                     {
                       method: "POST",
                       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionNotes }),
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes }),
                     }
                   );
                   const json = await res.json();
