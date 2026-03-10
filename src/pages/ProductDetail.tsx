@@ -20,6 +20,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { addItem, toggleCart } = useCart();
   const { formatPrice } = useCurrency();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [quantity] = useState(1);
 
