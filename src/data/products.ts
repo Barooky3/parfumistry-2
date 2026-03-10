@@ -394,7 +394,7 @@ export const products: Product[] = [
     name: 'Delina',
     brand: 'Parfums de Marly',
     price: 20.99,
-    originalPrice: 57.97,
+    originalPrice: 115.94,
     category: 'women',
     description: 'A luxurious floral fragrance with a contemporary twist. Delina opens with fresh rose, lychee, and rhubarb, creating a vibrant and slightly tart introduction. Soft vanilla and musk smooth the composition, adding warmth and longevity. Feminine and confident, its both romantic and modern.',
     scentNotes: {
