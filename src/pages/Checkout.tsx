@@ -1321,11 +1321,9 @@ const Checkout = () => {
                   </div>
                 </details>
 
-                <div className="rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-center">
-                  <Link to="/return-policy" className="text-sm font-semibold text-accent hover:underline">
-                    📋 Please read our return and refund policy before purchasing
-                  </Link>
-                </div>
+                <Link to="/return-policy" className="flex items-center justify-center gap-2 rounded-lg border border-accent bg-accent/10 px-4 py-3 text-sm font-semibold text-accent transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:shadow-md active:scale-[0.98]">
+                  📋 Please read our return and refund policy before purchasing →
+                </Link>
                 <p className="text-[11px] text-muted-foreground/60 text-center">
                   By completing this purchase you agree to our terms and conditions
                 </p>
