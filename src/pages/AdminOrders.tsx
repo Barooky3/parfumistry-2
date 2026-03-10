@@ -881,6 +881,13 @@ export default function AdminOrders() {
                       <p className="text-xs text-muted-foreground mt-1">
                         {date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} at {date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                       </p>
+                      {order.shipping_address && (() => {
+                        const addr = order.shipping_address as any;
+                        const parts = [addr.line1, addr.city, addr.postalCode, addr.country].filter(Boolean);
+                        return parts.length > 0 ? (
+                          <p className="text-xs text-muted-foreground mt-0.5">📍 {parts.join(", ")}</p>
+                        ) : null;
+                      })()}
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold">EUR {order.total_amount.toFixed(2)}</p>
@@ -1220,7 +1227,7 @@ export default function AdminOrders() {
                   <p className="text-sm font-medium pr-8">
                     {item.brand} — {item.name}
                     {item.quantity > 1 ? ` x${item.quantity}` : ""}
-                  </p>
+                      </p>
 
                   {/* Variant selector */}
                   {catalogueProduct?.variants && catalogueProduct.variants.length > 0 ? (
