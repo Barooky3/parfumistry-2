@@ -164,7 +164,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {/* ML Selector */}
             {product.variants && product.variants.length > 0 && (
               <div className="mb-4">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Select Size</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">{t('productDetail.selectSize')}</p>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((variant, index) => (
                     <button
