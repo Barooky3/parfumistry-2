@@ -989,7 +989,7 @@ export default function AdminOrders() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); }}
+                      onClick={() => { setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); }}
                       disabled={actionLoading.has(order.id)}
                     >
                       <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
