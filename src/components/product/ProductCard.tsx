@@ -5,6 +5,7 @@ import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
@@ -19,6 +20,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
     const { addItem, toggleCart } = useCart();
     const { formatPrice } = useCurrency();
+    const { t } = useLanguage();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [showButtons, setShowButtons] = useState(false);
@@ -180,7 +182,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           
           {/* Category Badge */}
           <span className="absolute top-2 left-2 text-[9px] font-medium tracking-[0.08em] px-2 py-1 bg-background/90 text-foreground uppercase">
-            {product.category === 'men' ? 'For Him' : product.category === 'women' ? 'For Her' : product.category === 'bundle' ? 'Bundle' : 'Unisex'}
+            {product.category === 'men' ? t('product.forHim') : product.category === 'women' ? t('product.forHer') : product.category === 'bundle' ? t('product.bundle') : t('product.unisex')}
           </span>
           
           {/* Discount Badge */}
@@ -239,7 +241,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           {/* Out of Stock Overlay */}
           {!product.inStock && (
             <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
-              <span className="text-[10px] font-medium tracking-[0.1em] uppercase text-foreground">Sold Out</span>
+              <span className="text-[10px] font-medium tracking-[0.1em] uppercase text-foreground">{t('product.soldOut')}</span>
             </div>
           )}
         </Link>

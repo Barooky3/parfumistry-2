@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
@@ -19,6 +20,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { addItem, toggleCart } = useCart();
   const { formatPrice } = useCurrency();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [quantity] = useState(1);
 
@@ -45,8 +47,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-xl font-semibold text-foreground mb-4">Product Not Found</h1>
-          <Button asChild className="rounded-none"><Link to="/shop">Back to Shop</Link></Button>
+          <h1 className="text-xl font-semibold text-foreground mb-4">{t('productDetail.notFound')}</h1>
+          <Button asChild className="rounded-none"><Link to="/shop">{t('productDetail.backToShop')}</Link></Button>
         </div>
       </div>
     );
@@ -162,7 +164,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {/* ML Selector */}
             {product.variants && product.variants.length > 0 && (
               <div className="mb-4">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Select Size</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">{t('productDetail.selectSize')}</p>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((variant, index) => (
                     <button
@@ -206,7 +208,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 disabled={!isInStock}
               >
                 <ShoppingBag className="h-4 w-4 mr-2" />
-                Add to Cart
+                {t('productDetail.addToCart')}
               </Button>
 
               <Button 
@@ -217,7 +219,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 disabled={!isInStock}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
-                Buy Now
+                {t('productDetail.buyNow')}
               </Button>
             </div>
 
@@ -246,7 +248,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {/* Description */}
             <div className="space-y-3 py-6 border-t border-border">
               <h3 className="text-lg font-semibold text-foreground">
-                {product.isBundle ? 'About This Bundle' : 'About This Fragrance'}
+                {product.isBundle ? t('productDetail.aboutBundle') : t('productDetail.aboutFragrance')}
               </h3>
               <p className="text-[15px] md:text-base text-foreground/80 leading-relaxed whitespace-pre-line">
                 {product.description}
@@ -265,7 +267,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.4 }}
           >
-            <h2 className="font-display text-2xl md:text-3xl text-foreground mb-8">You May Also Like</h2>
+            <h2 className="font-display text-2xl md:text-3xl text-foreground mb-8">{t('productDetail.youMayAlsoLike')}</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
@@ -281,16 +283,16 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           onClick={handleAddToCart} 
           disabled={!isInStock}
         >
-          <ShoppingBag className="h-4 w-4 mr-2" />
-          Add
-        </Button>
+            <ShoppingBag className="h-4 w-4 mr-2" />
+            {t('productDetail.add')}
+          </Button>
         <Button 
           className="flex-1 h-12 text-[11px] font-medium tracking-[0.1em] uppercase rounded-none bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98] transition-all" 
           onClick={handleBuyNow} 
           disabled={!isInStock}
         >
-          <CreditCard className="h-4 w-4 mr-2" />
-          Buy Now
+            <CreditCard className="h-4 w-4 mr-2" />
+            {t('productDetail.buyNow')}
         </Button>
       </div>
     </div>
