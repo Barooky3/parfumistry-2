@@ -254,6 +254,49 @@ export default function AdminOrders() {
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
 
+  // Order statistics by country with time filter
+  const countryStats = useMemo(() => {
+    const now = new Date();
+    const bgOffset = 3;
+    const bulgarianDayStart = (ref: Date) => {
+      const bgTime = new Date(ref.getTime() + bgOffset * 3600000);
+      const bgDay = new Date(Date.UTC(bgTime.getUTCFullYear(), bgTime.getUTCMonth(), bgTime.getUTCDate(), 1, 0, 0, 0));
+      if (bgTime.getUTCHours() < 1) bgDay.setUTCDate(bgDay.getUTCDate() - 1);
+      return new Date(bgDay.getTime() - bgOffset * 3600000);
+    };
+    const dayEnd = (ref: Date) => new Date(bulgarianDayStart(ref).getTime() + 24 * 3600000 - 1);
+
+    let statsRange: { from: Date; to: Date } | null = null;
+    switch (statsTimeFilter) {
+      case "today": statsRange = { from: bulgarianDayStart(now), to: dayEnd(now) }; break;
+      case "yesterday": statsRange = { from: bulgarianDayStart(subDays(now, 1)), to: dayEnd(subDays(now, 1)) }; break;
+      case "7days": statsRange = { from: bulgarianDayStart(subDays(now, 6)), to: dayEnd(now) }; break;
+      case "last_month": { const lm = subMonths(now, 1); statsRange = { from: startOfMonth(lm), to: dayEnd(subDays(startOfMonth(now), 1)) }; break; }
+      default: statsRange = null;
+    }
+
+    const byCountry: Record<string, { orders: number; revenue: number; approved: number; rejected: number; pending: number }> = {};
+    let totalOrders = 0;
+
+    for (const o of allOrders) {
+      if (statsRange) {
+        const d = new Date(o.created_at);
+        if (!isWithinInterval(d, { start: statsRange.from, end: statsRange.to })) continue;
+      }
+      const country = (o.shipping_address as any)?.country || "Unknown";
+      if (!byCountry[country]) byCountry[country] = { orders: 0, revenue: 0, approved: 0, rejected: 0, pending: 0 };
+      byCountry[country].orders++;
+      byCountry[country].revenue += o.total_amount;
+      if (o.status === "approved") byCountry[country].approved++;
+      else if (o.status === "rejected") byCountry[country].rejected++;
+      else byCountry[country].pending++;
+      totalOrders++;
+    }
+
+    const sorted = Object.entries(byCountry).sort((a, b) => b[1].orders - a[1].orders);
+    return { byCountry: sorted, totalOrders };
+  }, [allOrders, statsTimeFilter]);
+
   // Manual email catalogue search
   const manualFilteredCatalogue = useMemo(() => {
     if (!manualCatalogueSearch.trim()) return products.slice(0, 15);
