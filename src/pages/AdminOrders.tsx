@@ -6,7 +6,7 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban } from "lucide-react";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -106,6 +106,7 @@ export default function AdminOrders() {
   const [manualItems, setManualItems] = useState<OrderItem[]>([]);
   const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
   const [manualSending, setManualSending] = useState(false);
+  const [bannedEmails, setBannedEmails] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
@@ -140,11 +141,43 @@ export default function AdminOrders() {
     }
   };
 
+  const fetchBannedUsers = async () => {
+    const { data } = await supabase.from('banned_users').select('email');
+    if (data) setBannedEmails(new Set(data.map(d => d.email.toLowerCase())));
+  };
+
   useEffect(() => {
     if (ADMIN_EMAILS.includes(user?.email || "")) {
       fetchOrders(true);
+      fetchBannedUsers();
     }
   }, [user]);
+
+  const handleBanToggle = async (email: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const isBanned = bannedEmails.has(email.toLowerCase());
+    const action = isBanned ? "unban" : "ban";
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ban-user`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ action, email }),
+        }
+      );
+      if (res.ok) {
+        toast.success(isBanned ? `Unbanned ${email}` : `Banned ${email}`);
+        fetchBannedUsers();
+      } else {
+        const json = await res.json();
+        toast.error(json.error || "Failed");
+      }
+    } catch {
+      toast.error("Failed to update ban status");
+    }
+  };
 
   // Compute order count per email for repeat customer detection
   const emailOrderCounts = useMemo(() => {
@@ -877,7 +910,14 @@ export default function AdminOrders() {
                           ) : null;
                         })()}
                       </div>
-                      <p className="text-sm text-muted-foreground">{order.customer_email}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-muted-foreground">{order.customer_email}</p>
+                        {bannedEmails.has(order.customer_email.toLowerCase()) && (
+                          <Badge className="bg-destructive/10 text-destructive border-destructive/30 text-[10px]">
+                            <Ban className="h-3 w-3 mr-0.5" /> Banned
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} at {date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                       </p>
@@ -1025,6 +1065,14 @@ export default function AdminOrders() {
                       disabled={actionLoading.has(order.id + "-dismiss")}
                     >
                       <Trash2 className="h-4 w-4 mr-1" /> {actionLoading.has(order.id + "-dismiss") ? "Removing..." : "Remove"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={bannedEmails.has(order.customer_email.toLowerCase()) ? "outline" : "ghost"}
+                      className={bannedEmails.has(order.customer_email.toLowerCase()) ? "text-destructive border-destructive" : "text-muted-foreground"}
+                      onClick={() => handleBanToggle(order.customer_email)}
+                    >
+                      <Ban className="h-4 w-4 mr-1" /> {bannedEmails.has(order.customer_email.toLowerCase()) ? "Unban" : "Ban Account"}
                     </Button>
                   </div>
                 </div>

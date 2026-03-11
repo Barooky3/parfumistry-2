@@ -7,6 +7,7 @@ import { SocialProofPopup } from '@/components/SocialProofPopup';
 import { WelcomePopup } from '@/components/WelcomePopup';
 import { VisitorTracker } from '@/components/VisitorTracker';
 import { RejectionNotificationPopup } from '@/components/RejectionNotificationPopup';
+import { BannedUserPopup } from '@/components/BannedUserPopup';
 
 interface LayoutProps {
   children: ReactNode;
@@ -26,6 +27,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <WelcomePopup />
       <VisitorTracker />
       <RejectionNotificationPopup />
+      <BannedUserPopup />
     </div>
   );
 };
