@@ -92,6 +92,7 @@ export default function AdminOrders() {
   const [mismatchCartValue, setMismatchCartValue] = useState("");
   const [mismatchCurrency, setMismatchCurrency] = useState("EUR");
   const [customRecommendedCard, setCustomRecommendedCard] = useState("");
+  const [recommendedCardCurrency, setRecommendedCardCurrency] = useState("EUR");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
@@ -1043,7 +1044,7 @@ export default function AdminOrders() {
                           // Revolut has no codes — just reject with simple message
                           handleAction(order.id, "reject", "Payment not received.");
                         } else {
-                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard("");
+                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
                         }
                       }}
                       disabled={actionLoading.has(order.id)}
@@ -1189,7 +1190,16 @@ export default function AdminOrders() {
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm space-y-2">
                       <p className="font-medium text-amber-800">Missing: €{missing.toFixed(2)}</p>
                       <div className="flex items-center gap-2">
-                        <label className="text-xs font-medium text-amber-700 whitespace-nowrap">Recommended card: €</label>
+                        <label className="text-xs font-medium text-amber-700 whitespace-nowrap">Recommended card:</label>
+                        <select
+                          value={recommendedCardCurrency}
+                          onChange={(e) => setRecommendedCardCurrency(e.target.value)}
+                          className="h-7 rounded-md border border-amber-300 bg-white px-2 text-sm"
+                        >
+                          <option value="EUR">€ EUR</option>
+                          <option value="GBP">£ GBP</option>
+                          <option value="USD">$ USD</option>
+                        </select>
                         <Input
                           type="number"
                           step="5"
@@ -1198,7 +1208,7 @@ export default function AdminOrders() {
                           onChange={(e) => setCustomRecommendedCard(e.target.value)}
                         />
                       </div>
-                      <p className="text-amber-700 text-xs">Customer will be told to use a <strong>€{customRecommendedCard || recommendedCard}</strong> Rewarble card.</p>
+                      <p className="text-amber-700 text-xs">Customer will be told to use a <strong>{recommendedCardCurrency === "EUR" ? "€" : recommendedCardCurrency === "GBP" ? "£" : "$"}{customRecommendedCard || recommendedCard} {recommendedCardCurrency}</strong> Rewarble card.</p>
                     </div>
                   )}
                 </div>
@@ -1234,7 +1244,7 @@ export default function AdminOrders() {
                     {
                       method: "POST",
                       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? (() => { const ci = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0]; const raw = parseFloat(mismatchCodeValue) || 0; const eurVal = mismatchCurrency === "EUR" ? raw : raw / ci.rate; const nearestCardCalc = (a: number) => { const l = Math.floor(a / 5) * 5; return (a - l) >= 4.99 ? l + 5 : l; }; const missing = Math.max(0, (parseFloat(mismatchCartValue) || 0) - (Math.round(eurVal * 100) / 100)); return { mismatchCodeValue: Math.round(eurVal * 100) / 100, mismatchCartValue: parseFloat(mismatchCartValue) || 0, customRecommendedCard: customRecommendedCard ? parseFloat(customRecommendedCard) : (missing > 0 ? nearestCardCalc(missing) : 0) }; })() : {}) }),
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? (() => { const ci = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0]; const raw = parseFloat(mismatchCodeValue) || 0; const eurVal = mismatchCurrency === "EUR" ? raw : raw / ci.rate; const nearestCardCalc = (a: number) => { const l = Math.floor(a / 5) * 5; return (a - l) >= 4.99 ? l + 5 : l; }; const missing = Math.max(0, (parseFloat(mismatchCartValue) || 0) - (Math.round(eurVal * 100) / 100)); return { mismatchCodeValue: Math.round(eurVal * 100) / 100, mismatchCartValue: parseFloat(mismatchCartValue) || 0, customRecommendedCard: customRecommendedCard ? parseFloat(customRecommendedCard) : (missing > 0 ? nearestCardCalc(missing) : 0), recommendedCardCurrency }; })() : {}) }),
                     }
                   );
                   const json = await res.json();
