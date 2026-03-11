@@ -295,7 +295,7 @@ export default function AdminOrders() {
       totalOrders++;
     }
 
-    const sorted = Object.entries(byCountry).sort((a, b) => b[1].orders - a[1].orders);
+    const sorted = Object.entries(byCountry).sort((a, b) => b[1].approved - a[1].approved);
     return { byCountry: sorted, totalOrders };
   }, [allOrders, statsTimeFilter]);
 
