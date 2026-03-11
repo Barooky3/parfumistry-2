@@ -621,7 +621,8 @@ export default function AdminOrders() {
       o.customer_email.toLowerCase().includes(query) ||
       (o.order_number && o.order_number.toString().includes(query));
     const matchesCustomer = !customerEmailFilter || o.customer_email.toLowerCase() === customerEmailFilter;
-    return matchesStatus && matchesPayment && matchesSearch && matchesCustomer;
+    const matchesCountry = !countryFilter || ((o.shipping_address as any)?.country || "Unknown") === countryFilter;
+    return matchesStatus && matchesPayment && matchesSearch && matchesCustomer && matchesCountry;
   });
 
   return (
