@@ -1059,6 +1059,14 @@ export default function AdminOrders() {
                     >
                       <Trash2 className="h-4 w-4 mr-1" /> {actionLoading.has(order.id + "-dismiss") ? "Removing..." : "Remove"}
                     </Button>
+                    <Button
+                      size="sm"
+                      variant={bannedEmails.has(order.customer_email.toLowerCase()) ? "outline" : "ghost"}
+                      className={bannedEmails.has(order.customer_email.toLowerCase()) ? "text-destructive border-destructive" : "text-muted-foreground"}
+                      onClick={() => handleBanToggle(order.customer_email)}
+                    >
+                      <Ban className="h-4 w-4 mr-1" /> {bannedEmails.has(order.customer_email.toLowerCase()) ? "Unban" : "Ban Account"}
+                    </Button>
                   </div>
                 </div>
               );
