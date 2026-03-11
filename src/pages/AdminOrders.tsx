@@ -6,7 +6,7 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe } from "lucide-react";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -77,6 +77,8 @@ export default function AdminOrders() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
+
+  const [statsTimeFilter, setStatsTimeFilter] = useState<string>("all");
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
@@ -251,6 +253,49 @@ export default function AdminOrders() {
     }
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
+
+  // Order statistics by country with time filter
+  const countryStats = useMemo(() => {
+    const now = new Date();
+    const bgOffset = 3;
+    const bulgarianDayStart = (ref: Date) => {
+      const bgTime = new Date(ref.getTime() + bgOffset * 3600000);
+      const bgDay = new Date(Date.UTC(bgTime.getUTCFullYear(), bgTime.getUTCMonth(), bgTime.getUTCDate(), 1, 0, 0, 0));
+      if (bgTime.getUTCHours() < 1) bgDay.setUTCDate(bgDay.getUTCDate() - 1);
+      return new Date(bgDay.getTime() - bgOffset * 3600000);
+    };
+    const dayEnd = (ref: Date) => new Date(bulgarianDayStart(ref).getTime() + 24 * 3600000 - 1);
+
+    let statsRange: { from: Date; to: Date } | null = null;
+    switch (statsTimeFilter) {
+      case "today": statsRange = { from: bulgarianDayStart(now), to: dayEnd(now) }; break;
+      case "yesterday": statsRange = { from: bulgarianDayStart(subDays(now, 1)), to: dayEnd(subDays(now, 1)) }; break;
+      case "7days": statsRange = { from: bulgarianDayStart(subDays(now, 6)), to: dayEnd(now) }; break;
+      case "last_month": { const lm = subMonths(now, 1); statsRange = { from: startOfMonth(lm), to: dayEnd(subDays(startOfMonth(now), 1)) }; break; }
+      default: statsRange = null;
+    }
+
+    const byCountry: Record<string, { orders: number; revenue: number; approved: number; rejected: number; pending: number }> = {};
+    let totalOrders = 0;
+
+    for (const o of allOrders) {
+      if (statsRange) {
+        const d = new Date(o.created_at);
+        if (!isWithinInterval(d, { start: statsRange.from, end: statsRange.to })) continue;
+      }
+      const country = (o.shipping_address as any)?.country || "Unknown";
+      if (!byCountry[country]) byCountry[country] = { orders: 0, revenue: 0, approved: 0, rejected: 0, pending: 0 };
+      byCountry[country].orders++;
+      byCountry[country].revenue += o.total_amount;
+      if (o.status === "approved") byCountry[country].approved++;
+      else if (o.status === "rejected") byCountry[country].rejected++;
+      else byCountry[country].pending++;
+      totalOrders++;
+    }
+
+    const sorted = Object.entries(byCountry).sort((a, b) => b[1].orders - a[1].orders);
+    return { byCountry: sorted, totalOrders };
+  }, [allOrders, statsTimeFilter]);
 
   // Manual email catalogue search
   const manualFilteredCatalogue = useMemo(() => {
@@ -748,7 +793,68 @@ export default function AdminOrders() {
           </div>
         )}
 
-        {/* Manual Email Sender */}
+        {/* Order Statistics by Country */}
+        {allOrders.length > 0 && (
+          <div className="mb-6 border rounded-lg p-4 bg-card">
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                Order Statistics by Country — {countryStats.totalOrders} orders
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {[
+                { key: "all", label: "All Time" },
+                { key: "today", label: "Today" },
+                { key: "yesterday", label: "Yesterday" },
+                { key: "7days", label: "Last 7 Days" },
+                { key: "last_month", label: "Last Month" },
+              ].map(p => (
+                <button
+                  key={p.key}
+                  onClick={() => setStatsTimeFilter(p.key)}
+                  className={`px-2.5 py-1 text-xs rounded-md border transition-colors ${
+                    statsTimeFilter === p.key
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-muted-foreground border-input hover:bg-accent"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            {countryStats.byCountry.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No orders in this period</p>
+            ) : (
+              <div className="space-y-2">
+                {countryStats.byCountry.map(([country, data]) => (
+                  <div key={country} className="flex items-center gap-3 py-2 px-3 rounded-md bg-muted/30 border">
+                    <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">{country}</span>
+                        <span className="text-sm font-semibold">€{data.revenue.toFixed(2)}</span>
+                      </div>
+                      <div className="flex gap-3 mt-0.5">
+                        <span className="text-xs text-muted-foreground">{data.orders} order{data.orders !== 1 ? 's' : ''}</span>
+                        {data.approved > 0 && <span className="text-xs text-green-600">{data.approved} approved</span>}
+                        {data.pending > 0 && <span className="text-xs text-yellow-600">{data.pending} pending</span>}
+                        {data.rejected > 0 && <span className="text-xs text-red-600">{data.rejected} rejected</span>}
+                      </div>
+                    </div>
+                    <div className="w-24 h-2 bg-muted rounded-full overflow-hidden shrink-0">
+                      <div
+                        className="h-full bg-primary rounded-full transition-all"
+                        style={{ width: `${(data.orders / countryStats.totalOrders) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="mb-6 border rounded-lg p-4 bg-card">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-muted-foreground uppercase tracking-wider">Send Manual Order Email</p>
