@@ -275,7 +275,7 @@ serve(async (req) => {
         });
 
       } else if (orderAction === "reject") {
-        const { rejectionNotes, rejectionReason, mismatchCodeValue, mismatchCartValue } = body;
+        const { rejectionNotes, rejectionReason, mismatchCodeValue, mismatchCartValue, customRecommendedCard } = body;
         
         // Nearest €5 card denomination helper
         const nearestCard = (amount: number): number => {
