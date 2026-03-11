@@ -748,6 +748,23 @@ export default function AdminOrders() {
           </div>
         )}
 
+        {/* Order Statistics by Country */}
+        {allOrders.length > 0 && (() => {
+          const statsPresets = [
+            { key: "all", label: "All Time" },
+            { key: "today", label: "Today" },
+            { key: "yesterday", label: "Yesterday" },
+            { key: "7days", label: "Last 7 Days" },
+            { key: "last_month", label: "Last Month" },
+          ];
+
+          const [statsPreset, setStatsPreset] = [
+            // We'll use a simple approach with a state variable added above
+          ] as any;
+
+          return null; // placeholder
+        })()}
+
         {/* Manual Email Sender */}
         <div className="mb-6 border rounded-lg p-4 bg-card">
           <div className="flex items-center justify-between mb-3">
