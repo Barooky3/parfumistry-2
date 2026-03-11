@@ -275,7 +275,7 @@ serve(async (req) => {
         });
 
       } else if (orderAction === "reject") {
-        const { rejectionNotes, rejectionReason, mismatchCodeValue, mismatchCartValue } = body;
+        const { rejectionNotes, rejectionReason, mismatchCodeValue, mismatchCartValue, customRecommendedCard } = body;
         
         // Nearest €5 card denomination helper
         const nearestCard = (amount: number): number => {
@@ -296,7 +296,7 @@ serve(async (req) => {
           const codeVal = Number(mismatchCodeValue) || 0;
           const cartVal = Number(mismatchCartValue) || 0;
           const missing = Math.max(0, cartVal - codeVal);
-          const recommendedCard = missing > 0 ? nearestCard(missing) : 0;
+          const recommendedCard = customRecommendedCard ? Number(customRecommendedCard) : (missing > 0 ? nearestCard(missing) : 0);
           const recText = recommendedCard > 0 ? `The code you should use to cover the difference is a <strong>€${recommendedCard} Rewarble gift card</strong>.` : "";
           notesForDb = `Code value: €${codeVal.toFixed(2)} | Cart value: €${cartVal.toFixed(2)} | Missing: €${missing.toFixed(2)}`;
           reason = "Unfortunately, the value of the Rewarble gift card you provided <strong>does not match your cart total</strong>.<br><br>" +

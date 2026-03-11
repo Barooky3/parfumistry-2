@@ -91,6 +91,7 @@ export default function AdminOrders() {
   const [mismatchCodeValue, setMismatchCodeValue] = useState("");
   const [mismatchCartValue, setMismatchCartValue] = useState("");
   const [mismatchCurrency, setMismatchCurrency] = useState("EUR");
+  const [customRecommendedCard, setCustomRecommendedCard] = useState("");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
@@ -1042,7 +1043,7 @@ export default function AdminOrders() {
                           // Revolut has no codes — just reject with simple message
                           handleAction(order.id, "reject", "Payment not received.");
                         } else {
-                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR");
+                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard("");
                         }
                       }}
                       disabled={actionLoading.has(order.id)}
@@ -1185,9 +1186,19 @@ export default function AdminOrders() {
                     </p>
                   )}
                   {missing > 0 && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm space-y-2">
                       <p className="font-medium text-amber-800">Missing: €{missing.toFixed(2)}</p>
-                      <p className="text-amber-700 mt-1">Customer will be told to use a <strong>€{recommendedCard}</strong> Rewarble card to cover the gap.</p>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-medium text-amber-700 whitespace-nowrap">Recommended card: €</label>
+                        <Input
+                          type="number"
+                          step="5"
+                          className="h-7 w-20 text-sm"
+                          value={customRecommendedCard || recommendedCard}
+                          onChange={(e) => setCustomRecommendedCard(e.target.value)}
+                        />
+                      </div>
+                      <p className="text-amber-700 text-xs">Customer will be told to use a <strong>€{customRecommendedCard || recommendedCard}</strong> Rewarble card.</p>
                     </div>
                   )}
                 </div>
@@ -1223,7 +1234,7 @@ export default function AdminOrders() {
                     {
                       method: "POST",
                       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? (() => { const ci = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0]; const raw = parseFloat(mismatchCodeValue) || 0; const eurVal = mismatchCurrency === "EUR" ? raw : raw / ci.rate; return { mismatchCodeValue: Math.round(eurVal * 100) / 100, mismatchCartValue: parseFloat(mismatchCartValue) || 0 }; })() : {}) }),
+                      body: JSON.stringify({ orderId: rejectingOrder.id, action: "reject", rejectionReason, rejectionNotes, ...(rejectionReason === "value_mismatch" ? (() => { const ci = CURRENCIES.find(c => c.code === mismatchCurrency) || CURRENCIES[0]; const raw = parseFloat(mismatchCodeValue) || 0; const eurVal = mismatchCurrency === "EUR" ? raw : raw / ci.rate; const nearestCardCalc = (a: number) => { const l = Math.floor(a / 5) * 5; return (a - l) >= 4.99 ? l + 5 : l; }; const missing = Math.max(0, (parseFloat(mismatchCartValue) || 0) - (Math.round(eurVal * 100) / 100)); return { mismatchCodeValue: Math.round(eurVal * 100) / 100, mismatchCartValue: parseFloat(mismatchCartValue) || 0, customRecommendedCard: customRecommendedCard ? parseFloat(customRecommendedCard) : (missing > 0 ? nearestCardCalc(missing) : 0) }; })() : {}) }),
                     }
                   );
                   const json = await res.json();
