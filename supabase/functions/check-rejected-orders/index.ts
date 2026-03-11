@@ -26,7 +26,7 @@ serve(async (req) => {
 
     const { data, error } = await adminClient
       .from("orders")
-      .select("id, order_number, rejection_notes, status, created_at, checkout_reference")
+      .select("id, order_number, rejection_notes, status, created_at")
       .eq("customer_email", email.toLowerCase().trim())
       .eq("status", "rejected")
       .eq("rejection_seen", false)
