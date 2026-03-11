@@ -910,7 +910,14 @@ export default function AdminOrders() {
                           ) : null;
                         })()}
                       </div>
-                      <p className="text-sm text-muted-foreground">{order.customer_email}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-muted-foreground">{order.customer_email}</p>
+                        {bannedEmails.has(order.customer_email.toLowerCase()) && (
+                          <Badge className="bg-destructive/10 text-destructive border-destructive/30 text-[10px]">
+                            <Ban className="h-3 w-3 mr-0.5" /> Banned
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} at {date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                       </p>
