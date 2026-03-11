@@ -1186,9 +1186,19 @@ export default function AdminOrders() {
                     </p>
                   )}
                   {missing > 0 && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm space-y-2">
                       <p className="font-medium text-amber-800">Missing: €{missing.toFixed(2)}</p>
-                      <p className="text-amber-700 mt-1">Customer will be told to use a <strong>€{recommendedCard}</strong> Rewarble card to cover the gap.</p>
+                      <div className="flex items-center gap-2">
+                        <label className="text-xs font-medium text-amber-700 whitespace-nowrap">Recommended card: €</label>
+                        <Input
+                          type="number"
+                          step="5"
+                          className="h-7 w-20 text-sm"
+                          value={customRecommendedCard || recommendedCard}
+                          onChange={(e) => setCustomRecommendedCard(e.target.value)}
+                        />
+                      </div>
+                      <p className="text-amber-700 text-xs">Customer will be told to use a <strong>€{customRecommendedCard || recommendedCard}</strong> Rewarble card.</p>
                     </div>
                   )}
                 </div>
