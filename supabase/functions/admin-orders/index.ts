@@ -88,93 +88,96 @@ serve(async (req) => {
       }
 
       if (orderAction === "approve") {
-        // Update status to approved (allow re-approval with duplicate emails)
+        // Update status to approved
         await adminClient
           .from("orders")
           .update({ status: "approved", email_sent: true })
           .eq("id", orderId);
 
         // Send confirmation to customer via send-order-confirmation function
-        const confRes = await fetch(supabaseUrl + "/functions/v1/send-order-confirmation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + supabaseAnonKey,
-          },
-          body: JSON.stringify({
-            orderItems: order.order_items,
-            customerEmail: order.customer_email,
-            customerName: order.customer_name,
-            shippingAddress: order.shipping_address,
-            totalAmount: order.total_amount.toString(),
-            orderNumber: order.order_number,
-            discountCode: order.discount_code || null,
-            discountPercent: order.discount_percent || 0,
-            paymentMethod: order.checkout_reference?.startsWith("rewarble") ? "rewarble"
-              : order.checkout_reference?.startsWith("bank-transfer") ? "bank_transfer"
-              : order.checkout_reference?.startsWith("paypal") ? "paypal"
-              : undefined,
-          }),
-        });
-        if (!confRes.ok) {
-          console.error("Failed to send confirmation:", await confRes.text());
+        try {
+          const confRes = await fetch(supabaseUrl + "/functions/v1/send-order-confirmation", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + supabaseAnonKey,
+            },
+            body: JSON.stringify({
+              orderItems: order.order_items,
+              customerEmail: order.customer_email,
+              customerName: order.customer_name,
+              shippingAddress: order.shipping_address,
+              totalAmount: order.total_amount.toString(),
+              orderNumber: order.order_number,
+              discountCode: order.discount_code || null,
+              discountPercent: order.discount_percent || 0,
+              paymentMethod: order.checkout_reference?.startsWith("rewarble") ? "rewarble"
+                : order.checkout_reference?.startsWith("bank-transfer") ? "bank_transfer"
+                : order.checkout_reference?.startsWith("paypal") ? "paypal"
+                : undefined,
+            }),
+          });
+          if (!confRes.ok) {
+            console.error("Failed to send confirmation:", await confRes.text());
+          } else {
+            // Consume body to prevent resource leak
+            await confRes.text();
+          }
+        } catch (e) {
+          console.error("Error sending customer confirmation:", e);
         }
 
-        // Send comprehensive admin invoice
-        const apiKey = Deno.env.get("RESEND_API_KEY");
-        if (apiKey) {
-          const isGiftCard = order.checkout_reference?.startsWith("rewarble");
-          const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
-          const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
-          const isPaypal = order.checkout_reference?.startsWith("paypal");
-          const pmLabel = isGiftCard ? "Rewarble Gift Card (Verified)" : isRevolutApp ? "Revolut App (Verified)" : isBankTransfer ? "Bank Transfer / SEPA (Verified)" : isPaypal ? "PayPal (Verified)" : "Revolut Transfer (Verified)";
-          const orderNumLabel = order.order_number ? `#${order.order_number}` : order.id.slice(0, 8);
-          const invoiceDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+        // Send admin invoice email (single send, after customer email completes)
+        try {
+          const apiKey = Deno.env.get("RESEND_API_KEY");
+          if (apiKey) {
+            const isGiftCard = order.checkout_reference?.startsWith("rewarble");
+            const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
+            const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
+            const isPaypal = order.checkout_reference?.startsWith("paypal");
+            const pmLabel = isGiftCard ? "Rewarble Gift Card (Verified)" : isRevolutApp ? "Revolut App (Verified)" : isBankTransfer ? "Bank Transfer / SEPA (Verified)" : isPaypal ? "PayPal (Verified)" : "Revolut Transfer (Verified)";
+            const orderNumLabel = order.order_number ? `#${order.order_number}` : order.id.slice(0, 8);
+            const invoiceDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 
-          // Parse order items
-          const items = Array.isArray(order.order_items) ? order.order_items : [];
-          const itemRows = items.map((item: any) => {
-            const name = item.product?.name || item.name || "Unknown";
-            const brand = item.product?.brand || item.brand || "";
-            const qty = item.quantity || 1;
-            const price = item.selectedPrice || item.product?.price || item.price || 0;
-            const ml = item.selectedMl || item.product?.selectedMl || "";
-            const mlLabel = ml ? ` — ${ml}ml` : "";
-            const lineTotal = (price * qty).toFixed(2);
-            const affiliateUrl = item.product?.affiliateUrl || item.affiliateUrl || "";
-            const linkHtml = affiliateUrl ? ` <a href="${affiliateUrl}" style="color:#c9a96e;font-size:12px;">(link)</a>` : "";
-            return `<tr>
-              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;">${brand} — ${name}${mlLabel}${linkHtml}</td>
-              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:center;">${qty}</td>
-              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${Number(price).toFixed(2)}</td>
-              <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;font-weight:600;">€${lineTotal}</td>
-            </tr>`;
-          }).join("");
+            const items = Array.isArray(order.order_items) ? order.order_items : [];
+            const itemRows = items.map((item: any) => {
+              const name = item.product?.name || item.name || "Unknown";
+              const brand = item.product?.brand || item.brand || "";
+              const qty = item.quantity || 1;
+              const price = item.selectedPrice || item.product?.price || item.price || 0;
+              const ml = item.selectedMl || item.product?.selectedMl || "";
+              const mlLabel = ml ? ` — ${ml}ml` : "";
+              const lineTotal = (price * qty).toFixed(2);
+              const affiliateUrl = item.product?.affiliateUrl || item.affiliateUrl || "";
+              const linkHtml = affiliateUrl ? ` <a href="${affiliateUrl}" style="color:#c9a96e;font-size:12px;">(link)</a>` : "";
+              return `<tr>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;">${brand} — ${name}${mlLabel}${linkHtml}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:center;">${qty}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;">€${Number(price).toFixed(2)}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;font-size:14px;text-align:right;font-weight:600;">€${lineTotal}</td>
+              </tr>`;
+            }).join("");
 
-          // Calculate subtotal from items
-          const subtotal = items.reduce((sum: number, item: any) => {
-            const price = item.selectedPrice || item.product?.price || item.price || 0;
-            const qty = item.quantity || 1;
-            return sum + price * qty;
-          }, 0);
+            const subtotal = items.reduce((sum: number, item: any) => {
+              const price = item.selectedPrice || item.product?.price || item.price || 0;
+              const qty = item.quantity || 1;
+              return sum + price * qty;
+            }, 0);
 
-          // Discount info
-          const hasDiscount = order.discount_code && order.discount_percent;
-          const discountAmount = hasDiscount ? (subtotal * order.discount_percent / 100) : 0;
+            const hasDiscount = order.discount_code && order.discount_percent;
+            const discountAmount = hasDiscount ? (subtotal * order.discount_percent / 100) : 0;
 
-          // Shipping address
-          const addr = order.shipping_address || {};
-          const addressLines = [addr.line1, addr.line2, [addr.city, addr.postalCode].filter(Boolean).join(" "), addr.country].filter(Boolean);
-          const addressHtml = addressLines.length > 0 ? addressLines.join("<br/>") : "N/A";
+            const addr = order.shipping_address || {};
+            const addressLines = [addr.line1, addr.line2, [addr.city, addr.postalCode].filter(Boolean).join(" "), addr.country].filter(Boolean);
+            const addressHtml = addressLines.length > 0 ? addressLines.join("<br/>") : "N/A";
 
-          // Gift card codes
-          const giftCardHtml = order.gift_card_code 
-            ? `<tr><td style="padding:6px 0;color:#999;font-size:13px;">Gift Card Code(s):</td><td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:700;color:#92400e;">${order.gift_card_code}</td></tr>` 
-            : "";
+            const giftCardHtml = order.gift_card_code 
+              ? `<tr><td style="padding:6px 0;color:#999;font-size:13px;">Gift Card Code(s):</td><td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:700;color:#92400e;">${order.gift_card_code}</td></tr>` 
+              : "";
 
-          const invoiceSubject = `Invoice: Order ${orderNumLabel} — ${order.customer_name || order.customer_email} — €${order.total_amount}`;
+            const invoiceSubject = `Invoice: Order ${orderNumLabel} — ${order.customer_name || order.customer_email} — €${order.total_amount}`;
 
-          const invoiceHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+            const invoiceHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:20px;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:700px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e5e5;">
   
@@ -240,16 +243,21 @@ serve(async (req) => {
 </div>
 </body></html>`;
 
-          await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              from: "ProfParfums Orders <orders@profparfum.com>",
-              to: ADMIN_EMAILS,
-              subject: invoiceSubject,
-              html: invoiceHtml,
-            }),
-          });
+            const invoiceRes = await fetch("https://api.resend.com/emails", {
+              method: "POST",
+              headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+              body: JSON.stringify({
+                from: "ProfParfums Orders <orders@profparfum.com>",
+                to: ADMIN_EMAILS,
+                subject: invoiceSubject,
+                html: invoiceHtml,
+              }),
+            });
+            // Consume response body
+            await invoiceRes.text();
+          }
+        } catch (e) {
+          console.error("Error sending admin invoice:", e);
         }
 
         return new Response(JSON.stringify({ success: true, message: "Order approved, confirmation sent." }), {
