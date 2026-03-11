@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const POPUP_SAMPLES = {
   code_invalid: "Unfortunately, the Rewarble code you provided could not be verified. The code appears to be invalid, fake, or already used. Please make sure you sent the actual gift card code — it is 16 characters long and contains letters and numbers (e.g. 9YVMBH7H4CXHCX7J). Your order has been cancelled.",
   value_mismatch: "Code value: €15.00 | Cart value: €24.99 | Missing: €9.99",
-  order_number: "It looks like you provided the Rewarble order number instead of the gift card code. The order number starts with # (e.g. #123456) and is not what we need. The actual gift card code is 16 characters long (e.g. 9YVMBH7H4CXHCX7J). Please place a new order with the correct code.",
+  order_number: "It looks like you provided the Rewarble order number instead of the gift card code. The order number starts with # (e.g. #123456) and is not what we need. The actual gift card code is 16 characters long (e.g. 9YVMBH7H4CXHCX7J). You can find your gift card code in the confirmation email you received from Rewarble when you purchased the card. Please place a new order with the correct code.",
 };
 
 const PopupPreview = ({ reason, orderNumber }: { reason: string; orderNumber: string }) => (
