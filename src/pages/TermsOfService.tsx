@@ -39,7 +39,7 @@ const TermsOfService = () => {
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
                 <li>There is a verified issue with delivery (e.g. lost, damaged, or incorrect item)</li>
                 <li>The product has been used minimally — less than 5ml of the fragrance has been consumed</li>
-                <li>The return request is submitted within 14 days of receiving your order</li>
+                <li>The return request is submitted within 30 days of receiving your order</li>
               </ul>
               <p className="text-muted-foreground leading-relaxed mt-4">
                 To request a return or refund, please contact us through our Contact page with your order number and a brief description of the issue. Refunds are processed within 5-10 business days once approved.
