@@ -84,7 +84,6 @@ export default function AdminOrders() {
 
   // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
-  const [datePreset, setDatePreset] = useState<string>("all");
   const [customFrom, setCustomFrom] = useState<Date | undefined>();
   const [customTo, setCustomTo] = useState<Date | undefined>();
 
