@@ -1044,7 +1044,7 @@ export default function AdminOrders() {
                           // Revolut has no codes — just reject with simple message
                           handleAction(order.id, "reject", "Payment not received.");
                         } else {
-                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard("");
+                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
                         }
                       }}
                       disabled={actionLoading.has(order.id)}
