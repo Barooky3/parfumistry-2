@@ -275,7 +275,7 @@ serve(async (req) => {
         });
 
       } else if (orderAction === "reject") {
-        const { rejectionNotes, rejectionReason, mismatchCodeValue, mismatchCartValue, customRecommendedCard, recommendedCardCurrency } = body;
+        const { rejectionNotes, rejectionReason, mismatchCodeValue, mismatchCartValue, customRecommendedCard, recommendedCardCurrency, originalCodeValue, originalCodeCurrency } = body;
         
         // Nearest €5 card denomination helper
         const nearestCard = (amount: number): number => {
@@ -300,10 +300,22 @@ serve(async (req) => {
           const recCurrency = recommendedCardCurrency || "EUR";
           const recSymbol = recCurrency === "GBP" ? "£" : recCurrency === "USD" ? "$" : "€";
           const recText = recommendedCard > 0 ? `The code you should use to cover the difference is a <strong>${recSymbol}${recommendedCard} ${recCurrency} Rewarble gift card</strong>.` : "";
-          notesForDb = `Code value: €${codeVal.toFixed(2)} | Cart value: €${cartVal.toFixed(2)} | Missing: €${missing.toFixed(2)}`;
+          
+          // Show code value in original currency + EUR conversion if non-EUR
+          const origVal = Number(originalCodeValue) || codeVal;
+          const origCur = originalCodeCurrency || "EUR";
+          const origSymbol = origCur === "GBP" ? "£" : origCur === "USD" ? "$" : "€";
+          const isNonEur = origCur !== "EUR";
+          const codeValueDisplay = isNonEur
+            ? `${origSymbol}${origVal.toFixed(2)} ${origCur} (≈ €${codeVal.toFixed(2)})`
+            : `€${codeVal.toFixed(2)}`;
+          
+          notesForDb = isNonEur
+            ? `Code value: ${origSymbol}${origVal.toFixed(2)} ${origCur} (≈ €${codeVal.toFixed(2)}) | Cart value: €${cartVal.toFixed(2)} | Missing: €${missing.toFixed(2)}`
+            : `Code value: €${codeVal.toFixed(2)} | Cart value: €${cartVal.toFixed(2)} | Missing: €${missing.toFixed(2)}`;
           reason = "Unfortunately, the value of the Rewarble gift card you provided <strong>does not match your cart total</strong>.<br><br>" +
             `<div style="background:#fef3c7;border:1px solid #f59e0b;padding:12px 16px;border-radius:8px;margin:8px 0;font-size:14px;">` +
-            `Code value: <strong>€${codeVal.toFixed(2)}</strong><br>Cart value: <strong>€${cartVal.toFixed(2)}</strong><br>Missing amount: <strong>€${missing.toFixed(2)}</strong></div><br>` +
+            `Code value: <strong>${codeValueDisplay}</strong><br>Cart value: <strong>€${cartVal.toFixed(2)}</strong><br>Missing amount: <strong>€${missing.toFixed(2)}</strong></div><br>` +
             `To complete your purchase, please <strong>redo your order using two codes</strong>: the <strong>same code</strong> you already used, plus a <strong>new Rewarble gift card</strong> to cover the missing amount. ${recText} Your current order has been cancelled.`;
         } else if (rejectionReason === "order_number") {
           reason = "It looks like you provided the <strong>Rewarble order number</strong> instead of the <strong>gift card code</strong>. The order number is a number starting with <strong>#</strong> (e.g. #123456) and is <strong>not</strong> what we need.<br><br>The actual gift card code is <strong>16 characters long</strong> and contains <strong>letters and numbers</strong>, for example: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>.<br><br>You can find your gift card code in the <strong>confirmation email</strong> you received from the place where you purchased the card.<br><br>Please place a new order and enter the correct gift card code. Your current order has been cancelled.";
