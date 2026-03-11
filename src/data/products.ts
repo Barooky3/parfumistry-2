@@ -37,8 +37,8 @@ export const products: Product[] = [
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
     variants: [
-      { ml: 50, price: 36.99, originalPrice: 155.50, inStock: true, label: 'All 50ml (75ml for JPG)' },
-      { ml: 100, price: 42.99, originalPrice: 274.50, inStock: true, label: 'All 100ml (125ml for JPG)' },
+      { ml: 50, price: 36.99, originalPrice: 155.50, inStock: true, label: '50ml each' },
+      { ml: 100, price: 42.99, originalPrice: 274.50, inStock: true, label: '100ml each' },
     ],
   },
   {
