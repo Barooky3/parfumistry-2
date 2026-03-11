@@ -23,7 +23,7 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Centered Logo with Fade */}
-      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black">
+      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black" style={{ containIntrinsicSize: '0 100vh', contentVisibility: 'visible' }}>
         {/* Background Image with blur */}
         <motion.div 
           className="absolute inset-0 bg-cover bg-center opacity-40 blur-[2px]"
