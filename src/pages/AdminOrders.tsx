@@ -994,6 +994,21 @@ export default function AdminOrders() {
           )}
         </div>
 
+        {countryFilter && (
+          <div className="mb-4 flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5">
+            <Globe className="h-4 w-4 text-blue-700 shrink-0" />
+            <p className="text-sm text-blue-800 flex-1">
+              Filtering by country: <strong>{countryFilter}</strong>
+            </p>
+            <button
+              onClick={() => setCountryFilter("")}
+              className="text-xs text-blue-700 hover:text-blue-900 font-medium underline"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
+
         {customerEmailFilter && (
           <div className="mb-4 flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5">
             <Users className="h-4 w-4 text-amber-700 shrink-0" />
