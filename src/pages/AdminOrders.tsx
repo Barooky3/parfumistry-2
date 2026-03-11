@@ -80,7 +80,9 @@ export default function AdminOrders() {
 
   const [statsOpen, setStatsOpen] = useState(false);
   const [countryFilter, setCountryFilter] = useState<string>("");
+  const [statsTimeFilter, setStatsTimeFilter] = useState<string>("all");
 
+  // Date range for revenue tally
   const [datePreset, setDatePreset] = useState<string>("all");
   const [datePreset, setDatePreset] = useState<string>("all");
   const [customFrom, setCustomFrom] = useState<Date | undefined>();
