@@ -10,28 +10,34 @@ export interface PaddingOverride {
 }
 
 const cache: Record<string, PaddingOverride> = {};
-let allFetched = false;
+let fetchPromise: Promise<void> | null = null;
 const listeners = new Set<() => void>();
 
 const notify = () => listeners.forEach(fn => fn());
 
 export const fetchAllPaddingOverrides = async () => {
-  const { data } = await supabase
-    .from('product_padding_overrides')
-    .select('product_id, padding_top, padding_right, padding_bottom, padding_left, scale');
-  if (data) {
-    data.forEach((row: any) => {
-      cache[row.product_id] = {
-        padding_top: Number(row.padding_top),
-        padding_right: Number(row.padding_right),
-        padding_bottom: Number(row.padding_bottom),
-        padding_left: Number(row.padding_left),
-        scale: Number(row.scale) || 1,
-      };
-    });
-    allFetched = true;
-    notify();
-  }
+  // Singleton promise prevents duplicate fetches
+  if (fetchPromise) return fetchPromise;
+  
+  fetchPromise = (async () => {
+    const { data } = await supabase
+      .from('product_padding_overrides')
+      .select('product_id, padding_top, padding_right, padding_bottom, padding_left, scale');
+    if (data) {
+      data.forEach((row: any) => {
+        cache[row.product_id] = {
+          padding_top: Number(row.padding_top),
+          padding_right: Number(row.padding_right),
+          padding_bottom: Number(row.padding_bottom),
+          padding_left: Number(row.padding_left),
+          scale: Number(row.scale) || 1,
+        };
+      });
+      notify();
+    }
+  })();
+  
+  return fetchPromise;
 };
 
 export const savePaddingOverride = async (productId: string, padding: PaddingOverride) => {
@@ -53,7 +59,7 @@ export const useProductPadding = (productId: string): PaddingOverride | null => 
   const [, setTick] = useState(0);
 
   useEffect(() => {
-    if (!allFetched) fetchAllPaddingOverrides();
+    if (!fetchPromise) fetchAllPaddingOverrides();
     const listener = () => setTick(t => t + 1);
     listeners.add(listener);
     return () => { listeners.delete(listener); };
@@ -72,7 +78,6 @@ export const computePaddingAndScale = (override: PaddingOverride | null) => {
   const translateX = (override.padding_left - override.padding_right) / 2;
   const translateY = (override.padding_top - override.padding_bottom) / 2;
 
-  // Applied to an inner wrapper div that sits inside the overflow-hidden container
   const innerStyle: React.CSSProperties = {
     transform: `scale(${imageScale}) translate(${translateX}rem, ${translateY}rem)`,
     transformOrigin: 'center bottom',
