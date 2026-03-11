@@ -1190,7 +1190,16 @@ export default function AdminOrders() {
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm space-y-2">
                       <p className="font-medium text-amber-800">Missing: €{missing.toFixed(2)}</p>
                       <div className="flex items-center gap-2">
-                        <label className="text-xs font-medium text-amber-700 whitespace-nowrap">Recommended card: €</label>
+                        <label className="text-xs font-medium text-amber-700 whitespace-nowrap">Recommended card:</label>
+                        <select
+                          value={recommendedCardCurrency}
+                          onChange={(e) => setRecommendedCardCurrency(e.target.value)}
+                          className="h-7 rounded-md border border-amber-300 bg-white px-2 text-sm"
+                        >
+                          <option value="EUR">€ EUR</option>
+                          <option value="GBP">£ GBP</option>
+                          <option value="USD">$ USD</option>
+                        </select>
                         <Input
                           type="number"
                           step="5"
@@ -1199,7 +1208,7 @@ export default function AdminOrders() {
                           onChange={(e) => setCustomRecommendedCard(e.target.value)}
                         />
                       </div>
-                      <p className="text-amber-700 text-xs">Customer will be told to use a <strong>€{customRecommendedCard || recommendedCard}</strong> Rewarble card.</p>
+                      <p className="text-amber-700 text-xs">Customer will be told to use a <strong>{recommendedCardCurrency === "EUR" ? "€" : recommendedCardCurrency === "GBP" ? "£" : "$"}{customRecommendedCard || recommendedCard} {recommendedCardCurrency}</strong> Rewarble card.</p>
                     </div>
                   )}
                 </div>
