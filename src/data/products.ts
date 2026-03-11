@@ -86,8 +86,8 @@ export const products: Product[] = [
       { name: 'Armani Code', topNote: 'Bergamot', heartNote: 'Olive Blossom', baseNote: 'Tonka Bean', accentColor: '#2C2C2C' },
     ],
     variants: [
-      { ml: 50, price: 35.99, originalPrice: 116.42, inStock: true },
-      { ml: 100, price: 41.99, originalPrice: 225.42, inStock: true },
+      { ml: 50, price: 35.99, originalPrice: 116.42, inStock: true, label: 'All 50ml' },
+      { ml: 100, price: 41.99, originalPrice: 225.42, inStock: true, label: 'All 100ml' },
     ],
   },
   {
