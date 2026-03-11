@@ -91,6 +91,7 @@ export default function AdminOrders() {
   const [mismatchCodeValue, setMismatchCodeValue] = useState("");
   const [mismatchCartValue, setMismatchCartValue] = useState("");
   const [mismatchCurrency, setMismatchCurrency] = useState("EUR");
+  const [customRecommendedCard, setCustomRecommendedCard] = useState("");
 
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
