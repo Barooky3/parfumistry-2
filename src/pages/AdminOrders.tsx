@@ -6,7 +6,7 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown } from "lucide-react";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -78,6 +78,8 @@ export default function AdminOrders() {
   const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
+  const [statsOpen, setStatsOpen] = useState(false);
+  const [countryFilter, setCountryFilter] = useState<string>("");
   const [statsTimeFilter, setStatsTimeFilter] = useState<string>("all");
 
   // Date range for revenue tally
@@ -619,7 +621,8 @@ export default function AdminOrders() {
       o.customer_email.toLowerCase().includes(query) ||
       (o.order_number && o.order_number.toString().includes(query));
     const matchesCustomer = !customerEmailFilter || o.customer_email.toLowerCase() === customerEmailFilter;
-    return matchesStatus && matchesPayment && matchesSearch && matchesCustomer;
+    const matchesCountry = !countryFilter || ((o.shipping_address as any)?.country || "Unknown") === countryFilter;
+    return matchesStatus && matchesPayment && matchesSearch && matchesCustomer && matchesCountry;
   });
 
   return (
@@ -795,61 +798,92 @@ export default function AdminOrders() {
 
         {/* Order Statistics by Country */}
         {allOrders.length > 0 && (
-          <div className="mb-6 border rounded-lg p-4 bg-card">
-            <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                Order Statistics by Country — {countryStats.totalOrders} orders
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {[
-                { key: "all", label: "All Time" },
-                { key: "today", label: "Today" },
-                { key: "yesterday", label: "Yesterday" },
-                { key: "7days", label: "Last 7 Days" },
-                { key: "last_month", label: "Last Month" },
-              ].map(p => (
-                <button
-                  key={p.key}
-                  onClick={() => setStatsTimeFilter(p.key)}
-                  className={`px-2.5 py-1 text-xs rounded-md border transition-colors ${
-                    statsTimeFilter === p.key
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-background text-muted-foreground border-input hover:bg-accent"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-            {countryStats.byCountry.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No orders in this period</p>
-            ) : (
-              <div className="space-y-2">
-                {countryStats.byCountry.map(([country, data]) => (
-                  <div key={country} className="flex items-center gap-3 py-2 px-3 rounded-md bg-muted/30 border">
-                    <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">{country}</span>
-                        <span className="text-sm font-semibold">€{data.revenue.toFixed(2)}</span>
+          <div className="mb-6 border rounded-lg bg-card">
+            <button
+              onClick={() => setStatsOpen(!statsOpen)}
+              className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/30 transition-colors rounded-lg"
+            >
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                  Order Statistics by Country — {countryStats.totalOrders} orders
+                </p>
+              </div>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${statsOpen ? "rotate-180" : ""}`} />
+            </button>
+            {statsOpen && (
+              <div className="px-4 pb-4">
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {[
+                    { key: "all", label: "All Time" },
+                    { key: "today", label: "Today" },
+                    { key: "yesterday", label: "Yesterday" },
+                    { key: "7days", label: "Last 7 Days" },
+                    { key: "last_month", label: "Last Month" },
+                  ].map(p => (
+                    <button
+                      key={p.key}
+                      onClick={() => setStatsTimeFilter(p.key)}
+                      className={`px-2.5 py-1 text-xs rounded-md border transition-colors ${
+                        statsTimeFilter === p.key
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-background text-muted-foreground border-input hover:bg-accent"
+                      }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                {countryStats.byCountry.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No orders in this period</p>
+                ) : (
+                  <div className="space-y-2">
+                    {countryStats.byCountry.map(([country, data]) => (
+                      <div key={country} className="flex items-center gap-3 py-2 px-3 rounded-md bg-muted/30 border">
+                        <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium">{country}</span>
+                            <span className="text-sm font-semibold">€{data.revenue.toFixed(2)}</span>
+                          </div>
+                          <div className="flex gap-3 mt-0.5">
+                            <span className="text-xs text-muted-foreground">{data.orders} order{data.orders !== 1 ? 's' : ''}</span>
+                            {data.approved > 0 && (
+                              <button
+                                onClick={() => { setCountryFilter(country); setStatusFilter("approved"); }}
+                                className="text-xs text-green-600 hover:underline cursor-pointer"
+                              >
+                                {data.approved} approved
+                              </button>
+                            )}
+                            {data.pending > 0 && (
+                              <button
+                                onClick={() => { setCountryFilter(country); setStatusFilter("pending_approval"); }}
+                                className="text-xs text-yellow-600 hover:underline cursor-pointer"
+                              >
+                                {data.pending} pending
+                              </button>
+                            )}
+                            {data.rejected > 0 && (
+                              <button
+                                onClick={() => { setCountryFilter(country); setStatusFilter("rejected"); }}
+                                className="text-xs text-red-600 hover:underline cursor-pointer"
+                              >
+                                {data.rejected} rejected
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <div className="w-24 h-2 bg-muted rounded-full overflow-hidden shrink-0">
+                          <div
+                            className="h-full bg-primary rounded-full transition-all"
+                            style={{ width: `${(data.orders / countryStats.totalOrders) * 100}%` }}
+                          />
+                        </div>
                       </div>
-                      <div className="flex gap-3 mt-0.5">
-                        <span className="text-xs text-muted-foreground">{data.orders} order{data.orders !== 1 ? 's' : ''}</span>
-                        {data.approved > 0 && <span className="text-xs text-green-600">{data.approved} approved</span>}
-                        {data.pending > 0 && <span className="text-xs text-yellow-600">{data.pending} pending</span>}
-                        {data.rejected > 0 && <span className="text-xs text-red-600">{data.rejected} rejected</span>}
-                      </div>
-                    </div>
-                    <div className="w-24 h-2 bg-muted rounded-full overflow-hidden shrink-0">
-                      <div
-                        className="h-full bg-primary rounded-full transition-all"
-                        style={{ width: `${(data.orders / countryStats.totalOrders) * 100}%` }}
-                      />
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
@@ -959,6 +993,21 @@ export default function AdminOrders() {
             </div>
           )}
         </div>
+
+        {countryFilter && (
+          <div className="mb-4 flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5">
+            <Globe className="h-4 w-4 text-blue-700 shrink-0" />
+            <p className="text-sm text-blue-800 flex-1">
+              Filtering by country: <strong>{countryFilter}</strong>
+            </p>
+            <button
+              onClick={() => setCountryFilter("")}
+              className="text-xs text-blue-700 hover:text-blue-900 font-medium underline"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
 
         {customerEmailFilter && (
           <div className="mb-4 flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5">
