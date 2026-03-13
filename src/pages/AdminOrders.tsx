@@ -113,6 +113,8 @@ export default function AdminOrders() {
   const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
   const [manualSending, setManualSending] = useState(false);
   const [bannedEmails, setBannedEmails] = useState<Set<string>>(new Set());
+  const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
+  const [remoteSearching, setRemoteSearching] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
