@@ -165,7 +165,7 @@ function getLocationFromTimezone(): { country: string; city: string } {
 }
 
 // Skip tracking entirely on lovable.dev preview domains
-const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'mubarak.elkhabir@gmail.com'];
+const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'mubarak.elkhabir@gmail.com', 'malikisthebiggestw@gmail.com'];
 
 export const VisitorTracker = () => {
   const location = useLocation();

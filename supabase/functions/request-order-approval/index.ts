@@ -7,7 +7,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const ADMIN_EMAIL = "ewhz3384@gmail.com";
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
 
 interface OrderItem {
   name: string;
@@ -121,13 +121,13 @@ function buildProofRequestEmailHtml(customerName: string, totalAmount: string, o
 </body></html>`;
 }
 
-async function sendEmail(to: string, subject: string, htmlContent: string, replyTo?: string): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string, replyTo?: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
   const emailPayload: any = {
     from: "ProfParfums Orders <orders@profparfum.com>",
-    to: [to],
+    to: Array.isArray(to) ? to : [to],
     subject,
     html: htmlContent,
   };
@@ -247,7 +247,7 @@ serve(async (req) => {
       paypal_eneba: "PayPal/Eneba Order",
     };
     const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
-    await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+    await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
     console.log("Approval email sent to admin for order:", order.id);
 
     // Auto proof emails removed — customers now upload proof via the website after confirming payment

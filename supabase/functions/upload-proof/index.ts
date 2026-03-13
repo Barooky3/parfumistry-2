@@ -7,7 +7,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const ADMIN_EMAIL = "ewhz3384@gmail.com";
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
 
 async function sendProofUploadedNotification(order: any, proofUrl: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
@@ -49,7 +49,7 @@ async function sendProofUploadedNotification(order: any, proofUrl: string): Prom
     headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       from: "ProfParfums Orders <orders@profparfum.com>",
-      to: [ADMIN_EMAIL],
+      to: ADMIN_EMAILS,
       subject: `📸 Proof Uploaded${orderNumLabel}: ${order.customer_name || order.customer_email}`,
       html,
     }),

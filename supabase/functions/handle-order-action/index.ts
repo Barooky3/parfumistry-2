@@ -7,7 +7,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "ewhz3384@gmail.com";
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
 
 interface OrderItem {
   name: string;
@@ -215,7 +215,7 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
@@ -227,7 +227,7 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
     },
     body: JSON.stringify({
       from: "ProfParfums Orders <orders@profparfum.com>",
-      to: [to],
+      to: Array.isArray(to) ? to : [to],
       subject,
       html: htmlContent,
     }),
@@ -372,7 +372,7 @@ serve(async (req) => {
         }
       }
       
-      await sendEmail(ADMIN_EMAIL, invoiceSubject, finalInvoiceHtml);
+      await sendEmail(ADMIN_EMAILS, invoiceSubject, finalInvoiceHtml);
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 
