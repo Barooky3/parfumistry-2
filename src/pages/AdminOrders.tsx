@@ -1491,6 +1491,41 @@ export default function AdminOrders() {
         </DialogContent>
       </Dialog>
 
+      {/* Revolut Rejection Dialog */}
+      <Dialog open={!!revolutRejectingOrder} onOpenChange={(open) => { if (!open) setRevolutRejectingOrder(null); }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reject Revolut Order — #{revolutRejectingOrder?.order_number || '—'}</DialogTitle>
+            <DialogDescription>Optionally add a message to include in the rejection email.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Textarea
+              placeholder="Optional message (e.g. 'Payment not received', 'Wrong amount sent'...)"
+              value={revolutRejectMessage}
+              onChange={(e) => setRevolutRejectMessage(e.target.value)}
+              rows={3}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRevolutRejectingOrder(null)}>Cancel</Button>
+            <Button
+              variant="destructive"
+              disabled={revolutRejectLoading}
+              onClick={async () => {
+                if (!revolutRejectingOrder) return;
+                setRevolutRejectLoading(true);
+                const message = revolutRejectMessage.trim() || "Payment not received.";
+                await handleAction(revolutRejectingOrder.id, "reject", message);
+                setRevolutRejectLoading(false);
+                setRevolutRejectingOrder(null);
+              }}
+            >
+              {revolutRejectLoading ? "Rejecting..." : "Reject Order"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Edit Order Items Dialog */}
       <Dialog open={!!editingOrder} onOpenChange={(open) => { if (!open) { setEditingOrder(null); setShowCatalogue(false); } }}>
         <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
