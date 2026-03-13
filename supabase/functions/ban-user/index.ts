@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
     // Decode JWT to get admin email
     const payload = JSON.parse(atob(token.split(".")[1]));
     const adminEmail = payload.email;
-    const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com"];
+    const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
     if (!ADMIN_EMAILS.includes(adminEmail)) {
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
     }
