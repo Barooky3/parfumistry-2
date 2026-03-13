@@ -372,7 +372,7 @@ serve(async (req) => {
         }
       }
       
-      await sendEmail(ADMIN_EMAIL, invoiceSubject, finalInvoiceHtml);
+      await sendEmail(ADMIN_EMAILS, invoiceSubject, finalInvoiceHtml);
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 

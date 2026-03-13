@@ -247,7 +247,7 @@ serve(async (req) => {
       paypal_eneba: "PayPal/Eneba Order",
     };
     const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
-    await sendEmail(ADMIN_EMAIL, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+    await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
     console.log("Approval email sent to admin for order:", order.id);
 
     // Auto proof emails removed — customers now upload proof via the website after confirming payment
