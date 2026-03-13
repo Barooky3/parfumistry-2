@@ -661,17 +661,6 @@ export default function AdminOrders() {
   }, [allOrders, remoteSearchResults]);
 
 
-  const combinedOrders = useMemo(() => {
-    // Merge remote results into the list for filtering
-    const merged = [...allOrders];
-    for (const ro of remoteSearchResults) {
-      if (!merged.some(o => o.id === ro.id)) {
-        merged.push(ro);
-      }
-    }
-    return merged;
-  }, [allOrders, remoteSearchResults]);
-
   const filteredOrders = combinedOrders.filter(o => {
     const matchesStatus = statusFilter === "all" || o.status === statusFilter;
     const pm = getPaymentMethod(o.checkout_reference);
