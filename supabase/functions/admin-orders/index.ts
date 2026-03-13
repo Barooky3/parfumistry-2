@@ -70,6 +70,22 @@ serve(async (req) => {
         });
       }
 
+      // Search by name or email (ilike, bypasses limit)
+      const searchText = url.searchParams.get("search_text");
+      if (searchText) {
+        const pattern = `%${searchText}%`;
+        const { data, error } = await adminClient
+          .from("orders")
+          .select("*")
+          .or(`customer_name.ilike.${pattern},customer_email.ilike.${pattern}`)
+          .order("created_at", { ascending: false })
+          .limit(50);
+        if (error) throw error;
+        return new Response(JSON.stringify({ orders: data || [] }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       // List orders
       const statusFilter = url.searchParams.get("status") || "pending_approval";
       let query = adminClient.from("orders").select("*").order("created_at", { ascending: false });

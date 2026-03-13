@@ -161,26 +161,37 @@ export default function AdminOrders() {
     }
   }, [user]);
 
-  // Remote search for order numbers not in the local 1000
+  // Remote search for orders not in the local set
   useEffect(() => {
     const query = searchQuery.trim();
+    if (!query || query.length < 2) {
+      setRemoteSearchResults([]);
+      return;
+    }
     const isNumericSearch = /^\d+$/.test(query);
-    if (!isNumericSearch || !query) {
+    
+    // Check if we already have matching results locally
+    const hasLocalResults = allOrders.some(o => {
+      if (isNumericSearch) {
+        return o.order_number && o.order_number.toString().includes(query);
+      }
+      const q = query.toLowerCase();
+      return o.customer_name.toLowerCase().includes(q) || o.customer_email.toLowerCase().includes(q);
+    });
+    
+    if (hasLocalResults) {
       setRemoteSearchResults([]);
       return;
     }
-    const foundLocally = allOrders.some(o => o.order_number && o.order_number.toString().includes(query));
-    if (foundLocally) {
-      setRemoteSearchResults([]);
-      return;
-    }
+
     const timer = setTimeout(async () => {
       setRemoteSearching(true);
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) return;
+        const param = isNumericSearch ? `order_number=${query}` : `search_text=${encodeURIComponent(query)}`;
         const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?order_number=${query}`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?${param}`,
           { headers: { Authorization: `Bearer ${session.access_token}` } }
         );
         const json = await res.json();
