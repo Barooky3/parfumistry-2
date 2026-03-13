@@ -113,6 +113,8 @@ export default function AdminOrders() {
   const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
   const [manualSending, setManualSending] = useState(false);
   const [bannedEmails, setBannedEmails] = useState<Set<string>>(new Set());
+  const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
+  const [remoteSearching, setRemoteSearching] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
@@ -158,6 +160,43 @@ export default function AdminOrders() {
       fetchBannedUsers();
     }
   }, [user]);
+
+  // Remote search for order numbers not in the local 1000
+  useEffect(() => {
+    const query = searchQuery.trim();
+    const isNumericSearch = /^\d+$/.test(query);
+    if (!isNumericSearch || !query) {
+      setRemoteSearchResults([]);
+      return;
+    }
+    const foundLocally = allOrders.some(o => o.order_number && o.order_number.toString().includes(query));
+    if (foundLocally) {
+      setRemoteSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setRemoteSearching(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?order_number=${query}`,
+          { headers: { Authorization: `Bearer ${session.access_token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.orders?.length) {
+          setRemoteSearchResults(json.orders.filter((ro: any) => !allOrders.some(lo => lo.id === ro.id)));
+        } else {
+          setRemoteSearchResults([]);
+        }
+      } catch {
+        setRemoteSearchResults([]);
+      } finally {
+        setRemoteSearching(false);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery, allOrders]);
 
   const handleBanToggle = async (email: string) => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -590,6 +629,16 @@ export default function AdminOrders() {
     setEditSaving(false);
   };
 
+  const combinedOrders = useMemo(() => {
+    const merged = [...allOrders];
+    for (const ro of remoteSearchResults) {
+      if (!merged.some(o => o.id === ro.id)) {
+        merged.push(ro);
+      }
+    }
+    return merged;
+  }, [allOrders, remoteSearchResults]);
+
   if (authLoading) {
     return <div className="min-h-screen flex items-center justify-center"><RefreshCw className="animate-spin h-8 w-8 text-muted-foreground" /></div>;
   }
@@ -611,7 +660,9 @@ export default function AdminOrders() {
     "Other": "bg-gray-100 text-gray-800",
   };
 
-  const filteredOrders = allOrders.filter(o => {
+
+
+  const filteredOrders = combinedOrders.filter(o => {
     const matchesStatus = statusFilter === "all" || o.status === statusFilter;
     const pm = getPaymentMethod(o.checkout_reference);
     const matchesPayment = paymentFilter === "All" || pm === paymentFilter;
@@ -711,8 +762,11 @@ export default function AdminOrders() {
             placeholder="Search by name, email, or order number..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-9 pr-9"
           />
+          {remoteSearching && (
+            <RefreshCw className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground animate-spin" />
+          )}
         </div>
 
         {/* Revenue Tally */}

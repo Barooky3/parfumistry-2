@@ -51,6 +51,25 @@ serve(async (req) => {
     const action = url.searchParams.get("action");
 
     if (req.method === "GET") {
+      // Search by order number (exact match, bypasses limit)
+      const searchOrderNum = url.searchParams.get("order_number");
+      if (searchOrderNum) {
+        const num = parseInt(searchOrderNum, 10);
+        if (isNaN(num)) {
+          return new Response(JSON.stringify({ orders: [] }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        const { data, error } = await adminClient
+          .from("orders")
+          .select("*")
+          .eq("order_number", num);
+        if (error) throw error;
+        return new Response(JSON.stringify({ orders: data || [] }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       // List orders
       const statusFilter = url.searchParams.get("status") || "pending_approval";
       let query = adminClient.from("orders").select("*").order("created_at", { ascending: false });
