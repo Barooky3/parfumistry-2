@@ -611,7 +611,61 @@ export default function AdminOrders() {
     "Other": "bg-gray-100 text-gray-800",
   };
 
-  const filteredOrders = allOrders.filter(o => {
+  const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
+  const [remoteSearching, setRemoteSearching] = useState(false);
+
+  // Search server for order number not found locally
+  useEffect(() => {
+    const query = searchQuery.trim();
+    const isNumericSearch = /^\d+$/.test(query);
+    if (!isNumericSearch || !query) {
+      setRemoteSearchResults([]);
+      return;
+    }
+    // Check if already in local data
+    const foundLocally = allOrders.some(o => o.order_number && o.order_number.toString().includes(query));
+    if (foundLocally) {
+      setRemoteSearchResults([]);
+      return;
+    }
+    // Debounce remote search
+    const timer = setTimeout(async () => {
+      setRemoteSearching(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?order_number=${query}`,
+          { headers: { Authorization: `Bearer ${session.access_token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.orders?.length) {
+          // Merge without duplicates
+          setRemoteSearchResults(json.orders.filter((ro: any) => !allOrders.some(lo => lo.id === ro.id)));
+        } else {
+          setRemoteSearchResults([]);
+        }
+      } catch {
+        setRemoteSearchResults([]);
+      } finally {
+        setRemoteSearching(false);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery, allOrders]);
+
+  const combinedOrders = useMemo(() => {
+    // Merge remote results into the list for filtering
+    const merged = [...allOrders];
+    for (const ro of remoteSearchResults) {
+      if (!merged.some(o => o.id === ro.id)) {
+        merged.push(ro);
+      }
+    }
+    return merged;
+  }, [allOrders, remoteSearchResults]);
+
+  const filteredOrders = combinedOrders.filter(o => {
     const matchesStatus = statusFilter === "all" || o.status === statusFilter;
     const pm = getPaymentMethod(o.checkout_reference);
     const matchesPayment = paymentFilter === "All" || pm === paymentFilter;
