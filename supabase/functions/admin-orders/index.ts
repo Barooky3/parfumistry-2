@@ -76,7 +76,7 @@ serve(async (req) => {
       if (statusFilter !== "all") {
         query = query.eq("status", statusFilter);
       }
-      const { data, error } = await query.limit(1000);
+      const { data, error } = await query.limit(50);
       if (error) throw error;
       return new Response(JSON.stringify({ orders: data }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
