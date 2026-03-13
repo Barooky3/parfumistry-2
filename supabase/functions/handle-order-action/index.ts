@@ -215,7 +215,7 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
