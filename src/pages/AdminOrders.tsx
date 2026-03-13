@@ -762,8 +762,11 @@ export default function AdminOrders() {
             placeholder="Search by name, email, or order number..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-9 pr-9"
           />
+          {remoteSearching && (
+            <RefreshCw className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground animate-spin" />
+          )}
         </div>
 
         {/* Revenue Tally */}
