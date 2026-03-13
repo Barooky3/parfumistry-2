@@ -24,7 +24,7 @@ import {
 import { products } from "@/data/products";
 import { Product } from "@/types/product";
 
-const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
 
 // State for delete confirmation dialog - replaces native confirm() which breaks when "don't ask again" is checked
 

@@ -22,7 +22,7 @@ interface Order {
   order_number: number | null;
 }
 
-const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'mubarak.elkhabir@gmail.com', 'malikisthebiggestw@gmail.com'];
+const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'malikisthebiggestw@gmail.com'];
 
 const Account = () => {
   const { user, loading, signOut } = useAuth();
