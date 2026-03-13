@@ -650,15 +650,6 @@ export default function AdminOrders() {
     "Other": "bg-gray-100 text-gray-800",
   };
 
-  const combinedOrders = useMemo(() => {
-    const merged = [...allOrders];
-    for (const ro of remoteSearchResults) {
-      if (!merged.some(o => o.id === ro.id)) {
-        merged.push(ro);
-      }
-    }
-    return merged;
-  }, [allOrders, remoteSearchResults]);
 
 
   const filteredOrders = combinedOrders.filter(o => {
