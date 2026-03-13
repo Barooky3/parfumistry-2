@@ -78,8 +78,7 @@ serve(async (req) => {
           .from("orders")
           .select("*")
           .or(`customer_name.ilike.${pattern},customer_email.ilike.${pattern}`)
-          .order("created_at", { ascending: false })
-          .limit(50);
+          .order("created_at", { ascending: false });
         if (error) throw error;
         return new Response(JSON.stringify({ orders: data || [] }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -92,7 +91,7 @@ serve(async (req) => {
       if (statusFilter !== "all") {
         query = query.eq("status", statusFilter);
       }
-      const { data, error } = await query.limit(50);
+      const { data, error } = await query;
       if (error) throw error;
       return new Response(JSON.stringify({ orders: data }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
