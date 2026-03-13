@@ -98,6 +98,11 @@ export default function AdminOrders() {
   const [customRecommendedCard, setCustomRecommendedCard] = useState("");
   const [recommendedCardCurrency, setRecommendedCardCurrency] = useState("EUR");
 
+  // Revolut rejection state
+  const [revolutRejectingOrder, setRevolutRejectingOrder] = useState<Order | null>(null);
+  const [revolutRejectMessage, setRevolutRejectMessage] = useState("");
+  const [revolutRejectLoading, setRevolutRejectLoading] = useState(false);
+
   // Edit state
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [editItems, setEditItems] = useState<OrderItem[]>([]);
