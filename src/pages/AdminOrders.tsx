@@ -161,6 +161,43 @@ export default function AdminOrders() {
     }
   }, [user]);
 
+  // Remote search for order numbers not in the local 1000
+  useEffect(() => {
+    const query = searchQuery.trim();
+    const isNumericSearch = /^\d+$/.test(query);
+    if (!isNumericSearch || !query) {
+      setRemoteSearchResults([]);
+      return;
+    }
+    const foundLocally = allOrders.some(o => o.order_number && o.order_number.toString().includes(query));
+    if (foundLocally) {
+      setRemoteSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setRemoteSearching(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?order_number=${query}`,
+          { headers: { Authorization: `Bearer ${session.access_token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.orders?.length) {
+          setRemoteSearchResults(json.orders.filter((ro: any) => !allOrders.some(lo => lo.id === ro.id)));
+        } else {
+          setRemoteSearchResults([]);
+        }
+      } catch {
+        setRemoteSearchResults([]);
+      } finally {
+        setRemoteSearching(false);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery, allOrders]);
+
   const handleBanToggle = async (email: string) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
