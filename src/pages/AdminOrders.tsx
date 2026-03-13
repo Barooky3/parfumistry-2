@@ -1266,8 +1266,8 @@ export default function AdminOrders() {
                       onClick={() => {
                         const payMethod = getPaymentMethod(order.checkout_reference);
                         if (payMethod === "Revolut") {
-                          // Revolut has no codes — just reject with simple message
-                          handleAction(order.id, "reject", "Payment not received.");
+                          setRevolutRejectingOrder(order);
+                          setRevolutRejectMessage("");
                         } else {
                           setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
                         }
