@@ -629,6 +629,16 @@ export default function AdminOrders() {
     setEditSaving(false);
   };
 
+  const combinedOrders = useMemo(() => {
+    const merged = [...allOrders];
+    for (const ro of remoteSearchResults) {
+      if (!merged.some(o => o.id === ro.id)) {
+        merged.push(ro);
+      }
+    }
+    return merged;
+  }, [allOrders, remoteSearchResults]);
+
   if (authLoading) {
     return <div className="min-h-screen flex items-center justify-center"><RefreshCw className="animate-spin h-8 w-8 text-muted-foreground" /></div>;
   }
@@ -649,16 +659,6 @@ export default function AdminOrders() {
     "Revolut": "bg-cyan-100 text-cyan-800",
     "Other": "bg-gray-100 text-gray-800",
   };
-
-  const combinedOrders = useMemo(() => {
-    const merged = [...allOrders];
-    for (const ro of remoteSearchResults) {
-      if (!merged.some(o => o.id === ro.id)) {
-        merged.push(ro);
-      }
-    }
-    return merged;
-  }, [allOrders, remoteSearchResults]);
 
 
 
