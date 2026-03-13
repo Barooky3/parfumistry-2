@@ -7,7 +7,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_EMAIL = "ewhz3384@gmail.com";
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
 
 interface OrderItem {
   name: string;
