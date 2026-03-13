@@ -109,7 +109,7 @@ serve(async (req) => {
         });
       }
 
-      const ADMIN_EMAILS = ["ewhz3384@gmail.com", "mubarak.elkhabir@gmail.com", "malikisthebiggestw@gmail.com"];
+      const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
       if (!ADMIN_EMAILS.includes(payload.email || "")) {
         return new Response(JSON.stringify({ error: "Forbidden" }), {
           status: 403,
