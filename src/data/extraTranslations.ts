@@ -238,7 +238,7 @@ export const extraTranslations: Record<string, Record<string, string>> = {
     'hero.forHer': 'Pour Elle',
     'home.currentBestSellers': 'Meilleures Ventes Actuelles',
     'home.viewAllProducts': 'Voir Tous les Produits',
-    'home.joinFamily': 'Rejoignez la Famille ProfParfums',
+    'home.joinFamily': 'Rejoignez la Famille Parfumistry',
     'home.exclusiveOffers': 'Recevez des offres exclusives, des nouveautés et des offres privilégiées',
     'home.enterEmail': 'Entrez votre e-mail',
     'home.subscribe': "S'abonner",
