@@ -21,7 +21,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="font-display text-2xl mb-4">2. Nature of Products</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                ProfParfums offers a curated selection of premium fragrances. When you make a purchase:
+                Parfumistry offers a curated selection of premium fragrances. When you make a purchase:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
                 <li>You are purchasing fragrances from our collection</li>
