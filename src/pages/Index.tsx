@@ -141,7 +141,7 @@ const Index = () => {
             
             {/* Trust indicators */}
             <motion.div 
-              className="flex flex-wrap items-center justify-center gap-8 mt-14"
+              className="flex flex-wrap items-center justify-center gap-8 mt-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.2 }}
