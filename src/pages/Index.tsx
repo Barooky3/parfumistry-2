@@ -56,7 +56,7 @@ const Index = () => {
           >
             {/* Centered Logo - Main Focus */}
             <motion.div
-              className="relative mb-6"
+              className="relative mb-6 mt-8 md:mt-12"
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
