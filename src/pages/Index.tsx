@@ -56,7 +56,7 @@ const Index = () => {
           >
             {/* Centered Logo - Main Focus */}
             <motion.div
-              className="relative mb-0"
+              className="relative -mt-4"
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
@@ -97,12 +97,12 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="Parfumistry" 
-                className="h-auto w-[550px] md:w-[700px] lg:w-[900px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
+                className="h-auto w-[480px] md:w-[620px] lg:w-[800px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
             </motion.div>
             
             <motion.p 
-              className="text-sm md:text-base text-white/70 mb-10 max-w-md mx-auto leading-relaxed"
+              className="text-sm md:text-base text-white/70 mb-6 max-w-md mx-auto leading-relaxed -mt-2"
               style={{ minHeight: '1.5em' }}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -141,7 +141,7 @@ const Index = () => {
             
             {/* Trust indicators */}
             <motion.div 
-              className="flex flex-wrap items-center justify-center gap-8 mt-14"
+              className="flex flex-wrap items-center justify-center gap-8 mt-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.2 }}
