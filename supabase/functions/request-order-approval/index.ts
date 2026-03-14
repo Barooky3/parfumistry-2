@@ -126,7 +126,7 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
   const emailPayload: any = {
-    from: "ProfParfums Orders <orders@profparfum.com>",
+    from: "Parfumistry Orders <orders@profparfum.com>",
     to: Array.isArray(to) ? to : [to],
     subject,
     html: htmlContent,
