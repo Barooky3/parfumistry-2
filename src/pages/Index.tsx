@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ProductCard } from '@/components/product';
 import { getBestsellers } from '@/data/products';
-import { BrandNavigation, BundleSection } from '@/components/home';
+import { BrandNavigation, BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 import heroImage from '@/assets/hero-perfumes.jpg';
 import logo from '@/assets/logo.png';
