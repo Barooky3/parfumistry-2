@@ -68,7 +68,7 @@ export const Header = () => {
       }}
     >
       <div className="container">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
@@ -77,7 +77,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-10 ml-16">
             {navLinkKeys.map((link) => (
               <Link
                 key={link.href}

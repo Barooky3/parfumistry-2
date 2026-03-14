@@ -49,7 +49,7 @@ const Index = () => {
         
         <div className="container relative z-10 text-center">
           <motion.div 
-            className="max-w-2xl mx-auto pt-10 md:pt-16"
+            className="max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
