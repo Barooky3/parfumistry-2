@@ -59,7 +59,7 @@ serve(async (req) => {
       '<body style="margin:0;padding:0;background-color:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">',
       '<div style="max-width:600px;margin:0 auto;background-color:#ffffff;">',
       '<div style="background-color:#1a1a1a;padding:36px 32px;text-align:center;">',
-      '<h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>',
+      '<h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>',
       '</div>',
       '<div style="padding:40px 32px;text-align:center;">',
       '<h2 style="color:#1a1a1a;font-size:22px;font-weight:400;margin:0 0 16px 0;">Welcome, ' + name + '!</h2>',
