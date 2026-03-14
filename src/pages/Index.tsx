@@ -223,6 +223,8 @@ const Index = () => {
       {/* Bundle Section */}
       <BundleSection />
 
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Newsletter Section */}
       <section className="py-14 md:py-20 bg-secondary">
