@@ -69,7 +69,7 @@ export const products: Product[] = [
   {
     id: 'sleek-and-clean-bundle',
     name: 'Fragrance Bundle "Sleek and Clean"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 35.99,
     originalPrice: 116.42,
     category: 'bundle',
