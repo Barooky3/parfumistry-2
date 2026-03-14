@@ -93,7 +93,7 @@ export const products: Product[] = [
   {
     id: 'jpg-bundle',
     name: 'Fragrance Bundle "The JPG Collection"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 28.99,
     originalPrice: 120.00,
     category: 'bundle',
