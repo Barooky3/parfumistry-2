@@ -56,20 +56,20 @@ const Index = () => {
           >
             {/* Centered Logo - Main Focus */}
             <motion.div
-              className="relative mb-6"
+              className="relative mb-4"
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
             >
               {/* Animated pulsing glow behind logo */}
               <motion.div 
-                className="absolute inset-0 blur-[80px] opacity-40"
+                className="absolute -inset-8 blur-[100px] opacity-50"
                 style={{
-                  background: 'radial-gradient(circle at 50% 50%, hsl(345 60% 40% / 0.7), hsl(345 40% 25% / 0.3) 50%, transparent 75%)'
+                  background: 'radial-gradient(circle at 50% 50%, hsl(345 60% 40% / 0.8), hsl(345 40% 25% / 0.4) 50%, transparent 75%)'
                 }}
                 animate={{ 
-                  opacity: [0.3, 0.55, 0.3],
-                  scale: [0.95, 1.08, 0.95],
+                  opacity: [0.4, 0.7, 0.4],
+                  scale: [0.95, 1.1, 0.95],
                 }}
                 transition={{ 
                   duration: 4, 
@@ -79,13 +79,13 @@ const Index = () => {
               />
               {/* Secondary outer glow ring */}
               <motion.div 
-                className="absolute -inset-16 blur-[120px] opacity-20"
+                className="absolute -inset-24 blur-[150px] opacity-30"
                 style={{
-                  background: 'radial-gradient(circle at 50% 50%, hsl(345 50% 50% / 0.5), transparent 60%)'
+                  background: 'radial-gradient(circle at 50% 50%, hsl(345 50% 50% / 0.6), transparent 60%)'
                 }}
                 animate={{ 
-                  opacity: [0.15, 0.3, 0.15],
-                  scale: [1, 1.12, 1],
+                  opacity: [0.2, 0.45, 0.2],
+                  scale: [1, 1.15, 1],
                 }}
                 transition={{ 
                   duration: 5, 
@@ -97,7 +97,7 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="Parfumistry" 
-                className="h-auto w-[500px] md:w-[650px] lg:w-[850px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain"
+                className="h-auto w-[550px] md:w-[700px] lg:w-[900px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
             </motion.div>
             
