@@ -25,7 +25,7 @@ serve(async (req) => {
 <div style="max-width:600px;margin:0 auto;background:#fff;">
 
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
     <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Premium Fragrances</p>
   </div>
 
@@ -54,13 +54,13 @@ serve(async (req) => {
 
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Questions? Reach us at<br>
-      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
+      <a href="mailto:support@parfumistry.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@parfumistry.com</a></p>
     </div>
   </div>
 
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} Parfumistry. All rights reserved.</p>
   </div>
 
 </div>
@@ -73,9 +73,9 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "ProfParfums <orders@profparfum.com>",
+        from: "Parfumistry <orders@profparfum.com>",
         to: [email],
-        subject: "Welcome to ProfParfums — Here's 15% Off Your First Order",
+        subject: "Welcome to Parfumistry — Here's 15% Off Your First Order",
         html,
       }),
     });

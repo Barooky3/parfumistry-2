@@ -96,7 +96,7 @@ const Index = () => {
               />
               <img 
                 src={logo} 
-                alt="ProfParfums" 
+                alt="Parfumistry" 
                 className="h-auto w-[400px] md:w-[520px] lg:w-[700px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain"
               />
             </motion.div>
@@ -234,7 +234,7 @@ const Index = () => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
           >
-            <img src={logo} alt="ProfParfums" className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
+            <img src={logo} alt="Parfumistry" className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
               {t('home.joinFamily')}
             </h2>

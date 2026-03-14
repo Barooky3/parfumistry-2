@@ -260,7 +260,7 @@ function buildEmailHtml(
     '<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">',
 
     '<div style="background-color: #1a1a1a; padding: 36px 32px; text-align: center;">',
-    '<h1 style="color: #c9a96e; font-size: 26px; font-weight: 300; letter-spacing: 5px; margin: 0; text-transform: uppercase;">ProfParfums</h1>',
+    '<h1 style="color: #c9a96e; font-size: 26px; font-weight: 300; letter-spacing: 5px; margin: 0; text-transform: uppercase;">Parfumistry</h1>',
     '<p style="color: #666; font-size: 12px; letter-spacing: 2px; margin: 8px 0 0 0; text-transform: uppercase;">Premium Fragrances</p>',
     '</div>',
 
@@ -311,12 +311,12 @@ function buildEmailHtml(
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
-    '<a href="mailto:support@profparfums.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@profparfums.com</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
+    '<a href="mailto:support@parfumistry.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@parfumistry.com</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
     '</div></div>',
 
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
-    '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">ProfParfums</p>',
-    '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' ProfParfums. All rights reserved.<br>',
+    '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">Parfumistry</p>',
+    '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' Parfumistry. All rights reserved.<br>',
     '<a href="https://profparfums.lovable.app" style="color: #888; text-decoration: none;">profparfums.lovable.app</a></p>',
     '</div>',
 
@@ -363,7 +363,7 @@ function buildAdminInvoiceHtml(
   <div style="background:#1a1a1a;padding:32px 40px;display:flex;justify-content:space-between;">
     <table style="width:100%;"><tr>
       <td style="vertical-align:top;">
-        <h1 style="color:#c9a96e;font-size:24px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+        <h1 style="color:#c9a96e;font-size:24px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
         <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Premium Fragrances</p>
       </td>
       <td style="vertical-align:top;text-align:right;">
@@ -442,9 +442,9 @@ function buildAdminInvoiceHtml(
 
   <!-- Footer -->
   <div style="background:#1a1a1a;padding:24px 40px;text-align:center;">
-    <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} ProfParfums. All rights reserved.<br>
-    <a href="mailto:support@profparfums.com" style="color:#888;text-decoration:none;">support@profparfums.com</a></p>
+    <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} Parfumistry. All rights reserved.<br>
+    <a href="mailto:support@parfumistry.com" style="color:#888;text-decoration:none;">support@parfumistry.com</a></p>
   </div>
 
 </div>
@@ -462,7 +462,7 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "ProfParfums <orders@profparfum.com>",
+      from: "Parfumistry <orders@profparfum.com>",
       to: [to],
       subject,
       html: htmlContent,
@@ -521,7 +521,7 @@ serve(async (req) => {
 
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent);
 
-    const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
+    const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - Parfumistry` : "Order Confirmed - Parfumistry";
     await sendEmail(customerEmail, emailSubject, html);
 
     return new Response(JSON.stringify({ success: true }), {

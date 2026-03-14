@@ -216,7 +216,7 @@ serve(async (req) => {
 <div style="max-width:700px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e5e5;">
   
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:22px;font-weight:300;letter-spacing:5px;margin:0;">PROFPARFUMS</h1>
+    <h1 style="color:#c9a96e;font-size:22px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
     <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Invoice / Order Confirmation</p>
   </div>
 
@@ -281,7 +281,7 @@ serve(async (req) => {
               method: "POST",
               headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
               body: JSON.stringify({
-                from: "ProfParfums Orders <orders@profparfum.com>",
+                from: "Parfumistry Orders <orders@profparfum.com>",
                 to: ADMIN_EMAILS,
                 subject: invoiceSubject,
                 html: invoiceHtml,
@@ -393,14 +393,14 @@ serve(async (req) => {
             method: "POST",
             headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: "ProfParfums <orders@profparfum.com>",
+              from: "Parfumistry <orders@profparfum.com>",
               to: [order.customer_email],
               reply_to: "ewhz3384@gmail.com",
-              subject: order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums",
+              subject: order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry",
               html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PROFPARFUMS</h1>
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
   </div>
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
@@ -410,7 +410,7 @@ serve(async (req) => {
     ${adminNotesHtml}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
-      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>${order.order_number ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + order.order_number + '</strong></span>' : ''}</p>
+      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@parfumistry.com" style="color:#c9a96e;">support@parfumistry.com</a>${order.order_number ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + order.order_number + '</strong></span>' : ''}</p>
     </div>
   </div>
 </div></body></html>`,

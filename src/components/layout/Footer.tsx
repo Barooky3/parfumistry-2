@@ -38,7 +38,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Link to="/" className="inline-block mb-6">
-              <img src={logo} alt="ProfParfums" className="h-14 w-auto brightness-0 invert" />
+              <img src={logo} alt="Parfumistry" className="h-14 w-auto brightness-0 invert" />
             </Link>
             <p className="text-sm text-primary-foreground/70 leading-relaxed mb-6">{t('footer.description')}</p>
             <div className="flex gap-3">
@@ -78,7 +78,7 @@ export const Footer = () => {
         </div>
         <div className="border-t border-primary-foreground/10 mt-14 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-primary-foreground/50">© {new Date().getFullYear()} ProfParfums. {t('footer.rights')}</p>
+            <p className="text-xs text-primary-foreground/50">© {new Date().getFullYear()} Parfumistry. {t('footer.rights')}</p>
             <div className="flex items-center gap-4">
               <span className="text-xs text-primary-foreground/40">{t('footer.secureCheckout')}</span>
               <div className="flex items-center gap-2">

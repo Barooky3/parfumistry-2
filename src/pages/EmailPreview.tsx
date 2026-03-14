@@ -42,7 +42,7 @@ const EmailPreview = () => {
 <!DOCTYPE html><html><body style="margin:0;padding:20px;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PROFPARFUMS</h1>
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
   </div>
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
@@ -52,7 +52,7 @@ const EmailPreview = () => {
     ${adminNotes || ""}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
-      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a></p>
+      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@parfumistry.com" style="color:#c9a96e;">support@parfumistry.com</a></p>
     </div>
   </div>
 </div></body></html>`;
@@ -61,7 +61,7 @@ const EmailPreview = () => {
 <body style="margin:0;padding:20px;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
 <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-<h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+<h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
 <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Premium Fragrances</p>
 </div>
 <div style="background:linear-gradient(135deg,#c9a96e 0%,#b8944f 100%);padding:28px 32px;text-align:center;">
@@ -96,8 +96,8 @@ const EmailPreview = () => {
 <span style="font-size:22px;font-weight:600;color:#1a1a1a;">€32.00</span>
 </div>
 <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-<p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-<p style="color:#666;font-size:11px;margin:0;line-height:1.8;">© ${year} ProfParfums. All rights reserved.</p>
+<p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+<p style="color:#666;font-size:11px;margin:0;line-height:1.8;">© ${year} Parfumistry. All rights reserved.</p>
 </div>
 </div></body></html>`;
 

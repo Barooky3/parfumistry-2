@@ -71,7 +71,7 @@ export const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
-              ProfParfums
+              Parfumistry
             </span>
           </Link>
 

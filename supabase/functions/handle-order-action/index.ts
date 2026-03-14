@@ -101,7 +101,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
     <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Premium Fragrances</p>
   </div>
   <div style="padding:32px;">
@@ -113,12 +113,12 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
-      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a>${orderNumber ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : ''}</p>
+      <a href="mailto:support@parfumistry.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@parfumistry.com</a>${orderNumber ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : ''}</p>
     </div>
   </div>
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} Parfumistry. All rights reserved.</p>
   </div>
 </div>
 </body></html>`;
@@ -161,7 +161,7 @@ function buildAdminInvoiceHtml(
 <body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
     <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Admin Invoice</p>
   </div>
   <div style="padding:32px;">
@@ -208,8 +208,8 @@ function buildAdminInvoiceHtml(
     </div>
   </div>
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} Parfumistry. All rights reserved.</p>
   </div>
 </div>
 </body></html>`;
@@ -226,7 +226,7 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "ProfParfums Orders <orders@profparfum.com>",
+      from: "Parfumistry Orders <orders@profparfum.com>",
       to: Array.isArray(to) ? to : [to],
       subject,
       html: htmlContent,
@@ -397,7 +397,7 @@ serve(async (req) => {
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number, isBankTransferRej);
-      const rejSubject = order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums";
+      const rejSubject = order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry";
       
       let rejEmailWarning = "";
       try {
