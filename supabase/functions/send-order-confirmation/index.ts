@@ -260,7 +260,7 @@ function buildEmailHtml(
     '<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">',
 
     '<div style="background-color: #1a1a1a; padding: 36px 32px; text-align: center;">',
-    '<h1 style="color: #c9a96e; font-size: 26px; font-weight: 300; letter-spacing: 5px; margin: 0; text-transform: uppercase;">ProfParfums</h1>',
+    '<h1 style="color: #c9a96e; font-size: 26px; font-weight: 300; letter-spacing: 5px; margin: 0; text-transform: uppercase;">Parfumistry</h1>',
     '<p style="color: #666; font-size: 12px; letter-spacing: 2px; margin: 8px 0 0 0; text-transform: uppercase;">Premium Fragrances</p>',
     '</div>',
 
