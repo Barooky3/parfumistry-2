@@ -42,12 +42,20 @@ export const FAQSection = () => {
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-                  {faq.answer ?? (
-                    <span>
-                      We offer a relatively flexible return and refund policy. Please read it{' '}
-                      <Link to="/return-policy" className="text-accent font-medium hover:underline">here</Link>.
-                    </span>
-                  )}
+{faq.answer ?? (
+  index === 3 ? (
+    <span>
+      We offer a relatively flexible return and refund policy. Please read it{' '}
+      <Link to="/return-policy" className="text-accent font-medium hover:underline">here</Link>.
+    </span>
+  ) : (
+    <span>
+      Message us on our{' '}
+      <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">tik tok</a>
+      {' '}and we'll help you choose based on your goals and intended purpose!
+    </span>
+  )
+)}
                 </AccordionContent>
               </AccordionItem>
             ))}
