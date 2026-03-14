@@ -44,7 +44,7 @@ export const products: Product[] = [
   {
     id: 'young-playboy-bundle',
     name: 'Fragrance Bundle "Young Playboy"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 37.99,
     originalPrice: 140.00,
     category: 'bundle',
