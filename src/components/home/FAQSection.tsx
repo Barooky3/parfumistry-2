@@ -66,6 +66,8 @@ export const FAQSection = () => {
                       As soon as I'm able to open a bank account, normal payment methods (card payments, direct PayPal, cash on delivery, etc.) will be added right away.
                     </span>
                   ) : (
+                    faq.answer
+                  )}
                 </AccordionContent>
               </AccordionItem>
             ))}
