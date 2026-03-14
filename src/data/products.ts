@@ -1075,8 +1075,8 @@ export const products: Product[] = [
     id: 'pacific-chill',
     name: 'Pacific Chill',
     brand: 'Louis Vuitton',
-    price: 41.00,
-    originalPrice: 225.00,
+    price: 40.99,
+    originalPrice: 227.00,
     category: 'unisex',
     description: 'A refreshing and invigorating scent inspired by the Pacific coast. Citrusy, aquatic, and deeply relaxing.',
     scentNotes: {
@@ -1089,8 +1089,8 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
-      { ml: 100, price: 41.00, originalPrice: 225.00, inStock: true },
-      { ml: 200, price: 61.99, originalPrice: 290.00, inStock: true },
+      { ml: 100, price: 40.99, originalPrice: 227.00, inStock: true },
+      { ml: 200, price: 46.99, originalPrice: 292.00, inStock: true },
     ],
   },
   {
