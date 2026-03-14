@@ -63,11 +63,12 @@ export const Header = () => {
       className="fixed left-0 right-0 z-40 bg-background/40 backdrop-blur-md border-b border-border/30"
       style={{
         top: 'var(--promo-banner-height, 0px)',
-        transition: 'top 0.3s ease-out'
+        transition: 'top 0.3s ease-out',
+        marginBottom: '8px'
       }}
     >
       <div className="container">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">

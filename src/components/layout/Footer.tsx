@@ -11,7 +11,7 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 );
 
 const socialLinks = [
-  { icon: TikTokIcon, href: 'https://www.tiktok.com/@profparfumz', label: 'TikTok' },
+  { icon: TikTokIcon, href: 'https://www.tiktok.com/@parfumistry', label: 'TikTok' },
 ];
 
 export const Footer = () => {

@@ -8,7 +8,7 @@ const corsHeaders = {
 
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
-const SITE_URL = "https://profparfums.lovable.app";
+const SITE_URL = "https://parfumistry.com";
 
 // Actual perfume bottle images from profparfums.store
 // IMPORTANT: More specific keys MUST come before less specific ones to avoid prefix matching bugs
