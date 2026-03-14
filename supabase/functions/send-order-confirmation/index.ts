@@ -516,7 +516,7 @@ serve(async (req) => {
 
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
-    const origin = "https://profparfums.lovable.app";
+    const origin = "https://parfumistry.com";
     const itemsHtml = buildItemsHtml(normalizedItems, origin);
 
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent);
