@@ -75,7 +75,7 @@ serve(async (req) => {
       '</div></body></html>',
     ].join("\n");
 
-    await sendEmail(email, "Your Verification Code - ProfParfums", html);
+    await sendEmail(email, "Your Verification Code - Parfumistry", html);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

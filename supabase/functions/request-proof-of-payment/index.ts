@@ -112,10 +112,10 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "ProfParfums <orders@profparfum.com>",
+        from: "Parfumistry <orders@profparfum.com>",
         to: [order.customer_email],
         reply_to: ADMIN_EMAIL,
-        subject: order.order_number ? `Proof of Payment Required — Order #${order.order_number} — ProfParfums` : "Proof of Payment Required — ProfParfums",
+        subject: order.order_number ? `Proof of Payment Required — Order #${order.order_number} — Parfumistry` : "Proof of Payment Required — Parfumistry",
         html: html,
       }),
     });

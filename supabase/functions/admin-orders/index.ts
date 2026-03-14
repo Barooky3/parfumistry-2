@@ -410,7 +410,7 @@ serve(async (req) => {
     ${adminNotesHtml}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
-      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@profparfums.com" style="color:#c9a96e;">support@profparfums.com</a>${order.order_number ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + order.order_number + '</strong></span>' : ''}</p>
+      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@parfumistry.com" style="color:#c9a96e;">support@parfumistry.com</a>${order.order_number ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + order.order_number + '</strong></span>' : ''}</p>
     </div>
   </div>
 </div></body></html>`,

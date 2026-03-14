@@ -397,7 +397,7 @@ serve(async (req) => {
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number, isBankTransferRej);
-      const rejSubject = order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums";
+      const rejSubject = order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry";
       
       let rejEmailWarning = "";
       try {
