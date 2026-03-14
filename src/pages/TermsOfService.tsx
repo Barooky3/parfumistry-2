@@ -14,7 +14,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="font-display text-2xl mb-4">1. Acceptance of Terms</h2>
               <p className="text-muted-foreground leading-relaxed">
-                By accessing and using ProfParfums, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website or services.
+                By accessing and using Parfumistry, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website or services.
               </p>
             </section>
 
