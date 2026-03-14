@@ -442,9 +442,9 @@ function buildAdminInvoiceHtml(
 
   <!-- Footer -->
   <div style="background:#1a1a1a;padding:24px 40px;text-align:center;">
-    <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} ProfParfums. All rights reserved.<br>
-    <a href="mailto:support@profparfums.com" style="color:#888;text-decoration:none;">support@profparfums.com</a></p>
+    <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} Parfumistry. All rights reserved.<br>
+    <a href="mailto:support@parfumistry.com" style="color:#888;text-decoration:none;">support@parfumistry.com</a></p>
   </div>
 
 </div>
