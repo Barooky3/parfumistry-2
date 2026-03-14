@@ -73,9 +73,9 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "ProfParfums <orders@profparfum.com>",
+        from: "Parfumistry <orders@profparfum.com>",
         to: [email],
-        subject: "Welcome to ProfParfums — Here's 15% Off Your First Order",
+        subject: "Welcome to Parfumistry — Here's 15% Off Your First Order",
         html,
       }),
     });

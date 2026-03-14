@@ -521,7 +521,7 @@ serve(async (req) => {
 
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent);
 
-    const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - ProfParfums` : "Order Confirmed - ProfParfums";
+    const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - Parfumistry` : "Order Confirmed - Parfumistry";
     await sendEmail(customerEmail, emailSubject, html);
 
     return new Response(JSON.stringify({ success: true }), {
