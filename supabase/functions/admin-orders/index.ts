@@ -216,7 +216,7 @@ serve(async (req) => {
 <div style="max-width:700px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e5e5;">
   
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <h1 style="color:#c9a96e;font-size:22px;font-weight:300;letter-spacing:5px;margin:0;">PROFPARFUMS</h1>
+    <h1 style="color:#c9a96e;font-size:22px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
     <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Invoice / Order Confirmation</p>
   </div>
 
