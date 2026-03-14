@@ -20,8 +20,16 @@ const faqs = [
     answer: "return-policy"
   },
   {
+    question: "What if i dont like the fragrance or change my mind?",
+    answer: "return-policy"
+  },
+  {
     question: "Why are the payment methods so weird?",
     answer: "tiktok-payment"
+  },
+  {
+    question: "What if i dont know what to choose?",
+    answer: "tiktok-help"
   }
 ];
 
