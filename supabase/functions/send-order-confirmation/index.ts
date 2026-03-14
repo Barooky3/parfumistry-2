@@ -311,7 +311,7 @@ function buildEmailHtml(
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
-    '<a href="mailto:support@profparfums.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@profparfums.com</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
+    '<a href="mailto:support@parfumistry.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@parfumistry.com</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
     '</div></div>',
 
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
