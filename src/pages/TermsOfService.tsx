@@ -49,7 +49,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="font-display text-2xl mb-4">4. Shipping & Delivery</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Delivery times vary depending on your location. We aim to process and dispatch all orders within 1-3 business days. ProfParfums is not liable for delays caused by postal or courier services, customs, or other factors outside our control.
+                Delivery times vary depending on your location. We aim to process and dispatch all orders within 1-3 business days. Parfumistry is not liable for delays caused by postal or courier services, customs, or other factors outside our control.
               </p>
             </section>
 
