@@ -315,8 +315,8 @@ function buildEmailHtml(
     '</div></div>',
 
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
-    '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">ProfParfums</p>',
-    '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' ProfParfums. All rights reserved.<br>',
+    '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">Parfumistry</p>',
+    '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' Parfumistry. All rights reserved.<br>',
     '<a href="https://profparfums.lovable.app" style="color: #888; text-decoration: none;">profparfums.lovable.app</a></p>',
     '</div>',
 
