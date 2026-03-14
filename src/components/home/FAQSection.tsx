@@ -16,7 +16,7 @@ const faqs = [
     answer: "After ordering, you receive a DHL tracking number and updates about your order."
   },
   {
-    question: "What if I don't like the fragrance or change my mind?",
+    question: "What if i dont know what to choose?",
     answer: null
   }
 ];
