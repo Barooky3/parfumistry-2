@@ -40,9 +40,9 @@ const translations: Record<Language, Record<string, string>> = {
     // Hero
     'hero.subtitle': 'Premium Fragrances',
     'hero.shopNow': 'Shop Now',
-    'hero.instantDelivery': 'Instant Delivery',
-    'hero.verifiedSellers': 'Verified Sellers',
-    'hero.premiumQuality': 'Premium Quality',
+    'hero.instantDelivery': 'Fast DHL Shipping',
+    'hero.verifiedSellers': 'Verified Stock',
+    'hero.premiumQuality': 'Ridiculous Prices',
 
     // Home
     'home.bestsellers': 'Bestsellers',
