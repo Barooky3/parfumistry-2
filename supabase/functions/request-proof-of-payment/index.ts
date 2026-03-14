@@ -31,8 +31,8 @@ function buildProofRequestEmailHtml(customerName: string, totalAmount: string, o
     <p style="font-size:13px;color:#999;line-height:1.6;margin:0;">Once verified, we'll confirm your order and send you a confirmation email with all the details.${orderNumber ? ' Please reference order <strong>#' + orderNumber + '</strong> in your reply.' : ''}</p>
   </div>
   <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} ProfParfums. All rights reserved.</p>
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} Parfumistry. All rights reserved.</p>
   </div>
 </div>
 </body></html>`;
