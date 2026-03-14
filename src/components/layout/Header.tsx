@@ -68,7 +68,7 @@ export const Header = () => {
       }}
     >
       <div className="container">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
