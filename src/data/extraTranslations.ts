@@ -7,7 +7,7 @@ export const extraTranslations: Record<string, Record<string, string>> = {
     'hero.forHer': 'For Her',
     'home.currentBestSellers': 'Current Best Sellers',
     'home.viewAllProducts': 'View All Products',
-    'home.joinFamily': 'Join the ProfParfums Family',
+    'home.joinFamily': 'Join the Parfumistry Family',
     'home.exclusiveOffers': 'Get exclusive offers, new arrivals & insider deals',
     'home.enterEmail': 'Enter your email',
     'home.subscribe': 'Subscribe',
