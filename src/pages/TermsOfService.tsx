@@ -69,7 +69,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="font-display text-2xl mb-4">6. Intellectual Property</h2>
               <p className="text-muted-foreground leading-relaxed">
-                All content on ProfParfums, including but not limited to text, graphics, logos, images, and software, is the property of ProfParfums or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or create derivative works without our express written permission.
+                All content on Parfumistry, including but not limited to text, graphics, logos, images, and software, is the property of Parfumistry or its content suppliers and is protected by international copyright laws. You may not reproduce, distribute, or create derivative works without our express written permission.
               </p>
             </section>
 
