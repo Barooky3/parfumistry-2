@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -13,12 +14,16 @@ const faqs = [
   {
     question: "How can I track my package?",
     answer: "After ordering, you receive a DHL tracking number and updates about your order."
+  },
+  {
+    question: "What if I don't like the fragrance or change my mind?",
+    answer: null
   }
 ];
 
 export const FAQSection = () => {
   return (
-    <section className="py-14 md:py-20 bg-background">
+    <section id="faq" className="py-14 md:py-20 bg-background">
       <div className="container">
         <motion.div
           className="max-w-2xl mx-auto"
@@ -37,7 +42,12 @@ export const FAQSection = () => {
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-                  {faq.answer}
+                  {faq.answer ?? (
+                    <span>
+                      We offer a relatively flexible return and refund policy. Please read it{' '}
+                      <Link to="/return-policy" className="text-accent font-medium hover:underline">here</Link>.
+                    </span>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             ))}

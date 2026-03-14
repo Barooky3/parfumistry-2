@@ -111,34 +111,6 @@ const ReturnPolicy = () => {
             </div>
           </div>
 
-          {/* FAQ */}
-          <div className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">Frequently Asked Questions</h2>
-            <div className="space-y-5">
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-1">Why are the fragrances so cheap?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Our fragrances are sourced from reputable grey-market suppliers. Retail stores often clear older inventory in bulk to make room for new stock, selling it at heavily discounted prices.
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed mt-2">
-                  While most perfumes have a shelf life of around eight years, the ones we offer typically have about three to six years remaining. The scent and performance remain the same—lasting around 7–8 hours on the skin—but the shorter remaining shelf life allows us to sell them at significantly lower prices.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-1">What is the shipping like?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Shipping times take around 4–6 business days to all countries in the EU and UK, and 6–8 business days outside of the EU.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-1">How can I track my package?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  After ordering, you receive a DHL tracking number and updates about your order.
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Contact */}
           <div className="text-center pt-4">
             <p className="text-sm text-muted-foreground">
