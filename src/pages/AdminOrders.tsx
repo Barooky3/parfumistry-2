@@ -133,8 +133,16 @@ export default function AdminOrders() {
     else setTransitioning(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      let { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // Try refreshing the session if getSession returns null
+        const { data: refreshData } = await supabase.auth.refreshSession();
+        session = refreshData?.session ?? null;
+      }
+      if (!session) {
+        toast.error("Session expired. Please log in again.");
+        return;
+      }
 
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-orders?status=all`,
