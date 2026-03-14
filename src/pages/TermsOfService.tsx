@@ -76,7 +76,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="font-display text-2xl mb-4">7. Limitation of Liability</h2>
               <p className="text-muted-foreground leading-relaxed">
-                ProfParfums shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service. This includes damages for loss of profits, data, or other intangible losses.
+                Parfumistry shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service. This includes damages for loss of profits, data, or other intangible losses.
               </p>
             </section>
 

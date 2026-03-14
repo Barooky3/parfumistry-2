@@ -78,7 +78,7 @@ export const Footer = () => {
         </div>
         <div className="border-t border-primary-foreground/10 mt-14 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-primary-foreground/50">© {new Date().getFullYear()} ProfParfums. {t('footer.rights')}</p>
+            <p className="text-xs text-primary-foreground/50">© {new Date().getFullYear()} Parfumistry. {t('footer.rights')}</p>
             <div className="flex items-center gap-4">
               <span className="text-xs text-primary-foreground/40">{t('footer.secureCheckout')}</span>
               <div className="flex items-center gap-2">
