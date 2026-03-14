@@ -1243,14 +1243,7 @@ export default function AdminOrders() {
                     )}
                   </div>
 
-                  {/* Rejection Notes */}
-                  {order.status === "rejected" && order.rejection_notes && (
-                    <div className="mt-3 border-t pt-3">
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Rejection Notes Sent</p>
-                      <p className="text-sm bg-red-50 text-red-800 border border-red-200 rounded px-3 py-2 whitespace-pre-wrap">{order.rejection_notes}</p>
-                    </div>
-                  )}
-
+                  {/* Action Buttons */}
                   <div className="mt-4 flex gap-3 flex-wrap">
                     <Button
                       size="sm"
@@ -1302,6 +1295,17 @@ export default function AdminOrders() {
                       <Ban className="h-4 w-4 mr-1" /> {bannedEmails.has(order.customer_email.toLowerCase()) ? "Unban" : "Ban Account"}
                     </Button>
                   </div>
+
+                  {/* Rejection Notes - Displayed prominently under action buttons for rejected orders */}
+                  {order.status === "rejected" && order.rejection_notes && (
+                    <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <X className="h-4 w-4 text-red-600" />
+                        <p className="text-sm font-semibold text-red-800 uppercase tracking-wider">Rejection Reason</p>
+                      </div>
+                      <p className="text-sm text-red-700 whitespace-pre-wrap leading-relaxed">{order.rejection_notes}</p>
+                    </div>
+                  )}
                 </div>
               );
             })}
