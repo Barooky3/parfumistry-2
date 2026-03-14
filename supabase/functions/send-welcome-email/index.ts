@@ -54,7 +54,7 @@ serve(async (req) => {
 
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Questions? Reach us at<br>
-      <a href="mailto:support@profparfums.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@profparfums.com</a></p>
+      <a href="mailto:support@parfumistry.com" style="color:#c9a96e;text-decoration:none;font-weight:500;">support@parfumistry.com</a></p>
     </div>
   </div>
 
