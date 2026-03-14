@@ -88,8 +88,8 @@ function resolveProductImage(name: string, originalImage: string): string {
   for (const [key, url] of Object.entries(PRODUCT_IMAGES)) {
     if (n.includes(key.replace(/-/g, " "))) return url;
   }
-  // Fallback: if the original image is already from profparfums.store or lovable.app, use it
-  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app"))) return originalImage;
+  // Fallback: if the original image is from the CDN or lovable.app, use it
+  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app") || originalImage.includes("parfumistry.com"))) return originalImage;
   // Last resort: try to make local paths work via site URL
   if (originalImage && originalImage.startsWith("/")) return SITE_URL + originalImage;
   // If no image at all, return a placeholder
