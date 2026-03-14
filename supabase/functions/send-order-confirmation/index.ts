@@ -363,7 +363,7 @@ function buildAdminInvoiceHtml(
   <div style="background:#1a1a1a;padding:32px 40px;display:flex;justify-content:space-between;">
     <table style="width:100%;"><tr>
       <td style="vertical-align:top;">
-        <h1 style="color:#c9a96e;font-size:24px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">ProfParfums</h1>
+        <h1 style="color:#c9a96e;font-size:24px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
         <p style="color:#666;font-size:11px;letter-spacing:2px;margin:6px 0 0;text-transform:uppercase;">Premium Fragrances</p>
       </td>
       <td style="vertical-align:top;text-align:right;">
