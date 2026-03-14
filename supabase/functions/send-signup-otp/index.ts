@@ -70,7 +70,7 @@ serve(async (req) => {
       '<p style="color:#999;font-size:12px;margin:24px 0 0 0;">This code expires in 10 minutes.</p>',
       '</div>',
       '<div style="background-color:#1a1a1a;padding:24px 32px;text-align:center;">',
-      '<p style="color:#666;font-size:11px;margin:0;">&copy; ' + new Date().getFullYear() + ' ProfParfums</p>',
+      '<p style="color:#666;font-size:11px;margin:0;">&copy; ' + new Date().getFullYear() + ' Parfumistry</p>',
       '</div>',
       '</div></body></html>',
     ].join("\n");
