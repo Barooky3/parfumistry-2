@@ -393,10 +393,10 @@ serve(async (req) => {
             method: "POST",
             headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: "ProfParfums <orders@profparfum.com>",
+              from: "Parfumistry <orders@profparfum.com>",
               to: [order.customer_email],
               reply_to: "ewhz3384@gmail.com",
-              subject: order.order_number ? `Order #${order.order_number} Update - ProfParfums` : "Order Update - ProfParfums",
+              subject: order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry",
               html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
