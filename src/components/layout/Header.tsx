@@ -95,7 +95,7 @@ export const Header = () => {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-3 pl-6">
             {/* Currency Dropdown - aromaeu style */}
             <div ref={currencyRef} className="relative hidden md:block mr-1">
               <button
