@@ -84,7 +84,7 @@ export const extraTranslations: Record<string, Record<string, string>> = {
     'hero.forHer': 'Voor Haar',
     'home.currentBestSellers': 'Huidige Bestsellers',
     'home.viewAllProducts': 'Bekijk Alle Producten',
-    'home.joinFamily': 'Word lid van de ProfParfums Familie',
+    'home.joinFamily': 'Word lid van de Parfumistry Familie',
     'home.exclusiveOffers': 'Ontvang exclusieve aanbiedingen, nieuwkomers & insider deals',
     'home.enterEmail': 'Voer je e-mail in',
     'home.subscribe': 'Abonneren',
