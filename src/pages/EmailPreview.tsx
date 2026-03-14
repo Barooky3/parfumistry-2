@@ -96,8 +96,8 @@ const EmailPreview = () => {
 <span style="font-size:22px;font-weight:600;color:#1a1a1a;">€32.00</span>
 </div>
 <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
-<p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">ProfParfums</p>
-<p style="color:#666;font-size:11px;margin:0;line-height:1.8;">© ${year} ProfParfums. All rights reserved.</p>
+<p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+<p style="color:#666;font-size:11px;margin:0;line-height:1.8;">© ${year} Parfumistry. All rights reserved.</p>
 </div>
 </div></body></html>`;
 
