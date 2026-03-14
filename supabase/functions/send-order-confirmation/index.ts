@@ -8,7 +8,7 @@ const corsHeaders = {
 
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
-const SITE_URL = "https://profparfums.lovable.app";
+const SITE_URL = "https://parfumistry.com";
 
 // Actual perfume bottle images from profparfums.store
 // IMPORTANT: More specific keys MUST come before less specific ones to avoid prefix matching bugs
@@ -88,8 +88,8 @@ function resolveProductImage(name: string, originalImage: string): string {
   for (const [key, url] of Object.entries(PRODUCT_IMAGES)) {
     if (n.includes(key.replace(/-/g, " "))) return url;
   }
-  // Fallback: if the original image is already from profparfums.store or lovable.app, use it
-  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app"))) return originalImage;
+  // Fallback: if the original image is from the CDN or lovable.app, use it
+  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app") || originalImage.includes("parfumistry.com"))) return originalImage;
   // Last resort: try to make local paths work via site URL
   if (originalImage && originalImage.startsWith("/")) return SITE_URL + originalImage;
   // If no image at all, return a placeholder
@@ -317,7 +317,7 @@ function buildEmailHtml(
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
     '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">Parfumistry</p>',
     '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' Parfumistry. All rights reserved.<br>',
-    '<a href="https://profparfums.lovable.app" style="color: #888; text-decoration: none;">profparfums.lovable.app</a></p>',
+    '<a href="https://parfumistry.com" style="color: #888; text-decoration: none;">parfumistry.com</a></p>',
     '</div>',
 
     '</div></body></html>',
@@ -516,7 +516,7 @@ serve(async (req) => {
 
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
-    const origin = "https://profparfums.lovable.app";
+    const origin = "https://parfumistry.com";
     const itemsHtml = buildItemsHtml(normalizedItems, origin);
 
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent);

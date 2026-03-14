@@ -49,7 +49,7 @@ serve(async (req) => {
     <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 16px;">Enter <strong>Professor15</strong> at checkout to apply your discount.</p>
 
     <div style="text-align:center;margin:24px 0;">
-      <a href="https://profparfums.lovable.app/shop" style="display:inline-block;background:#1a1a1a;color:#c9a96e;padding:14px 36px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:1px;text-transform:uppercase;">Browse Collection</a>
+      <a href="https://parfumistry.com/shop" style="display:inline-block;background:#1a1a1a;color:#c9a96e;padding:14px 36px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:1px;text-transform:uppercase;">Browse Collection</a>
     </div>
 
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
