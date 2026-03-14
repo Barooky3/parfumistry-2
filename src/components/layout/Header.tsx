@@ -77,7 +77,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-10 ml-16">
             {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
