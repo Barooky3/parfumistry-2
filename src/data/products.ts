@@ -19,7 +19,7 @@ export const products: Product[] = [
   {
     id: 'evening-sweetheart-bundle',
     name: 'Fragrance Bundle "Evening Sweetheart"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 36.99,
     originalPrice: 155.50,
     category: 'bundle',
