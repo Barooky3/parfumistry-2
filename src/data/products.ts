@@ -19,7 +19,7 @@ export const products: Product[] = [
   {
     id: 'evening-sweetheart-bundle',
     name: 'Fragrance Bundle "Evening Sweetheart"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 36.99,
     originalPrice: 155.50,
     category: 'bundle',
@@ -44,7 +44,7 @@ export const products: Product[] = [
   {
     id: 'young-playboy-bundle',
     name: 'Fragrance Bundle "Young Playboy"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 37.99,
     originalPrice: 140.00,
     category: 'bundle',
@@ -69,7 +69,7 @@ export const products: Product[] = [
   {
     id: 'sleek-and-clean-bundle',
     name: 'Fragrance Bundle "Sleek and Clean"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 35.99,
     originalPrice: 116.42,
     category: 'bundle',
@@ -93,7 +93,7 @@ export const products: Product[] = [
   {
     id: 'jpg-bundle',
     name: 'Fragrance Bundle "The JPG Collection"',
-    brand: 'Profparfums',
+    brand: 'Parfumistry',
     price: 28.99,
     originalPrice: 120.00,
     category: 'bundle',

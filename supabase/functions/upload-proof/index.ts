@@ -48,7 +48,7 @@ async function sendProofUploadedNotification(order: any, proofUrl: string): Prom
     method: "POST",
     headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "ProfParfums Orders <orders@profparfum.com>",
+      from: "Parfumistry Orders <orders@profparfum.com>",
       to: ADMIN_EMAILS,
       subject: `📸 Proof Uploaded${orderNumLabel}: ${order.customer_name || order.customer_email}`,
       html,
