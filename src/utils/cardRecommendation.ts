@@ -1,42 +1,43 @@
 import { Currency, CURRENCIES } from '@/contexts/CurrencyContext';
 
-const CARD_CURRENCIES = ['EUR', 'USD', 'GBP'] as const;
-
 const CARD_SYMBOLS: Record<string, string> = {
   EUR: '€',
   USD: '$',
   GBP: '£',
 };
 
-function nearestCard(amount: number): number {
-  const lower = Math.floor(amount / 5) * 5;
-  return (amount - lower) >= 4.99 ? lower + 5 : lower;
-}
+// Actual available Rewarble card denominations per currency
+const AVAILABLE_DENOMINATIONS: Record<string, number[]> = {
+  EUR: [5, 10, 20, 25, 30, 35, 40, 45, 50],
+  USD: [5, 10, 15, 20, 25, 30, 35, 45, 50],
+  GBP: [5, 10, 15, 20, 35, 45, 50],
+};
 
 /**
- * Given an order total in EUR, finds the card denomination across EUR/USD/GBP
+ * Given an order total in EUR, finds the available card denomination across EUR/USD/GBP
  * that is closest to the actual EUR total (to minimise over/underpay).
- * Returns a recommendation string like "a €15 card" or "a $15 card".
  */
 export function getCardRecommendation(eurTotal: number, _userCurrency: Currency): string {
   let bestCurrency = 'EUR';
-  let bestDenom = nearestCard(eurTotal);
-  let bestDiffEur = Math.abs(eurTotal - bestDenom); // difference in EUR terms
+  let bestDenom = 50;
+  let bestDiffEur = Infinity;
 
-  for (const cc of CARD_CURRENCIES) {
+  for (const [cc, denoms] of Object.entries(AVAILABLE_DENOMINATIONS)) {
     const info = CURRENCIES.find(c => c.code === cc);
     if (!info) continue;
 
     const convertedAmount = eurTotal * info.rate;
-    const denom = nearestCard(convertedAmount);
-    // Convert denomination back to EUR to compare fairly
-    const denomInEur = denom / info.rate;
-    const diff = Math.abs(eurTotal - denomInEur);
 
-    if (diff < bestDiffEur) {
-      bestDiffEur = diff;
-      bestDenom = denom;
-      bestCurrency = cc;
+    for (const denom of denoms) {
+      // Only consider denominations that cover the total (or are closest)
+      const denomInEur = denom / info.rate;
+      const diff = Math.abs(eurTotal - denomInEur);
+
+      if (diff < bestDiffEur) {
+        bestDiffEur = diff;
+        bestDenom = denom;
+        bestCurrency = cc;
+      }
     }
   }
 
