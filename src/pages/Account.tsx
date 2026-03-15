@@ -139,36 +139,16 @@ const Account = () => {
             <div className="space-y-4">
               {orders.map((order) => {
                 const items = Array.isArray(order.order_items) ? order.order_items : [];
+                const mismatchData = parseValueMismatch(order.rejection_notes);
                 return (
-                  <div key={order.id} className="border border-border bg-background p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <p className="text-xs text-foreground font-mono font-semibold">
-                          Order #{order.order_number || '—'}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(order.created_at).toLocaleDateString('en-GB', {
-                            day: 'numeric', month: 'short', year: 'numeric'
-                          })}
-                        </p>
-                      </div>
-                      <span className={`text-[10px] font-semibold tracking-[0.1em] uppercase px-2.5 py-1 border rounded-sm ${statusColor(order.status)}`}>
-                        {order.status}
-                      </span>
-                    </div>
-                    <div className="space-y-1.5 mb-3">
-                      {items.map((item, i) => (
-                        <div key={i} className="flex items-center justify-between text-sm">
-                          <span className="text-foreground">{item.name} <span className="text-muted-foreground">×{item.quantity}</span></span>
-                          <span className="text-foreground font-medium">{formatPrice(item.price)}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-between pt-3 border-t border-border">
-                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-[0.1em]">Total</span>
-                      <span className="text-sm font-semibold text-foreground">{formatPrice(order.total_amount)}</span>
-                    </div>
-                  </div>
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    items={items}
+                    mismatchData={mismatchData}
+                    formatPrice={formatPrice}
+                    statusColor={statusColor}
+                  />
                 );
               })}
             </div>
