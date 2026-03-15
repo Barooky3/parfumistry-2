@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, LogOut, Package, Loader2, ExternalLink } from 'lucide-react';
+import { User, LogOut, Package, Loader2, ExternalLink, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -20,7 +20,15 @@ interface Order {
   order_items: OrderItem[];
   created_at: string;
   order_number: number | null;
+  rejection_notes: string | null;
 }
+
+const parseValueMismatch = (notes: string | null) => {
+  if (!notes) return null;
+  const match = notes.match(/Code value:\s*(.+?)\s*\|\s*Cart value:\s*€([\d.]+)\s*\|\s*Missing:\s*€([\d.]+)/);
+  if (!match) return null;
+  return { codeValue: match[1], cartValue: match[2], missingAmount: match[3] };
+};
 
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'malikisthebiggestw@gmail.com'];
 
