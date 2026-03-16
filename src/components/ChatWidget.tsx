@@ -169,10 +169,6 @@ export const ChatWidget = () => {
                 </Button>
               </div>
             </div>
-          ) : blocked ? (
-            <div className="flex-1 flex items-center justify-center px-6 text-center">
-              <p className="text-sm text-muted-foreground">Your chat access has been restricted. Please contact us via email if you need assistance.</p>
-            </div>
           ) : (
             <>
               {/* Messages */}
