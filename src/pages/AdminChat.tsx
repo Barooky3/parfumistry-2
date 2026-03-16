@@ -107,19 +107,6 @@ const AdminChat = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, () => {
         loadConversations();
       })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
-        // If new message is for the currently selected conversation, add it
-        const newMsg = payload.new as Message & { conversation_id: string };
-        if (selectedRef.current && newMsg.conversation_id === selectedRef.current.id) {
-          setMessages(prev => {
-            if (prev.some(m => m.id === newMsg.id)) return prev;
-            return [...prev, newMsg];
-          });
-          // Mark as read
-          invokeAdminChat({ action: 'mark_read', conversation_id: selectedRef.current.id });
-        }
-        loadConversations();
-      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
