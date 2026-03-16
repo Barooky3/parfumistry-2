@@ -297,7 +297,7 @@ const AdminChat = () => {
               Select a conversation
             </div>
           ) : (
-            <>
+            <div className="flex-1 min-h-0 flex flex-col">
               {/* Chat header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
                 <div>
