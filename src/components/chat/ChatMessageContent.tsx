@@ -70,8 +70,6 @@ const ChatMessageContent = ({ message }: ChatMessageContentProps) => {
       parts.push(message.slice(lastIndex));
     }
 
-    return (
-      <div className="space-y-2">
     const textParts = parts.filter((p): p is string => typeof p === 'string' && p.trim().length > 0);
     const imageParts = parts.filter((p): p is { type: 'img'; src: string } => typeof p !== 'string');
 
