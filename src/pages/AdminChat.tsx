@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 import { toast } from '@/hooks/use-toast';
 
-const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
+const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 const RETURN_REFUND_LINK_MSG = `[button:Return & Refund Policy](/return-policy)`;
 
 const PROOF_IMAGES = [
@@ -24,6 +24,8 @@ const PROOF_IMAGES = [
 ];
 
 const PROOF_MSG = `Store Policy is that we ask all customers to send photos of the perfumes they get if they want, so I can use as proof, and when you get yours I'll also ask you to send photos of yours too if you don't mind, like these ones I got recently.\n\n${PROOF_IMAGES.map(img => `[img:${img}]`).join('\n')}`;
+
+const CHEAP_MSG = `The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers. A normal perfume lasts for 8 years before expiry, the ones we sell lasts for 3-6 years before expiry, so these have the same smell and last 7-8 hours on skin just like the original, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap. You get dhl tracking number after ordering and you can also return if you don't like em or have issues, we have a full return and refund policy on the site`;
 
 interface Conversation {
   id: string;
@@ -211,19 +213,8 @@ const AdminChat = () => {
     setSending(false);
   };
 
-  const sendQuickReply = async (msg: string) => {
-    if (!selected || sending) return;
-    setSending(true);
-    const optimisticMsg: Message = {
-      id: `temp-${Date.now()}`,
-      sender_type: 'admin',
-      message: msg,
-      created_at: new Date().toISOString(),
-      read: true,
-    };
-    setMessages(prev => [...prev, optimisticMsg]);
-    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: msg });
-    setSending(false);
+  const draftQuickReply = (msg: string) => {
+    setInput(msg);
   };
 
   const toggleBlock = async (conv: Conversation) => {
@@ -396,7 +387,7 @@ const AdminChat = () => {
               )}
 
               {/* Messages */}
-              <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
+              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-2">
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex ${msg.sender_type === 'admin' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
@@ -413,32 +404,37 @@ const AdminChat = () => {
               {/* Quick replies */}
               <div className="border-t border-border px-3 py-2 flex gap-1.5 flex-wrap">
                 <button
-                  onClick={() => sendQuickReply(RETURN_REFUND_LINK_MSG)}
-                  disabled={sending}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  onClick={() => draftQuickReply(RETURN_REFUND_LINK_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
-                  📋 Return & Refund Policy
+                  📋 Return & Refund
                 </button>
                 <button
-                  onClick={() => sendQuickReply(PROOF_MSG)}
-                  disabled={sending}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  onClick={() => draftQuickReply(PROOF_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
                   📸 Proof Photos
+                </button>
+                <button
+                  onClick={() => draftQuickReply(CHEAP_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                >
+                  💰 Cheap
                 </button>
               </div>
 
               {/* Input */}
               <div className="border-t border-border px-3 py-2 flex gap-2">
-                <input
+                <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
                   placeholder="Type a reply..."
-                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground resize-none max-h-[120px] min-h-[36px]"
                   maxLength={2000}
+                  rows={input.length > 100 ? 3 : 1}
                 />
-                <button onClick={sendReply} disabled={!input.trim() || sending} className="text-accent disabled:opacity-30">
+                <button onClick={sendReply} disabled={!input.trim() || sending} className="text-accent disabled:opacity-30 self-end pb-1">
                   <Send className="h-5 w-5" />
                 </button>
               </div>
