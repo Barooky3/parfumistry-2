@@ -159,12 +159,17 @@ export const ChatWidget = () => {
       {/* Floating button */}
       {!open && (
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => { setOpen(true); setUnreadCount(0); }}
           className="fixed bottom-5 right-5 z-50 h-14 px-5 rounded-full bg-accent text-accent-foreground shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform"
           aria-label="Open chat"
         >
           <MessageCircle className="h-6 w-6" />
           <span className="font-semibold text-sm">Chat</span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full bg-destructive text-destructive-foreground text-xs font-bold flex items-center justify-center animate-pulse">
+              {unreadCount}
+            </span>
+          )}
         </button>
       )}
 
