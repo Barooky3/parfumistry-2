@@ -107,7 +107,7 @@ export const ChatWidget = () => {
     }
   }, [messages]);
 
-  const sendMessageText = async (text: string) => {
+  const sendMessageText = async (text: string, notify = true) => {
     if (!text.trim() || !user) return;
 
     let convId = conversationId;
@@ -134,22 +134,24 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    supabase.functions.invoke('chat-notify', {
-      body: { conversation_id: convId, message: text, user_email: user.email },
-    });
+    if (notify) {
+      supabase.functions.invoke('chat-notify', {
+        body: { conversation_id: convId, message: text, user_email: user.email },
+      });
+    }
   };
 
   const sendMessage = async () => {
     if (!input.trim() || !user) return;
     const text = input.trim();
     setInput('');
-    await sendMessageText(text);
+    await sendMessageText(text, true);
   };
 
   const handlePresetSelect = async (question: string, answer: string) => {
     if (!user) return;
-    await sendMessageText(question);
-    // Insert the auto-answer as an "admin" message so it appears on the left
+    // Send question without email notification
+    await sendMessageText(question, false);
     const convId = conversationId;
     if (convId) {
       await supabase.from('chat_messages').insert({
