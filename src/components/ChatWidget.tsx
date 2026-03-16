@@ -107,14 +107,11 @@ export const ChatWidget = () => {
     }
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || !user) return;
-    const text = input.trim();
-    setInput('');
+  const sendMessageText = async (text: string) => {
+    if (!text.trim() || !user) return;
 
     let convId = conversationId;
 
-    // Create conversation if none exists
     if (!convId) {
       const { data: newConvo, error } = await supabase
         .from('chat_conversations')
@@ -131,17 +128,36 @@ export const ChatWidget = () => {
       setConversationId(convId);
     }
 
-    // Insert message
     await supabase.from('chat_messages').insert({
       conversation_id: convId,
       sender_type: 'customer',
       message: text,
     });
 
-    // Notify admin via edge function (fire and forget)
     supabase.functions.invoke('chat-notify', {
       body: { conversation_id: convId, message: text, user_email: user.email },
     });
+  };
+
+  const sendMessage = async () => {
+    if (!input.trim() || !user) return;
+    const text = input.trim();
+    setInput('');
+    await sendMessageText(text);
+  };
+
+  const handlePresetSelect = async (question: string, answer: string) => {
+    if (!user) return;
+    await sendMessageText(question);
+    // Insert the auto-answer as an "admin" message so it appears on the left
+    const convId = conversationId;
+    if (convId) {
+      await supabase.from('chat_messages').insert({
+        conversation_id: convId,
+        sender_type: 'admin',
+        message: answer,
+      });
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
