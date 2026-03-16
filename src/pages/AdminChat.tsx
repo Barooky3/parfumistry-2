@@ -321,12 +321,22 @@ const AdminChat = () => {
                   <Button
                     size="sm"
                     variant="ghost"
+                    onClick={() => navigate(`/admin/orders?email=${encodeURIComponent(selected.user_email)}`)}
+                    className="gap-1 text-muted-foreground"
+                  >
+                    <Package className="h-3.5 w-3.5" />
+                    All Orders
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => setShowOrders(!showOrders)}
                     className="gap-1 text-muted-foreground"
                   >
                     <Package className="h-3.5 w-3.5" />
-                    Orders ({orders.length})
+                    Quick View ({orders.length})
                     {showOrders ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </Button>
                   </Button>
                   <Button
                     size="sm"
