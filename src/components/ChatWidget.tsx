@@ -42,6 +42,7 @@ export const ChatWidget = () => {
       if (convos && convos.length > 0) {
         const convo = convos[0];
         setConversationId(convo.id);
+        setIsBlocked(convo.blocked === true);
         // Load messages
         const { data: msgs } = await supabase
           .from('chat_messages')
