@@ -22,6 +22,7 @@ export const ChatWidget = () => {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load or create conversation when user is logged in and chat opens
@@ -41,6 +42,7 @@ export const ChatWidget = () => {
       if (convos && convos.length > 0) {
         const convo = convos[0];
         setConversationId(convo.id);
+        setIsBlocked(convo.blocked === true);
         // Load messages
         const { data: msgs } = await supabase
           .from('chat_messages')
@@ -109,6 +111,18 @@ export const ChatWidget = () => {
 
   const sendMessageText = async (text: string, notify = true) => {
     if (!text.trim() || !user) return;
+
+    // If blocked, fake the message locally without saving or notifying
+    if (isBlocked) {
+      const fakeMsg: Message = {
+        id: crypto.randomUUID(),
+        sender_type: 'customer',
+        message: text,
+        created_at: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, fakeMsg]);
+      return;
+    }
 
     let convId = conversationId;
 
@@ -222,8 +236,12 @@ export const ChatWidget = () => {
                   <div className="flex justify-center py-8">
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
                   </div>
-                ) : messages.length === 0 ? (
+                ) : messages.length === 0 && !isBlocked ? (
                   <ChatPresets onSelect={handlePresetSelect} />
+                ) : messages.length === 0 && isBlocked ? (
+                  <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+                    Send us a message below!
+                  </div>
                 ) : (
                   messages.map((msg) => (
                     <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
