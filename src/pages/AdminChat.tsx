@@ -10,9 +10,7 @@ import { toast } from '@/hooks/use-toast';
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
 
-const RETURN_POLICY_MSG = `We offer a 30-day return window from the date you receive your order. Products are eligible for return if less than 5ml (~50 sprays) have been used. We cover all return shipping costs. For damaged or incorrect items, we provide a full refund or replacement upon proof — no return required.`;
-
-const REFUND_POLICY_MSG = `Once your return is approved, refunds are processed back to your original payment method within 1–2 business days. If your item arrived damaged or incorrect, please send us a photo and we'll arrange a full refund or replacement right away — no need to ship anything back.`;
+const RETURN_REFUND_LINK_MSG = `[button:Return & Refund Policy](/return-policy)`;
 
 interface Conversation {
   id: string;
