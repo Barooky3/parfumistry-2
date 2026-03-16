@@ -246,24 +246,26 @@ export const ChatWidget = () => {
                   <div className="flex justify-center py-8">
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
                   </div>
-                ) : messages.length === 0 && !isBlocked ? (
-                  <ChatPresets onSelect={handlePresetSelect} />
-                ) : messages.length === 0 && isBlocked ? (
-                  <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
-                    Send us a message below!
-                  </div>
                 ) : (
-                  messages.map((msg) => (
-                    <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
-                        msg.sender_type === 'customer'
-                          ? 'bg-accent text-accent-foreground rounded-br-sm'
-                          : 'bg-muted text-foreground rounded-bl-sm'
-                      }`}>
-                        <ChatMessageContent message={msg.message} />
+                  <>
+                    {messages.map((msg) => (
+                      <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
+                          msg.sender_type === 'customer'
+                            ? 'bg-accent text-accent-foreground rounded-br-sm'
+                            : 'bg-muted text-foreground rounded-bl-sm'
+                        }`}>
+                          <ChatMessageContent message={msg.message} />
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+                    {!isBlocked && (
+                      <ChatPresets onSelect={handlePresetSelect} />
+                    )}
+                    <p className="text-[10px] text-muted-foreground text-center pt-1 pb-1">
+                      Or type your own message below to chat directly with us!
+                    </p>
+                  </>
                 )}
               </div>
 
