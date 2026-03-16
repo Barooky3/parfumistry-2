@@ -189,7 +189,7 @@ export const ChatWidget = () => {
     setMessages(prev => [...prev, fakeQuestion]);
 
     // Send question to DB without notification (don't await for UI speed)
-    const convId = await sendMessageText(question, false);
+    const convId = await sendMessageText(question, false, true);
 
     // Delay the answer by 1.5s so it feels natural
     setTimeout(() => {
