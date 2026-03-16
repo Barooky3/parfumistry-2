@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import ChatMessageContent from '@/components/chat/ChatMessageContent';
 
 interface Message {
   id: string;
@@ -188,7 +189,7 @@ export const ChatWidget = () => {
                           ? 'bg-accent text-accent-foreground rounded-br-sm'
                           : 'bg-muted text-foreground rounded-bl-sm'
                       }`}>
-                        {msg.message}
+                        <ChatMessageContent message={msg.message} />
                       </div>
                     </div>
                   ))
