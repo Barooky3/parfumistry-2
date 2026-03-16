@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
+import ChatPresets from '@/components/chat/ChatPresets';
 
 interface Message {
   id: string;
