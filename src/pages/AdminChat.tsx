@@ -139,31 +139,21 @@ const AdminChat = () => {
     setLoading(false);
   };
 
-  // Load messages when selecting conversation
+  // Load messages when selecting conversation + poll for new messages
   useEffect(() => {
     if (!selected) return;
     loadMessages(selected.id);
     loadOrders(selected.user_email);
     setShowOrders(false);
 
-    // Dedicated channel for this conversation's messages
-    const channel = supabase
-      .channel(`admin-msgs-${selected.id}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'chat_messages',
-        filter: `conversation_id=eq.${selected.id}`,
-      }, (payload) => {
-        const newMsg = payload.new as Message;
-        setMessages(prev => {
-          if (prev.some(m => m.id === newMsg.id)) return prev;
-          return [...prev, newMsg];
-        });
-      })
-      .subscribe();
+    // Poll every 3 seconds for new messages (realtime RLS blocks admin from seeing customer messages via subscription)
+    const interval = setInterval(() => {
+      if (selectedRef.current?.id === selected.id) {
+        loadMessages(selected.id);
+      }
+    }, 3000);
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { clearInterval(interval); };
   }, [selected?.id]);
 
   const loadMessages = async (convId: string) => {
