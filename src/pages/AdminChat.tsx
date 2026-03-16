@@ -147,22 +147,24 @@ const AdminChat = () => {
     loadOrders(selected.user_email);
     setShowOrders(false);
 
-    // Poll every 3 seconds for new messages (realtime RLS blocks admin from seeing customer messages via subscription)
+    // Poll every 5 seconds for new messages
     const interval = setInterval(() => {
       if (selectedRef.current?.id === selected.id) {
         loadMessages(selected.id);
       }
-    }, 3000);
+    }, 5000);
 
     return () => { clearInterval(interval); };
   }, [selected?.id]);
 
   const loadMessages = async (convId: string) => {
-    const data = await invokeAdminChat({ action: 'get_messages', conversation_id: convId });
+    const [data] = await Promise.all([
+      invokeAdminChat({ action: 'get_messages', conversation_id: convId }),
+      invokeAdminChat({ action: 'mark_read', conversation_id: convId }),
+    ]);
     if (data?.messages) {
       setMessages(data.messages);
     }
-    await invokeAdminChat({ action: 'mark_read', conversation_id: convId });
   };
 
   const loadOrders = async (email: string) => {
