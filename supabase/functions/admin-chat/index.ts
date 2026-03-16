@@ -40,13 +40,19 @@ Deno.serve(async (req) => {
 
       const results = [];
       for (const conv of convos || []) {
-        const { count } = await supabase
+        const { count: unreadCount } = await supabase
           .from("chat_messages")
           .select("*", { count: "exact", head: true })
           .eq("conversation_id", conv.id)
           .eq("sender_type", "customer")
           .eq("read", false);
-        results.push({ ...conv, unread_count: count || 0 });
+
+        const { count: orderCount } = await supabase
+          .from("orders")
+          .select("*", { count: "exact", head: true })
+          .eq("customer_email", conv.user_email);
+
+        results.push({ ...conv, unread_count: unreadCount || 0, order_count: orderCount || 0 });
       }
 
       return new Response(JSON.stringify({ conversations: results }), { headers: corsHeaders });
