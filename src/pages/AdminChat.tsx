@@ -419,6 +419,13 @@ const AdminChat = () => {
                 >
                   📋 Return & Refund Policy
                 </button>
+                <button
+                  onClick={() => sendQuickReply(PROOF_MSG)}
+                  disabled={sending}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                >
+                  📸 Proof Photos
+                </button>
               </div>
 
               {/* Input */}
