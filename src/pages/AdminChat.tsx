@@ -265,13 +265,14 @@ const AdminChat = () => {
               <p className="text-sm text-muted-foreground text-center py-8">No conversations yet</p>
             ) : (
               conversations.map((conv) => {
-                const hasNewActivity = (conv.unread_count ?? 0) > 0;
+                const isRead = readIds.has(conv.id);
+                const hasNewActivity = (conv.unread_count ?? 0) > 0 && !isRead;
                 const hasOrders = (conv.order_count ?? 0) > 0;
                 const isSelected = selected?.id === conv.id;
                 return (
                   <button
                     key={conv.id}
-                    onClick={() => setSelected(conv)}
+                    onClick={() => handleSelectConversation(conv)}
                     className={`w-full text-left px-4 py-3 border-b border-border transition-colors ${
                       isSelected
                         ? 'bg-muted'
