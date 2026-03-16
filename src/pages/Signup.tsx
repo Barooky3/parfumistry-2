@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 const PASSWORD_RULES = [
-  { label: 'At least 6 characters', test: (p: string) => p.length >= 6 },
+  { label: 'At least 1 character', test: (p: string) => p.length >= 1 },
 ];
 
 const Signup = () => {
