@@ -235,7 +235,7 @@ const AdminChat = () => {
     <div className="h-[75vh] min-h-[520px]">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-full min-h-0 border border-border rounded-xl overflow-hidden">
         {/* Conversation list */}
-        <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto bg-card">
+        <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto overscroll-contain touch-pan-y bg-card" style={{ WebkitOverflowScrolling: 'touch' }}>
           {loading ? (
             <div className="flex justify-center py-8">
               <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
