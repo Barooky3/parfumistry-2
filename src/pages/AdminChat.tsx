@@ -213,19 +213,8 @@ const AdminChat = () => {
     setSending(false);
   };
 
-  const sendQuickReply = async (msg: string) => {
-    if (!selected || sending) return;
-    setSending(true);
-    const optimisticMsg: Message = {
-      id: `temp-${Date.now()}`,
-      sender_type: 'admin',
-      message: msg,
-      created_at: new Date().toISOString(),
-      read: true,
-    };
-    setMessages(prev => [...prev, optimisticMsg]);
-    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: msg });
-    setSending(false);
+  const draftQuickReply = (msg: string) => {
+    setInput(msg);
   };
 
   const toggleBlock = async (conv: Conversation) => {
