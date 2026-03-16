@@ -73,9 +73,10 @@ export const ChatWidget = () => {
           if (prev.some(m => m.id === newMsg.id)) return prev;
           return [...prev, newMsg];
         });
-        // If chat is closed and message is from admin, increment unread
+        // If message is from admin, auto-open the chat widget
         if (newMsg.sender_type === 'admin') {
-          setUnreadCount(prev => prev + 1);
+          setOpen(true);
+          setUnreadCount(0);
         }
       })
       .subscribe();
