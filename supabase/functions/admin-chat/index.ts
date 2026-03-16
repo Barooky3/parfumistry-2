@@ -137,6 +137,12 @@ Deno.serve(async (req) => {
     }
 
     if (action === "block") {
+      // Delete all messages but keep conversation marked as blocked
+      await supabase
+        .from("chat_messages")
+        .delete()
+        .eq("conversation_id", conversation_id);
+
       await supabase
         .from("chat_conversations")
         .update({ blocked: true })
