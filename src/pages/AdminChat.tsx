@@ -232,8 +232,8 @@ const AdminChat = () => {
   }
 
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-[75vh] border border-border rounded-xl overflow-hidden">
+    <div className="h-[75vh] min-h-[520px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-full min-h-0 border border-border rounded-xl overflow-hidden">
         {/* Conversation list */}
         <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto bg-card">
           {loading ? (
