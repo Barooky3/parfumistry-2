@@ -404,18 +404,22 @@ const AdminChat = () => {
               {/* Quick replies */}
               <div className="border-t border-border px-3 py-2 flex gap-1.5 flex-wrap">
                 <button
-                  onClick={() => sendQuickReply(RETURN_REFUND_LINK_MSG)}
-                  disabled={sending}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  onClick={() => draftQuickReply(RETURN_REFUND_LINK_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
-                  📋 Return & Refund Policy
+                  📋 Return & Refund
                 </button>
                 <button
-                  onClick={() => sendQuickReply(PROOF_MSG)}
-                  disabled={sending}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                  onClick={() => draftQuickReply(PROOF_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
                   📸 Proof Photos
+                </button>
+                <button
+                  onClick={() => draftQuickReply(CHEAP_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                >
+                  💰 Cheap
                 </button>
               </div>
 
