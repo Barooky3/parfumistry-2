@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Send, Ban, ArrowLeft, Unlock } from 'lucide-react';
+import { Send, Ban, Unlock, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
@@ -82,7 +82,14 @@ const AdminChat = () => {
   const loadConversations = async () => {
     const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
-      setConversations(data.conversations);
+      // Sort: unread first, then read at bottom
+      const sorted = [...data.conversations].sort((a: Conversation, b: Conversation) => {
+        const aUnread = (a.unread_count ?? 0) > 0 ? 1 : 0;
+        const bUnread = (b.unread_count ?? 0) > 0 ? 1 : 0;
+        if (aUnread !== bUnread) return bUnread - aUnread;
+        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      });
+      setConversations(sorted);
     }
     setLoading(false);
   };
@@ -142,6 +149,16 @@ const AdminChat = () => {
     if (selected?.id === conv.id) {
       setSelected({ ...conv, blocked: !conv.blocked });
     }
+  };
+
+  const deleteConversation = async (conv: Conversation) => {
+    await invokeAdminChat({ action: 'delete', conversation_id: conv.id });
+    toast({ title: 'Conversation deleted' });
+    if (selected?.id === conv.id) {
+      setSelected(null);
+      setMessages([]);
+    }
+    loadConversations();
   };
 
   if (!isAdmin) {
@@ -210,15 +227,26 @@ const AdminChat = () => {
                   <p className="font-semibold text-sm text-foreground">{selected.user_name || selected.user_email}</p>
                   <p className="text-xs text-muted-foreground">{selected.user_email}</p>
                 </div>
-                <Button
-                  size="sm"
-                  variant={selected.blocked ? 'outline' : 'destructive'}
-                  onClick={() => toggleBlock(selected)}
-                  className="gap-1"
-                >
-                  {selected.blocked ? <Unlock className="h-3.5 w-3.5" /> : <Ban className="h-3.5 w-3.5" />}
-                  {selected.blocked ? 'Unblock' : 'Block'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteConversation(selected)}
+                    className="gap-1 text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={selected.blocked ? 'outline' : 'destructive'}
+                    onClick={() => toggleBlock(selected)}
+                    className="gap-1"
+                  >
+                    {selected.blocked ? <Unlock className="h-3.5 w-3.5" /> : <Ban className="h-3.5 w-3.5" />}
+                    {selected.blocked ? 'Unblock' : 'Block'}
+                  </Button>
+                </div>
               </div>
 
               {/* Messages */}

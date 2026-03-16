@@ -38,11 +38,7 @@ export const ChatWidget = () => {
 
       if (convos && convos.length > 0) {
         const convo = convos[0];
-        if (convo.blocked) {
-          setBlocked(true);
-          setLoading(false);
-          return;
-        }
+        setBlocked(convo.blocked);
         setConversationId(convo.id);
         // Load messages
         const { data: msgs } = await supabase
@@ -119,10 +115,12 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    // Notify admin via edge function (fire and forget)
-    supabase.functions.invoke('chat-notify', {
-      body: { conversation_id: convId, message: text, user_email: user.email },
-    });
+    // Notify admin via edge function (fire and forget) — skip if blocked
+    if (!blocked) {
+      supabase.functions.invoke('chat-notify', {
+        body: { conversation_id: convId, message: text, user_email: user.email },
+      });
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -170,10 +168,6 @@ export const ChatWidget = () => {
                   <Link to="/signup" onClick={() => setOpen(false)}>Sign Up</Link>
                 </Button>
               </div>
-            </div>
-          ) : blocked ? (
-            <div className="flex-1 flex items-center justify-center px-6 text-center">
-              <p className="text-sm text-muted-foreground">Your chat access has been restricted. Please contact us via email if you need assistance.</p>
             </div>
           ) : (
             <>
