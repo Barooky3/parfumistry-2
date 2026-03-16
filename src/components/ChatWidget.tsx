@@ -109,8 +109,8 @@ export const ChatWidget = () => {
     }
   }, [messages]);
 
-  const sendMessageText = async (text: string, notify = true) => {
-    if (!text.trim() || !user) return;
+  const sendMessageText = async (text: string, notify = true): Promise<string | null> => {
+    if (!text.trim() || !user) return null;
 
     // If blocked, fake the message locally without saving or notifying
     if (isBlocked) {
@@ -121,7 +121,7 @@ export const ChatWidget = () => {
         created_at: new Date().toISOString(),
       };
       setMessages(prev => [...prev, fakeMsg]);
-      return;
+      return null;
     }
 
     let convId = conversationId;
@@ -137,7 +137,7 @@ export const ChatWidget = () => {
         .select()
         .single();
 
-      if (error || !newConvo) return;
+      if (error || !newConvo) return null;
       convId = newConvo.id;
       setConversationId(convId);
     }
@@ -153,6 +153,8 @@ export const ChatWidget = () => {
         body: { conversation_id: convId, message: text, user_email: user.email },
       });
     }
+
+    return convId;
   };
 
   const sendMessage = async () => {
@@ -164,9 +166,17 @@ export const ChatWidget = () => {
 
   const handlePresetSelect = async (question: string, answer: string) => {
     if (!user) return;
-    // Send question without email notification
-    await sendMessageText(question, false);
-    const convId = conversationId;
+
+    if (isBlocked) {
+      // Fake both question and answer locally
+      const fakeQ: Message = { id: crypto.randomUUID(), sender_type: 'customer', message: question, created_at: new Date().toISOString() };
+      const fakeA: Message = { id: crypto.randomUUID(), sender_type: 'admin', message: answer, created_at: new Date(Date.now() + 100).toISOString() };
+      setMessages(prev => [...prev, fakeQ, fakeA]);
+      return;
+    }
+
+    // Send question without email notification, get back the convId
+    const convId = await sendMessageText(question, false);
     if (convId) {
       await supabase.from('chat_messages').insert({
         conversation_id: convId,
@@ -236,24 +246,26 @@ export const ChatWidget = () => {
                   <div className="flex justify-center py-8">
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
                   </div>
-                ) : messages.length === 0 && !isBlocked ? (
-                  <ChatPresets onSelect={handlePresetSelect} />
-                ) : messages.length === 0 && isBlocked ? (
-                  <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
-                    Send us a message below!
-                  </div>
                 ) : (
-                  messages.map((msg) => (
-                    <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
-                        msg.sender_type === 'customer'
-                          ? 'bg-accent text-accent-foreground rounded-br-sm'
-                          : 'bg-muted text-foreground rounded-bl-sm'
-                      }`}>
-                        <ChatMessageContent message={msg.message} />
+                  <>
+                    {messages.map((msg) => (
+                      <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
+                          msg.sender_type === 'customer'
+                            ? 'bg-accent text-accent-foreground rounded-br-sm'
+                            : 'bg-muted text-foreground rounded-bl-sm'
+                        }`}>
+                          <ChatMessageContent message={msg.message} />
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+                    {!isBlocked && (
+                      <ChatPresets onSelect={handlePresetSelect} />
+                    )}
+                    <p className="text-[10px] text-muted-foreground text-center pt-1 pb-1">
+                      Or type your own message below to chat directly with us!
+                    </p>
+                  </>
                 )}
               </div>
 
