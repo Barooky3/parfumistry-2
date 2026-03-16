@@ -18,6 +18,7 @@ interface Conversation {
   blocked: boolean;
   updated_at: string;
   unread_count?: number;
+  order_count?: number;
 }
 
 interface Message {
