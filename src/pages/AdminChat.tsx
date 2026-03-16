@@ -337,7 +337,6 @@ const AdminChat = () => {
                     Quick View ({orders.length})
                     {showOrders ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                   </Button>
-                  </Button>
                   <Button
                     size="sm"
                     variant="ghost"
