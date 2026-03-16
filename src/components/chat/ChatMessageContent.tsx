@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const BUTTON_REGEX = /\[button:(.+?)\]\((.+?)\)/;
+const LINK_REGEX = /\[link:(.+?):(.+?)\]/g;
 const IMG_REGEX = /\[img:(.+?)\]/g;
 
 interface ChatMessageContentProps {
