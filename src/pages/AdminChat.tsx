@@ -131,16 +131,12 @@ const AdminChat = () => {
     const text = input.trim();
     setInput('');
 
-    await supabase.functions.invoke('admin-chat', {
-      body: { action: 'send_reply', conversation_id: selected.id, message: text },
-    });
+    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text });
   };
 
   const toggleBlock = async (conv: Conversation) => {
     const action = conv.blocked ? 'unblock' : 'block';
-    await supabase.functions.invoke('admin-chat', {
-      body: { action, conversation_id: conv.id },
-    });
+    await invokeAdminChat({ action, conversation_id: conv.id });
     toast({ title: conv.blocked ? 'User unblocked' : 'User blocked from chat' });
     loadConversations();
     if (selected?.id === conv.id) {
