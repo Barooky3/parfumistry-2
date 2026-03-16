@@ -82,7 +82,14 @@ const AdminChat = () => {
   const loadConversations = async () => {
     const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
-      setConversations(data.conversations);
+      // Sort: unread first, then read at bottom
+      const sorted = [...data.conversations].sort((a: Conversation, b: Conversation) => {
+        const aUnread = (a.unread_count ?? 0) > 0 ? 1 : 0;
+        const bUnread = (b.unread_count ?? 0) > 0 ? 1 : 0;
+        if (aUnread !== bUnread) return bUnread - aUnread;
+        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      });
+      setConversations(sorted);
     }
     setLoading(false);
   };
