@@ -151,6 +151,16 @@ const AdminChat = () => {
     }
   };
 
+  const deleteConversation = async (conv: Conversation) => {
+    await invokeAdminChat({ action: 'delete', conversation_id: conv.id });
+    toast({ title: 'Conversation deleted' });
+    if (selected?.id === conv.id) {
+      setSelected(null);
+      setMessages([]);
+    }
+    loadConversations();
+  };
+
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
