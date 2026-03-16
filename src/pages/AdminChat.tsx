@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Send, Ban, Unlock, Trash2, Package, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, Ban, Unlock, Trash2, Package, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 import { toast } from '@/hooks/use-toast';
