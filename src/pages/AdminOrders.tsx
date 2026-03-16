@@ -6,8 +6,10 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, MessageCircle } from "lucide-react";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
+import { lazy, Suspense } from "react";
+const AdminChatInbox = lazy(() => import("@/pages/AdminChat"));
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -75,7 +77,7 @@ export default function AdminOrders() {
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   const [statsOpen, setStatsOpen] = useState(false);
@@ -737,9 +739,26 @@ export default function AdminOrders() {
             <Radio className="h-4 w-4 inline mr-1.5" />
             Live Visitors
           </button>
+          {user?.email === "ewhz3384@gmail.com" && (
+            <button
+              onClick={() => setActiveTab("chat")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+                activeTab === "chat"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <MessageCircle className="h-4 w-4 inline mr-1.5" />
+              Chat Inbox
+            </button>
+          )}
         </div>
 
-        {activeTab === "live" ? (
+        {activeTab === "chat" ? (
+          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
+            <AdminChatInbox />
+          </Suspense>
+        ) : activeTab === "live" ? (
           <LiveVisitorDashboard />
         ) : (
         <>

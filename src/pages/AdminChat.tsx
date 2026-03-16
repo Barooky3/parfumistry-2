@@ -135,20 +135,14 @@ const AdminChat = () => {
 
   if (!isAdmin) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-[40vh]">
         <p className="text-muted-foreground">Access denied.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/admin/orders')}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-2xl font-bold text-foreground">Chat Inbox</h1>
-      </div>
+    <div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[65vh] border border-border rounded-xl overflow-hidden">
         {/* Conversation list */}
