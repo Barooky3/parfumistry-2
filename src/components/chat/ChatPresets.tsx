@@ -7,7 +7,7 @@ interface Preset {
 
 const presets: Preset[] = [
   {
-    question: "Are these perfumes authentic?",
+    question: "Are these perfumes authentic / why are they so cheap?",
     answer: "Our fragrances are sourced from reputable grey-market suppliers. Retail stores often clear older inventory in bulk to make room for new stock, selling it at heavily discounted prices.\n\nWhile most perfumes have a shelf life of around eight years, the ones we offer typically have about three to six years remaining. The scent and performance remain the same—lasting around 7–8 hours on the skin—but the shorter remaining shelf life allows us to sell them at significantly lower prices."
   },
   {
