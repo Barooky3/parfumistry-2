@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 import { toast } from '@/hooks/use-toast';
 
-const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
+const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 const RETURN_REFUND_LINK_MSG = `[button:Return & Refund Policy](/return-policy)`;
 
 const PROOF_IMAGES = [
