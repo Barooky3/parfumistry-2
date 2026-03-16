@@ -291,7 +291,7 @@ const AdminChat = () => {
         </div>
 
         {/* Message area */}
-        <div className="md:col-span-2 flex flex-col bg-background">
+        <div className="md:col-span-2 min-h-0 flex flex-col bg-background overflow-hidden">
           {!selected ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
               Select a conversation
