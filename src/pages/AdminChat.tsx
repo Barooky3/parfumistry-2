@@ -269,16 +269,13 @@ const AdminChat = () => {
               {/* Quick replies */}
               <div className="border-t border-border px-3 py-2 flex gap-1.5 flex-wrap">
                 <button
-                  onClick={() => setInput(RETURN_POLICY_MSG)}
+                  onClick={async () => {
+                    if (!selected) return;
+                    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: RETURN_REFUND_LINK_MSG });
+                  }}
                   className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
-                  📋 Return Policy
-                </button>
-                <button
-                  onClick={() => setInput(REFUND_POLICY_MSG)}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-                >
-                  💰 Refund Policy
+                  📋 Return & Refund Policy
                 </button>
               </div>
 
