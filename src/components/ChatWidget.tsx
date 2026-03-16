@@ -19,7 +19,6 @@ export const ChatWidget = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [blocked, setBlocked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -40,7 +39,6 @@ export const ChatWidget = () => {
 
       if (convos && convos.length > 0) {
         const convo = convos[0];
-        setBlocked(convo.blocked);
         setConversationId(convo.id);
         // Load messages
         const { data: msgs } = await supabase
@@ -90,13 +88,12 @@ export const ChatWidget = () => {
     const loadConvoId = async () => {
       const { data: convos } = await supabase
         .from('chat_conversations')
-        .select('id, blocked')
+        .select('id')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1);
       if (convos && convos.length > 0) {
         setConversationId(convos[0].id);
-        setBlocked(convos[0].blocked);
       }
     };
     if (!conversationId) loadConvoId();
@@ -140,12 +137,10 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    // Notify admin via edge function (fire and forget) — skip if blocked
-    if (!blocked) {
-      supabase.functions.invoke('chat-notify', {
-        body: { conversation_id: convId, message: text, user_email: user.email },
-      });
-    }
+    // Notify admin via edge function (fire and forget)
+    supabase.functions.invoke('chat-notify', {
+      body: { conversation_id: convId, message: text, user_email: user.email },
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

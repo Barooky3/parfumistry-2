@@ -36,6 +36,7 @@ Deno.serve(async (req) => {
       const { data: convos } = await supabase
         .from("chat_conversations")
         .select("*")
+        .eq("blocked", false)
         .order("updated_at", { ascending: false });
 
       const results = [];

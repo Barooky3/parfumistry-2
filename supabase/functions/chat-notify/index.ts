@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -13,6 +15,21 @@ Deno.serve(async (req) => {
 
   try {
     const { conversation_id, message, user_email } = await req.json();
+
+    // Check if conversation is blocked — silently skip notification
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const { data: conv } = await supabase
+      .from("chat_conversations")
+      .select("blocked")
+      .eq("id", conversation_id)
+      .single();
+
+    if (conv?.blocked) {
+      return new Response(JSON.stringify({ success: true, skipped: true }), { headers: corsHeaders });
+    }
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
