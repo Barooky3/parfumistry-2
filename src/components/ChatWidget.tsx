@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { MessageCircle, X, Send, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +12,7 @@ interface Message {
   sender_type: string;
   message: string;
   created_at: string;
+  isLocal?: boolean;
 }
 
 export const ChatWidget = () => {
@@ -24,14 +25,15 @@ export const ChatWidget = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isBlocked, setIsBlocked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const loadedRef = useRef(false);
 
   // Load or create conversation when user is logged in and chat opens
   useEffect(() => {
     if (!user || !open) return;
+    if (loadedRef.current && conversationId) return;
 
     const loadConversation = async () => {
       setLoading(true);
-      // Check for existing conversation
       const { data: convos } = await supabase
         .from('chat_conversations')
         .select('*')
@@ -43,7 +45,6 @@ export const ChatWidget = () => {
         const convo = convos[0];
         setConversationId(convo.id);
         setIsBlocked(convo.blocked === true);
-        // Load messages
         const { data: msgs } = await supabase
           .from('chat_messages')
           .select('*')
@@ -51,13 +52,14 @@ export const ChatWidget = () => {
           .order('created_at', { ascending: true });
         setMessages(msgs || []);
       }
+      loadedRef.current = true;
       setLoading(false);
     };
 
     loadConversation();
-  }, [user, open]);
+  }, [user, open, conversationId]);
 
-  // Realtime subscription for new messages (always active when conversationId exists)
+  // Realtime subscription
   useEffect(() => {
     if (!conversationId) return;
 
@@ -71,10 +73,22 @@ export const ChatWidget = () => {
       }, (payload) => {
         const newMsg = payload.new as Message;
         setMessages(prev => {
+          // Skip if exact ID match
           if (prev.some(m => m.id === newMsg.id)) return prev;
+          // Replace local duplicate (same message text + sender within 10s)
+          const localDupe = prev.findIndex(m =>
+            m.isLocal &&
+            m.sender_type === newMsg.sender_type &&
+            m.message === newMsg.message &&
+            Math.abs(new Date(m.created_at).getTime() - new Date(newMsg.created_at).getTime()) < 10000
+          );
+          if (localDupe !== -1) {
+            const updated = [...prev];
+            updated[localDupe] = newMsg;
+            return updated;
+          }
           return [...prev, newMsg];
         });
-        // If message is from admin, auto-open the chat widget
         if (newMsg.sender_type === 'admin') {
           setOpen(true);
           setUnreadCount(0);
@@ -85,9 +99,9 @@ export const ChatWidget = () => {
     return () => { supabase.removeChannel(channel); };
   }, [conversationId]);
 
-  // Load conversation even when chat is closed to enable realtime notifications
+  // Load convo ID when closed for realtime notifications
   useEffect(() => {
-    if (!user) return;
+    if (!user || conversationId) return;
     const loadConvoId = async () => {
       const { data: convos } = await supabase
         .from('chat_conversations')
@@ -99,20 +113,22 @@ export const ChatWidget = () => {
         setConversationId(convos[0].id);
       }
     };
-    if (!conversationId) loadConvoId();
-  }, [user]);
+    loadConvoId();
+  }, [user, conversationId]);
 
-  // Auto-scroll
+  // Auto-scroll (debounced)
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    const el = scrollRef.current;
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+      });
     }
   }, [messages]);
 
-  const sendMessageText = async (text: string, notify = true, skipLocalAdd = false): Promise<string | null> => {
+  const sendMessageText = useCallback(async (text: string, notify = true, skipLocalAdd = false): Promise<string | null> => {
     if (!text.trim() || !user) return null;
 
-    // If blocked, fake the message locally without saving or notifying
     if (isBlocked) {
       if (!skipLocalAdd) {
         const fakeMsg: Message = {
@@ -120,6 +136,7 @@ export const ChatWidget = () => {
           sender_type: 'customer',
           message: text,
           created_at: new Date().toISOString(),
+          isLocal: true,
         };
         setMessages(prev => [...prev, fakeMsg]);
       }
@@ -157,41 +174,39 @@ export const ChatWidget = () => {
     }
 
     return convId;
-  };
+  }, [user, isBlocked, conversationId]);
 
-  const sendMessage = async () => {
+  const sendMessage = useCallback(async () => {
     if (!input.trim() || !user) return;
     const text = input.trim();
     setInput('');
     await sendMessageText(text, true);
-  };
+  }, [input, user, sendMessageText]);
 
-  const handlePresetSelect = async (question: string, answer: string) => {
+  const handlePresetSelect = useCallback(async (question: string, answer: string) => {
     if (!user) return;
 
     if (isBlocked) {
-      const fakeQ: Message = { id: crypto.randomUUID(), sender_type: 'customer', message: question, created_at: new Date().toISOString() };
+      const fakeQ: Message = { id: crypto.randomUUID(), sender_type: 'customer', message: question, created_at: new Date().toISOString(), isLocal: true };
       setMessages(prev => [...prev, fakeQ]);
       setTimeout(() => {
-        const fakeA: Message = { id: crypto.randomUUID(), sender_type: 'admin', message: answer, created_at: new Date().toISOString() };
+        const fakeA: Message = { id: crypto.randomUUID(), sender_type: 'admin', message: answer, created_at: new Date().toISOString(), isLocal: true };
         setMessages(prev => [...prev, fakeA]);
       }, 1500);
       return;
     }
 
-    // Add question to local state immediately so it appears first
     const fakeQuestion: Message = {
       id: crypto.randomUUID(),
       sender_type: 'customer',
       message: question,
       created_at: new Date().toISOString(),
+      isLocal: true,
     };
     setMessages(prev => [...prev, fakeQuestion]);
 
-    // Send question to DB without notification (don't await for UI speed)
     const convId = await sendMessageText(question, false, true);
 
-    // Delay the answer by 1.5s so it feels natural
     setTimeout(() => {
       if (convId) {
         const fakeAnswer: Message = {
@@ -199,26 +214,26 @@ export const ChatWidget = () => {
           sender_type: 'admin',
           message: answer,
           created_at: new Date().toISOString(),
+          isLocal: true,
         };
         setMessages(prev => [...prev, fakeAnswer]);
       }
     }, 1500);
-  };
+  }, [user, isBlocked, sendMessageText]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
-  };
+  }, [sendMessage]);
 
   return (
     <>
-      {/* Floating button */}
       {!open && (
         <button
           onClick={() => { setOpen(true); setUnreadCount(0); }}
-          className="fixed bottom-5 right-5 z-50 h-14 px-5 rounded-full bg-accent text-accent-foreground shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform"
+          className="fixed bottom-5 right-5 z-50 h-14 px-5 rounded-full bg-accent text-accent-foreground shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform will-change-transform"
           aria-label="Open chat"
         >
           <MessageCircle className="h-6 w-6" />
@@ -231,20 +246,17 @@ export const ChatWidget = () => {
         </button>
       )}
 
-      {/* Chat window */}
       {open && (
-        <div className="fixed bottom-5 right-5 z-50 w-[340px] sm:w-[380px] h-[min(480px,calc(100dvh-40px))] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden overscroll-contain">
+        <div className="fixed bottom-0 right-0 sm:bottom-5 sm:right-5 z-50 w-full sm:w-[380px] h-[100dvh] sm:h-[min(480px,calc(100dvh-40px))] bg-card border border-border sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden overscroll-contain">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-accent text-accent-foreground">
+          <div className="flex items-center justify-between px-4 py-3 bg-accent text-accent-foreground shrink-0">
             <span className="font-semibold text-sm">Live Support</span>
-            <button onClick={() => setOpen(false)} className="hover:opacity-70">
+            <button onClick={() => setOpen(false)} className="hover:opacity-70 p-1">
               <X className="h-5 w-5" />
             </button>
           </div>
 
-          {/* Body */}
           {!user ? (
-            // Not logged in
             <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
               <LogIn className="h-10 w-10 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">Please log in or create an account to start chatting with our support team.</p>
@@ -259,8 +271,7 @@ export const ChatWidget = () => {
             </div>
           ) : (
             <div className="flex-1 min-h-0 flex flex-col">
-              {/* Messages */}
-              <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {loading ? (
                   <div className="flex justify-center py-8">
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
@@ -288,15 +299,13 @@ export const ChatWidget = () => {
                 )}
               </div>
 
-              {/* Disclaimer */}
-              <div className="px-4 py-1.5 bg-muted/50 border-t border-border">
+              <div className="px-4 py-1.5 bg-muted/50 border-t border-border shrink-0">
                 <p className="text-[10px] text-muted-foreground text-center leading-tight">
                   Replies usually take a few minutes to hours. You'll be notified by email or on the website when we respond.
                 </p>
               </div>
 
-              {/* Input */}
-              <div className="border-t border-border px-3 py-2 flex gap-2">
+              <div className="border-t border-border px-3 py-2 flex gap-2 shrink-0 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
