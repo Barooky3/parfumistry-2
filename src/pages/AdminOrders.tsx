@@ -75,7 +75,7 @@ export default function AdminOrders() {
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   const [statsOpen, setStatsOpen] = useState(false);
