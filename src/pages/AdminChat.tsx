@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Send, Ban, Unlock, Trash2, Package, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, Ban, Unlock, Trash2, Package, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 import { toast } from '@/hooks/use-toast';
@@ -231,143 +231,163 @@ const AdminChat = () => {
     );
   }
 
+  const goBack = () => {
+    setSelected(null);
+    setMessages([]);
+    setOrders([]);
+  };
+
   return (
-    <div className="h-[75vh] min-h-[520px]">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-full min-h-0 border border-border rounded-xl overflow-hidden">
-        {/* Conversation list */}
-        <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto overscroll-contain touch-pan-y bg-card" style={{ WebkitOverflowScrolling: 'touch' }}>
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
-            </div>
-          ) : conversations.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">No conversations yet</p>
-          ) : (
-            conversations.map((conv) => {
-              const hasNewActivity = (conv.unread_count ?? 0) > 0;
-              const hasOrders = (conv.order_count ?? 0) > 0;
-              const isSelected = selected?.id === conv.id;
-              return (
-                <button
-                  key={conv.id}
-                  onClick={() => setSelected(conv)}
-                  className={`w-full text-left px-4 py-3 border-b border-border transition-colors ${
-                    isSelected
-                      ? 'bg-muted'
-                      : hasNewActivity
-                        ? 'bg-card hover:bg-muted/50'
-                        : 'bg-transparent opacity-50 hover:opacity-75'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className={`text-sm truncate ${hasNewActivity ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground'}`}>
-                      {conv.user_name || conv.user_email}
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      {hasOrders && (
-                        <Badge
-                          variant="outline"
-                          className="text-[10px] px-1.5 gap-0.5 cursor-pointer hover:bg-accent transition-colors"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/admin/orders?email=${encodeURIComponent(conv.user_email)}`);
-                          }}
-                        >
-                          <Package className="h-2.5 w-2.5" />
-                          {conv.order_count}
-                        </Badge>
-                      )}
-                      {conv.blocked && <Badge variant="destructive" className="text-[10px] px-1.5">Blocked</Badge>}
-                      {hasNewActivity && !conv.blocked && (
-                        <Badge className="text-[10px] px-1.5 bg-accent text-accent-foreground">{conv.unread_count}</Badge>
-                      )}
+    <div className="h-[calc(100dvh-120px)] md:h-[75vh] md:min-h-[520px]">
+      <div className="flex h-full min-h-0 border border-border rounded-xl overflow-hidden">
+        {/* Conversation list - hidden on mobile when a conversation is selected */}
+        <div className={`${selected ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 lg:w-96 flex-shrink-0 min-h-0 border-r border-border bg-card`}>
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
+              </div>
+            ) : conversations.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No conversations yet</p>
+            ) : (
+              conversations.map((conv) => {
+                const hasNewActivity = (conv.unread_count ?? 0) > 0;
+                const hasOrders = (conv.order_count ?? 0) > 0;
+                const isSelected = selected?.id === conv.id;
+                return (
+                  <button
+                    key={conv.id}
+                    onClick={() => setSelected(conv)}
+                    className={`w-full text-left px-4 py-3 border-b border-border transition-colors ${
+                      isSelected
+                        ? 'bg-muted'
+                        : hasNewActivity
+                          ? 'bg-card hover:bg-muted/50'
+                          : 'bg-transparent opacity-50 hover:opacity-75'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm truncate ${hasNewActivity ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground'}`}>
+                        {conv.user_name || conv.user_email}
+                      </span>
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {hasOrders && (
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] px-1.5 gap-0.5 cursor-pointer hover:bg-accent transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/admin/orders?email=${encodeURIComponent(conv.user_email)}`);
+                            }}
+                          >
+                            <Package className="h-2.5 w-2.5" />
+                            {conv.order_count}
+                          </Badge>
+                        )}
+                        {conv.blocked && <Badge variant="destructive" className="text-[10px] px-1.5">Blocked</Badge>}
+                        {hasNewActivity && !conv.blocked && (
+                          <Badge className="text-[10px] px-1.5 bg-accent text-accent-foreground">{conv.unread_count}</Badge>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate">{conv.user_email}</p>
-                </button>
-              );
-            })
-          )}
+                    <p className="text-xs text-muted-foreground truncate">{conv.user_email}</p>
+                  </button>
+                );
+              })
+            )}
+          </div>
         </div>
 
-        {/* Message area */}
-        <div className="md:col-span-2 min-h-0 flex flex-col bg-background overflow-hidden">
+        {/* Message area - full screen on mobile when selected */}
+        <div className={`${selected ? 'flex' : 'hidden md:flex'} flex-col flex-1 min-h-0 min-w-0 bg-background`}>
           {!selected ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
               Select a conversation
             </div>
           ) : (
-            <div className="flex-1 min-h-0 flex flex-col">
+            <>
               {/* Chat header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
-                <div>
-                  <p className="font-semibold text-sm text-foreground">{selected.user_name || selected.user_email}</p>
-                  <p className="text-xs text-muted-foreground">{selected.user_email}</p>
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-card flex-shrink-0">
+                <button onClick={goBack} className="md:hidden p-1 -ml-1 text-muted-foreground hover:text-foreground">
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm text-foreground truncate">{selected.user_name || selected.user_email}</p>
+                  <p className="text-xs text-muted-foreground truncate">{selected.user_email}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex items-center gap-1 flex-shrink-0">
                   <Button
-                    size="sm"
+                    size="icon"
                     variant="ghost"
                     onClick={() => navigate(`/admin/orders?email=${encodeURIComponent(selected.user_email)}`)}
-                    className="gap-1 text-muted-foreground"
+                    className="h-8 w-8 text-muted-foreground"
+                    title="All Orders"
                   >
-                    <Package className="h-3.5 w-3.5" />
-                    All Orders
+                    <Package className="h-4 w-4" />
                   </Button>
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => setShowOrders(!showOrders)}
-                    className="gap-1 text-muted-foreground"
+                    className="gap-1 text-muted-foreground text-xs hidden sm:inline-flex"
                   >
-                    <Package className="h-3.5 w-3.5" />
-                    Quick View ({orders.length})
+                    Orders ({orders.length})
                     {showOrders ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                   </Button>
                   <Button
-                    size="sm"
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setShowOrders(!showOrders)}
+                    className="h-8 w-8 text-muted-foreground sm:hidden"
+                    title="Quick View Orders"
+                  >
+                    <ChevronDown className={`h-4 w-4 transition-transform ${showOrders ? 'rotate-180' : ''}`} />
+                  </Button>
+                  <Button
+                    size="icon"
                     variant="ghost"
                     onClick={() => deleteConversation(selected)}
-                    className="gap-1 text-muted-foreground hover:text-destructive"
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                    title="Delete"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                   <Button
                     size="sm"
                     variant={selected.blocked ? 'outline' : 'destructive'}
                     onClick={() => toggleBlock(selected)}
-                    className="gap-1"
+                    className="gap-1 text-xs h-8 px-2"
                   >
                     {selected.blocked ? <Unlock className="h-3.5 w-3.5" /> : <Ban className="h-3.5 w-3.5" />}
-                    {selected.blocked ? 'Unblock' : 'Block'}
+                    <span className="hidden sm:inline">{selected.blocked ? 'Unblock' : 'Block'}</span>
                   </Button>
                 </div>
               </div>
 
               {/* Orders panel */}
               {showOrders && (
-                <div className="border-b border-border bg-muted/50 px-4 py-2 max-h-[200px] overflow-y-auto">
+                <div className="border-b border-border bg-muted/50 px-3 py-2 max-h-[180px] overflow-y-auto flex-shrink-0">
                   {ordersLoading ? (
                     <p className="text-xs text-muted-foreground py-2">Loading orders...</p>
                   ) : orders.length === 0 ? (
-                    <p className="text-xs text-muted-foreground py-2">No orders found for this customer.</p>
+                    <p className="text-xs text-muted-foreground py-2">No orders found.</p>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       {orders.map((order) => (
                         <button
                           key={order.id}
                           onClick={() => navigate(`/admin/orders?search=${order.order_number}`)}
                           className="w-full flex items-center justify-between bg-card rounded-lg px-3 py-2 text-xs hover:bg-muted transition-colors cursor-pointer"
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             <span className="font-mono font-semibold text-foreground">#{order.order_number}</span>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(order.status)}`}>
+                            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(order.status)}`}>
                               {order.status}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-muted-foreground">
+                          <div className="flex items-center gap-2 text-muted-foreground">
                             <span>€{Number(order.total_amount).toFixed(2)}</span>
-                            <span>{new Date(order.created_at).toLocaleDateString()}</span>
+                            <span className="hidden sm:inline">{new Date(order.created_at).toLocaleDateString()}</span>
                           </div>
                         </button>
                       ))}
@@ -377,10 +397,10 @@ const AdminChat = () => {
               )}
 
               {/* Messages */}
-              <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex ${msg.sender_type === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
+                    <div className={`max-w-[85%] sm:max-w-[75%] px-3 py-2 rounded-xl text-sm break-words ${
                       msg.sender_type === 'admin'
                         ? 'bg-accent text-accent-foreground rounded-br-sm'
                         : 'bg-muted text-foreground rounded-bl-sm'
@@ -392,18 +412,18 @@ const AdminChat = () => {
               </div>
 
               {/* Quick replies */}
-              <div className="border-t border-border px-3 py-2 flex gap-1.5 flex-wrap">
+              <div className="border-t border-border px-2 py-1.5 flex gap-1 flex-wrap flex-shrink-0">
                 <button
                   onClick={() => draftQuickReply(RETURN_REFUND_LINK_MSG)}
                   className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
-                  📋 Return & Refund
+                  📋 Return
                 </button>
                 <button
                   onClick={() => draftQuickReply(PROOF_MSG)}
                   className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
                 >
-                  📸 Proof Photos
+                  📸 Proof
                 </button>
                 <button
                   onClick={() => draftQuickReply(CHEAP_MSG)}
@@ -414,13 +434,13 @@ const AdminChat = () => {
               </div>
 
               {/* Input */}
-              <div className="border-t border-border px-3 py-2 flex gap-2">
+              <div className="border-t border-border px-2 py-2 flex gap-2 flex-shrink-0">
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
                   placeholder="Type a reply..."
-                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground resize-none max-h-[120px] min-h-[36px]"
+                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground resize-none max-h-[100px] min-h-[36px]"
                   maxLength={2000}
                   rows={input.length > 100 ? 3 : 1}
                 />
@@ -428,7 +448,7 @@ const AdminChat = () => {
                   <Send className="h-5 w-5" />
                 </button>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
