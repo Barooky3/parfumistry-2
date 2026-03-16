@@ -368,7 +368,11 @@ const AdminChat = () => {
                   ) : (
                     <div className="space-y-2">
                       {orders.map((order) => (
-                        <div key={order.id} className="flex items-center justify-between bg-card rounded-lg px-3 py-2 text-xs">
+                        <button
+                          key={order.id}
+                          onClick={() => navigate(`/admin/orders?search=${order.order_number}`)}
+                          className="w-full flex items-center justify-between bg-card rounded-lg px-3 py-2 text-xs hover:bg-muted transition-colors cursor-pointer"
+                        >
                           <div className="flex items-center gap-3">
                             <span className="font-mono font-semibold text-foreground">#{order.order_number}</span>
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(order.status)}`}>
@@ -379,7 +383,7 @@ const AdminChat = () => {
                             <span>€{Number(order.total_amount).toFixed(2)}</span>
                             <span>{new Date(order.created_at).toLocaleDateString()}</span>
                           </div>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   )}
