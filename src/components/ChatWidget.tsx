@@ -88,13 +88,12 @@ export const ChatWidget = () => {
     const loadConvoId = async () => {
       const { data: convos } = await supabase
         .from('chat_conversations')
-        .select('id, blocked')
+        .select('id')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1);
       if (convos && convos.length > 0) {
         setConversationId(convos[0].id);
-        setBlocked(convos[0].blocked);
       }
     };
     if (!conversationId) loadConvoId();
