@@ -225,6 +225,13 @@ export const ChatWidget = () => {
                 )}
               </div>
 
+              {/* Disclaimer */}
+              <div className="px-4 py-1.5 bg-muted/50 border-t border-border">
+                <p className="text-[10px] text-muted-foreground text-center leading-tight">
+                  Replies usually take a few minutes to hours. You'll be notified by email or on the website when we respond.
+                </p>
+              </div>
+
               {/* Input */}
               <div className="border-t border-border px-3 py-2 flex gap-2">
                 <input
