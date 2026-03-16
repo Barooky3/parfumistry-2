@@ -261,7 +261,7 @@ const AdminChat = () => {
                         ? 'bg-accent text-accent-foreground rounded-br-sm'
                         : 'bg-muted text-foreground rounded-bl-sm'
                     }`}>
-                      {msg.message}
+                      <ChatMessageContent message={msg.message} />
                     </div>
                   </div>
                 ))}
