@@ -425,15 +425,16 @@ const AdminChat = () => {
 
               {/* Input */}
               <div className="border-t border-border px-3 py-2 flex gap-2">
-                <input
+                <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
                   placeholder="Type a reply..."
-                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground resize-none max-h-[120px] min-h-[36px]"
                   maxLength={2000}
+                  rows={input.length > 100 ? 3 : 1}
                 />
-                <button onClick={sendReply} disabled={!input.trim() || sending} className="text-accent disabled:opacity-30">
+                <button onClick={sendReply} disabled={!input.trim() || sending} className="text-accent disabled:opacity-30 self-end pb-1">
                   <Send className="h-5 w-5" />
                 </button>
               </div>
