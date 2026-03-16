@@ -9,10 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 const PASSWORD_RULES = [
-  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
-  { label: 'At least 1 uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
-  { label: 'At least 1 number', test: (p: string) => /\d/.test(p) },
-  { label: 'At least 1 special character (!@#$...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+  { label: 'At least 6 characters', test: (p: string) => p.length >= 6 },
 ];
 
 const Signup = () => {
