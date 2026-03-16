@@ -58,6 +58,7 @@ const AdminChat = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -112,16 +113,29 @@ const AdminChat = () => {
     return () => { supabase.removeChannel(channel); };
   }, [isAdmin]);
 
+  const sortConversations = useCallback((convs: Conversation[], readSet: Set<string>) => {
+    return [...convs].sort((a, b) => {
+      const aUnread = (a.unread_count ?? 0) > 0 && !readSet.has(a.id) ? 1 : 0;
+      const bUnread = (b.unread_count ?? 0) > 0 && !readSet.has(b.id) ? 1 : 0;
+      if (aUnread !== bUnread) return bUnread - aUnread;
+      return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+    });
+  }, []);
+
   const loadConversations = async () => {
     const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
-      const sorted = [...data.conversations].sort((a: Conversation, b: Conversation) => {
-        const aUnread = (a.unread_count ?? 0) > 0 ? 1 : 0;
-        const bUnread = (b.unread_count ?? 0) > 0 ? 1 : 0;
-        if (aUnread !== bUnread) return bUnread - aUnread;
-        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      setConversations(prev => {
+        // Clear readIds for conversations that are now actually 0 unread
+        setReadIds(prevRead => {
+          const newRead = new Set(prevRead);
+          for (const conv of data.conversations) {
+            if ((conv.unread_count ?? 0) === 0) newRead.delete(conv.id);
+          }
+          return newRead;
+        });
+        return sortConversations(data.conversations, readIds);
       });
-      setConversations(sorted);
     }
     setLoading(false);
   };
@@ -231,6 +245,17 @@ const AdminChat = () => {
     );
   }
 
+  const handleSelectConversation = (conv: Conversation) => {
+    setSelected(conv);
+    if ((conv.unread_count ?? 0) > 0) {
+      const newReadIds = new Set(readIds);
+      newReadIds.add(conv.id);
+      setReadIds(newReadIds);
+      // Re-sort so this conversation drops below unread ones
+      setConversations(prev => sortConversations(prev, newReadIds));
+    }
+  };
+
   const goBack = () => {
     setSelected(null);
     setMessages([]);
@@ -251,13 +276,14 @@ const AdminChat = () => {
               <p className="text-sm text-muted-foreground text-center py-8">No conversations yet</p>
             ) : (
               conversations.map((conv) => {
-                const hasNewActivity = (conv.unread_count ?? 0) > 0;
+                const isRead = readIds.has(conv.id);
+                const hasNewActivity = (conv.unread_count ?? 0) > 0 && !isRead;
                 const hasOrders = (conv.order_count ?? 0) > 0;
                 const isSelected = selected?.id === conv.id;
                 return (
                   <button
                     key={conv.id}
-                    onClick={() => setSelected(conv)}
+                    onClick={() => handleSelectConversation(conv)}
                     className={`w-full text-left px-4 py-3 border-b border-border transition-colors ${
                       isSelected
                         ? 'bg-muted'
