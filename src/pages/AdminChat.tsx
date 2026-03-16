@@ -112,16 +112,12 @@ const AdminChat = () => {
   }, [selected?.id]);
 
   const loadMessages = async (convId: string) => {
-    const { data } = await supabase.functions.invoke('admin-chat', {
-      body: { action: 'get_messages', conversation_id: convId },
-    });
+    const data = await invokeAdminChat({ action: 'get_messages', conversation_id: convId });
     if (data?.messages) {
       setMessages(data.messages);
     }
     // Mark as read
-    await supabase.functions.invoke('admin-chat', {
-      body: { action: 'mark_read', conversation_id: convId },
-    });
+    await invokeAdminChat({ action: 'mark_read', conversation_id: convId });
   };
 
   useEffect(() => {
