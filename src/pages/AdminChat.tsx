@@ -263,6 +263,7 @@ const AdminChat = () => {
           ) : (
             conversations.map((conv) => {
               const hasNewActivity = (conv.unread_count ?? 0) > 0;
+              const hasOrders = (conv.order_count ?? 0) > 0;
               const isSelected = selected?.id === conv.id;
               return (
                 <button
@@ -280,10 +281,25 @@ const AdminChat = () => {
                     <span className={`text-sm truncate ${hasNewActivity ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground'}`}>
                       {conv.user_name || conv.user_email}
                     </span>
-                    {conv.blocked && <Badge variant="destructive" className="text-[10px] px-1.5">Blocked</Badge>}
-                    {hasNewActivity && !conv.blocked && (
-                      <Badge className="text-[10px] px-1.5 bg-accent text-accent-foreground">{conv.unread_count}</Badge>
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {hasOrders && (
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] px-1.5 gap-0.5 cursor-pointer hover:bg-accent transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/admin/orders?email=${encodeURIComponent(conv.user_email)}`);
+                          }}
+                        >
+                          <Package className="h-2.5 w-2.5" />
+                          {conv.order_count}
+                        </Badge>
+                      )}
+                      {conv.blocked && <Badge variant="destructive" className="text-[10px] px-1.5">Blocked</Badge>}
+                      {hasNewActivity && !conv.blocked && (
+                        <Badge className="text-[10px] px-1.5 bg-accent text-accent-foreground">{conv.unread_count}</Badge>
+                      )}
+                    </div>
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{conv.user_email}</p>
                 </button>
