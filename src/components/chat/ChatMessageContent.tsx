@@ -72,13 +72,21 @@ const ChatMessageContent = ({ message }: ChatMessageContentProps) => {
 
     return (
       <div className="space-y-2">
-        {parts.map((part, i) => {
-          if (typeof part === 'string') {
-            const trimmed = part.trim();
-            return trimmed ? <p key={i} className="whitespace-pre-wrap">{trimmed}</p> : null;
-          }
-          return <ImageWithLightbox key={i} src={part.src} />;
-        })}
+    const textParts = parts.filter((p): p is string => typeof p === 'string' && p.trim().length > 0);
+    const imageParts = parts.filter((p): p is { type: 'img'; src: string } => typeof p !== 'string');
+
+    return (
+      <div className="space-y-2">
+        {textParts.map((text, i) => (
+          <p key={`t-${i}`} className="whitespace-pre-wrap">{text.trim()}</p>
+        ))}
+        {imageParts.length > 0 && (
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            {imageParts.map((img, i) => (
+              <ImageWithLightbox key={`i-${i}`} src={img.src} />
+            ))}
+          </div>
+        )}
       </div>
     );
   }
