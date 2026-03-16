@@ -39,22 +39,48 @@ Deno.serve(async (req) => {
         .eq("blocked", false)
         .order("updated_at", { ascending: false });
 
-      const results = [];
-      for (const conv of convos || []) {
-        const { count: unreadCount } = await supabase
-          .from("chat_messages")
-          .select("*", { count: "exact", head: true })
-          .eq("conversation_id", conv.id)
-          .eq("sender_type", "customer")
-          .eq("read", false);
-
-        const { count: orderCount } = await supabase
-          .from("orders")
-          .select("*", { count: "exact", head: true })
-          .eq("customer_email", conv.user_email);
-
-        results.push({ ...conv, unread_count: unreadCount || 0, order_count: orderCount || 0 });
+      if (!convos || convos.length === 0) {
+        return new Response(JSON.stringify({ conversations: [] }), { headers: corsHeaders });
       }
+
+      // Parallel: fetch all unread counts and order counts at once
+      const convIds = convos.map(c => c.id);
+      const emails = [...new Set(convos.map(c => c.user_email))];
+
+      const [unreadRes, orderRes] = await Promise.all([
+        supabase
+          .from("chat_messages")
+          .select("conversation_id", { count: "exact" })
+          .in("conversation_id", convIds)
+          .eq("sender_type", "customer")
+          .eq("read", false),
+        supabase
+          .from("orders")
+          .select("customer_email")
+          .in("customer_email", emails),
+      ]);
+
+      // Build unread count map
+      const unreadMap: Record<string, number> = {};
+      if (unreadRes.data) {
+        for (const row of unreadRes.data) {
+          unreadMap[row.conversation_id] = (unreadMap[row.conversation_id] || 0) + 1;
+        }
+      }
+
+      // Build order count map
+      const orderMap: Record<string, number> = {};
+      if (orderRes.data) {
+        for (const row of orderRes.data) {
+          orderMap[row.customer_email] = (orderMap[row.customer_email] || 0) + 1;
+        }
+      }
+
+      const results = convos.map(conv => ({
+        ...conv,
+        unread_count: unreadMap[conv.id] || 0,
+        order_count: orderMap[conv.user_email] || 0,
+      }));
 
       return new Response(JSON.stringify({ conversations: results }), { headers: corsHeaders });
     }
