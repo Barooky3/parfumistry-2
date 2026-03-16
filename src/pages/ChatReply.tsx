@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 
-const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
+const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
 interface Message {
   id: string;
