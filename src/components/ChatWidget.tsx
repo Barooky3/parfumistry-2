@@ -56,7 +56,7 @@ export const ChatWidget = () => {
     loadConversation();
   }, [user, open]);
 
-  // Realtime subscription for new messages
+  // Realtime subscription for new messages (always active when conversationId exists)
   useEffect(() => {
     if (!conversationId) return;
 
@@ -73,11 +73,33 @@ export const ChatWidget = () => {
           if (prev.some(m => m.id === newMsg.id)) return prev;
           return [...prev, newMsg];
         });
+        // If chat is closed and message is from admin, increment unread
+        if (newMsg.sender_type === 'admin') {
+          setUnreadCount(prev => prev + 1);
+        }
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
   }, [conversationId]);
+
+  // Load conversation even when chat is closed to enable realtime notifications
+  useEffect(() => {
+    if (!user) return;
+    const loadConvoId = async () => {
+      const { data: convos } = await supabase
+        .from('chat_conversations')
+        .select('id, blocked')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (convos && convos.length > 0) {
+        setConversationId(convos[0].id);
+        setBlocked(convos[0].blocked);
+      }
+    };
+    if (!conversationId) loadConvoId();
+  }, [user]);
 
   // Auto-scroll
   useEffect(() => {
