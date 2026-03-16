@@ -38,11 +38,8 @@ interface ChatPresetsProps {
 
 const ChatPresets = ({ onSelect }: ChatPresetsProps) => {
   return (
-    <div className="px-3 py-4 space-y-3">
-      <div className="text-center space-y-1">
-        <HelpCircle className="h-8 w-8 text-muted-foreground mx-auto" />
-        <p className="text-xs text-muted-foreground">Quick answers to common questions:</p>
-      </div>
+    <div className="py-2 space-y-2">
+      <p className="text-xs text-muted-foreground text-center">Quick answers:</p>
       <div className="flex flex-wrap gap-1.5">
         {presets.map((preset, i) => (
           <button
@@ -54,9 +51,6 @@ const ChatPresets = ({ onSelect }: ChatPresetsProps) => {
           </button>
         ))}
       </div>
-      <p className="text-[10px] text-muted-foreground text-center pt-1">
-        Or type your own message below to chat directly with us!
-      </p>
     </div>
   );
 };
