@@ -1,16 +1,46 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const BUTTON_REGEX = /\[button:(.+?)\]\((.+?)\)/;
+const IMG_REGEX = /\[img:(.+?)\]/g;
 
 interface ChatMessageContentProps {
   message: string;
 }
 
+const ImageWithLightbox = ({ src }: { src: string }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <>
+      <img
+        src={src}
+        alt="Shared photo"
+        className="rounded-lg max-w-[180px] max-h-[220px] object-cover cursor-pointer hover:opacity-90 transition-opacity"
+        onClick={() => setExpanded(true)}
+        loading="lazy"
+      />
+      {expanded && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setExpanded(false)}
+        >
+          <img
+            src={src}
+            alt="Shared photo"
+            className="max-w-full max-h-full object-contain rounded-lg"
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
 const ChatMessageContent = ({ message }: ChatMessageContentProps) => {
-  const match = message.match(BUTTON_REGEX);
-  
-  if (match) {
-    const [, label, url] = match;
+  // Check for button syntax
+  const buttonMatch = message.match(BUTTON_REGEX);
+  if (buttonMatch) {
+    const [, label, url] = buttonMatch;
     return (
       <Link
         to={url}
@@ -21,7 +51,45 @@ const ChatMessageContent = ({ message }: ChatMessageContentProps) => {
     );
   }
 
-  return <>{message}</>;
+  // Check for images
+  const hasImages = IMG_REGEX.test(message);
+  if (hasImages) {
+    IMG_REGEX.lastIndex = 0; // Reset regex
+    const parts: (string | { type: 'img'; src: string })[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = IMG_REGEX.exec(message)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(message.slice(lastIndex, match.index));
+      }
+      parts.push({ type: 'img', src: match[1] });
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < message.length) {
+      parts.push(message.slice(lastIndex));
+    }
+
+    const textParts = parts.filter((p): p is string => typeof p === 'string' && p.trim().length > 0);
+    const imageParts = parts.filter((p): p is { type: 'img'; src: string } => typeof p !== 'string');
+
+    return (
+      <div className="space-y-2">
+        {textParts.map((text, i) => (
+          <p key={`t-${i}`} className="whitespace-pre-wrap">{text.trim()}</p>
+        ))}
+        {imageParts.length > 0 && (
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            {imageParts.map((img, i) => (
+              <ImageWithLightbox key={`i-${i}`} src={img.src} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return <span className="whitespace-pre-wrap">{message}</span>;
 };
 
 export default ChatMessageContent;
