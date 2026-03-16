@@ -165,24 +165,34 @@ const AdminChat = () => {
           ) : conversations.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">No conversations yet</p>
           ) : (
-            conversations.map((conv) => (
-              <button
-                key={conv.id}
-                onClick={() => setSelected(conv)}
-                className={`w-full text-left px-4 py-3 border-b border-border hover:bg-muted/50 transition-colors ${
-                  selected?.id === conv.id ? 'bg-muted' : ''
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm text-foreground truncate">{conv.user_name || conv.user_email}</span>
-                  {conv.blocked && <Badge variant="destructive" className="text-[10px] px-1.5">Blocked</Badge>}
-                  {(conv.unread_count ?? 0) > 0 && !conv.blocked && (
-                    <Badge className="text-[10px] px-1.5 bg-accent text-accent-foreground">{conv.unread_count}</Badge>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground truncate">{conv.user_email}</p>
-              </button>
-            ))
+            conversations.map((conv) => {
+              const hasNewActivity = (conv.unread_count ?? 0) > 0;
+              const isSelected = selected?.id === conv.id;
+              return (
+                <button
+                  key={conv.id}
+                  onClick={() => setSelected(conv)}
+                  className={`w-full text-left px-4 py-3 border-b border-border transition-colors ${
+                    isSelected
+                      ? 'bg-muted'
+                      : hasNewActivity
+                        ? 'bg-card hover:bg-muted/50'
+                        : 'bg-transparent opacity-50 hover:opacity-75'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm truncate ${hasNewActivity ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground'}`}>
+                      {conv.user_name || conv.user_email}
+                    </span>
+                    {conv.blocked && <Badge variant="destructive" className="text-[10px] px-1.5">Blocked</Badge>}
+                    {hasNewActivity && !conv.blocked && (
+                      <Badge className="text-[10px] px-1.5 bg-accent text-accent-foreground">{conv.unread_count}</Badge>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">{conv.user_email}</p>
+                </button>
+              );
+            })
           )}
         </div>
 
