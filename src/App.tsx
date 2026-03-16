@@ -31,6 +31,7 @@ const RevolutApp = lazy(() => import("./pages/RevolutApp"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ProofUpload = lazy(() => import("./pages/ProofUpload"));
 const EmailPreview = lazy(() => import("./pages/EmailPreview"));
+const AdminChat = lazy(() => import("./pages/AdminChat"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -79,6 +80,7 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/proof" element={<ProofUpload />} />
                 <Route path="/email-preview" element={<EmailPreview />} />
+                <Route path="/admin/chat" element={<AdminChat />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
