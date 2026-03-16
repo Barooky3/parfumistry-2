@@ -1,16 +1,14 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Send, Ban, Unlock, Trash2 } from 'lucide-react';
+import { Send, Ban, Unlock, Trash2, Package, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 import { toast } from '@/hooks/use-toast';
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
-
 const RETURN_REFUND_LINK_MSG = `[button:Return & Refund Policy](/return-policy)`;
 
 interface Conversation {
@@ -30,6 +28,15 @@ interface Message {
   read: boolean;
 }
 
+interface Order {
+  id: string;
+  order_number: number | null;
+  status: string;
+  total_amount: number;
+  created_at: string;
+  order_items: any;
+}
+
 const AdminChat = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -38,11 +45,19 @@ const AdminChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [showOrders, setShowOrders] = useState(false);
+  const [ordersLoading, setOrdersLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const selectedRef = useRef<Conversation | null>(null);
+
+  // Keep ref in sync
+  useEffect(() => { selectedRef.current = selected; }, [selected]);
 
   const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
 
-  const invokeAdminChat = async (body: Record<string, any>) => {
+  const invokeAdminChat = useCallback(async (body: Record<string, any>) => {
     let { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       const { data: refreshData } = await supabase.auth.refreshSession();
@@ -63,8 +78,9 @@ const AdminChat = () => {
     );
     if (!res.ok) return null;
     return await res.json();
-  };
+  }, []);
 
+  // Load conversations
   useEffect(() => {
     if (!isAdmin) return;
     loadConversations();
@@ -74,7 +90,17 @@ const AdminChat = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, () => {
         loadConversations();
       })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, () => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
+        // If new message is for the currently selected conversation, add it
+        const newMsg = payload.new as Message & { conversation_id: string };
+        if (selectedRef.current && newMsg.conversation_id === selectedRef.current.id) {
+          setMessages(prev => {
+            if (prev.some(m => m.id === newMsg.id)) return prev;
+            return [...prev, newMsg];
+          });
+          // Mark as read
+          invokeAdminChat({ action: 'mark_read', conversation_id: selectedRef.current.id });
+        }
         loadConversations();
       })
       .subscribe();
@@ -85,7 +111,6 @@ const AdminChat = () => {
   const loadConversations = async () => {
     const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
-      // Sort: unread first, then read at bottom
       const sorted = [...data.conversations].sort((a: Conversation, b: Conversation) => {
         const aUnread = (a.unread_count ?? 0) > 0 ? 1 : 0;
         const bUnread = (b.unread_count ?? 0) > 0 ? 1 : 0;
@@ -101,7 +126,10 @@ const AdminChat = () => {
   useEffect(() => {
     if (!selected) return;
     loadMessages(selected.id);
+    loadOrders(selected.user_email);
+    setShowOrders(false);
 
+    // Dedicated channel for this conversation's messages
     const channel = supabase
       .channel(`admin-msgs-${selected.id}`)
       .on('postgres_changes', {
@@ -126,10 +154,17 @@ const AdminChat = () => {
     if (data?.messages) {
       setMessages(data.messages);
     }
-    // Mark as read
     await invokeAdminChat({ action: 'mark_read', conversation_id: convId });
   };
 
+  const loadOrders = async (email: string) => {
+    setOrdersLoading(true);
+    const data = await invokeAdminChat({ action: 'get_orders', user_email: email });
+    setOrders(data?.orders || []);
+    setOrdersLoading(false);
+  };
+
+  // Auto-scroll on new messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -137,11 +172,43 @@ const AdminChat = () => {
   }, [messages]);
 
   const sendReply = async () => {
-    if (!input.trim() || !selected) return;
+    if (!input.trim() || !selected || sending) return;
     const text = input.trim();
     setInput('');
+    setSending(true);
 
-    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text });
+    // Optimistic update
+    const optimisticMsg: Message = {
+      id: `temp-${Date.now()}`,
+      sender_type: 'admin',
+      message: text,
+      created_at: new Date().toISOString(),
+      read: true,
+    };
+    setMessages(prev => [...prev, optimisticMsg]);
+
+    const result = await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text });
+    
+    // Replace optimistic message with real one if we got it back, or reload
+    if (result?.message_id) {
+      setMessages(prev => prev.map(m => m.id === optimisticMsg.id ? { ...m, id: result.message_id } : m));
+    }
+    setSending(false);
+  };
+
+  const sendQuickReply = async (msg: string) => {
+    if (!selected || sending) return;
+    setSending(true);
+    const optimisticMsg: Message = {
+      id: `temp-${Date.now()}`,
+      sender_type: 'admin',
+      message: msg,
+      created_at: new Date().toISOString(),
+      read: true,
+    };
+    setMessages(prev => [...prev, optimisticMsg]);
+    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: msg });
+    setSending(false);
   };
 
   const toggleBlock = async (conv: Conversation) => {
@@ -160,8 +227,17 @@ const AdminChat = () => {
     if (selected?.id === conv.id) {
       setSelected(null);
       setMessages([]);
+      setOrders([]);
     }
     loadConversations();
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'approved': return 'bg-green-500/20 text-green-400';
+      case 'rejected': return 'bg-red-500/20 text-red-400';
+      default: return 'bg-yellow-500/20 text-yellow-400';
+    }
   };
 
   if (!isAdmin) {
@@ -174,8 +250,7 @@ const AdminChat = () => {
 
   return (
     <div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[65vh] border border-border rounded-xl overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-[75vh] border border-border rounded-xl overflow-hidden">
         {/* Conversation list */}
         <div className="md:col-span-1 border-r border-border overflow-y-auto bg-card">
           {loading ? (
@@ -234,11 +309,20 @@ const AdminChat = () => {
                   <Button
                     size="sm"
                     variant="ghost"
+                    onClick={() => setShowOrders(!showOrders)}
+                    className="gap-1 text-muted-foreground"
+                  >
+                    <Package className="h-3.5 w-3.5" />
+                    Orders ({orders.length})
+                    {showOrders ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => deleteConversation(selected)}
                     className="gap-1 text-muted-foreground hover:text-destructive"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                    Delete
                   </Button>
                   <Button
                     size="sm"
@@ -252,6 +336,34 @@ const AdminChat = () => {
                 </div>
               </div>
 
+              {/* Orders panel */}
+              {showOrders && (
+                <div className="border-b border-border bg-muted/50 px-4 py-2 max-h-[200px] overflow-y-auto">
+                  {ordersLoading ? (
+                    <p className="text-xs text-muted-foreground py-2">Loading orders...</p>
+                  ) : orders.length === 0 ? (
+                    <p className="text-xs text-muted-foreground py-2">No orders found for this customer.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {orders.map((order) => (
+                        <div key={order.id} className="flex items-center justify-between bg-card rounded-lg px-3 py-2 text-xs">
+                          <div className="flex items-center gap-3">
+                            <span className="font-mono font-semibold text-foreground">#{order.order_number}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(order.status)}`}>
+                              {order.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <span>€{Number(order.total_amount).toFixed(2)}</span>
+                            <span>{new Date(order.created_at).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Messages */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
                 {messages.map((msg) => (
@@ -260,7 +372,7 @@ const AdminChat = () => {
                       msg.sender_type === 'admin'
                         ? 'bg-accent text-accent-foreground rounded-br-sm'
                         : 'bg-muted text-foreground rounded-bl-sm'
-                    }`}>
+                    } ${msg.id.startsWith('temp-') ? 'opacity-60' : ''}`}>
                       <ChatMessageContent message={msg.message} />
                     </div>
                   </div>
@@ -270,11 +382,9 @@ const AdminChat = () => {
               {/* Quick replies */}
               <div className="border-t border-border px-3 py-2 flex gap-1.5 flex-wrap">
                 <button
-                  onClick={async () => {
-                    if (!selected) return;
-                    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: RETURN_REFUND_LINK_MSG });
-                  }}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                  onClick={() => sendQuickReply(RETURN_REFUND_LINK_MSG)}
+                  disabled={sending}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
                 >
                   📋 Return & Refund Policy
                 </button>
@@ -290,7 +400,7 @@ const AdminChat = () => {
                   className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                   maxLength={2000}
                 />
-                <button onClick={sendReply} disabled={!input.trim()} className="text-accent disabled:opacity-30">
+                <button onClick={sendReply} disabled={!input.trim() || sending} className="text-accent disabled:opacity-30">
                   <Send className="h-5 w-5" />
                 </button>
               </div>

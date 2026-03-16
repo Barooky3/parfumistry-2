@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { action, conversation_id, message } = await req.json();
+    const { action, conversation_id, message, user_email } = await req.json();
 
     if (action === "list_conversations") {
       const { data: convos } = await supabase
@@ -74,19 +74,19 @@ Deno.serve(async (req) => {
     }
 
     if (action === "send_reply") {
-      await supabase.from("chat_messages").insert({
+      const { data: inserted } = await supabase.from("chat_messages").insert({
         conversation_id,
         sender_type: "admin",
         message,
         read: true,
-      });
+      }).select("id").single();
 
       await supabase
         .from("chat_conversations")
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversation_id);
 
-      return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      return new Response(JSON.stringify({ success: true, message_id: inserted?.id }), { headers: corsHeaders });
     }
 
     if (action === "block") {
@@ -108,7 +108,6 @@ Deno.serve(async (req) => {
     }
 
     if (action === "delete") {
-      // Delete all messages first, then the conversation
       await supabase
         .from("chat_messages")
         .delete()
@@ -120,6 +119,17 @@ Deno.serve(async (req) => {
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+
+    if (action === "get_orders") {
+      const { data: orders } = await supabase
+        .from("orders")
+        .select("id, order_number, status, total_amount, created_at, order_items")
+        .eq("customer_email", user_email)
+        .order("created_at", { ascending: false })
+        .limit(20);
+
+      return new Response(JSON.stringify({ orders: orders || [] }), { headers: corsHeaders });
     }
 
     return new Response(JSON.stringify({ error: "Invalid action" }), { status: 400, headers: corsHeaders });
