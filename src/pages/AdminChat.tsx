@@ -235,7 +235,7 @@ const AdminChat = () => {
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-[75vh] border border-border rounded-xl overflow-hidden">
         {/* Conversation list */}
-        <div className="md:col-span-1 border-r border-border overflow-y-auto bg-card">
+        <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto bg-card">
           {loading ? (
             <div className="flex justify-center py-8">
               <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
@@ -291,13 +291,13 @@ const AdminChat = () => {
         </div>
 
         {/* Message area */}
-        <div className="md:col-span-2 flex flex-col bg-background">
+        <div className="md:col-span-2 min-h-0 flex flex-col bg-background overflow-hidden">
           {!selected ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
               Select a conversation
             </div>
           ) : (
-            <>
+            <div className="flex-1 min-h-0 flex flex-col">
               {/* Chat header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
                 <div>
@@ -377,7 +377,7 @@ const AdminChat = () => {
               )}
 
               {/* Messages */}
-              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-2">
+              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex ${msg.sender_type === 'admin' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
@@ -428,7 +428,7 @@ const AdminChat = () => {
                   <Send className="h-5 w-5" />
                 </button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
