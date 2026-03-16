@@ -264,6 +264,22 @@ const AdminChat = () => {
                 ))}
               </div>
 
+              {/* Quick replies */}
+              <div className="border-t border-border px-3 py-2 flex gap-1.5 flex-wrap">
+                <button
+                  onClick={() => setInput(RETURN_POLICY_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                >
+                  📋 Return Policy
+                </button>
+                <button
+                  onClick={() => setInput(REFUND_POLICY_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                >
+                  💰 Refund Policy
+                </button>
+              </div>
+
               {/* Input */}
               <div className="border-t border-border px-3 py-2 flex gap-2">
                 <input
