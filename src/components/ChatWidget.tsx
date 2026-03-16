@@ -21,6 +21,7 @@ export const ChatWidget = () => {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [blocked, setBlocked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load or create conversation when user is logged in and chat opens
@@ -55,7 +56,7 @@ export const ChatWidget = () => {
     loadConversation();
   }, [user, open]);
 
-  // Realtime subscription for new messages
+  // Realtime subscription for new messages (always active when conversationId exists)
   useEffect(() => {
     if (!conversationId) return;
 
@@ -72,11 +73,33 @@ export const ChatWidget = () => {
           if (prev.some(m => m.id === newMsg.id)) return prev;
           return [...prev, newMsg];
         });
+        // If chat is closed and message is from admin, increment unread
+        if (newMsg.sender_type === 'admin') {
+          setUnreadCount(prev => prev + 1);
+        }
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
   }, [conversationId]);
+
+  // Load conversation even when chat is closed to enable realtime notifications
+  useEffect(() => {
+    if (!user) return;
+    const loadConvoId = async () => {
+      const { data: convos } = await supabase
+        .from('chat_conversations')
+        .select('id, blocked')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (convos && convos.length > 0) {
+        setConversationId(convos[0].id);
+        setBlocked(convos[0].blocked);
+      }
+    };
+    if (!conversationId) loadConvoId();
+  }, [user]);
 
   // Auto-scroll
   useEffect(() => {
@@ -136,12 +159,17 @@ export const ChatWidget = () => {
       {/* Floating button */}
       {!open && (
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => { setOpen(true); setUnreadCount(0); }}
           className="fixed bottom-5 right-5 z-50 h-14 px-5 rounded-full bg-accent text-accent-foreground shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform"
           aria-label="Open chat"
         >
           <MessageCircle className="h-6 w-6" />
           <span className="font-semibold text-sm">Chat</span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full bg-destructive text-destructive-foreground text-xs font-bold flex items-center justify-center animate-pulse">
+              {unreadCount}
+            </span>
+          )}
         </button>
       )}
 

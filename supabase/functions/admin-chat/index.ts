@@ -92,6 +92,46 @@ Deno.serve(async (req) => {
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversation_id);
 
+      // Send email notification to customer
+      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+      if (RESEND_API_KEY && user_email) {
+        const SITE_URL = "https://profparfums.lovable.app";
+        // Strip [img:...] tags for email preview
+        const cleanMessage = message.replace(/\[img:[^\]]+\]/g, '').trim();
+        const previewText = cleanMessage.length > 200 ? cleanMessage.substring(0, 200) + '...' : cleanMessage;
+        const hasImages = /\[img:/.test(message);
+
+        try {
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${RESEND_API_KEY}`,
+            },
+            body: JSON.stringify({
+              from: "ProfParfums <orders@profparfum.com>",
+              to: [user_email],
+              subject: "💬 New reply from ProfParfums Support",
+              html: `
+                <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
+                  <h2 style="color: #333; margin-bottom: 16px;">You have a new message from our support team</h2>
+                  <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 0 0 12px;">
+                    <p style="margin: 0; color: #222; font-size: 15px; white-space: pre-wrap;">${previewText}</p>
+                    ${hasImages ? '<p style="margin: 8px 0 0; color: #888; font-size: 13px;">📷 This message also includes photos — view them on our website.</p>' : ''}
+                  </div>
+                  <a href="${SITE_URL}" style="display: inline-block; background: #000; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                    View &amp; Reply
+                  </a>
+                  <p style="margin-top: 20px; color: #999; font-size: 12px;">If you didn't expect this message, you can ignore this email.</p>
+                </div>
+              `,
+            }),
+          });
+        } catch (emailErr) {
+          console.error("Failed to email customer:", emailErr);
+        }
+      }
+
       return new Response(JSON.stringify({ success: true, message_id: inserted?.id }), { headers: corsHeaders });
     }
 
