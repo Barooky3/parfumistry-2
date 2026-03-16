@@ -203,7 +203,7 @@ export const ChatWidget = () => {
           ) : (
             <div className="flex-1 min-h-0 flex flex-col">
               {/* Messages */}
-              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-2">
+              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {loading ? (
                   <div className="flex justify-center py-8">
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
