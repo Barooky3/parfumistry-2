@@ -39,11 +39,33 @@ const AdminChat = () => {
 
   const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
 
+  const invokeAdminChat = async (body: Record<string, any>) => {
+    let { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      const { data: refreshData } = await supabase.auth.refreshSession();
+      session = refreshData?.session ?? null;
+    }
+    if (!session) return null;
+
+    const res = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-chat`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    if (!res.ok) return null;
+    return await res.json();
+  };
+
   useEffect(() => {
     if (!isAdmin) return;
     loadConversations();
 
-    // Realtime for new conversations
     const channel = supabase
       .channel('admin-chat-convos')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, () => {
@@ -58,10 +80,7 @@ const AdminChat = () => {
   }, [isAdmin]);
 
   const loadConversations = async () => {
-    // Admin reads all conversations via edge function
-    const { data } = await supabase.functions.invoke('admin-chat', {
-      body: { action: 'list_conversations' },
-    });
+    const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
       setConversations(data.conversations);
     }
@@ -93,16 +112,12 @@ const AdminChat = () => {
   }, [selected?.id]);
 
   const loadMessages = async (convId: string) => {
-    const { data } = await supabase.functions.invoke('admin-chat', {
-      body: { action: 'get_messages', conversation_id: convId },
-    });
+    const data = await invokeAdminChat({ action: 'get_messages', conversation_id: convId });
     if (data?.messages) {
       setMessages(data.messages);
     }
     // Mark as read
-    await supabase.functions.invoke('admin-chat', {
-      body: { action: 'mark_read', conversation_id: convId },
-    });
+    await invokeAdminChat({ action: 'mark_read', conversation_id: convId });
   };
 
   useEffect(() => {
@@ -116,16 +131,12 @@ const AdminChat = () => {
     const text = input.trim();
     setInput('');
 
-    await supabase.functions.invoke('admin-chat', {
-      body: { action: 'send_reply', conversation_id: selected.id, message: text },
-    });
+    await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text });
   };
 
   const toggleBlock = async (conv: Conversation) => {
     const action = conv.blocked ? 'unblock' : 'block';
-    await supabase.functions.invoke('admin-chat', {
-      body: { action, conversation_id: conv.id },
-    });
+    await invokeAdminChat({ action, conversation_id: conv.id });
     toast({ title: conv.blocked ? 'User unblocked' : 'User blocked from chat' });
     loadConversations();
     if (selected?.id === conv.id) {
