@@ -24,7 +24,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const navigate = useNavigate();
   const [quantity] = useState(1);
 
-  const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
+  const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
 
   const product = id ? getProductById(id) : undefined;
