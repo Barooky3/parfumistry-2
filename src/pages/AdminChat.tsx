@@ -11,6 +11,20 @@ import { toast } from '@/hooks/use-toast';
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
 const RETURN_REFUND_LINK_MSG = `[button:Return & Refund Policy](/return-policy)`;
 
+const PROOF_IMAGES = [
+  '/images/proof/le-male-elixir.webp',
+  '/images/proof/le-male-parfum-1.webp',
+  '/images/proof/le-male-parfum-2.webp',
+  '/images/proof/ysl-y-edp.webp',
+  '/images/proof/aventus-absolu.webp',
+  '/images/proof/xerjoff-naxos-box.webp',
+  '/images/proof/xerjoff-naxos-bottle.webp',
+  '/images/proof/pdm-layton.webp',
+  '/images/proof/silver-mountain-water.webp',
+];
+
+const PROOF_MSG = `Store Policy is that we ask all customers to send photos of the perfumes they get if they want, so I can use as proof, and when you get yours I'll also ask you to send photos of yours too if you don't mind, like these ones I got recently.\n\n${PROOF_IMAGES.map(img => `[img:${img}]`).join('\n')}`;
+
 interface Conversation {
   id: string;
   user_email: string;
