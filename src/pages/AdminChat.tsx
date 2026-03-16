@@ -232,10 +232,10 @@ const AdminChat = () => {
   }
 
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-[75vh] border border-border rounded-xl overflow-hidden">
+    <div className="h-[75vh] min-h-[520px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 h-full min-h-0 border border-border rounded-xl overflow-hidden">
         {/* Conversation list */}
-        <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto bg-card">
+        <div className="md:col-span-1 min-h-0 border-r border-border overflow-y-auto overscroll-contain touch-pan-y bg-card" style={{ WebkitOverflowScrolling: 'touch' }}>
           {loading ? (
             <div className="flex justify-center py-8">
               <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
@@ -377,7 +377,7 @@ const AdminChat = () => {
               )}
 
               {/* Messages */}
-              <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto overscroll-contain px-4 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex ${msg.sender_type === 'admin' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${

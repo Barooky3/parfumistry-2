@@ -768,9 +768,11 @@ export default function AdminOrders() {
         </div>
 
         {activeTab === "chat" ? (
-          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-            <AdminChatInbox />
-          </Suspense>
+          <div className="h-[75vh] min-h-[520px]">
+            <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
+              <AdminChatInbox />
+            </Suspense>
+          </div>
         ) : activeTab === "live" ? (
           <LiveVisitorDashboard />
         ) : (
