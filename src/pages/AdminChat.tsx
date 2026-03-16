@@ -245,6 +245,17 @@ const AdminChat = () => {
     );
   }
 
+  const handleSelectConversation = (conv: Conversation) => {
+    setSelected(conv);
+    if ((conv.unread_count ?? 0) > 0) {
+      const newReadIds = new Set(readIds);
+      newReadIds.add(conv.id);
+      setReadIds(newReadIds);
+      // Re-sort so this conversation drops below unread ones
+      setConversations(prev => sortConversations(prev, newReadIds));
+    }
+  };
+
   const goBack = () => {
     setSelected(null);
     setMessages([]);
