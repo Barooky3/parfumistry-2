@@ -112,6 +112,18 @@ export const ChatWidget = () => {
   const sendMessageText = async (text: string, notify = true) => {
     if (!text.trim() || !user) return;
 
+    // If blocked, fake the message locally without saving or notifying
+    if (isBlocked) {
+      const fakeMsg: Message = {
+        id: crypto.randomUUID(),
+        sender_type: 'customer',
+        message: text,
+        created_at: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, fakeMsg]);
+      return;
+    }
+
     let convId = conversationId;
 
     if (!convId) {
