@@ -221,7 +221,7 @@ export const ChatWidget = () => {
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
                   </div>
                 ) : messages.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center mt-8">Send a message to start chatting with our team!</p>
+                  <ChatPresets onSelect={handlePresetSelect} />
                 ) : (
                   messages.map((msg) => (
                     <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
