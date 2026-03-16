@@ -38,6 +38,74 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_conversations: {
+        Row: {
+          blocked: boolean
+          created_at: string
+          id: string
+          status: string
+          updated_at: string
+          user_email: string
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          blocked?: boolean
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_email: string
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          blocked?: boolean
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_email?: string
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          message: string
+          read: boolean
+          sender_type: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean
+          sender_type?: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_otps: {
         Row: {
           code: string
