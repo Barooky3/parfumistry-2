@@ -137,12 +137,10 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    // Notify admin via edge function (fire and forget) — skip if blocked
-    if (!blocked) {
-      supabase.functions.invoke('chat-notify', {
-        body: { conversation_id: convId, message: text, user_email: user.email },
-      });
-    }
+    // Notify admin via edge function (fire and forget)
+    supabase.functions.invoke('chat-notify', {
+      body: { conversation_id: convId, message: text, user_email: user.email },
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
