@@ -227,15 +227,26 @@ const AdminChat = () => {
                   <p className="font-semibold text-sm text-foreground">{selected.user_name || selected.user_email}</p>
                   <p className="text-xs text-muted-foreground">{selected.user_email}</p>
                 </div>
-                <Button
-                  size="sm"
-                  variant={selected.blocked ? 'outline' : 'destructive'}
-                  onClick={() => toggleBlock(selected)}
-                  className="gap-1"
-                >
-                  {selected.blocked ? <Unlock className="h-3.5 w-3.5" /> : <Ban className="h-3.5 w-3.5" />}
-                  {selected.blocked ? 'Unblock' : 'Block'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteConversation(selected)}
+                    className="gap-1 text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={selected.blocked ? 'outline' : 'destructive'}
+                    onClick={() => toggleBlock(selected)}
+                    className="gap-1"
+                  >
+                    {selected.blocked ? <Unlock className="h-3.5 w-3.5" /> : <Ban className="h-3.5 w-3.5" />}
+                    {selected.blocked ? 'Unblock' : 'Block'}
+                  </Button>
+                </div>
               </div>
 
               {/* Messages */}

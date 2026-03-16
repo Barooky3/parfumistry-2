@@ -38,7 +38,6 @@ Deno.serve(async (req) => {
         .select("*")
         .order("updated_at", { ascending: false });
 
-      // Get unread counts
       const results = [];
       for (const conv of convos || []) {
         const { count } = await supabase
@@ -82,7 +81,6 @@ Deno.serve(async (req) => {
         read: true,
       });
 
-      // Update conversation timestamp
       await supabase
         .from("chat_conversations")
         .update({ updated_at: new Date().toISOString() })
@@ -104,6 +102,21 @@ Deno.serve(async (req) => {
       await supabase
         .from("chat_conversations")
         .update({ blocked: false })
+        .eq("id", conversation_id);
+
+      return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+
+    if (action === "delete") {
+      // Delete all messages first, then the conversation
+      await supabase
+        .from("chat_messages")
+        .delete()
+        .eq("conversation_id", conversation_id);
+
+      await supabase
+        .from("chat_conversations")
+        .delete()
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
