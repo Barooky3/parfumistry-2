@@ -107,19 +107,6 @@ const AdminChat = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, () => {
         loadConversations();
       })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
-        // If new message is for the currently selected conversation, add it
-        const newMsg = payload.new as Message & { conversation_id: string };
-        if (selectedRef.current && newMsg.conversation_id === selectedRef.current.id) {
-          setMessages(prev => {
-            if (prev.some(m => m.id === newMsg.id)) return prev;
-            return [...prev, newMsg];
-          });
-          // Mark as read
-          invokeAdminChat({ action: 'mark_read', conversation_id: selectedRef.current.id });
-        }
-        loadConversations();
-      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
@@ -139,31 +126,21 @@ const AdminChat = () => {
     setLoading(false);
   };
 
-  // Load messages when selecting conversation
+  // Load messages when selecting conversation + poll for new messages
   useEffect(() => {
     if (!selected) return;
     loadMessages(selected.id);
     loadOrders(selected.user_email);
     setShowOrders(false);
 
-    // Dedicated channel for this conversation's messages
-    const channel = supabase
-      .channel(`admin-msgs-${selected.id}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'chat_messages',
-        filter: `conversation_id=eq.${selected.id}`,
-      }, (payload) => {
-        const newMsg = payload.new as Message;
-        setMessages(prev => {
-          if (prev.some(m => m.id === newMsg.id)) return prev;
-          return [...prev, newMsg];
-        });
-      })
-      .subscribe();
+    // Poll every 3 seconds for new messages (realtime RLS blocks admin from seeing customer messages via subscription)
+    const interval = setInterval(() => {
+      if (selectedRef.current?.id === selected.id) {
+        loadMessages(selected.id);
+      }
+    }, 3000);
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { clearInterval(interval); };
   }, [selected?.id]);
 
   const loadMessages = async (convId: string) => {
@@ -331,11 +308,20 @@ const AdminChat = () => {
                   <Button
                     size="sm"
                     variant="ghost"
+                    onClick={() => navigate(`/admin/orders?email=${encodeURIComponent(selected.user_email)}`)}
+                    className="gap-1 text-muted-foreground"
+                  >
+                    <Package className="h-3.5 w-3.5" />
+                    All Orders
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => setShowOrders(!showOrders)}
                     className="gap-1 text-muted-foreground"
                   >
                     <Package className="h-3.5 w-3.5" />
-                    Orders ({orders.length})
+                    Quick View ({orders.length})
                     {showOrders ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                   </Button>
                   <Button
@@ -368,7 +354,11 @@ const AdminChat = () => {
                   ) : (
                     <div className="space-y-2">
                       {orders.map((order) => (
-                        <div key={order.id} className="flex items-center justify-between bg-card rounded-lg px-3 py-2 text-xs">
+                        <button
+                          key={order.id}
+                          onClick={() => navigate(`/admin/orders?search=${order.order_number}`)}
+                          className="w-full flex items-center justify-between bg-card rounded-lg px-3 py-2 text-xs hover:bg-muted transition-colors cursor-pointer"
+                        >
                           <div className="flex items-center gap-3">
                             <span className="font-mono font-semibold text-foreground">#{order.order_number}</span>
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(order.status)}`}>
@@ -379,7 +369,7 @@ const AdminChat = () => {
                             <span>€{Number(order.total_amount).toFixed(2)}</span>
                             <span>{new Date(order.created_at).toLocaleDateString()}</span>
                           </div>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   )}
