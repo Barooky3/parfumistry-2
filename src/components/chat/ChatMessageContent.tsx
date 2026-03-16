@@ -90,6 +90,39 @@ const ChatMessageContent = ({ message }: ChatMessageContentProps) => {
     );
   }
 
+  // Check for inline links [link:/path:Label]
+  const hasLinks = LINK_REGEX.test(message);
+  if (hasLinks) {
+    LINK_REGEX.lastIndex = 0;
+    const parts: (string | { type: 'link'; url: string; label: string })[] = [];
+    let lastIndex = 0;
+    let match;
+    while ((match = LINK_REGEX.exec(message)) !== null) {
+      if (match.index > lastIndex) parts.push(message.slice(lastIndex, match.index));
+      parts.push({ type: 'link', url: match[1], label: match[2] });
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < message.length) parts.push(message.slice(lastIndex));
+
+    return (
+      <div className="space-y-2">
+        {parts.map((p, i) =>
+          typeof p === 'string' ? (
+            <span key={i} className="whitespace-pre-wrap">{p}</span>
+          ) : (
+            <Link
+              key={i}
+              to={p.url}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent text-accent-foreground font-medium text-xs hover:opacity-80 transition-opacity mt-1"
+            >
+              📋 {p.label}
+            </Link>
+          )
+        )}
+      </div>
+    );
+  }
+
   return <span className="whitespace-pre-wrap">{message}</span>;
 };
 
