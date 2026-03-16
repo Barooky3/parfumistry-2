@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Send, Ban, Unlock, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ChatMessageContent from '@/components/chat/ChatMessageContent';
 import { toast } from '@/hooks/use-toast';
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
