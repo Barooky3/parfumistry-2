@@ -176,7 +176,7 @@ export const ChatWidget = () => {
 
       {/* Chat window */}
       {open && (
-        <div className="fixed bottom-5 right-5 z-50 w-[340px] sm:w-[380px] h-[480px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed bottom-5 right-5 z-50 w-[340px] sm:w-[380px] h-[min(480px,calc(100dvh-40px))] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden overscroll-contain">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 bg-accent text-accent-foreground">
             <span className="font-semibold text-sm">Live Support</span>
