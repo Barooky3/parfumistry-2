@@ -44,7 +44,7 @@ const ChatMessageContent = ({ message }: ChatMessageContentProps) => {
     return (
       <Link
         to={url}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/20 text-accent font-medium text-xs hover:bg-accent/30 transition-colors underline-offset-2 hover:underline"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/20 text-primary-foreground font-medium text-xs hover:bg-primary/30 transition-colors underline underline-offset-2"
       >
         📋 {label}
       </Link>
