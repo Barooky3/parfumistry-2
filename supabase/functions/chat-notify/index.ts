@@ -4,6 +4,7 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAIL = "ewhz3384@gmail.com";
+const SITE_URL = "https://profparfums.lovable.app";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -18,6 +19,9 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "No email key" }), { status: 500, headers: corsHeaders });
     }
 
+    const replyUrl = `${SITE_URL}/admin/chat-reply?id=${conversation_id}&email=${encodeURIComponent(user_email)}`;
+    const chatUrl = `${SITE_URL}/admin/orders`;
+
     const emailRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -30,12 +34,17 @@ Deno.serve(async (req) => {
         subject: `💬 New Chat Message from ${user_email}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
-            <h2 style="color: #333;">New Live Chat Message</h2>
-            <p><strong>From:</strong> ${user_email}</p>
-            <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 16px 0;">
-              <p style="margin: 0;">${message}</p>
+            <h2 style="color: #333; margin-bottom: 4px;">New Live Chat Message</h2>
+            <p style="margin: 0 0 16px; color: #666;"><strong>From:</strong> ${user_email}</p>
+            <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 0 0 20px;">
+              <p style="margin: 0; color: #222; font-size: 15px;">${message}</p>
             </div>
-            <p style="color: #888; font-size: 13px;">Reply from your admin chat inbox.</p>
+            <a href="${replyUrl}" style="display: inline-block; background: #000; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+              Reply Now
+            </a>
+            <p style="margin-top: 16px;">
+              <a href="${chatUrl}" style="color: #666; font-size: 13px; text-decoration: underline;">Open full chat inbox</a>
+            </p>
           </div>
         `,
       }),

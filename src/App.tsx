@@ -32,6 +32,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ProofUpload = lazy(() => import("./pages/ProofUpload"));
 const EmailPreview = lazy(() => import("./pages/EmailPreview"));
 const AdminChat = lazy(() => import("./pages/AdminChat"));
+const ChatReply = lazy(() => import("./pages/ChatReply"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -81,6 +82,7 @@ const App = () => (
                 <Route path="/proof" element={<ProofUpload />} />
                 <Route path="/email-preview" element={<EmailPreview />} />
                 <Route path="/admin/chat" element={<AdminChat />} />
+                <Route path="/admin/chat-reply" element={<ChatReply />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
