@@ -22,6 +22,7 @@ export const ChatWidget = () => {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load or create conversation when user is logged in and chat opens
