@@ -168,25 +168,39 @@ export const ChatWidget = () => {
     if (!user) return;
 
     if (isBlocked) {
-      // Fake both question and answer locally
       const fakeQ: Message = { id: crypto.randomUUID(), sender_type: 'customer', message: question, created_at: new Date().toISOString() };
-      const fakeA: Message = { id: crypto.randomUUID(), sender_type: 'admin', message: answer, created_at: new Date(Date.now() + 100).toISOString() };
-      setMessages(prev => [...prev, fakeQ, fakeA]);
+      setMessages(prev => [...prev, fakeQ]);
+      setTimeout(() => {
+        const fakeA: Message = { id: crypto.randomUUID(), sender_type: 'admin', message: answer, created_at: new Date().toISOString() };
+        setMessages(prev => [...prev, fakeA]);
+      }, 1500);
       return;
     }
 
-    // Send question without email notification, get back the convId
+    // Add question to local state immediately so it appears first
+    const fakeQuestion: Message = {
+      id: crypto.randomUUID(),
+      sender_type: 'customer',
+      message: question,
+      created_at: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, fakeQuestion]);
+
+    // Send question to DB without notification (don't await for UI speed)
     const convId = await sendMessageText(question, false);
-    if (convId) {
-      // Add answer directly to local state (RLS blocks client-side admin inserts)
-      const fakeAnswer: Message = {
-        id: crypto.randomUUID(),
-        sender_type: 'admin',
-        message: answer,
-        created_at: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, fakeAnswer]);
-    }
+
+    // Delay the answer by 1.5s so it feels natural
+    setTimeout(() => {
+      if (convId) {
+        const fakeAnswer: Message = {
+          id: crypto.randomUUID(),
+          sender_type: 'admin',
+          message: answer,
+          created_at: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, fakeAnswer]);
+      }
+    }, 1500);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
