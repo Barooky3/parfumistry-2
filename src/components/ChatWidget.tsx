@@ -178,11 +178,14 @@ export const ChatWidget = () => {
     // Send question without email notification, get back the convId
     const convId = await sendMessageText(question, false);
     if (convId) {
-      await supabase.from('chat_messages').insert({
-        conversation_id: convId,
+      // Add answer directly to local state (RLS blocks client-side admin inserts)
+      const fakeAnswer: Message = {
+        id: crypto.randomUUID(),
         sender_type: 'admin',
         message: answer,
-      });
+        created_at: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, fakeAnswer]);
     }
   };
 
