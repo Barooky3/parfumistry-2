@@ -45,7 +45,7 @@ serve(async (req) => {
       }
 
       // Skip tracking for admin accounts
-      const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
+      const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
       if (userEmail && ADMIN_EMAILS.includes(userEmail)) {
         return new Response(JSON.stringify({ ok: true, skipped: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
