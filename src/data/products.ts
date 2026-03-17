@@ -49,7 +49,7 @@ export const products: Product[] = [
     originalPrice: 191.96,
     category: 'bundle',
     description: '"Young Playboy" Bundle – 5 legendary fragrances in one package. Looking for a set that delivers fresh, bold, and versatile scents.',
-    image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-young-playboy-9880709.png?v=1768068548&width=400',
     affiliateUrl: '/product/young-playboy-bundle',
     inStock: true,
     featured: true,
