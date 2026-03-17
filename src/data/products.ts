@@ -1086,7 +1086,7 @@ export const products: Product[] = [
       base: ['Musk', 'Cedarwood'],
     },
     accentColor: '#87CEEB',
-    image: 'https://profparfums.store/cdn/shop/files/image_6261aa49-3221-4a96-91e9-c8d120107fc0.png?v=1768493348&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/image_6261aa49-3221-4a96-91e9-c8d120107fc0.png?v=1768493348&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
