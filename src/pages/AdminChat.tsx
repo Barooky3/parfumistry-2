@@ -529,7 +529,11 @@ const AdminChat = () => {
               </div>
 
               {/* Input */}
-              <div className="border-t border-border px-2 py-2 flex gap-2 flex-shrink-0 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+              <div className="border-t border-border px-2 py-2 flex gap-2 items-end flex-shrink-0 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+                <div className="flex gap-0.5 self-end pb-1">
+                  <button onClick={() => setInput(prev => prev + '🤓')} className="text-lg hover:scale-110 transition-transform" title="Nerd">🤓</button>
+                  <button onClick={() => setInput(prev => prev + '👍')} className="text-lg hover:scale-110 transition-transform" title="Thumbs up">👍</button>
+                </div>
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
