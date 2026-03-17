@@ -156,7 +156,7 @@ export const products: Product[] = [
       base: ['Praline', 'Musk', 'Ambroxan'],
     },
     accentColor: '#D4A76A',
-    image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-althair-7480525.png?v=1768068548&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-althair-7480525.png?v=1768068548&width=400',
     affiliateUrl: '/product/althair',
     inStock: true,
     featured: true,
