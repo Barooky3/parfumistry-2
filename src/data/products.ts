@@ -100,9 +100,9 @@ export const products: Product[] = [
     description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion.',
     image: '',
     bundleImages: [
-      'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=800',
-      'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800',
-      'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800',
+      'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=400',
+      'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=400',
+      'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=400',
     ],
     affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
