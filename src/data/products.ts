@@ -717,7 +717,7 @@ export const products: Product[] = [
       base: ['Tonka Bean', 'Sandalwood', 'Amber'],
     },
     accentColor: '#003B5C',
-    image: 'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
