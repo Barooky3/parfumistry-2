@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ProductCard } from '@/components/product';
 import { getBestsellers } from '@/data/products';
-import { BrandNavigation, BundleSection, FAQSection } from '@/components/home';
+import { BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
 import logo from '@/assets/logo.png';
+
+// Lazy-load BrandNavigation since it uses framer-motion eagerly
+const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').then(m => ({ default: m.BrandNavigation })));
 
 const Index = () => {
   const bestsellers = getBestsellers();
@@ -22,15 +24,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Centered Logo with Fade */}
+      {/* Hero Section - CSS animations instead of framer-motion to reduce main-thread blocking */}
       <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black" style={{ containIntrinsicSize: '0 100vh', contentVisibility: 'visible' }}>
         {/* Background Image with blur */}
-        <motion.div 
-          className="absolute inset-0 overflow-hidden"
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.4 }}
-          transition={{ duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
+        <div className="absolute inset-0 overflow-hidden hero-bg-animate">
           <img
             src={heroImage}
             alt=""
@@ -40,7 +37,7 @@ const Index = () => {
             height={1080}
             className="w-full h-full object-cover object-center blur-[2px]"
           />
-        </motion.div>
+        </div>
         
         {/* Radial vignette fade - dark edges, lighter center */}
         <div 
@@ -54,50 +51,21 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/80" />
         
         <div className="container relative z-10 text-center">
-          <motion.div 
-            className="max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-          >
+          <div className="max-w-2xl mx-auto hero-content-animate">
             {/* Centered Logo - Main Focus */}
-            <motion.div
-              className="relative -mt-4"
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
-            >
+            <div className="relative -mt-4 hero-logo-animate">
               {/* Animated pulsing glow behind logo */}
-              <motion.div 
-                className="absolute -inset-8 blur-[100px] opacity-50"
+              <div 
+                className="absolute -inset-8 blur-[100px] hero-glow-pulse"
                 style={{
                   background: 'radial-gradient(circle at 50% 50%, hsl(345 60% 40% / 0.8), hsl(345 40% 25% / 0.4) 50%, transparent 75%)'
                 }}
-                animate={{ 
-                  opacity: [0.4, 0.7, 0.4],
-                  scale: [0.95, 1.1, 0.95],
-                }}
-                transition={{ 
-                  duration: 4, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
               />
               {/* Secondary outer glow ring */}
-              <motion.div 
-                className="absolute -inset-24 blur-[150px] opacity-30"
+              <div 
+                className="absolute -inset-24 blur-[150px] hero-glow-pulse-secondary"
                 style={{
                   background: 'radial-gradient(circle at 50% 50%, hsl(345 50% 50% / 0.6), transparent 60%)'
-                }}
-                animate={{ 
-                  opacity: [0.2, 0.45, 0.2],
-                  scale: [1, 1.15, 1],
-                }}
-                transition={{ 
-                  duration: 5, 
-                  repeat: Infinity, 
-                  ease: "easeInOut",
-                  delay: 1
                 }}
               />
               <img 
@@ -107,24 +75,16 @@ const Index = () => {
                 height={1024}
                 className="h-auto w-[480px] md:w-[620px] lg:w-[800px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
-            </motion.div>
+            </div>
             
-            <motion.p 
-              className="text-sm md:text-base text-white/70 mb-6 max-w-md mx-auto leading-relaxed -mt-2"
+            <p 
+              className="text-sm md:text-base text-white/70 mb-6 max-w-md mx-auto leading-relaxed -mt-2 hero-text-animate"
               style={{ minHeight: '1.5em' }}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.9 }}
             >
               Premium fragrances. Cheap shipping. Unmatched prices.
-            </motion.p>
+            </p>
             
-            <motion.div 
-              className="flex flex-col sm:flex-row items-center justify-center gap-3"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1 }}
-            >
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 hero-buttons-animate">
               <Button 
                 size="lg" 
                 className="h-12 px-10 text-[11px] font-medium tracking-[0.15em] uppercase bg-accent text-accent-foreground hover:bg-accent/90 rounded-none active:scale-[0.98] transition-all"
@@ -145,37 +105,29 @@ const Index = () => {
                   {t('hero.forHer')}
                 </Link>
               </Button>
-            </motion.div>
+            </div>
             
             {/* Trust indicators */}
-            <motion.div 
-              className="flex flex-wrap items-center justify-center gap-8 mt-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.2 }}
-            >
+            <div className="flex flex-wrap items-center justify-center gap-8 mt-8 hero-trust-animate">
               {features.map((feature, index) => (
                 <span key={index} className="text-[10px] tracking-[0.15em] text-white/50 font-light uppercase">
                   {feature.label}
                 </span>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
         
         {/* Scroll indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1.5 }}
-        >
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hero-scroll-animate">
           <div className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent" />
-        </motion.div>
+        </div>
       </section>
 
       {/* Brand Navigation */}
-      <BrandNavigation />
+      <Suspense fallback={null}>
+        <BrandNavigation />
+      </Suspense>
 
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
