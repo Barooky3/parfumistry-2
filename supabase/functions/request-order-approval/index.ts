@@ -9,6 +9,24 @@ const corsHeaders = {
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
+const VALID_DISCOUNT_CODES: Record<string, number> = {
+  'professor15': 15,
+  'parfum10': 10,
+  'parfumz20': 20,
+  'parfumo30': 30,
+  'parfuma90': 90,
+  'parfumz50': 50,
+};
+
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 interface OrderItem {
   name: string;
   brand: string;
