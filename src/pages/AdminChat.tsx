@@ -494,7 +494,9 @@ const AdminChat = () => {
                         </div>
                       </div>
                       {isAdmin && isLastAdminMsg && isSeen && (
-                        <p className="text-[10px] text-muted-foreground text-right mt-0.5 pr-1">Seen</p>
+                        <p className="text-[10px] text-muted-foreground text-right mt-0.5 pr-1">
+                          ✓ Seen {selected.customer_last_seen_at ? new Date(selected.customer_last_seen_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
+                        </p>
                       )}
                     </div>
                   );
