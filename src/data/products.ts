@@ -1285,7 +1285,7 @@ export const products: Product[] = [
       base: ['Amberwood'],
     },
     accentColor: '#B8860B',
-    image: 'https://profparfums.store/cdn/shop/files/product_2_matched_1.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/product_2_matched_1.png?v=1768068488&width=400',
     affiliateUrl: '/product/the-most-wanted-edp-intense',
     inStock: true,
     variants: [
