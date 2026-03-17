@@ -7,7 +7,7 @@ import { ProductCard } from '@/components/product';
 import { getBestsellers } from '@/data/products';
 import { BrandNavigation, BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
-import heroImage from '@/assets/hero-perfumes.webp';
+const heroImage = '/images/hero-perfumes.webp';
 import logo from '@/assets/logo.png';
 
 const Index = () => {
