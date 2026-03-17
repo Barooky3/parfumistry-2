@@ -947,7 +947,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Cedar', 'Musk'],
     },
     accentColor: '#2C2C2C',
-    image: 'https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/873128790811?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
