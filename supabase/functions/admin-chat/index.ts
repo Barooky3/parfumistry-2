@@ -37,6 +37,7 @@ Deno.serve(async (req) => {
         .from("chat_conversations")
         .select("*")
         .eq("blocked", false)
+        .eq("hidden_from_admin", false)
         .order("updated_at", { ascending: false });
 
       if (!convos || convos.length === 0) {
@@ -197,14 +198,10 @@ Deno.serve(async (req) => {
     }
 
     if (action === "delete") {
-      await supabase
-        .from("chat_messages")
-        .delete()
-        .eq("conversation_id", conversation_id);
-
+      // Soft-delete: just hide from admin, preserve all history
       await supabase
         .from("chat_conversations")
-        .delete()
+        .update({ hidden_from_admin: true })
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });

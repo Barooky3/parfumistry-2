@@ -125,25 +125,18 @@ export const ChatWidget = () => {
         }
       })
       .on('postgres_changes', {
-        event: 'DELETE',
+        event: 'UPDATE',
         schema: 'public',
         table: 'chat_conversations',
         filter: `id=eq.${conversationId}`,
-      }, () => {
-        // Admin deleted this conversation — reset local state
-        setConversationId(null);
-        setMessages([]);
-        loadedRef.current = false;
-      })
-      .on('postgres_changes', {
-        event: 'DELETE',
-        schema: 'public',
-        table: 'chat_messages',
-        filter: `conversation_id=eq.${conversationId}`,
       }, (payload) => {
-        const deletedId = (payload.old as any)?.id;
-        if (deletedId) {
-          setMessages(prev => prev.filter(m => m.id !== deletedId));
+        const updated = payload.new as any;
+        if (updated.blocked) {
+          // Admin blocked — clear everything
+          setIsBlocked(true);
+          setMessages([]);
+          setConversationId(null);
+          loadedRef.current = false;
         }
       })
       .subscribe();
@@ -223,26 +216,8 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    // If conversation was deleted by admin, create a fresh one and retry
     if (msgError) {
-      const { data: freshConvo } = await supabase
-        .from('chat_conversations')
-        .insert({
-          user_id: user.id,
-          user_email: user.email || '',
-          user_name: user.user_metadata?.full_name || user.email || '',
-        })
-        .select()
-        .single();
-      if (freshConvo) {
-        convId = freshConvo.id;
-        setConversationId(convId);
-        await supabase.from('chat_messages').insert({
-          conversation_id: convId,
-          sender_type: 'customer',
-          message: text,
-        });
-      }
+      console.error('Failed to send message:', msgError);
     }
 
     await supabase
