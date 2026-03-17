@@ -201,7 +201,7 @@ export const products: Product[] = [
       base: ['Amber', 'White Musk'],
     },
     accentColor: '#C9A050',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-aoud-vanille-5716076.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-aoud-vanille-5716076.png?v=1768068487&width=400',
     affiliateUrl: '/product/aoud-vanille',
     inStock: true,
     variants: [
