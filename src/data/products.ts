@@ -514,7 +514,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Cedar', 'Sandalwood', 'Patchouli'],
     },
     accentColor: '#1E90FF',
-    image: 'https://profparfums.store/cdn/shop/files/versace-eros-2404971.png?v=1768068489&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/versace-eros-2404971.png?v=1768068489&width=400',
     affiliateUrl: '/product/eros-parfum',
     inStock: false,
     variants: [
