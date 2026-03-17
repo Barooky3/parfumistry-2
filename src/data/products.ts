@@ -763,7 +763,7 @@ export const products: Product[] = [
       base: ['Tobacco Leaf', 'Patchouli', 'Vetiver'],
     },
     accentColor: '#E8734A',
-    image: 'https://profparfums.store/cdn/shop/files/valentino.png?v=1768493347&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/valentino.png?v=1768493347&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
