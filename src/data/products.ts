@@ -1329,7 +1329,7 @@ export const products: Product[] = [
       base: ['Amber', 'Sandalwood', 'Musk'],
     },
     accentColor: '#6B3A2A',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-xplicit-vanilla-7508759.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-xplicit-vanilla-7508759.png?v=1768068488&width=400',
     affiliateUrl: '/product/xplicit-vanilla',
     inStock: true,
     variants: [
