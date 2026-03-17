@@ -125,25 +125,18 @@ export const ChatWidget = () => {
         }
       })
       .on('postgres_changes', {
-        event: 'DELETE',
+        event: 'UPDATE',
         schema: 'public',
         table: 'chat_conversations',
         filter: `id=eq.${conversationId}`,
-      }, () => {
-        // Admin deleted this conversation — reset local state
-        setConversationId(null);
-        setMessages([]);
-        loadedRef.current = false;
-      })
-      .on('postgres_changes', {
-        event: 'DELETE',
-        schema: 'public',
-        table: 'chat_messages',
-        filter: `conversation_id=eq.${conversationId}`,
       }, (payload) => {
-        const deletedId = (payload.old as any)?.id;
-        if (deletedId) {
-          setMessages(prev => prev.filter(m => m.id !== deletedId));
+        const updated = payload.new as any;
+        if (updated.blocked) {
+          // Admin blocked — clear everything
+          setIsBlocked(true);
+          setMessages([]);
+          setConversationId(null);
+          loadedRef.current = false;
         }
       })
       .subscribe();
