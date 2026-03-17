@@ -186,10 +186,19 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             {product.category === 'men' ? t('product.forHim') : product.category === 'women' ? t('product.forHer') : product.category === 'bundle' ? t('product.bundle') : t('product.unisex')}
           </span>
           
+          {/* Hot Deal Fire Badge */}
+          {product.hotDeal && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[85%] z-30 pointer-events-none">
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-destructive/20 blur-xl scale-150" />
+                <Flame size={40} className="text-destructive drop-shadow-[0_0_12px_hsl(var(--destructive)/0.7)] animate-pulse" strokeWidth={2.5} />
+              </div>
+            </div>
+          )}
+
           {/* Discount Badge */}
           {hasDiscount && (
-            <span className="absolute top-2 right-2 bg-accent text-accent-foreground text-[9px] font-semibold px-1.5 py-0.5 flex items-center gap-0.5">
-              {product.hotDeal && <Flame size={10} className="text-accent-foreground" />}
+            <span className="absolute top-2 right-2 bg-accent text-accent-foreground text-[9px] font-semibold px-1.5 py-0.5">
               -{discountPercent}%
             </span>
           )}
