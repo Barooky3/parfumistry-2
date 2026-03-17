@@ -1307,7 +1307,7 @@ export const products: Product[] = [
       base: ['Tonka Bean', 'Vanilla', 'Amber'],
     },
     accentColor: '#8B4513',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-tonka-cola-5797937.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-tonka-cola-5797937.png?v=1768068488&width=400',
     affiliateUrl: '/product/tonka-cola',
     inStock: true,
     variants: [
