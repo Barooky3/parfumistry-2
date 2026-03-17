@@ -86,13 +86,23 @@ Deno.serve(async (req) => {
     }
 
     if (action === "get_messages") {
-      const { data: msgs } = await supabase
-        .from("chat_messages")
-        .select("*")
-        .eq("conversation_id", conversation_id)
-        .order("created_at", { ascending: true });
+      const [msgsRes, convoRes] = await Promise.all([
+        supabase
+          .from("chat_messages")
+          .select("*")
+          .eq("conversation_id", conversation_id)
+          .order("created_at", { ascending: true }),
+        supabase
+          .from("chat_conversations")
+          .select("customer_last_seen_at")
+          .eq("id", conversation_id)
+          .single(),
+      ]);
 
-      return new Response(JSON.stringify({ messages: msgs || [] }), { headers: corsHeaders });
+      return new Response(JSON.stringify({
+        messages: msgsRes.data || [],
+        customer_last_seen_at: convoRes.data?.customer_last_seen_at || null,
+      }), { headers: corsHeaders });
     }
 
     if (action === "mark_read") {

@@ -220,6 +220,10 @@ const AdminChat = () => {
     if (data?.messages) {
       setMessages(data.messages);
     }
+    // Update customer_last_seen_at from fresh data
+    if (data?.customer_last_seen_at !== undefined) {
+      setSelected(prev => prev && prev.id === convId ? { ...prev, customer_last_seen_at: data.customer_last_seen_at } : prev);
+    }
   };
 
   const loadOrders = async (email: string) => {
