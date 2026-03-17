@@ -1063,7 +1063,7 @@ export const products: Product[] = [
       base: ['Tobacco', 'Tonka Bean', 'Vanilla'],
     },
     accentColor: '#C19A5B',
-    image: 'https://profparfums.store/cdn/shop/files/xerjoff-naxos-3352432.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/xerjoff-naxos-3352432.png?v=1768068487&width=400',
     affiliateUrl: '/product/naxos',
     inStock: true,
     featured: true,
