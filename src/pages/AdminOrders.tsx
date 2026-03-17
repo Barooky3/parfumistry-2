@@ -214,6 +214,7 @@ export default function AdminOrders() {
     if (ADMIN_EMAILS.includes(user?.email || "")) {
       fetchOrders(true);
       fetchBannedUsers();
+      fetchBlockedUsers();
     }
   }, [user]);
 
