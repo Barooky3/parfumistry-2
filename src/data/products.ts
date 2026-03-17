@@ -1130,7 +1130,7 @@ export const products: Product[] = [
       base: ['Tobacco', 'Vanilla', 'Oud'],
     },
     accentColor: '#B22222',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-red-tobacco-3937206.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-red-tobacco-3937206.png?v=1768068488&width=400',
     affiliateUrl: '/product/red-tobacco',
     inStock: true,
     variants: [
