@@ -43,6 +43,21 @@ serve(async (req) => {
       throw new Error("Email and name are required");
     }
 
+    // Input validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) throw new Error("Invalid email format");
+    if (String(name).length > 100) throw new Error("Name too long");
+
+    function escapeHtml(text: string): string {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    const safeName = escapeHtml(String(name));
     const code = String(Math.floor(100000 + Math.random() * 900000));
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
