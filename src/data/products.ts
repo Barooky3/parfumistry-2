@@ -381,7 +381,7 @@ export const products: Product[] = [
       base: ['Cedar', 'White Musk'],
     },
     accentColor: '#B8860B',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-cedrat-boise-8376726.png?v=1768068547&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-cedrat-boise-8376726.png?v=1768068547&width=400',
     affiliateUrl: '/product/cedrat-boise',
     inStock: false,
     variants: [
