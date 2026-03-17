@@ -693,7 +693,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Amber', 'Tonka Bean', 'Suede'],
     },
     accentColor: '#C0392B',
-    image: 'https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=400',
     affiliateUrl: '/product/stronger-with-you-intensely',
     inStock: true,
     featured: true,
