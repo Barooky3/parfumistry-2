@@ -971,7 +971,7 @@ export const products: Product[] = [
       base: ['Patchouli', 'White Musk', 'Cashmeran'],
     },
     accentColor: '#D4548E',
-    image: 'https://profparfums.store/cdn/shop/files/yves-saint-laurent-mon-paris-7356496.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/yves-saint-laurent-mon-paris-7356496.png?v=1768068487&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/762497810755?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
