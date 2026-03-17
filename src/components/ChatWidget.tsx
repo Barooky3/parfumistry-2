@@ -33,17 +33,26 @@ export const ChatWidget = () => {
 
     const loadConversation = async () => {
       setLoading(true);
+      // Fetch ALL conversations to check if any are blocked
       const { data: convos } = await supabase
         .from('chat_conversations')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1);
+        .order('created_at', { ascending: false });
 
       if (convos && convos.length > 0) {
+        // If ANY conversation is blocked, the user is blocked
+        const anyBlocked = convos.some(c => c.blocked === true);
+        if (anyBlocked) {
+          setIsBlocked(true);
+          loadedRef.current = true;
+          setLoading(false);
+          return;
+        }
+
         const convo = convos[0];
         setConversationId(convo.id);
-        setIsBlocked(convo.blocked === true);
+        setIsBlocked(false);
         const { data: msgs } = await supabase
           .from('chat_messages')
           .select('*')
