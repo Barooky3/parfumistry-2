@@ -140,21 +140,48 @@ const AdminChat = () => {
     setLoading(false);
   };
 
-  // Load messages when selecting conversation + poll for new messages
+  // Load messages when selecting conversation + realtime + poll backup
   useEffect(() => {
     if (!selected) return;
     loadMessages(selected.id);
     loadOrders(selected.user_email);
     setShowOrders(false);
 
-    // Poll every 5 seconds for new messages
+    // Realtime subscription for instant message delivery
+    const channel = supabase
+      .channel(`admin-msgs-${selected.id}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'chat_messages',
+        filter: `conversation_id=eq.${selected.id}`,
+      }, (payload) => {
+        const newMsg = payload.new as Message;
+        setMessages(prev => {
+          if (prev.some(m => m.id === newMsg.id)) return prev;
+          // Replace optimistic temp messages
+          const tempIdx = prev.findIndex(m => m.id.startsWith('temp-') && m.message === newMsg.message);
+          if (tempIdx !== -1) {
+            const updated = [...prev];
+            updated[tempIdx] = newMsg;
+            return updated;
+          }
+          return [...prev, newMsg];
+        });
+      })
+      .subscribe();
+
+    // Backup poll every 10s
     const interval = setInterval(() => {
       if (selectedRef.current?.id === selected.id) {
         loadMessages(selected.id);
       }
-    }, 5000);
+    }, 10000);
 
-    return () => { clearInterval(interval); };
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
   }, [selected?.id]);
 
   const loadMessages = async (convId: string) => {

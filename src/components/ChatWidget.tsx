@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
-import ChatPresets from '@/components/chat/ChatPresets';
 
 interface Message {
   id: string;
@@ -73,9 +72,8 @@ export const ChatWidget = () => {
       }, (payload) => {
         const newMsg = payload.new as Message;
         setMessages(prev => {
-          // Skip if exact ID match
           if (prev.some(m => m.id === newMsg.id)) return prev;
-          // Replace local duplicate (same message text + sender within 10s)
+          // Replace local optimistic duplicate
           const localDupe = prev.findIndex(m =>
             m.isLocal &&
             m.sender_type === newMsg.sender_type &&
@@ -116,7 +114,7 @@ export const ChatWidget = () => {
     loadConvoId();
   }, [user, conversationId]);
 
-  // Auto-scroll (debounced)
+  // Auto-scroll
   useEffect(() => {
     const el = scrollRef.current;
     if (el) {
@@ -126,22 +124,22 @@ export const ChatWidget = () => {
     }
   }, [messages]);
 
-  const sendMessageText = useCallback(async (text: string, notify = true, skipLocalAdd = false): Promise<string | null> => {
-    if (!text.trim() || !user) return null;
+  const sendMessage = useCallback(async () => {
+    if (!input.trim() || !user) return;
+    const text = input.trim();
+    setInput('');
 
-    if (isBlocked) {
-      if (!skipLocalAdd) {
-        const fakeMsg: Message = {
-          id: crypto.randomUUID(),
-          sender_type: 'customer',
-          message: text,
-          created_at: new Date().toISOString(),
-          isLocal: true,
-        };
-        setMessages(prev => [...prev, fakeMsg]);
-      }
-      return null;
-    }
+    // Optimistic local message
+    const localMsg: Message = {
+      id: crypto.randomUUID(),
+      sender_type: 'customer',
+      message: text,
+      created_at: new Date().toISOString(),
+      isLocal: true,
+    };
+    setMessages(prev => [...prev, localMsg]);
+
+    if (isBlocked) return;
 
     let convId = conversationId;
 
@@ -156,7 +154,7 @@ export const ChatWidget = () => {
         .select()
         .single();
 
-      if (error || !newConvo) return null;
+      if (error || !newConvo) return;
       convId = newConvo.id;
       setConversationId(convId);
     }
@@ -167,64 +165,10 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    if (notify) {
-      supabase.functions.invoke('chat-notify', {
-        body: { conversation_id: convId, message: text, user_email: user.email },
-      });
-    }
-
-    return convId;
-  }, [user, isBlocked, conversationId]);
-
-  const sendMessage = useCallback(async () => {
-    if (!input.trim() || !user) return;
-    const text = input.trim();
-    setInput('');
-    await sendMessageText(text, true);
-  }, [input, user, sendMessageText]);
-
-  const handlePresetSelect = useCallback(async (question: string, answer: string) => {
-    if (!user) return;
-
-    if (isBlocked) {
-      const fakeQ: Message = { id: crypto.randomUUID(), sender_type: 'customer', message: question, created_at: new Date().toISOString(), isLocal: true };
-      setMessages(prev => [...prev, fakeQ]);
-      setTimeout(() => {
-        const fakeA: Message = { id: crypto.randomUUID(), sender_type: 'admin', message: answer, created_at: new Date().toISOString(), isLocal: true };
-        setMessages(prev => [...prev, fakeA]);
-      }, 1500);
-      return;
-    }
-
-    // Add local question immediately for instant UX
-    const fakeQuestion: Message = {
-      id: crypto.randomUUID(),
-      sender_type: 'customer',
-      message: question,
-      created_at: new Date().toISOString(),
-      isLocal: true,
-    };
-    setMessages(prev => [...prev, fakeQuestion]);
-
-    const convId = await sendMessageText(question, false, true);
-
-    if (convId) {
-      // Add local answer immediately for instant UX
-      const fakeAnswer: Message = {
-        id: crypto.randomUUID(),
-        sender_type: 'admin',
-        message: answer,
-        created_at: new Date().toISOString(),
-        isLocal: true,
-      };
-      setMessages(prev => [...prev, fakeAnswer]);
-
-      // Persist the auto-reply answer to the database via edge function (bypasses RLS sender_type restriction)
-      supabase.functions.invoke('chat-auto-reply', {
-        body: { conversation_id: convId, message: answer },
-      });
-    }
-  }, [user, isBlocked, sendMessageText]);
+    supabase.functions.invoke('chat-notify', {
+      body: { conversation_id: convId, message: text, user_email: user.email },
+    });
+  }, [input, user, isBlocked, conversationId]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -253,7 +197,6 @@ export const ChatWidget = () => {
 
       {open && (
         <div className="fixed bottom-0 right-0 sm:bottom-5 sm:right-5 z-50 w-full sm:w-[380px] h-[100dvh] sm:h-[min(480px,calc(100dvh-40px))] bg-card border border-border sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden overscroll-contain">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 bg-accent text-accent-foreground shrink-0">
             <span className="font-semibold text-sm">Live Support</span>
             <button onClick={() => setOpen(false)} className="hover:opacity-70 p-1">
@@ -282,19 +225,17 @@ export const ChatWidget = () => {
                     <div className="w-5 h-5 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
                   </div>
                 ) : (
-                  <>
-                    {messages.map((msg) => (
-                      <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
-                          msg.sender_type === 'customer'
-                            ? 'bg-accent text-accent-foreground rounded-br-sm'
-                            : 'bg-muted text-foreground rounded-bl-sm'
-                        }`}>
-                          <ChatMessageContent message={msg.message} />
-                        </div>
+                  messages.map((msg) => (
+                    <div key={msg.id} className={`flex ${msg.sender_type === 'customer' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[75%] px-3 py-2 rounded-xl text-sm ${
+                        msg.sender_type === 'customer'
+                          ? 'bg-accent text-accent-foreground rounded-br-sm'
+                          : 'bg-muted text-foreground rounded-bl-sm'
+                      } ${msg.isLocal ? 'opacity-70' : ''}`}>
+                        <ChatMessageContent message={msg.message} />
                       </div>
-                    ))}
-                  </>
+                    </div>
+                  ))
                 )}
               </div>
 

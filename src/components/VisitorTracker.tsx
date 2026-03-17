@@ -4,7 +4,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 
 const SESSION_KEY = 'profparfums-visitor-session';
-const HEARTBEAT_INTERVAL = 15000; // 15 seconds
+const HEARTBEAT_INTERVAL = 30000; // 30 seconds
 
 function getSessionId(): string {
   let id = sessionStorage.getItem(SESSION_KEY);
