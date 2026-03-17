@@ -103,8 +103,8 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="Parfumistry" 
-                width={1536}
-                height={1024}
+                width={800}
+                height={533}
                 className="h-auto w-[480px] md:w-[620px] lg:w-[800px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
             </motion.div>
