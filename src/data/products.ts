@@ -925,7 +925,7 @@ export const products: Product[] = [
       base: ['Tonka Bean', 'Benzoin', 'Patchouli', 'Labdanum'],
     },
     accentColor: '#DAA520',
-    image: 'https://profparfums.store/cdn/shop/files/gold_resized_to_match_black_object_1.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/gold_resized_to_match_black_object_1.png?v=1768068488&width=400',
     affiliateUrl: '/product/le-male-elixir-absolu',
     inStock: true,
     variants: [
