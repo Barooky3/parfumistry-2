@@ -138,7 +138,7 @@ Deno.serve(async (req) => {
             body: JSON.stringify({
               from: "ProfParfums <orders@profparfum.com>",
               to: [user_email],
-              subject: "💬 New reply from ProfParfums Support",
+              subject: "💬 New reply from Parfumistry Support",
               html: `
                 <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
                   <h2 style="color: #333; margin-bottom: 16px;">You have a new message from our support team</h2>
