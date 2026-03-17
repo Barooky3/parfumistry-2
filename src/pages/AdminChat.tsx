@@ -488,24 +488,31 @@ const AdminChat = () => {
               {/* Messages */}
               <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {messages.map((msg, idx) => {
-                  const isAdmin = msg.sender_type === 'admin';
-                  const isLastAdminMsg = isAdmin && !messages.slice(idx + 1).some(m => m.sender_type === 'admin');
-                  const isSeen = isAdmin && selected?.customer_last_seen_at && new Date(msg.created_at) <= new Date(selected.customer_last_seen_at);
+                  const isAdminMsg = msg.sender_type === 'admin';
+                  const isSeen = isAdminMsg && selected?.customer_last_seen_at && new Date(msg.created_at) <= new Date(selected.customer_last_seen_at);
+                  const isTemp = msg.id.startsWith('temp-');
                   return (
                     <div key={msg.id}>
-                      <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`flex ${isAdminMsg ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] sm:max-w-[75%] px-3 py-2 rounded-xl text-sm break-words ${
-                          isAdmin
+                          isAdminMsg
                             ? 'bg-accent text-accent-foreground rounded-br-sm'
                             : 'bg-muted text-foreground rounded-bl-sm'
-                        } ${msg.id.startsWith('temp-') ? 'opacity-60' : ''}`}>
+                        } ${isTemp ? 'opacity-60' : ''}`}>
                           <ChatMessageContent message={msg.message} />
                         </div>
                       </div>
-                      {isAdmin && isLastAdminMsg && isSeen && (
-                        <p className="text-[10px] text-muted-foreground text-right mt-0.5 pr-1">
-                          ✓ Seen {selected.customer_last_seen_at ? new Date(selected.customer_last_seen_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
-                        </p>
+                      {isAdminMsg && !isTemp && (
+                        <div className="flex items-center justify-end gap-0.5 mt-0.5 pr-1">
+                          {isSeen ? (
+                            <>
+                              <CheckCheck className="h-3.5 w-3.5 text-blue-400" />
+                              <span className="text-[10px] text-blue-400 font-medium">Read</span>
+                            </>
+                          ) : (
+                            <Check className="h-3 w-3 text-muted-foreground" />
+                          )}
+                        </div>
                       )}
                     </div>
                   );
