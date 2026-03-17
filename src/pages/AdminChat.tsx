@@ -208,15 +208,15 @@ const AdminChat = () => {
     };
   }, [selected?.id]);
 
+  const markRead = useCallback(async (convId: string) => {
+    await invokeAdminChat({ action: 'mark_read', conversation_id: convId });
+  }, [invokeAdminChat]);
+
   const loadMessages = async (convId: string) => {
-    const [data] = await Promise.all([
-      invokeAdminChat({ action: 'get_messages', conversation_id: convId }),
-      invokeAdminChat({ action: 'mark_read', conversation_id: convId }),
-    ]);
+    const data = await invokeAdminChat({ action: 'get_messages', conversation_id: convId });
     if (data?.messages) {
       setMessages(data.messages);
     }
-    // Update customer_last_seen_at from fresh data
     if (data?.customer_last_seen_at !== undefined) {
       setSelected(prev => prev && prev.id === convId ? { ...prev, customer_last_seen_at: data.customer_last_seen_at } : prev);
     }
