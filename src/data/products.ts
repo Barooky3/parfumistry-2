@@ -740,7 +740,7 @@ export const products: Product[] = [
       base: ['Tobacco', 'Vanilla', 'Leather'],
     },
     accentColor: '#8B0000',
-    image: 'https://profparfums.store/cdn/shop/files/spicebomb.png?v=1768410549&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/spicebomb.png?v=1768410549&width=400',
     affiliateUrl: '/product/spicebomb-extreme',
     inStock: false,
     featured: true,
