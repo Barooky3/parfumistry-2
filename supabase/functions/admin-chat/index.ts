@@ -210,6 +210,16 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
 
+    if (action === "get_seen_status") {
+      const { data } = await supabase
+        .from("chat_conversations")
+        .select("customer_last_seen_at")
+        .eq("id", conversation_id)
+        .single();
+
+      return new Response(JSON.stringify({ customer_last_seen_at: data?.customer_last_seen_at || null }), { headers: corsHeaders });
+    }
+
     if (action === "get_orders") {
       const { data: orders } = await supabase
         .from("orders")
