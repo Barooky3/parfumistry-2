@@ -403,7 +403,7 @@ export const products: Product[] = [
       base: ['Cashmeran', 'Musk', 'Cedar'],
     },
     accentColor: '#E8A0BF',
-    image: 'https://profparfums.store/cdn/shop/files/second_image_matched_dimensions_smaller.png?v=1768068548&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/second_image_matched_dimensions_smaller.png?v=1768068548&width=400',
     affiliateUrl: '/product/delina',
     inStock: true,
     featured: true,
