@@ -195,11 +195,17 @@ export const ChatWidget = () => {
       setConversationId(convId);
     }
 
-    await supabase.from('chat_messages').insert({
-      conversation_id: convId,
-      sender_type: 'customer',
-      message: text,
-    });
+    await Promise.all([
+      supabase.from('chat_messages').insert({
+        conversation_id: convId,
+        sender_type: 'customer',
+        message: text,
+      }),
+      supabase
+        .from('chat_conversations')
+        .update({ customer_last_seen_at: new Date().toISOString() })
+        .eq('id', convId),
+    ]);
 
     supabase.functions.invoke('chat-notify', {
       body: { conversation_id: convId, message: text, user_email: user.email },
