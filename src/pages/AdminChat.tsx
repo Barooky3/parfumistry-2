@@ -162,7 +162,9 @@ const AdminChat = () => {
   // Load messages when selecting conversation + realtime
   useEffect(() => {
     if (!selected) return;
+    // Load messages and mark read once on selection
     loadMessages(selected.id);
+    markRead(selected.id);
     loadOrders(selected.user_email);
     setShowOrders(false);
 
@@ -185,26 +187,20 @@ const AdminChat = () => {
           }
           return [...prev, newMsg];
         });
-      })
-      .on('postgres_changes', {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'chat_conversations',
-        filter: `id=eq.${selected.id}`,
-      }, (payload) => {
-        const updated = payload.new as any;
-        if (updated.customer_last_seen_at) {
-          setSelected(prev => prev ? { ...prev, customer_last_seen_at: updated.customer_last_seen_at } : prev);
-        }
+        // Mark new customer messages as read
+        if (newMsg.sender_type === 'customer') markRead(selected.id);
       })
       .subscribe();
 
-    // Poll every 5s to catch seen status updates (realtime blocked by RLS)
-    const interval = setInterval(() => {
+    // Poll only customer_last_seen_at every 8s (lightweight, no message refetch)
+    const interval = setInterval(async () => {
       if (selectedRef.current?.id === selected.id) {
-        loadMessages(selected.id);
+        const data = await invokeAdminChat({ action: 'get_seen_status', conversation_id: selected.id });
+        if (data?.customer_last_seen_at) {
+          setSelected(prev => prev && prev.id === selected.id ? { ...prev, customer_last_seen_at: data.customer_last_seen_at } : prev);
+        }
       }
-    }, 5000);
+    }, 8000);
 
     return () => {
       supabase.removeChannel(channel);
@@ -212,15 +208,15 @@ const AdminChat = () => {
     };
   }, [selected?.id]);
 
+  const markRead = useCallback(async (convId: string) => {
+    await invokeAdminChat({ action: 'mark_read', conversation_id: convId });
+  }, [invokeAdminChat]);
+
   const loadMessages = async (convId: string) => {
-    const [data] = await Promise.all([
-      invokeAdminChat({ action: 'get_messages', conversation_id: convId }),
-      invokeAdminChat({ action: 'mark_read', conversation_id: convId }),
-    ]);
+    const data = await invokeAdminChat({ action: 'get_messages', conversation_id: convId });
     if (data?.messages) {
       setMessages(data.messages);
     }
-    // Update customer_last_seen_at from fresh data
     if (data?.customer_last_seen_at !== undefined) {
       setSelected(prev => prev && prev.id === convId ? { ...prev, customer_last_seen_at: data.customer_last_seen_at } : prev);
     }
