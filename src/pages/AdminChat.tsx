@@ -37,6 +37,7 @@ interface Conversation {
   updated_at: string;
   unread_count?: number;
   order_count?: number;
+  customer_last_seen_at?: string | null;
 }
 
 interface Message {
@@ -179,6 +180,17 @@ const AdminChat = () => {
           }
           return [...prev, newMsg];
         });
+      })
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'chat_conversations',
+        filter: `id=eq.${selected.id}`,
+      }, (payload) => {
+        const updated = payload.new as any;
+        if (updated.customer_last_seen_at) {
+          setSelected(prev => prev ? { ...prev, customer_last_seen_at: updated.customer_last_seen_at } : prev);
+        }
       })
       .subscribe();
 
@@ -466,17 +478,27 @@ const AdminChat = () => {
 
               {/* Messages */}
               <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-3 space-y-2 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
-                {messages.map((msg) => (
-                  <div key={msg.id} className={`flex ${msg.sender_type === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] sm:max-w-[75%] px-3 py-2 rounded-xl text-sm break-words ${
-                      msg.sender_type === 'admin'
-                        ? 'bg-accent text-accent-foreground rounded-br-sm'
-                        : 'bg-muted text-foreground rounded-bl-sm'
-                    } ${msg.id.startsWith('temp-') ? 'opacity-60' : ''}`}>
-                      <ChatMessageContent message={msg.message} />
+                {messages.map((msg, idx) => {
+                  const isAdmin = msg.sender_type === 'admin';
+                  const isLastAdminMsg = isAdmin && !messages.slice(idx + 1).some(m => m.sender_type === 'admin');
+                  const isSeen = isAdmin && selected?.customer_last_seen_at && new Date(msg.created_at) <= new Date(selected.customer_last_seen_at);
+                  return (
+                    <div key={msg.id}>
+                      <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[85%] sm:max-w-[75%] px-3 py-2 rounded-xl text-sm break-words ${
+                          isAdmin
+                            ? 'bg-accent text-accent-foreground rounded-br-sm'
+                            : 'bg-muted text-foreground rounded-bl-sm'
+                        } ${msg.id.startsWith('temp-') ? 'opacity-60' : ''}`}>
+                          <ChatMessageContent message={msg.message} />
+                        </div>
+                      </div>
+                      {isAdmin && isLastAdminMsg && isSeen && (
+                        <p className="text-[10px] text-muted-foreground text-right mt-0.5 pr-1">Seen</p>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Quick replies */}
