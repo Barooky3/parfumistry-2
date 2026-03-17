@@ -8,7 +8,7 @@ import { getBestsellers } from '@/data/products';
 import { BrandNavigation, BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 
 const Index = () => {
   const bestsellers = getBestsellers();
@@ -103,8 +103,8 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="Parfumistry" 
-                width={1536}
-                height={1024}
+                width={800}
+                height={533}
                 className="h-auto w-[480px] md:w-[620px] lg:w-[800px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
             </motion.div>
