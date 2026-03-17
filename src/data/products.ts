@@ -74,7 +74,7 @@ export const products: Product[] = [
     originalPrice: 183.96,
     category: 'bundle',
     description: 'Looking for fragrances that work anytime, anywhere? This set is your daily go-to – fresh, masculine, and clean.',
-    image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-sleek-and-clean-3751514.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-sleek-and-clean-3751514.png?v=1768068487&width=400',
     affiliateUrl: '/product/sleek-and-clean-bundle',
     inStock: true,
     isBundle: true,
