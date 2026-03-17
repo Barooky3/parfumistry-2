@@ -27,6 +27,8 @@ const PROOF_MSG = `Store Policy is that we ask all customers to send photos of t
 
 const CHEAP_MSG = `The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers. A normal perfume lasts for 8 years before expiry, the ones we sell lasts for 3-6 years before expiry, so these have the same smell and last 7-8 hours on skin just like the original, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap. You get dhl tracking number after ordering and you can also return if you don't like em or have issues, we have a full return and refund policy on the site`;
 
+const SHIPPING_MSG = `Shipping times take around 4–6 business days to all countries in the EU and UK, and 6–8 business days outside of the EU.`;
+
 interface Conversation {
   id: string;
   user_email: string;
