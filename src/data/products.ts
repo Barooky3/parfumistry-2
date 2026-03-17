@@ -470,7 +470,7 @@ export const products: Product[] = [
       base: ['Musk', 'Oakmoss', 'Patchouli'],
     },
     accentColor: '#D4C72E',
-    image: 'https://profparfums.store/cdn/shop/files/yellow_resized_to_red_d0d3284b-0228-4acd-8b37-3765a0c838d8.png?v=1768068547&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/yellow_resized_to_red_d0d3284b-0228-4acd-8b37-3765a0c838d8.png?v=1768068547&width=400',
     affiliateUrl: '/product/eros-energy',
     inStock: true,
     variants: [
