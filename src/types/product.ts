@@ -41,6 +41,7 @@ export interface Product {
   bundleContents?: BundleFragrance[]; // Fragrances in a bundle
   imagePadding?: string;
   bundleImages?: string[]; // Multiple product images for composite bundle display
+  hotDeal?: boolean; // Show fire discount badge
 }
 
 export interface CartItem {
