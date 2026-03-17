@@ -195,7 +195,7 @@ const Index = () => {
             <p className="text-xs text-muted-foreground mt-4">
               {t('home.noSpam')}
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>
