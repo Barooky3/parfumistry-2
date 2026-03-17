@@ -1176,7 +1176,7 @@ export const products: Product[] = [
       base: ['Musk', 'Sandalwood', 'Galbanum'],
     },
     accentColor: '#C0C0C0',
-    image: 'https://profparfums.store/cdn/shop/files/creed-silver-mountain-water-3465174.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/creed-silver-mountain-water-3465174.png?v=1768068487&width=400',
     affiliateUrl: '/product/silver-mountain-water',
     inStock: true,
     variants: [
