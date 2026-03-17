@@ -24,7 +24,6 @@ export const BannedUserPopup = () => {
       const { data } = await supabase
         .from('banned_users')
         .select('email')
-        .eq('email', user.email!.toLowerCase())
         .maybeSingle();
 
       if (data) {
