@@ -291,7 +291,7 @@ export const products: Product[] = [
       base: ['Patchouli', 'Sandalwood', 'Dark Chocolate'],
     },
     accentColor: '#4A1942',
-    image: 'https://profparfums.store/cdn/shop/files/tom-ford-black-orchid-1912271.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/tom-ford-black-orchid-1912271.png?v=1768068487&width=400',
     affiliateUrl: '/product/black-orchid',
     inStock: true,
     variants: [
