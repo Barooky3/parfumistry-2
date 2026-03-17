@@ -269,11 +269,15 @@ const AdminChat = () => {
   const toggleBlock = async (conv: Conversation) => {
     const action = conv.blocked ? 'unblock' : 'block';
     await invokeAdminChat({ action, conversation_id: conv.id });
-    toast({ title: conv.blocked ? 'User unblocked' : 'User blocked from chat' });
-    loadConversations();
+    toast({ title: conv.blocked ? 'User unblocked' : 'User blocked & chat wiped' });
     if (selected?.id === conv.id) {
+      if (!conv.blocked) {
+        // Just blocked — clear messages from UI
+        setMessages([]);
+      }
       setSelected({ ...conv, blocked: !conv.blocked });
     }
+    loadConversations();
   };
 
   const deleteConversation = async (conv: Conversation) => {
