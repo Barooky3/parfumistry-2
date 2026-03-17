@@ -1108,7 +1108,7 @@ export const products: Product[] = [
       base: ['Cedarwood', 'Patchouli', 'Amber'],
     },
     accentColor: '#2C2C2C',
-    image: 'https://profparfums.store/cdn/shop/files/prada_resized_uniform_54c5598a-9a6e-47d7-8803-0a385e54b9c6.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/prada_resized_uniform_54c5598a-9a6e-47d7-8803-0a385e54b9c6.png?v=1768068488&width=400',
     affiliateUrl: '/product/paradigme',
     inStock: true,
     variants: [
