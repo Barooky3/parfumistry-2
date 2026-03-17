@@ -37,6 +37,7 @@ Deno.serve(async (req) => {
         .from("chat_conversations")
         .select("*")
         .eq("blocked", false)
+        .eq("hidden_from_admin", false)
         .order("updated_at", { ascending: false });
 
       if (!convos || convos.length === 0) {
