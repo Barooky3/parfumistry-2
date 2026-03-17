@@ -216,26 +216,8 @@ export const ChatWidget = () => {
       message: text,
     });
 
-    // If conversation was deleted by admin, create a fresh one and retry
     if (msgError) {
-      const { data: freshConvo } = await supabase
-        .from('chat_conversations')
-        .insert({
-          user_id: user.id,
-          user_email: user.email || '',
-          user_name: user.user_metadata?.full_name || user.email || '',
-        })
-        .select()
-        .single();
-      if (freshConvo) {
-        convId = freshConvo.id;
-        setConversationId(convId);
-        await supabase.from('chat_messages').insert({
-          conversation_id: convId,
-          sender_type: 'customer',
-          message: text,
-        });
-      }
+      console.error('Failed to send message:', msgError);
     }
 
     await supabase

@@ -198,14 +198,10 @@ Deno.serve(async (req) => {
     }
 
     if (action === "delete") {
-      await supabase
-        .from("chat_messages")
-        .delete()
-        .eq("conversation_id", conversation_id);
-
+      // Soft-delete: just hide from admin, preserve all history
       await supabase
         .from("chat_conversations")
-        .delete()
+        .update({ hidden_from_admin: true })
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
