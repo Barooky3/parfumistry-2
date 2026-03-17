@@ -559,7 +559,7 @@ export const products: Product[] = [
       base: ['White Musk', 'Cedar'],
     },
     accentColor: '#5DADE2',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-french-riviera-9959440.png?v=1768068547&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-french-riviera-9959440.png?v=1768068547&width=400',
     affiliateUrl: '/product/french-riviera',
     inStock: false,
     variants: [
