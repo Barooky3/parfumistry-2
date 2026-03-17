@@ -199,12 +199,12 @@ const AdminChat = () => {
       })
       .subscribe();
 
-    // Backup poll every 15s
+    // Poll every 5s to catch seen status updates (realtime blocked by RLS)
     const interval = setInterval(() => {
       if (selectedRef.current?.id === selected.id) {
         loadMessages(selected.id);
       }
-    }, 15000);
+    }, 5000);
 
     return () => {
       supabase.removeChannel(channel);
