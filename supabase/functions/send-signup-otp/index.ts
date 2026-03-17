@@ -77,7 +77,7 @@ serve(async (req) => {
       '<h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>',
       '</div>',
       '<div style="padding:40px 32px;text-align:center;">',
-      '<h2 style="color:#1a1a1a;font-size:22px;font-weight:400;margin:0 0 16px 0;">Welcome, ' + name + '!</h2>',
+      '<h2 style="color:#1a1a1a;font-size:22px;font-weight:400;margin:0 0 16px 0;">Welcome, ' + safeName + '!</h2>',
       '<p style="color:#666;font-size:14px;margin:0 0 32px 0;line-height:1.6;">Enter this code on the website to verify your account:</p>',
       '<div style="background-color:#f8f7f4;border:2px solid #c9a96e;border-radius:8px;padding:24px;display:inline-block;">',
       '<span style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1a1a;">' + code + '</span>',

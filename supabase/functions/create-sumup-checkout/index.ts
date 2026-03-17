@@ -50,7 +50,8 @@ serve(async (req) => {
     if (!merchantCode) throw new Error("Could not determine merchant code");
 
     const body = (await req.json()) as CheckoutRequest;
-    const { amount, description, customerEmail, customerName, checkoutReference, redirectUrl, orderItems, shippingAddress, discountCode, discountPercent } = body;
+    const { amount, description, customerEmail, customerName, checkoutReference, redirectUrl, orderItems, shippingAddress, discountCode } = body;
+    const discountPercent = VALID_DISCOUNT_CODES[discountCode?.toLowerCase().trim() || ''] ?? 0;
 
     if (!amount || amount <= 0) throw new Error("Invalid amount");
     if (!checkoutReference) throw new Error("Missing checkout reference");
