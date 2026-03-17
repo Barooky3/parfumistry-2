@@ -1,20 +1,30 @@
-import { ReactNode } from 'react';
+import { ReactNode, lazy, Suspense, useEffect, useState } from 'react';
 import { PromoBanner } from './PromoBanner';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
-import { SocialProofPopup } from '@/components/SocialProofPopup';
-import { WelcomePopup } from '@/components/WelcomePopup';
-import { VisitorTracker } from '@/components/VisitorTracker';
-import { RejectionNotificationPopup } from '@/components/RejectionNotificationPopup';
-import { BannedUserPopup } from '@/components/BannedUserPopup';
-import { ChatWidget } from '@/components/ChatWidget';
+
+// Lazy-load non-critical widgets to reduce initial main-thread work
+const SocialProofPopup = lazy(() => import('@/components/SocialProofPopup').then(m => ({ default: m.SocialProofPopup })));
+const WelcomePopup = lazy(() => import('@/components/WelcomePopup').then(m => ({ default: m.WelcomePopup })));
+const VisitorTracker = lazy(() => import('@/components/VisitorTracker').then(m => ({ default: m.VisitorTracker })));
+const RejectionNotificationPopup = lazy(() => import('@/components/RejectionNotificationPopup').then(m => ({ default: m.RejectionNotificationPopup })));
+const BannedUserPopup = lazy(() => import('@/components/BannedUserPopup').then(m => ({ default: m.BannedUserPopup })));
+const ChatWidget = lazy(() => import('@/components/ChatWidget').then(m => ({ default: m.ChatWidget })));
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: LayoutProps) => {
+  const [showDeferred, setShowDeferred] = useState(false);
+
+  useEffect(() => {
+    // Defer non-critical widgets until after initial render + idle time
+    const id = requestIdleCallback(() => setShowDeferred(true), { timeout: 2000 });
+    return () => cancelIdleCallback(id);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <PromoBanner />
@@ -24,12 +34,16 @@ export const Layout = ({ children }: LayoutProps) => {
       </main>
       <Footer />
       <CartDrawer />
-      <SocialProofPopup />
-      <WelcomePopup />
-      <VisitorTracker />
-      <RejectionNotificationPopup />
-      <BannedUserPopup />
-      <ChatWidget />
+      {showDeferred && (
+        <Suspense fallback={null}>
+          <SocialProofPopup />
+          <WelcomePopup />
+          <VisitorTracker />
+          <RejectionNotificationPopup />
+          <BannedUserPopup />
+          <ChatWidget />
+        </Suspense>
+      )}
     </div>
   );
 };

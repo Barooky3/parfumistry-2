@@ -10,7 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Layout } from "@/components/layout";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import Index from "./pages/Index";
+const Index = lazy(() => import("./pages/Index"));
 
 // Lazy-loaded routes for code splitting
 const Shop = lazy(() => import("./pages/Shop"));
