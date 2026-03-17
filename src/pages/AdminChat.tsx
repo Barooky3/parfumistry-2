@@ -61,6 +61,7 @@ const AdminChat = () => {
   const navigate = useNavigate();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const readIdsRef = useRef<Set<string>>(new Set());
   const [selected, setSelected] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -71,9 +72,11 @@ const AdminChat = () => {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<Conversation | null>(null);
+  const reloadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Keep ref in sync
+  // Keep refs in sync
   useEffect(() => { selectedRef.current = selected; }, [selected]);
+  useEffect(() => { readIdsRef.current = readIds; }, [readIds]);
 
   const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
 
@@ -100,21 +103,6 @@ const AdminChat = () => {
     return await res.json();
   }, []);
 
-  // Load conversations
-  useEffect(() => {
-    if (!isAdmin) return;
-    loadConversations();
-
-    const channel = supabase
-      .channel('admin-chat-convos')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, () => {
-        loadConversations();
-      })
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [isAdmin]);
-
   const sortConversations = useCallback((convs: Conversation[], readSet: Set<string>) => {
     return [...convs].sort((a, b) => {
       const aUnread = (a.unread_count ?? 0) > 0 && !readSet.has(a.id) ? 1 : 0;
@@ -124,32 +112,54 @@ const AdminChat = () => {
     });
   }, []);
 
-  const loadConversations = async () => {
+  const loadConversations = useCallback(async () => {
     const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
-      setConversations(prev => {
-        // Clear readIds for conversations that are now actually 0 unread
-        setReadIds(prevRead => {
-          const newRead = new Set(prevRead);
-          for (const conv of data.conversations) {
-            if ((conv.unread_count ?? 0) === 0) newRead.delete(conv.id);
-          }
-          return newRead;
-        });
-        return sortConversations(data.conversations, readIds);
-      });
+      const currentReadIds = readIdsRef.current;
+      // Clear readIds for conversations that are now actually 0 unread
+      const newRead = new Set(currentReadIds);
+      for (const conv of data.conversations) {
+        if ((conv.unread_count ?? 0) === 0) newRead.delete(conv.id);
+      }
+      setReadIds(newRead);
+      setConversations(sortConversations(data.conversations, newRead));
     }
     setLoading(false);
-  };
+  }, [invokeAdminChat, sortConversations]);
 
-  // Load messages when selecting conversation + realtime + poll backup
+  // Debounced reload for realtime events
+  const debouncedReload = useCallback(() => {
+    if (reloadTimerRef.current) clearTimeout(reloadTimerRef.current);
+    reloadTimerRef.current = setTimeout(() => {
+      loadConversations();
+    }, 500);
+  }, [loadConversations]);
+
+  // Load conversations + realtime
+  useEffect(() => {
+    if (!isAdmin) return;
+    loadConversations();
+
+    // Listen to both conversations AND messages for instant updates
+    const channel = supabase
+      .channel('admin-inbox-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, debouncedReload)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, debouncedReload)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+      if (reloadTimerRef.current) clearTimeout(reloadTimerRef.current);
+    };
+  }, [isAdmin, loadConversations, debouncedReload]);
+
+  // Load messages when selecting conversation + realtime
   useEffect(() => {
     if (!selected) return;
     loadMessages(selected.id);
     loadOrders(selected.user_email);
     setShowOrders(false);
 
-    // Realtime subscription for instant message delivery
     const channel = supabase
       .channel(`admin-msgs-${selected.id}`)
       .on('postgres_changes', {
@@ -161,7 +171,6 @@ const AdminChat = () => {
         const newMsg = payload.new as Message;
         setMessages(prev => {
           if (prev.some(m => m.id === newMsg.id)) return prev;
-          // Replace optimistic temp messages
           const tempIdx = prev.findIndex(m => m.id.startsWith('temp-') && m.message === newMsg.message);
           if (tempIdx !== -1) {
             const updated = [...prev];
@@ -173,12 +182,12 @@ const AdminChat = () => {
       })
       .subscribe();
 
-    // Backup poll every 10s
+    // Backup poll every 15s
     const interval = setInterval(() => {
       if (selectedRef.current?.id === selected.id) {
         loadMessages(selected.id);
       }
-    }, 10000);
+    }, 15000);
 
     return () => {
       supabase.removeChannel(channel);
@@ -205,8 +214,11 @@ const AdminChat = () => {
 
   // Auto-scroll on new messages
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    const el = scrollRef.current;
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+      });
     }
   }, [messages]);
 
@@ -216,7 +228,6 @@ const AdminChat = () => {
     setInput('');
     setSending(true);
 
-    // Optimistic update
     const optimisticMsg: Message = {
       id: `temp-${Date.now()}`,
       sender_type: 'admin',
@@ -227,8 +238,7 @@ const AdminChat = () => {
     setMessages(prev => [...prev, optimisticMsg]);
 
     const result = await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text, user_email: selected.user_email });
-    
-    // Replace optimistic message with real one if we got it back, or reload
+
     if (result?.message_id) {
       setMessages(prev => prev.map(m => m.id === optimisticMsg.id ? { ...m, id: result.message_id } : m));
     }
@@ -282,7 +292,6 @@ const AdminChat = () => {
       const newReadIds = new Set(readIds);
       newReadIds.add(conv.id);
       setReadIds(newReadIds);
-      // Re-sort so this conversation drops below unread ones
       setConversations(prev => sortConversations(prev, newReadIds));
     }
   };
@@ -291,12 +300,14 @@ const AdminChat = () => {
     setSelected(null);
     setMessages([]);
     setOrders([]);
+    // Refresh conversations to get updated unread counts
+    loadConversations();
   };
 
   return (
     <div className="h-[calc(100dvh-120px)] md:h-[75vh] md:min-h-[520px]">
       <div className="flex h-full min-h-0 border border-border rounded-xl overflow-hidden">
-        {/* Conversation list - hidden on mobile when a conversation is selected */}
+        {/* Conversation list */}
         <div className={`${selected ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 lg:w-96 flex-shrink-0 min-h-0 border-r border-border bg-card`}>
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
             {loading ? (
@@ -355,7 +366,7 @@ const AdminChat = () => {
           </div>
         </div>
 
-        {/* Message area - full screen on mobile when selected */}
+        {/* Message area */}
         <div className={`${selected ? 'flex' : 'hidden md:flex'} flex-col flex-1 min-h-0 min-w-0 bg-background`}>
           {!selected ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
@@ -470,34 +481,22 @@ const AdminChat = () => {
 
               {/* Quick replies */}
               <div className="border-t border-border px-2 py-1.5 flex gap-1 flex-wrap flex-shrink-0">
-                <button
-                  onClick={() => draftQuickReply(RETURN_REFUND_LINK_MSG)}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-                >
+                <button onClick={() => draftQuickReply(RETURN_REFUND_LINK_MSG)} className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
                   📋 Return
                 </button>
-                <button
-                  onClick={() => draftQuickReply(PROOF_MSG)}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-                >
+                <button onClick={() => draftQuickReply(PROOF_MSG)} className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
                   📸 Proof
                 </button>
-                <button
-                  onClick={() => draftQuickReply(CHEAP_MSG)}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-                >
+                <button onClick={() => draftQuickReply(CHEAP_MSG)} className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
                   💰 Cheap
                 </button>
-                <button
-                  onClick={() => draftQuickReply(SHIPPING_MSG)}
-                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-                >
+                <button onClick={() => draftQuickReply(SHIPPING_MSG)} className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
                   📦 Shipping
                 </button>
               </div>
 
               {/* Input */}
-              <div className="border-t border-border px-2 py-2 flex gap-2 flex-shrink-0">
+              <div className="border-t border-border px-2 py-2 flex gap-2 flex-shrink-0 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
