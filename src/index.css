@@ -8,6 +8,7 @@
 
 @layer base {
   :root {
+    --promo-banner-height: 120px;
     /* Warm Cream Luxury Theme with Burgundy Accent */
     --background: 30 25% 98%;
     --foreground: 350 20% 12%;
