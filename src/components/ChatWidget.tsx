@@ -154,7 +154,7 @@ export const ChatWidget = () => {
     const text = input.trim();
     setInput('');
 
-    // Optimistic local message
+    // Optimistic local message (shown even if blocked for silent blocking)
     const localMsg: Message = {
       id: crypto.randomUUID(),
       sender_type: 'customer',
@@ -164,6 +164,7 @@ export const ChatWidget = () => {
     };
     setMessages(prev => [...prev, localMsg]);
 
+    // Silently block: don't send, don't create new conversations
     if (isBlocked) return;
 
     let convId = conversationId;
