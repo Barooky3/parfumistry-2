@@ -359,7 +359,7 @@ export const products: Product[] = [
       base: ['Woody Notes', 'Vetiver'],
     },
     accentColor: '#8B4513',
-    image: 'https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
