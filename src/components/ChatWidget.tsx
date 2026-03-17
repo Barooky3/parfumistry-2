@@ -96,6 +96,13 @@ export const ChatWidget = () => {
         if (newMsg.sender_type === 'admin') {
           setOpen(true);
           setUnreadCount(0);
+          // Mark as seen immediately if chat is open
+          if (conversationId) {
+            supabase
+              .from('chat_conversations')
+              .update({ customer_last_seen_at: new Date().toISOString() })
+              .eq('id', conversationId);
+          }
         }
       })
       .subscribe();
