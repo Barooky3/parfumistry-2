@@ -26,6 +26,16 @@ export const ChatWidget = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
 
+  // Update customer_last_seen_at every time chat opens
+  useEffect(() => {
+    if (!user || !open || !conversationId) return;
+    supabase
+      .from('chat_conversations')
+      .update({ customer_last_seen_at: new Date().toISOString() })
+      .eq('id', conversationId)
+      .then();
+  }, [user, open, conversationId]);
+
   // Load or create conversation when user is logged in and chat opens
   useEffect(() => {
     if (!user || !open) return;
