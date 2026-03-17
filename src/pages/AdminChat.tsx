@@ -181,6 +181,17 @@ const AdminChat = () => {
           return [...prev, newMsg];
         });
       })
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'chat_conversations',
+        filter: `id=eq.${selected.id}`,
+      }, (payload) => {
+        const updated = payload.new as any;
+        if (updated.customer_last_seen_at) {
+          setSelected(prev => prev ? { ...prev, customer_last_seen_at: updated.customer_last_seen_at } : prev);
+        }
+      })
       .subscribe();
 
     // Backup poll every 15s
