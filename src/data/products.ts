@@ -994,7 +994,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Cedarwood', 'Vetiver'],
     },
     accentColor: '#3A3A8C',
-    image: 'https://profparfums.store/cdn/shop/files/ysl-myslf-eau-de-parfum-1896916.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/ysl-myslf-eau-de-parfum-1896916.png?v=1768068488&width=400',
     affiliateUrl: '/product/myself-edp',
     inStock: true,
     variants: [
