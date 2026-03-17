@@ -132,39 +132,21 @@ const Index = () => {
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
         <div className="container">
-          <motion.div 
-            className="text-center mb-8 md:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="text-center mb-8 md:mb-12">
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
               {t('home.currentBestSellers')}
             </h2>
-          </motion.div>
+          </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-5">
-            {bestsellers.slice(0, 10).map((product, index) => (
-              <motion.div 
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.3, delay: index * 0.04 }}
-              >
+            {bestsellers.slice(0, 10).map((product) => (
+              <div key={product.id}>
                 <ProductCard product={product} />
-              </motion.div>
+              </div>
             ))}
           </div>
           
-          <motion.div 
-            className="text-center mt-10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
+          <div className="text-center mt-10">
             <Button 
               variant="outline" 
               size="lg" 
@@ -176,7 +158,7 @@ const Index = () => {
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
 
