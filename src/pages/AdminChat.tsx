@@ -117,13 +117,18 @@ const AdminChat = () => {
     const data = await invokeAdminChat({ action: 'list_conversations' });
     if (data?.conversations) {
       const currentReadIds = readIdsRef.current;
-      // Clear readIds for conversations that are now actually 0 unread
       const newRead = new Set(currentReadIds);
       for (const conv of data.conversations) {
         if ((conv.unread_count ?? 0) === 0) newRead.delete(conv.id);
       }
       setReadIds(newRead);
       setConversations(sortConversations(data.conversations, newRead));
+      // Keep selected in sync with fresh data (e.g. customer_last_seen_at)
+      const sel = selectedRef.current;
+      if (sel) {
+        const fresh = data.conversations.find((c: Conversation) => c.id === sel.id);
+        if (fresh) setSelected(prev => prev ? { ...prev, customer_last_seen_at: fresh.customer_last_seen_at } : prev);
+      }
     }
     setLoading(false);
   }, [invokeAdminChat, sortConversations]);
