@@ -24,7 +24,7 @@ export const products: Product[] = [
     originalPrice: 187.96,
     category: 'bundle',
     description: '"Evening Sweetheart" Bundle – top-tier sweet bangers for the night. Got a date? A party? These fragrances will make you unforgettable.',
-    image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-evening-sweetheart-9560408.png?v=1768068549&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/fragrance-bundle-evening-sweetheart-9560408.png?v=1768068549&width=400',
     affiliateUrl: '/product/evening-sweetheart-bundle',
     inStock: true,
     featured: true,
