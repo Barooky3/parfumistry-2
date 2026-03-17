@@ -648,7 +648,7 @@ export const products: Product[] = [
       base: ['Oud', 'Vanilla', 'Musk'],
     },
     accentColor: '#6B3A2A',
-    image: 'https://profparfums.store/cdn/shop/files/lataffa-khamrah-qahwa-4225237.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/lataffa-khamrah-qahwa-4225237.png?v=1768068488&width=400',
     affiliateUrl: '/product/khamrah-qahwa',
     inStock: false,
     variants: [
