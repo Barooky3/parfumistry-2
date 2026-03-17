@@ -581,7 +581,7 @@ export const products: Product[] = [
       base: ['Virginia Cedar', 'Vetiver'],
     },
     accentColor: '#4A4A4A',
-    image: 'https://profparfums.store/cdn/shop/files/dior-homme-intense-7103864.png?v=1768068547&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/dior-homme-intense-7103864.png?v=1768068547&width=400',
     affiliateUrl: '/product/homme-intense',
     inStock: true,
     variants: [
