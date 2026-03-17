@@ -171,13 +171,7 @@ const Index = () => {
       {/* Newsletter Section */}
       <section className="py-14 md:py-20 bg-secondary">
         <div className="container">
-          <motion.div 
-            className="max-w-lg mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="max-w-lg mx-auto text-center">
             <img src={logo} alt="Parfumistry" width={1536} height={1024} className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
               {t('home.joinFamily')}
