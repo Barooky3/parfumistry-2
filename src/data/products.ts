@@ -246,7 +246,7 @@ export const products: Product[] = [
       base: ['Patchouli', 'Vetiver', 'Oakmoss', 'Sandalwood'],
     },
     accentColor: '#1A1A2E',
-    image: 'https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=400',
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
