@@ -141,6 +141,7 @@ export default function AdminOrders() {
   const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
   const [manualSending, setManualSending] = useState(false);
   const [bannedEmails, setBannedEmails] = useState<Set<string>>(new Set());
+  const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
 
