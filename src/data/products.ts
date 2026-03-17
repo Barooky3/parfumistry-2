@@ -448,7 +448,7 @@ export const products: Product[] = [
       base: ['Madagascar Vanilla', 'Amber', 'Musk'],
     },
     accentColor: '#E8B84B',
-    image: 'https://profparfums.store/cdn/shop/files/xerjoff-erba-pura-8755466.png?v=1768068547&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/xerjoff-erba-pura-8755466.png?v=1768068547&width=400',
     affiliateUrl: '/product/erba-pura',
     inStock: true,
     variants: [
