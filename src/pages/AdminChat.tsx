@@ -37,6 +37,7 @@ interface Conversation {
   updated_at: string;
   unread_count?: number;
   order_count?: number;
+  customer_last_seen_at?: string | null;
 }
 
 interface Message {
