@@ -219,11 +219,9 @@ export const ChatWidget = () => {
       };
       setMessages(prev => [...prev, fakeAnswer]);
 
-      // Persist the auto-reply answer to the database so it survives reloads
-      await supabase.from('chat_messages').insert({
-        conversation_id: convId,
-        sender_type: 'admin',
-        message: answer,
+      // Persist the auto-reply answer to the database via edge function (bypasses RLS sender_type restriction)
+      supabase.functions.invoke('chat-auto-reply', {
+        body: { conversation_id: convId, message: answer },
       });
     }
   }, [user, isBlocked, sendMessageText]);
