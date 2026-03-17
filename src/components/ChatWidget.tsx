@@ -50,6 +50,12 @@ export const ChatWidget = () => {
           .eq('conversation_id', convo.id)
           .order('created_at', { ascending: true });
         setMessages(msgs || []);
+
+        // Mark customer as having seen messages now
+        await supabase
+          .from('chat_conversations')
+          .update({ customer_last_seen_at: new Date().toISOString() })
+          .eq('id', convo.id);
       }
       loadedRef.current = true;
       setLoading(false);
