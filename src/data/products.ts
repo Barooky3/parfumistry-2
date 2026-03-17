@@ -1198,7 +1198,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Tonka Bean', 'Suede'],
     },
     accentColor: '#D4A76A',
-    image: 'https://profparfums.store/cdn/shop/files/1C01C9E5-CAD8-4745-8AED-B06A573E591B_converted_1.png?v=1768068489&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/1C01C9E5-CAD8-4745-8AED-B06A573E591B_converted_1.png?v=1768068489&width=400',
     affiliateUrl: '/product/stronger-with-you-amber',
     inStock: true,
     variants: [
