@@ -188,7 +188,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           
           {/* Hot Deal Fire Badge */}
           {product.hotDeal && (
-            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
               <div className="relative flex items-center justify-center gap-1.5">
                 <div className="absolute inset-0 rounded-full bg-destructive/20 blur-xl scale-[2]" />
                 <Flame size={22} className="text-destructive drop-shadow-[0_0_10px_hsl(var(--destructive)/0.8)] animate-pulse" strokeWidth={2.5} />
