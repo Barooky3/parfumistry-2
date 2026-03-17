@@ -181,7 +181,7 @@ const EU_UK_COUNTRIES = new Set([
 
 const getShippingCost = (country: string): number => {
   if (!country) return 0;
-  return EU_UK_COUNTRIES.has(country) ? 1.99 : 2.99;
+  return EU_UK_COUNTRIES.has(country) ? 3.99 : 4.99;
 };
 
 // Interface for PDOK API response (Netherlands)
