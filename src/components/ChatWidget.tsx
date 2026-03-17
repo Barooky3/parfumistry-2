@@ -133,11 +133,10 @@ export const ChatWidget = () => {
       }, (payload) => {
         const updated = payload.new as any;
         if (updated.blocked) {
-          // Admin blocked — clear everything
+          // Silently block: keep any local messages visible, just prevent future DB writes
           setIsBlocked(true);
-          setMessages([]);
           setConversationId(null);
-          loadedRef.current = false;
+          loadedRef.current = true;
         }
       })
       .subscribe();
