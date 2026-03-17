@@ -832,7 +832,7 @@ export const products: Product[] = [
       base: ['Bourbon Vanilla'],
     },
     accentColor: '#C9A96E',
-    image: 'https://profparfums.store/cdn/shop/files/product_3_matched_1.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/product_3_matched_1.png?v=1768068488&width=400',
     affiliateUrl: '/product/the-most-wanted-parfum',
     inStock: true,
     featured: true,
