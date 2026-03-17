@@ -43,6 +43,7 @@ export type Database = {
           blocked: boolean
           created_at: string
           customer_last_seen_at: string | null
+          hidden_from_admin: boolean
           id: string
           status: string
           updated_at: string
@@ -54,6 +55,7 @@ export type Database = {
           blocked?: boolean
           created_at?: string
           customer_last_seen_at?: string | null
+          hidden_from_admin?: boolean
           id?: string
           status?: string
           updated_at?: string
@@ -65,6 +67,7 @@ export type Database = {
           blocked?: boolean
           created_at?: string
           customer_last_seen_at?: string | null
+          hidden_from_admin?: boolean
           id?: string
           status?: string
           updated_at?: string
