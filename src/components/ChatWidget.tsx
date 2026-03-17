@@ -196,6 +196,7 @@ export const ChatWidget = () => {
       return;
     }
 
+    // Add local question immediately for instant UX
     const fakeQuestion: Message = {
       id: crypto.randomUUID(),
       sender_type: 'customer',
@@ -207,18 +208,24 @@ export const ChatWidget = () => {
 
     const convId = await sendMessageText(question, false, true);
 
-    setTimeout(() => {
-      if (convId) {
-        const fakeAnswer: Message = {
-          id: crypto.randomUUID(),
-          sender_type: 'admin',
-          message: answer,
-          created_at: new Date().toISOString(),
-          isLocal: true,
-        };
-        setMessages(prev => [...prev, fakeAnswer]);
-      }
-    }, 1500);
+    if (convId) {
+      // Add local answer immediately for instant UX
+      const fakeAnswer: Message = {
+        id: crypto.randomUUID(),
+        sender_type: 'admin',
+        message: answer,
+        created_at: new Date().toISOString(),
+        isLocal: true,
+      };
+      setMessages(prev => [...prev, fakeAnswer]);
+
+      // Persist the auto-reply answer to the database so it survives reloads
+      await supabase.from('chat_messages').insert({
+        conversation_id: convId,
+        sender_type: 'admin',
+        message: answer,
+      });
+    }
   }, [user, isBlocked, sendMessageText]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
