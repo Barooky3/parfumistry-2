@@ -903,7 +903,7 @@ export const products: Product[] = [
       base: ['Sandalwood', 'Musk'],
     },
     accentColor: '#7EC8E3',
-    image: 'https://profparfums.store/cdn/shop/files/jpg_le_beau_edt_bg_removed_1_1.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/jpg_le_beau_edt_bg_removed_1_1.png?v=1768068487&width=400',
     affiliateUrl: '/product/le-beau-edt',
     inStock: false,
     variants: [
