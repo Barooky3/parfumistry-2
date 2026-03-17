@@ -1215,6 +1215,11 @@ export default function AdminOrders() {
                             <Ban className="h-3 w-3 mr-0.5" /> Banned
                           </Badge>
                         )}
+                        {blockedEmails.has(order.customer_email.toLowerCase()) && (
+                          <Badge className="bg-orange-500/10 text-orange-600 border-orange-500/30 text-[10px]">
+                            <MessageCircle className="h-3 w-3 mr-0.5" /> Inbox Blocked
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} at {date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
