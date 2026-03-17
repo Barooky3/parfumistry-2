@@ -855,7 +855,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Patchouli', 'Cedarwood'],
     },
     accentColor: '#2C2C2C',
-    image: 'https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=400',
     affiliateUrl: '/product/black-opium',
     inStock: true,
     variants: [
