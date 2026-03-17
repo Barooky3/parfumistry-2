@@ -51,11 +51,12 @@ export const ChatWidget = () => {
         .order('created_at', { ascending: false });
 
       if (convos && convos.length > 0) {
-        // If ANY conversation is blocked, the user is blocked
         const anyBlocked = convos.some(c => c.blocked === true);
         if (anyBlocked) {
+          // Silently blocked: show empty chat as if fresh, no indication of block
           setIsBlocked(true);
           loadedRef.current = true;
+          setMessages([]);
           setLoading(false);
           return;
         }
