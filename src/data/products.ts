@@ -179,7 +179,7 @@ export const products: Product[] = [
       base: ['Amber', 'Musk'],
     },
     accentColor: '#C8D96F',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-aoud-lemon-mint-3807519.png?v=1767903748&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-aoud-lemon-mint-3807519.png?v=1767903748&width=400',
     affiliateUrl: '/product/aoud-lemon-mint',
     inStock: true,
     variants: [
