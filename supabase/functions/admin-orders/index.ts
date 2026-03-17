@@ -414,7 +414,7 @@ serve(async (req) => {
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
-    <p style="font-size:15px;color:#333;">Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
+    <p style="font-size:15px;color:#333;">Hi <strong>${escapeHtml(order.customer_name || "Valued Customer")}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
     ${adminNotesHtml}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
