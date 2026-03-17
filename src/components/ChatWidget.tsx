@@ -217,17 +217,38 @@ export const ChatWidget = () => {
       setConversationId(convId);
     }
 
-    await Promise.all([
-      supabase.from('chat_messages').insert({
-        conversation_id: convId,
-        sender_type: 'customer',
-        message: text,
-      }),
-      supabase
+    const { error: msgError } = await supabase.from('chat_messages').insert({
+      conversation_id: convId,
+      sender_type: 'customer',
+      message: text,
+    });
+
+    // If conversation was deleted by admin, create a fresh one and retry
+    if (msgError) {
+      const { data: freshConvo } = await supabase
         .from('chat_conversations')
-        .update({ customer_last_seen_at: new Date().toISOString() })
-        .eq('id', convId),
-    ]);
+        .insert({
+          user_id: user.id,
+          user_email: user.email || '',
+          user_name: user.user_metadata?.full_name || user.email || '',
+        })
+        .select()
+        .single();
+      if (freshConvo) {
+        convId = freshConvo.id;
+        setConversationId(convId);
+        await supabase.from('chat_messages').insert({
+          conversation_id: convId,
+          sender_type: 'customer',
+          message: text,
+        });
+      }
+    }
+
+    await supabase
+      .from('chat_conversations')
+      .update({ customer_last_seen_at: new Date().toISOString() })
+      .eq('id', convId);
 
     supabase.functions.invoke('chat-notify', {
       body: { conversation_id: convId, message: text, user_email: user.email },
