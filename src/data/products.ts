@@ -492,7 +492,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Tonka Bean', 'Cedarwood', 'Sandalwood'],
     },
     accentColor: '#C0392B',
-    image: 'https://profparfums.store/cdn/shop/files/A2B6CEE1-52D5-4900-AE35-97311C0903DF_transparent_1.png?v=1768068490&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/A2B6CEE1-52D5-4900-AE35-97311C0903DF_transparent_1.png?v=1768068490&width=400',
     affiliateUrl: '/product/eros-flame',
     inStock: true,
     variants: [
