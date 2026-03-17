@@ -191,6 +191,25 @@ export default function AdminOrders() {
     if (data) setBannedEmails(new Set(data.map(d => d.email.toLowerCase())));
   };
 
+  const fetchBlockedUsers = async () => {
+    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-chat`,
+        { headers: { Authorization: `Bearer ${session.access_token}` } }
+      );
+      if (res.ok) {
+        const json = await res.json();
+        const blocked = (json.conversations || [])
+          .filter((c: any) => c.blocked)
+          .map((c: any) => c.user_email.toLowerCase());
+        setBlockedEmails(new Set(blocked));
+      }
+    } catch {}
+  };
+
   useEffect(() => {
     if (ADMIN_EMAILS.includes(user?.email || "")) {
       fetchOrders(true);
