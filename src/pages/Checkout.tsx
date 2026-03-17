@@ -1068,28 +1068,22 @@ const Checkout = () => {
                 </div>
 
                 {/* Estimated Delivery Info */}
-                <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-yellow-500/10 via-accent/5 to-transparent border border-yellow-500/30 p-4 mt-2">
+                <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-yellow-500/10 via-accent/5 to-transparent border border-yellow-500/30 p-3 sm:p-4 mt-2">
                   <div className="absolute -top-6 -right-6 w-20 h-20 bg-yellow-500/10 rounded-full blur-2xl" />
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
-                      <span className="text-lg">📦</span>
+                  <div className="flex items-center gap-2.5 sm:gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                      <span className="text-sm sm:text-lg">📦</span>
                     </div>
-                    <div className="flex-1 space-y-2">
-                      <p className="text-sm font-bold text-foreground tracking-wide">Estimated Delivery via DHL</p>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="bg-background/60 rounded-lg px-3 py-2 border border-border/40">
-                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">EU & UK</p>
-                          <p className="text-sm font-bold text-foreground">4–6 days</p>
-                        </div>
-                        <div className="bg-background/60 rounded-lg px-3 py-2 border border-border/40">
-                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Rest of World</p>
-                          <p className="text-sm font-bold text-foreground">6–8 days</p>
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-bold text-foreground">Estimated Delivery via DHL</p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">EU & UK:</span>
+                        <span className="text-[10px] sm:text-xs font-bold text-foreground">4–6 working days</span>
+                        <span className="text-muted-foreground/40 mx-0.5">•</span>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">Worldwide:</span>
+                        <span className="text-[10px] sm:text-xs font-bold text-foreground">6–8 working days</span>
                       </div>
-                      <div className="flex items-center gap-1.5 pt-0.5">
-                        <span className="text-xs">📧</span>
-                        <p className="text-xs text-muted-foreground">DHL tracking number sent automatically by email</p>
-                      </div>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">📧 Tracking number sent by email</p>
                     </div>
                   </div>
                 </div>
