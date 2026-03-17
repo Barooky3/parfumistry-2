@@ -1,5 +1,6 @@
-import { CheckSquare, Truck, MapPin } from 'lucide-react';
+import { Package, Truck, MapPin, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { motion } from 'framer-motion';
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
@@ -24,31 +25,86 @@ export const DeliveryInfo = () => {
   const deliveryStart = addBusinessDays(today, 4);
   const deliveryEnd = addBusinessDays(today, 6);
 
+  const steps = [
+    {
+      icon: Package,
+      label: t('delivery.ordered'),
+      date: formatDate(orderDate),
+      active: true,
+    },
+    {
+      icon: Truck,
+      label: t('delivery.orderReady'),
+      date: `${formatDate(orderDate)} – ${formatDate(orderReadyEnd)}`,
+      active: false,
+    },
+    {
+      icon: MapPin,
+      label: t('delivery.delivered'),
+      date: `${formatDate(deliveryStart)} – ${formatDate(deliveryEnd)}`,
+      active: false,
+    },
+  ];
+
   return (
-    <div className="space-y-2.5">
-      <div className="bg-secondary border border-border/60 rounded-lg px-4 py-3.5">
-        <p className="text-sm text-foreground/90">
-          {t('delivery.orderToday')}{' '}
-          <span className="font-semibold text-foreground">{formatDate(deliveryStart)}</span> {t('delivery.and')}{' '}
-          <span className="font-semibold text-foreground">{formatDate(deliveryEnd)}</span>
-        </p>
-      </div>
-      <div className="grid grid-cols-3 gap-1.5">
-        <div className="bg-secondary border border-border/40 rounded-lg p-3 text-center">
-          <CheckSquare className="h-5 w-5 mx-auto mb-1.5 text-accent" strokeWidth={1.5} />
-          <p className="text-[11px] font-medium text-foreground tracking-wide">{t('delivery.ordered')}</p>
-          <p className="text-xs font-semibold text-foreground mt-1">{formatDate(orderDate)}</p>
+    <div className="space-y-3">
+      {/* Hero banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="relative overflow-hidden rounded-xl bg-gradient-to-r from-accent/15 via-accent/5 to-transparent border border-accent/30 px-5 py-4"
+      >
+        <div className="absolute top-0 right-0 w-24 h-24 bg-accent/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+        <div className="flex items-center gap-3">
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+            <Clock className="h-5 w-5 text-accent" strokeWidth={2} />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground leading-snug">
+              {t('delivery.orderToday')}
+            </p>
+            <p className="text-sm text-foreground/80">
+              <span className="font-bold text-accent">{formatDate(deliveryStart)}</span>
+              {' '}{t('delivery.and')}{' '}
+              <span className="font-bold text-accent">{formatDate(deliveryEnd)}</span>
+            </p>
+          </div>
         </div>
-        <div className="bg-secondary border border-border/40 rounded-lg p-3 text-center">
-          <Truck className="h-5 w-5 mx-auto mb-1.5 text-accent" strokeWidth={1.5} />
-          <p className="text-[11px] font-medium text-foreground tracking-wide">{t('delivery.orderReady')}</p>
-          <p className="text-xs font-semibold text-foreground mt-1">{formatDate(orderDate)} – {formatDate(orderReadyEnd)}</p>
+      </motion.div>
+
+      {/* Timeline steps */}
+      <div className="relative flex items-start justify-between px-2">
+        {/* Connecting line */}
+        <div className="absolute top-5 left-[calc(16.67%)] right-[calc(16.67%)] h-[2px] bg-border/60">
+          <div className="h-full w-[33%] bg-accent rounded-full" />
         </div>
-        <div className="bg-secondary border border-border/40 rounded-lg p-3 text-center">
-          <MapPin className="h-5 w-5 mx-auto mb-1.5 text-accent" strokeWidth={1.5} />
-          <p className="text-[11px] font-medium text-foreground tracking-wide">{t('delivery.delivered')}</p>
-          <p className="text-xs font-semibold text-foreground mt-1">{formatDate(deliveryStart)} – {formatDate(deliveryEnd)}</p>
-        </div>
+
+        {steps.map((step, i) => (
+          <motion.div
+            key={step.label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 + i * 0.1 }}
+            className="relative flex flex-col items-center text-center flex-1"
+          >
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center z-10 transition-all ${
+                step.active
+                  ? 'bg-accent text-accent-foreground shadow-[0_0_16px_hsl(var(--accent)/0.4)]'
+                  : 'bg-secondary border border-border/60 text-muted-foreground'
+              }`}
+            >
+              <step.icon className="h-[18px] w-[18px]" strokeWidth={step.active ? 2.5 : 1.5} />
+            </div>
+            <p className={`text-[11px] mt-2 font-semibold tracking-wide ${step.active ? 'text-accent' : 'text-foreground/70'}`}>
+              {step.label}
+            </p>
+            <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+              {step.date}
+            </p>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
