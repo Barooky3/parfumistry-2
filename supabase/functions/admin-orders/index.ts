@@ -234,9 +234,9 @@ serve(async (req) => {
       <tr>
         <td style="vertical-align:top;width:50%;">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px;">Bill To</div>
-          <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px;">${order.customer_name || "N/A"}</div>
-          <div style="color:#666;line-height:1.5;">${order.customer_email}</div>
-          <div style="color:#666;line-height:1.5;margin-top:4px;">${addressHtml}</div>
+           <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px;">${escapeHtml(order.customer_name || "N/A")}</div>
+           <div style="color:#666;line-height:1.5;">${escapeHtml(order.customer_email)}</div>
+           <div style="color:#666;line-height:1.5;margin-top:4px;">${escapeHtml(addressHtml)}</div>
         </td>
         <td style="vertical-align:top;text-align:right;">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px;">Invoice Details</div>
