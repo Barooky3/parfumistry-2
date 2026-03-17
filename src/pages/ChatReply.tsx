@@ -74,6 +74,7 @@ export default function ChatReply() {
       action: 'send_reply',
       conversation_id: conversationId,
       message: reply.trim(),
+      user_email: customerEmail,
     });
 
     if (result?.success) {
