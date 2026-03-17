@@ -1242,7 +1242,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Amber', 'Benzoin'],
     },
     accentColor: '#8B6EA8',
-    image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-parfum-2174125.png?v=1768068547&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-parfum-2174125.png?v=1768068547&width=400',
     affiliateUrl: '/product/stronger-with-you-parfum',
     inStock: true,
     variants: [
