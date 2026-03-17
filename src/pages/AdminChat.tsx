@@ -224,7 +224,7 @@ const AdminChat = () => {
     };
     setMessages(prev => [...prev, optimisticMsg]);
 
-    const result = await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text });
+    const result = await invokeAdminChat({ action: 'send_reply', conversation_id: selected.id, message: text, user_email: selected.user_email });
     
     // Replace optimistic message with real one if we got it back, or reload
     if (result?.message_id) {
