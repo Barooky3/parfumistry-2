@@ -626,7 +626,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Tonka Bean', 'Benzoin'],
     },
     accentColor: '#8B4513',
-    image: 'https://profparfums.store/cdn/shop/files/lattafa-khamrah-6018164.png?v=1768068489&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/lattafa-khamrah-6018164.png?v=1768068489&width=400',
     affiliateUrl: '/product/khamrah-parfum',
     inStock: true,
     featured: true,
