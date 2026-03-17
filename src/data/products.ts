@@ -669,7 +669,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Sandalwood', 'Pepper'],
     },
     accentColor: '#6A5ACD',
-    image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-layton-9771652.png?v=1768068489&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-layton-9771652.png?v=1768068489&width=400',
     affiliateUrl: '/product/layton',
     inStock: true,
     featured: true,
