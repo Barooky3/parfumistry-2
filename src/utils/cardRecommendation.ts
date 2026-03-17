@@ -20,23 +20,22 @@ const AVAILABLE_DENOMINATIONS: Record<string, number[]> = {
 export function getCardRecommendation(eurTotal: number, _userCurrency: Currency): string {
   let bestCurrency = 'EUR';
   let bestDenom = 50;
-  let bestDiffEur = Infinity;
+  let bestOverpayEur = Infinity;
 
   for (const [cc, denoms] of Object.entries(AVAILABLE_DENOMINATIONS)) {
     const info = CURRENCIES.find(c => c.code === cc);
     if (!info) continue;
 
-    const convertedAmount = eurTotal * info.rate;
-
     for (const denom of denoms) {
-      // Only consider denominations that cover the total (or are closest)
       const denomInEur = denom / info.rate;
-      const diff = Math.abs(eurTotal - denomInEur);
-
-      if (diff < bestDiffEur) {
-        bestDiffEur = diff;
-        bestDenom = denom;
-        bestCurrency = cc;
+      // Only consider denominations that cover the total (no underpay)
+      if (denomInEur >= eurTotal - 0.01) {
+        const overpay = denomInEur - eurTotal;
+        if (overpay < bestOverpayEur) {
+          bestOverpayEur = overpay;
+          bestDenom = denom;
+          bestCurrency = cc;
+        }
       }
     }
   }
