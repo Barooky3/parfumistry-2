@@ -878,7 +878,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Oriental Notes', 'Woody Notes'],
     },
     accentColor: '#000000',
-    image: 'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=400',
     affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH',
     inStock: true,
     featured: true,
