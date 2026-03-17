@@ -1,5 +1,6 @@
 import { forwardRef, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
@@ -187,7 +188,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           
           {/* Discount Badge */}
           {hasDiscount && (
-            <span className="absolute top-2 right-2 bg-accent text-accent-foreground text-[9px] font-semibold px-1.5 py-0.5">
+            <span className="absolute top-2 right-2 bg-accent text-accent-foreground text-[9px] font-semibold px-1.5 py-0.5 flex items-center gap-0.5">
+              {product.hotDeal && <Flame size={10} className="text-accent-foreground" />}
               -{discountPercent}%
             </span>
           )}
