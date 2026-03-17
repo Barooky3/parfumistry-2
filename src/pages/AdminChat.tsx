@@ -488,6 +488,12 @@ const AdminChat = () => {
                 >
                   💰 Cheap
                 </button>
+                <button
+                  onClick={() => draftQuickReply(SHIPPING_MSG)}
+                  className="text-[10px] px-2 py-1 rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                >
+                  📦 Shipping
+                </button>
               </div>
 
               {/* Input */}
