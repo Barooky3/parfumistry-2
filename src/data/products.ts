@@ -426,7 +426,7 @@ export const products: Product[] = [
       base: ['Madagascar Vanilla', 'White Musk'],
     },
     accentColor: '#DAA520',
-    image: 'https://profparfums.store/cdn/shop/files/xerjoff-erba-gold-9327888.png?v=1768068546&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/xerjoff-erba-gold-9327888.png?v=1768068546&width=400',
     affiliateUrl: '/product/erba-gold',
     inStock: true,
     variants: [
