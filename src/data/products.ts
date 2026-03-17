@@ -133,7 +133,7 @@ export const products: Product[] = [
       base: ['Brown Sugar', 'Ambergris', 'Musk'],
     },
     accentColor: '#8B6914',
-    image: 'https://profparfums.store/cdn/shop/files/mancera-amore-caffe-1050170.png?v=1768068487&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/mancera-amore-caffe-1050170.png?v=1768068487&width=400',
     affiliateUrl: '/product/amore-caffe',
     inStock: false,
     featured: true,
