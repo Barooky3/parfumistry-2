@@ -7,6 +7,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const VALID_DISCOUNT_CODES: Record<string, number> = {
+  'professor15': 15,
+  'parfum10': 10,
+  'parfumz20': 20,
+  'parfumo30': 30,
+  'parfuma90': 90,
+  'parfumz50': 50,
+};
+
 interface CheckoutRequest {
   amount: number;
   description: string;
@@ -17,7 +26,6 @@ interface CheckoutRequest {
   orderItems: any[];
   shippingAddress: any;
   discountCode?: string;
-  discountPercent?: number;
 }
 
 serve(async (req) => {
@@ -42,7 +50,8 @@ serve(async (req) => {
     if (!merchantCode) throw new Error("Could not determine merchant code");
 
     const body = (await req.json()) as CheckoutRequest;
-    const { amount, description, customerEmail, customerName, checkoutReference, redirectUrl, orderItems, shippingAddress, discountCode, discountPercent } = body;
+    const { amount, description, customerEmail, customerName, checkoutReference, redirectUrl, orderItems, shippingAddress, discountCode } = body;
+    const discountPercent = VALID_DISCOUNT_CODES[discountCode?.toLowerCase().trim() || ''] ?? 0;
 
     if (!amount || amount <= 0) throw new Error("Invalid amount");
     if (!checkoutReference) throw new Error("Missing checkout reference");

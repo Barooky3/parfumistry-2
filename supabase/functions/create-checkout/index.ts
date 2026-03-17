@@ -6,6 +6,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const VALID_DISCOUNT_CODES: Record<string, number> = {
+  'professor15': 15,
+  'parfum10': 10,
+  'parfumz20': 20,
+  'parfumo30': 30,
+  'parfuma90': 90,
+  'parfumz50': 50,
+};
+
 interface CartLineItem {
   name: string;
   brand: string;
@@ -25,7 +34,7 @@ interface CheckoutRequest {
     postalCode: string;
     line1: string;
   };
-  discountPercent?: number;
+  discountCode?: string;
   freeItemDiscount?: number;
 }
 
@@ -88,11 +97,10 @@ serve(async (req) => {
     const clientSecret = Deno.env.get("PAYPAL_SECRET") || "";
     if (!clientId || !clientSecret) throw new Error("PayPal credentials not configured");
 
-    const { items, customerEmail, customerName, shippingAddress, discountPercent, freeItemDiscount } =
+    const { items, customerEmail, customerName, shippingAddress, discountCode, freeItemDiscount } =
       (await req.json()) as CheckoutRequest;
 
-    const validDiscounts = [10, 15, 20, 30, 50, 90];
-    const discount = validDiscounts.includes(discountPercent || 0) ? (discountPercent || 0) : 0;
+    const discount = VALID_DISCOUNT_CODES[discountCode?.toLowerCase().trim() || ''] ?? 0;
     const multiplier = 1 - discount / 100;
 
     if (!items || items.length === 0) throw new Error("No items in cart");

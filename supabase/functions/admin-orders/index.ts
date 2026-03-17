@@ -9,6 +9,15 @@ const corsHeaders = {
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -225,9 +234,9 @@ serve(async (req) => {
       <tr>
         <td style="vertical-align:top;width:50%;">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px;">Bill To</div>
-          <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px;">${order.customer_name || "N/A"}</div>
-          <div style="color:#666;line-height:1.5;">${order.customer_email}</div>
-          <div style="color:#666;line-height:1.5;margin-top:4px;">${addressHtml}</div>
+           <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px;">${escapeHtml(order.customer_name || "N/A")}</div>
+           <div style="color:#666;line-height:1.5;">${escapeHtml(order.customer_email)}</div>
+           <div style="color:#666;line-height:1.5;margin-top:4px;">${escapeHtml(addressHtml)}</div>
         </td>
         <td style="vertical-align:top;text-align:right;">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:8px;">Invoice Details</div>
@@ -405,7 +414,7 @@ serve(async (req) => {
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
-    <p style="font-size:15px;color:#333;">Hi <strong>${order.customer_name || "Valued Customer"}</strong>,</p>
+    <p style="font-size:15px;color:#333;">Hi <strong>${escapeHtml(order.customer_name || "Valued Customer")}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
     ${adminNotesHtml}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>

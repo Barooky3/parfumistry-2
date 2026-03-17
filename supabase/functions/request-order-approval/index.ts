@@ -9,6 +9,24 @@ const corsHeaders = {
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
+const VALID_DISCOUNT_CODES: Record<string, number> = {
+  'professor15': 15,
+  'parfum10': 10,
+  'parfumz20': 20,
+  'parfumo30': 30,
+  'parfuma90': 90,
+  'parfumz50': 50,
+};
+
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 interface OrderItem {
   name: string;
   brand: string;
@@ -67,9 +85,9 @@ function buildApprovalEmailHtml(
     <p style="font-size:15px;color:#333;margin:0 0 16px;">A new order needs your approval before the confirmation email is sent to the customer.</p>
     <table style="width:100%;margin-bottom:16px;font-size:14px;">
       ${orderNumRow}
-      <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${customerEmail}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(customerName)}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(customerEmail)}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Total:</td><td style="padding:4px 0;"><strong>€${totalAmount}</strong></td></tr>
     </table>
     <div style="text-align:center;margin-top:24px;margin-bottom:16px;">
@@ -105,7 +123,7 @@ function buildProofRequestEmailHtml(customerName: string, totalAmount: string, o
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Proof of Payment Required</h2>
     ${orderNumText}
-    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
+    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">Thank you for your order of <strong>&euro;${totalAmount}</strong>. To process your order and send you the confirmation email, we need to verify your payment.</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">Please <strong>reply to this email</strong> with a screenshot or photo of your payment confirmation (e.g. bank transfer receipt, transaction confirmation).</p>
     <div style="background:#eff6ff;border:2px solid #2563eb;padding:16px 20px;border-radius:8px;margin-bottom:24px;">
@@ -157,7 +175,8 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, discountPercent, idempotencyKey } = body;
+    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, idempotencyKey } = body;
+    const discountPercent = VALID_DISCOUNT_CODES[discountCode?.toLowerCase().trim() || ''] ?? 0;
 
     if (!customerEmail) throw new Error("Customer email is required");
     if (!orderItems || orderItems.length === 0) throw new Error("No order items");

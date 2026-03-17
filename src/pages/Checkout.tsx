@@ -690,7 +690,7 @@ const Checkout = () => {
       createOrder: async () => {
         const fd = formDataRef.current;
         const cartItems = items.map(item => ({ name: item.product.name, brand: item.product.brand, image: item.product.image, price: item.selectedPrice || item.product.price, quantity: item.quantity, selectedMl: item.selectedMl }));
-        const { data, error } = await supabase.functions.invoke('create-checkout', { body: { items: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, discountPercent: appliedDiscountRef.current?.percent || 0, freeItemDiscount } });
+        const { data, error } = await supabase.functions.invoke('create-checkout', { body: { items: cartItems, customerEmail: fd.email, customerName: `${fd.firstName} ${fd.lastName}`, shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress }, discountCode: appliedDiscountRef.current?.code || null, freeItemDiscount } });
         if (error || !data?.orderID) throw new Error(error?.message || data?.error || 'Failed to create order');
         return data.orderID;
       },
