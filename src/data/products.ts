@@ -223,7 +223,7 @@ export const products: Product[] = [
       base: ['Birch', 'Musk', 'Oakmoss'],
     },
     accentColor: '#2D2D2D',
-    image: 'https://profparfums.store/cdn/shop/files/creed-aventus-1140157.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/creed-aventus-1140157.png?v=1768068488&width=400',
     affiliateUrl: '/product/aventus',
     inStock: true,
     featured: true,
