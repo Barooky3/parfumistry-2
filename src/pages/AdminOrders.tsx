@@ -80,14 +80,22 @@ export default function AdminOrders() {
   const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
-  // Read URL search params for email filter (e.g. from chat link)
+  // Read URL search params for email/search filter (e.g. from chat link)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const emailParam = params.get("email");
+    const searchParam = params.get("search");
     if (emailParam) {
       setCustomerEmailFilter(emailParam.toLowerCase());
       setStatusFilter("all");
       setActiveTab("orders");
+    }
+    if (searchParam) {
+      setSearchQuery(searchParam);
+      setStatusFilter("all");
+      setActiveTab("orders");
+    }
+    if (emailParam || searchParam) {
       // Clean URL
       window.history.replaceState({}, "", window.location.pathname);
     }
