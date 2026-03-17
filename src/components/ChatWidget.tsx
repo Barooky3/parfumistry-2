@@ -125,11 +125,14 @@ export const ChatWidget = () => {
     const loadConvoId = async () => {
       const { data: convos } = await supabase
         .from('chat_conversations')
-        .select('id')
+        .select('id, blocked')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1);
+        .order('created_at', { ascending: false });
       if (convos && convos.length > 0) {
+        if (convos.some(c => c.blocked)) {
+          setIsBlocked(true);
+          return;
+        }
         setConversationId(convos[0].id);
       }
     };
