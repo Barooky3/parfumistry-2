@@ -241,7 +241,7 @@ export const ChatWidget = () => {
 
               <div className="px-4 py-1.5 bg-muted/50 border-t border-border shrink-0">
                 <p className="text-[10px] text-muted-foreground text-center leading-tight">
-                  Replies usually take a few minutes to hours. You'll be notified by email or on the website when we respond.
+                  Replies usually take a few minutes to hours. Type out your full question so we can answer it as soon as we get back to you. You'll be notified by email when we respond.
                 </p>
               </div>
 
