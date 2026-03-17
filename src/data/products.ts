@@ -603,7 +603,7 @@ export const products: Product[] = [
       base: ['Ambroxan', 'Woody Notes', 'Musk'],
     },
     accentColor: '#F5C542',
-    image: 'https://profparfums.store/cdn/shop/files/product_4_matched_1.png?v=1768068548&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/product_4_matched_1.png?v=1768068548&width=400',
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
