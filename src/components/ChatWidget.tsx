@@ -294,12 +294,6 @@ export const ChatWidget = () => {
                         </div>
                       </div>
                     ))}
-                    {!isBlocked && (
-                      <ChatPresets onSelect={handlePresetSelect} />
-                    )}
-                    <p className="text-[10px] text-muted-foreground text-center pt-1 pb-1">
-                      Or type your own message below to chat directly with us!
-                    </p>
                   </>
                 )}
               </div>
