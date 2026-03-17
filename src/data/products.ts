@@ -1220,7 +1220,7 @@ export const products: Product[] = [
       base: ['Vanilla', 'Chestnut', 'Suede'],
     },
     accentColor: '#8B1A1A',
-    image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=800',
+    image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=400',
     affiliateUrl: '/product/stronger-with-you-absolutely',
     inStock: true,
     variants: [
