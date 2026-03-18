@@ -7,6 +7,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
 interface OrderItem {
@@ -107,7 +116,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${orderNumText}
-    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
+    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
     ${giftCardTip}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
@@ -176,9 +185,9 @@ function buildAdminInvoiceHtml(
       </div>
     </div>
     <table style="width:100%;margin-bottom:16px;font-size:13px;">
-      <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${customerEmail}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(customerName)}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(customerEmail)}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Payment:</td><td style="padding:4px 0;">${paymentMethod}</td></tr>
     </table>
     ${giftCardSection}

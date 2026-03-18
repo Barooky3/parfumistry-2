@@ -35,26 +35,25 @@ serve(async (req) => {
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Decode JWT to get email without requiring active session
+    // Verify JWT signature via Supabase Auth
     const token = authHeader.replace("Bearer ", "");
-    let payload: { email?: string };
-    try {
-      const parts = token.split(".");
-      payload = JSON.parse(atob(parts[1]));
-    } catch {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const userEmail = payload.email || "";
+    const userEmail = user.email || "";
     if (!ADMIN_EMAILS.includes(userEmail)) {
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Verify the token is actually valid by checking with service role
     const adminClient = createClient(supabaseUrl, supabaseServiceKey);
     const url = new URL(req.url);
     const action = url.searchParams.get("action");
@@ -442,7 +441,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("Admin orders error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Unable to process request" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

@@ -70,20 +70,20 @@ serve(async (req) => {
           });
           if (updateError) {
             return new Response(
-              JSON.stringify({ error: updateError.message }),
+              JSON.stringify({ error: "Unable to process registration" }),
               { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
             );
           }
           userId = existingUser.id;
         } else {
           return new Response(
-            JSON.stringify({ error: createError.message }),
-            { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-          );
+              JSON.stringify({ error: "Unable to process registration" }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+            );
         }
       } else {
         return new Response(
-          JSON.stringify({ error: createError.message }),
+          JSON.stringify({ error: "Unable to process registration" }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
         );
       }
@@ -98,7 +98,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error verifying OTP:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Unable to verify code" }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }

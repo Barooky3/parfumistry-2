@@ -9,6 +9,15 @@ const corsHeaders = {
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 async function sendProofUploadedNotification(order: any, proofUrl: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) { console.error("RESEND_API_KEY not configured, skipping notification"); return; }
@@ -33,8 +42,8 @@ async function sendProofUploadedNotification(order: any, proofUrl: string): Prom
     </div>
     <table style="width:100%;margin-bottom:16px;font-size:14px;">
       ${orderNum ? `<tr><td style="padding:4px 0;color:#999;width:120px;">Order #:</td><td style="padding:4px 0;"><strong>#${orderNum}</strong></td></tr>` : ""}
-      <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${order.customer_name}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${order.customer_email}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(order.customer_name)}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(order.customer_email)}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Payment:</td><td style="padding:4px 0;">${paymentMethod}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Total:</td><td style="padding:4px 0;"><strong>€${Number(order.total_amount).toFixed(2)}</strong></td></tr>
     </table>

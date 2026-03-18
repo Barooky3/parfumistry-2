@@ -6,6 +6,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
 const SITE_URL = "https://parfumistry.com";
@@ -277,7 +286,7 @@ function buildEmailHtml(
 
     '<div style="padding: 32px 32px 0 32px;">',
     orderNumSection,
-    '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
+    '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + escapeHtml(customerName) + '</strong>,</p>',
     '<div style="background-color: #faf9f6; border: 2px solid #c9a96e; padding: 16px 24px; border-radius: 8px; text-align: center; margin-bottom: 24px;">',
     '<p style="font-size: 16px; color: #1a1a1a; margin: 0; font-weight: 500; line-height: 1.6;">📦 Your order has been confirmed and is being prepared for shipment. You will receive your <strong>DHL</strong> tracking number within <strong>2 business days</strong>.</p>',
     '</div>',
@@ -292,7 +301,7 @@ function buildEmailHtml(
     ...(discountCode && discountPercent ? [
     '<div style="padding: 0 32px; text-align: right;">',
     '<span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #999;">Discount: </span>',
-    '<span style="font-size: 15px; font-weight: 500; color: #c9a96e;">' + discountCode + ' (' + discountPercent + '% off)</span>',
+    '<span style="font-size: 15px; font-weight: 500; color: #c9a96e;">' + escapeHtml(discountCode || '') + ' (' + discountPercent + '% off)</span>',
     '</div>',
     ] : []),
 
@@ -378,9 +387,9 @@ function buildAdminInvoiceHtml(
       <tr>
         <td style="vertical-align:top;width:50%;">
           <p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#999;margin:0 0 6px;">Bill To</p>
-          <p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;">${customerName}</p>
-          <p style="font-size:13px;color:#666;margin:0 0 2px;">${customerEmail}</p>
-          <p style="font-size:13px;color:#666;margin:0;">${addressText}</p>
+          <p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;">${escapeHtml(customerName)}</p>
+          <p style="font-size:13px;color:#666;margin:0 0 2px;">${escapeHtml(customerEmail)}</p>
+          <p style="font-size:13px;color:#666;margin:0;">${escapeHtml(addressText)}</p>
         </td>
         <td style="vertical-align:top;text-align:right;">
           <table style="margin-left:auto;">
@@ -531,7 +540,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error sending order confirmation:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Unable to send confirmation" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
