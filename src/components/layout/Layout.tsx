@@ -21,8 +21,14 @@ export const Layout = ({ children }: LayoutProps) => {
 
   useEffect(() => {
     // Defer non-critical widgets until after initial render + idle time
-    const id = requestIdleCallback(() => setShowDeferred(true), { timeout: 2000 });
-    return () => cancelIdleCallback(id);
+    // requestIdleCallback is not supported in Safari/iOS — fallback to setTimeout
+    if (typeof requestIdleCallback === 'function') {
+      const id = requestIdleCallback(() => setShowDeferred(true), { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      const id = setTimeout(() => setShowDeferred(true), 1000);
+      return () => clearTimeout(id);
+    }
   }, []);
 
   return (
