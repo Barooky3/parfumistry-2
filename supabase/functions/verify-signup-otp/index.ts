@@ -77,9 +77,9 @@ serve(async (req) => {
           userId = existingUser.id;
         } else {
           return new Response(
-            JSON.stringify({ error: createError.message }),
-            { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-          );
+              JSON.stringify({ error: "Unable to process registration" }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+            );
         }
       } else {
         return new Response(
