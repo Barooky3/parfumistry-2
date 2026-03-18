@@ -19,16 +19,25 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
     }
 
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const adminEmail = payload.email;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Verify JWT signature via Supabase Auth
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
+    }
+
+    const adminEmail = user.email || "";
     if (!ADMIN_EMAILS.includes(adminEmail)) {
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { action, conversation_id, message, user_email } = await req.json();
 
@@ -44,7 +53,6 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ conversations: [] }), { headers: corsHeaders });
       }
 
-      // Parallel: fetch all unread counts and order counts at once
       const convIds = convos.map(c => c.id);
       const emails = [...new Set(convos.map(c => c.user_email))];
 
@@ -61,7 +69,6 @@ Deno.serve(async (req) => {
           .in("customer_email", emails),
       ]);
 
-      // Build unread count map
       const unreadMap: Record<string, number> = {};
       if (unreadRes.data) {
         for (const row of unreadRes.data) {
@@ -69,7 +76,6 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Build order count map
       const orderMap: Record<string, number> = {};
       if (orderRes.data) {
         for (const row of orderRes.data) {
@@ -130,11 +136,9 @@ Deno.serve(async (req) => {
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversation_id);
 
-      // Send email notification to customer
       const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
       if (RESEND_API_KEY && user_email) {
         const SITE_URL = "https://profparfums.lovable.app";
-        // Strip [img:...] tags for email preview
         const cleanMessage = message.replace(/\[img:[^\]]+\]/g, '').trim();
         const previewText = cleanMessage.length > 200 ? cleanMessage.substring(0, 200) + '...' : cleanMessage;
         const hasImages = /\[img:/.test(message);
@@ -174,7 +178,6 @@ Deno.serve(async (req) => {
     }
 
     if (action === "block") {
-      // Delete all messages but keep conversation marked as blocked
       await supabase
         .from("chat_messages")
         .delete()
@@ -198,7 +201,6 @@ Deno.serve(async (req) => {
     }
 
     if (action === "delete") {
-      // Soft-delete: just hide from admin, preserve all history
       await supabase
         .from("chat_conversations")
         .update({ hidden_from_admin: true })
@@ -230,6 +232,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ error: "Invalid action" }), { status: 400, headers: corsHeaders });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders });
+    console.error("Admin chat error:", err);
+    return new Response(JSON.stringify({ error: "Unable to process request" }), { status: 500, headers: corsHeaders });
   }
 });
