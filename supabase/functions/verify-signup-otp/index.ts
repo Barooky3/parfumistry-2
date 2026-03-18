@@ -83,7 +83,7 @@ serve(async (req) => {
         }
       } else {
         return new Response(
-          JSON.stringify({ error: createError.message }),
+          JSON.stringify({ error: "Unable to process registration" }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
         );
       }
