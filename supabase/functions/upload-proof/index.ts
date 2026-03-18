@@ -127,12 +127,20 @@ serve(async (req) => {
       });
     }
 
-    // Get public URL
-    const { data: urlData } = supabase.storage
+    // Generate signed URL (1-year expiry) since bucket is now private
+    const { data: signedData, error: signedError } = await supabase.storage
       .from("payment-proofs")
-      .getPublicUrl(fileName);
+      .createSignedUrl(fileName, 60 * 60 * 24 * 365);
 
-    const proofUrl = urlData.publicUrl;
+    if (signedError || !signedData?.signedUrl) {
+      console.error("Signed URL error:", signedError);
+      return new Response(JSON.stringify({ error: "Failed to generate proof URL" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
+    }
+
+    const proofUrl = signedData.signedUrl;
 
     // Update order with proof URL (append if multiple)
     const existingProof = order.proof_url;
