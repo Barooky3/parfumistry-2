@@ -7,7 +7,7 @@ import { getBestsellers } from '@/data/products';
 import { BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
-import logo from '@/assets/logo.png';
+const logo = '/images/logo.png';
 
 // Lazy-load BrandNavigation since it uses framer-motion eagerly
 const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').then(m => ({ default: m.BrandNavigation })));
@@ -71,8 +71,9 @@ const Index = () => {
               <img 
                 src={logo} 
                 alt="Parfumistry" 
-                width={1536}
-                height={1024}
+                width={800}
+                height={533}
+                fetchPriority="high"
                 className="h-auto w-[480px] md:w-[620px] lg:w-[800px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
             </div>
@@ -172,7 +173,7 @@ const Index = () => {
       <section className="py-14 md:py-20 bg-secondary">
         <div className="container">
           <div className="max-w-lg mx-auto text-center">
-            <img src={logo} alt="Parfumistry" width={1536} height={1024} className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
+            <img src={logo} alt="Parfumistry" width={800} height={533} loading="lazy" className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
               {t('home.joinFamily')}
             </h2>
