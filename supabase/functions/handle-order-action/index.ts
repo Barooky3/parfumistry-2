@@ -185,9 +185,9 @@ function buildAdminInvoiceHtml(
       </div>
     </div>
     <table style="width:100%;margin-bottom:16px;font-size:13px;">
-      <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${customerName}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${customerEmail}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${addressText}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(customerName)}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(customerEmail)}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Payment:</td><td style="padding:4px 0;">${paymentMethod}</td></tr>
     </table>
     ${giftCardSection}
