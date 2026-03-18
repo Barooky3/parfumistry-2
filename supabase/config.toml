@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.chat-notify]
 verify_jwt = false
+
+[functions.admin-padding]
+verify_jwt = false
+
+[functions.mark-rejection-seen]
+verify_jwt = false
