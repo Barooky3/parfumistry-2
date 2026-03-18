@@ -116,7 +116,7 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   <div style="padding:32px;">
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${orderNumText}
-    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${customerName}</strong>,</p>
+    <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
     ${giftCardTip}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
