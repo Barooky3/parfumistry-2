@@ -387,9 +387,9 @@ function buildAdminInvoiceHtml(
       <tr>
         <td style="vertical-align:top;width:50%;">
           <p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#999;margin:0 0 6px;">Bill To</p>
-          <p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;">${customerName}</p>
-          <p style="font-size:13px;color:#666;margin:0 0 2px;">${customerEmail}</p>
-          <p style="font-size:13px;color:#666;margin:0;">${addressText}</p>
+          <p style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;">${escapeHtml(customerName)}</p>
+          <p style="font-size:13px;color:#666;margin:0 0 2px;">${escapeHtml(customerEmail)}</p>
+          <p style="font-size:13px;color:#666;margin:0;">${escapeHtml(addressText)}</p>
         </td>
         <td style="vertical-align:top;text-align:right;">
           <table style="margin-left:auto;">
