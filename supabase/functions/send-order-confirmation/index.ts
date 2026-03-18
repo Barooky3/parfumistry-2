@@ -286,7 +286,7 @@ function buildEmailHtml(
 
     '<div style="padding: 32px 32px 0 32px;">',
     orderNumSection,
-    '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + customerName + '</strong>,</p>',
+    '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + escapeHtml(customerName) + '</strong>,</p>',
     '<div style="background-color: #faf9f6; border: 2px solid #c9a96e; padding: 16px 24px; border-radius: 8px; text-align: center; margin-bottom: 24px;">',
     '<p style="font-size: 16px; color: #1a1a1a; margin: 0; font-weight: 500; line-height: 1.6;">📦 Your order has been confirmed and is being prepared for shipment. You will receive your <strong>DHL</strong> tracking number within <strong>2 business days</strong>.</p>',
     '</div>',
