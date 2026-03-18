@@ -540,7 +540,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error sending order confirmation:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Unable to send confirmation" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
