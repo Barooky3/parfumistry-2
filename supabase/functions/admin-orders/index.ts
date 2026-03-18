@@ -441,7 +441,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("Admin orders error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Unable to process request" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
