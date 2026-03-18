@@ -7,7 +7,7 @@ import { getBestsellers } from '@/data/products';
 import { BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
-import logo from '@/assets/logo.png';
+const logo = '/images/logo.png';
 
 // Lazy-load BrandNavigation since it uses framer-motion eagerly
 const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').then(m => ({ default: m.BrandNavigation })));
