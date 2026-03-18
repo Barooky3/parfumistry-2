@@ -70,7 +70,7 @@ serve(async (req) => {
           });
           if (updateError) {
             return new Response(
-              JSON.stringify({ error: updateError.message }),
+              JSON.stringify({ error: "Unable to process registration" }),
               { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
             );
           }
