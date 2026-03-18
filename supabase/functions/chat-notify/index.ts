@@ -74,6 +74,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders });
+    console.error("Chat notify error:", err);
+    return new Response(JSON.stringify({ error: "Unable to process request" }), { status: 500, headers: corsHeaders });
   }
 });

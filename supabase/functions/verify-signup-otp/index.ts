@@ -98,7 +98,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error verifying OTP:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Unable to verify code" }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
