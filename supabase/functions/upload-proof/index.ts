@@ -9,6 +9,15 @@ const corsHeaders = {
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 async function sendProofUploadedNotification(order: any, proofUrl: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) { console.error("RESEND_API_KEY not configured, skipping notification"); return; }
