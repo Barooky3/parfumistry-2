@@ -301,7 +301,7 @@ function buildEmailHtml(
     ...(discountCode && discountPercent ? [
     '<div style="padding: 0 32px; text-align: right;">',
     '<span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #999;">Discount: </span>',
-    '<span style="font-size: 15px; font-weight: 500; color: #c9a96e;">' + discountCode + ' (' + discountPercent + '% off)</span>',
+    '<span style="font-size: 15px; font-weight: 500; color: #c9a96e;">' + escapeHtml(discountCode || '') + ' (' + discountPercent + '% off)</span>',
     '</div>',
     ] : []),
 
