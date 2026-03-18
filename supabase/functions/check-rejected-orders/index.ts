@@ -13,21 +13,36 @@ serve(async (req) => {
   }
 
   try {
-    const { email } = await req.json();
-    if (!email) {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Require authentication
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ rejectedOrders: [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const token = authHeader.replace("Bearer ", "");
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user?.email) {
+      return new Response(JSON.stringify({ rejectedOrders: [] }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const adminClient = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Only query orders for the authenticated user's email
     const { data, error } = await adminClient
       .from("orders")
-      .select("id, order_number, rejection_notes, status, created_at, checkout_reference")
-      .eq("customer_email", email.toLowerCase().trim())
+      .select("id, order_number, rejection_notes, status, created_at")
+      .eq("customer_email", user.email.toLowerCase().trim())
       .eq("status", "rejected")
       .eq("rejection_seen", false)
       .order("created_at", { ascending: false })

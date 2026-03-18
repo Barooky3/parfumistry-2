@@ -33,13 +33,12 @@ export const RejectionNotificationPopup = () => {
 
   useEffect(() => {
     const checkRejections = async () => {
-      const email = localStorage.getItem('pp_customer_email');
-      if (!email) return;
+      // Only check for authenticated users
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.email) return;
 
       try {
-        const { data, error } = await supabase.functions.invoke('check-rejected-orders', {
-          body: { email },
-        });
+        const { data, error } = await supabase.functions.invoke('check-rejected-orders', {});
         if (error || !data?.rejectedOrders?.length) return;
         setRejectedOrders(data.rejectedOrders);
         setVisible(true);
