@@ -44,15 +44,30 @@ export const savePaddingOverride = async (productId: string, padding: PaddingOve
   cache[productId] = padding;
   notify();
   
-  const { error } = await supabase
-    .from('product_padding_overrides')
-    .upsert({
+  // Use admin edge function for server-side authorization
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+  if (!token) {
+    console.error('No auth session for padding save');
+    return;
+  }
+  
+  const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+  const res = await fetch(`https://${projectId}.supabase.co/functions/v1/admin-padding`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
       product_id: productId,
       ...padding,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'product_id' });
+    }),
+  });
   
-  if (error) console.error('Failed to save padding:', error);
+  if (!res.ok) {
+    console.error('Failed to save padding:', await res.text());
+  }
 };
 
 export const useProductPadding = (productId: string): PaddingOverride | null => {
