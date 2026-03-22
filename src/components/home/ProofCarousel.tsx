@@ -15,44 +15,89 @@ const proofImages = [
 
 const ProofCarousel = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const dragState = useRef({ isDragging: false, startX: 0, scrollLeft: 0 });
+  const dragState = useRef({
+    isDragging: false,
+    startX: 0,
+    scrollLeft: 0,
+    lastInteractionAt: 0,
+  });
 
-  // Auto-scroll using refs to avoid re-render restarts
+  const resetDrag = () => {
+    dragState.current.isDragging = false;
+    dragState.current.lastInteractionAt = Date.now();
+  };
+
+  // Auto-scroll using refs + delta time for smooth, consistent speed
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    let raf: number;
-    const speed = 0.5;
 
-    const step = () => {
-      if (!dragState.current.isDragging && el) {
-        el.scrollLeft += speed;
+    let raf: number;
+    let lastTs = 0;
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    const speedPxPerSecond = isMobile ? 14 : 30;
+
+    const step = (ts: number) => {
+      if (!lastTs) lastTs = ts;
+      const delta = ts - lastTs;
+      lastTs = ts;
+
+      const isRecentlyInteracted = Date.now() - dragState.current.lastInteractionAt < 900;
+      if (!dragState.current.isDragging && !isRecentlyInteracted && el) {
+        el.scrollLeft += (speedPxPerSecond * delta) / 1000;
         if (el.scrollLeft >= el.scrollWidth / 2) {
           el.scrollLeft = 0;
         }
       }
+
       raf = requestAnimationFrame(step);
     };
+
+    const forceReset = () => {
+      dragState.current.isDragging = false;
+    };
+
+    window.addEventListener('mouseup', forceReset);
+    window.addEventListener('touchend', forceReset);
+    window.addEventListener('touchcancel', forceReset);
+    window.addEventListener('blur', forceReset);
+
     raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('mouseup', forceReset);
+      window.removeEventListener('touchend', forceReset);
+      window.removeEventListener('touchcancel', forceReset);
+      window.removeEventListener('blur', forceReset);
+    };
   }, []);
 
   const handlePointerDown = (x: number) => {
     dragState.current = {
+      ...dragState.current,
       isDragging: true,
       startX: x - (scrollRef.current?.offsetLeft || 0),
       scrollLeft: scrollRef.current?.scrollLeft || 0,
+      lastInteractionAt: Date.now(),
     };
   };
+
   const handlePointerMove = (x: number) => {
     if (!dragState.current.isDragging) return;
+
+    dragState.current.lastInteractionAt = Date.now();
     const walk = (x - (scrollRef.current?.offsetLeft || 0) - dragState.current.startX) * 1.5;
-    if (scrollRef.current) scrollRef.current.scrollLeft = dragState.current.scrollLeft - walk;
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = dragState.current.scrollLeft - walk;
+    }
   };
-  const handleEnd = () => { dragState.current.isDragging = false; };
 
   const onMouseDown = (e: React.MouseEvent) => handlePointerDown(e.pageX);
-  const onMouseMove = (e: React.MouseEvent) => { if (dragState.current.isDragging) e.preventDefault(); handlePointerMove(e.pageX); };
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (dragState.current.isDragging) e.preventDefault();
+    handlePointerMove(e.pageX);
+  };
   const onTouchStart = (e: React.TouchEvent) => handlePointerDown(e.touches[0].pageX);
   const onTouchMove = (e: React.TouchEvent) => handlePointerMove(e.touches[0].pageX);
 
@@ -102,11 +147,12 @@ const ProofCarousel = () => {
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
-        onMouseUp={handleEnd}
-        onMouseLeave={handleEnd}
+        onMouseUp={resetDrag}
+        onMouseLeave={resetDrag}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        onTouchEnd={handleEnd}
+        onTouchEnd={resetDrag}
+        onTouchCancel={resetDrag}
       >
         {/* Double the images for seamless loop feel */}
         {[...proofImages, ...proofImages].map((img, i) => (
