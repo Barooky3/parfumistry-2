@@ -85,7 +85,7 @@ const ProofCarousel = () => {
                       width: i < fullStars ? '100%' : i === fullStars ? `${partialFill}%` : '0%',
                     }}
                   >
-                    <Star className="h-5 w-5 text-amber-400 stroke-[1.5]" fill="currentColor" />
+                    <Star className="h-5 w-5 text-accent stroke-[1.5]" fill="currentColor" />
                   </div>
                 </div>
               ))}
