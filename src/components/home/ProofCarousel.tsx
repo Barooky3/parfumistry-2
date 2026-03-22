@@ -100,12 +100,12 @@ const ProofCarousel = () => {
         ref={scrollRef}
         className="flex gap-3 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing select-none px-4"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
         onMouseUp={handleEnd}
         onMouseLeave={handleEnd}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
         onTouchEnd={handleEnd}
       >
         {/* Double the images for seamless loop feel */}
