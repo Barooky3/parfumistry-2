@@ -131,6 +131,9 @@ const Index = () => {
         <BrandNavigation />
       </Suspense>
 
+      {/* Proof Photo Carousel */}
+      <ProofCarousel />
+
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
         <div className="container">
