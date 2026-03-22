@@ -66,7 +66,7 @@ const ProofCarousel = () => {
     if (scrollRef.current) scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  const rating = 4.7;
+  const rating = 4.4;
   const fullStars = Math.floor(rating);
   const partialFill = (rating - fullStars) * 100;
 
