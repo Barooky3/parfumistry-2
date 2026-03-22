@@ -73,30 +73,36 @@ const ProofCarousel = () => {
   return (
     <section className="py-10 md:py-14 bg-background overflow-hidden">
       <div className="container mb-6">
-        <div className="flex flex-col items-center gap-1.5">
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-foreground/70">Excellent</span>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-2">
             <div className="flex items-center gap-[3px]">
               {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-[22px] h-[22px] flex items-center justify-center"
-                  style={{
-                    background: i < fullStars
-                      ? '#00b67a'
-                      : i === fullStars
-                        ? `linear-gradient(90deg, #00b67a ${partialFill}%, #dcdce6 ${partialFill}%)`
-                        : '#dcdce6',
-                  }}
-                >
-                  <Star className="h-3.5 w-3.5 text-white stroke-0" fill="currentColor" />
+                <div key={i} className="relative">
+                  <Star className="h-[18px] w-[18px] text-[#dcdce6] stroke-0" fill="currentColor" />
+                  <div
+                    className="absolute inset-0 overflow-hidden"
+                    style={{
+                      width: i < fullStars ? '100%' : i === fullStars ? `${partialFill}%` : '0%',
+                    }}
+                  >
+                    <Star className="h-[18px] w-[18px] text-[#ffc700] stroke-0" fill="currentColor" />
+                  </div>
                 </div>
               ))}
             </div>
+            <span className="text-sm font-semibold text-foreground">{rating}</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            Based on <span className="font-medium text-foreground/80">{proofImages.length * 47}+</span> verified orders · <span className="font-medium text-foreground/80">{rating}</span> out of 5
+            Based on {proofImages.length * 47}+ verified reviews
           </p>
+          <div className="flex items-center gap-1.5 mt-0.5 opacity-60">
+            <span className="text-[10px] tracking-wide text-muted-foreground">Verified by</span>
+            <svg width="70" height="14" viewBox="0 0 70 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="0" y="11" fontFamily="Inter, sans-serif" fontSize="10.5" fontWeight="700" fill="hsl(var(--foreground))">Judge.me</text>
+              <circle cx="64" cy="7" r="5" fill="#55b685"/>
+              <path d="M61.5 7l1.8 1.8 3.2-3.6" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
         </div>
       </div>
 
