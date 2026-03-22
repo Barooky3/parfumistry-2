@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { lazy, Suspense } from 'react';
+import ProofCarousel from '@/components/home/ProofCarousel';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product';
 import { getBestsellers } from '@/data/products';
