@@ -14,11 +14,12 @@ const proofImages = [
 ];
 
 const ProofCarousel = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const offsetRef = useRef(0);
   const dragState = useRef({
     isDragging: false,
     startX: 0,
-    scrollLeft: 0,
+    startOffset: 0,
     lastInteractionAt: 0,
   });
 
@@ -27,15 +28,14 @@ const ProofCarousel = () => {
     dragState.current.lastInteractionAt = Date.now();
   };
 
-  // Auto-scroll using refs + delta time for smooth, consistent speed
   useEffect(() => {
-    const el = scrollRef.current;
+    const el = trackRef.current;
     if (!el) return;
 
     let raf: number;
     let lastTs = 0;
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
-    const speedPxPerSecond = isMobile ? 14 : 30;
+    const speedPxPerSecond = isMobile ? 20 : 30;
 
     const step = (ts: number) => {
       if (!lastTs) lastTs = ts;
@@ -43,11 +43,14 @@ const ProofCarousel = () => {
       lastTs = ts;
 
       const isRecentlyInteracted = Date.now() - dragState.current.lastInteractionAt < 900;
-      if (!dragState.current.isDragging && !isRecentlyInteracted && el) {
-        el.scrollLeft += (speedPxPerSecond * delta) / 1000;
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft = 0;
+      if (!dragState.current.isDragging && !isRecentlyInteracted) {
+        offsetRef.current += (speedPxPerSecond * delta) / 1000;
+        // Reset when we've scrolled past the first set of images
+        const halfWidth = el.scrollWidth / 2;
+        if (halfWidth > 0 && offsetRef.current >= halfWidth) {
+          offsetRef.current -= halfWidth;
         }
+        el.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
       }
 
       raf = requestAnimationFrame(step);
@@ -75,21 +78,20 @@ const ProofCarousel = () => {
 
   const handlePointerDown = (x: number) => {
     dragState.current = {
-      ...dragState.current,
       isDragging: true,
-      startX: x - (scrollRef.current?.offsetLeft || 0),
-      scrollLeft: scrollRef.current?.scrollLeft || 0,
+      startX: x,
+      startOffset: offsetRef.current,
       lastInteractionAt: Date.now(),
     };
   };
 
   const handlePointerMove = (x: number) => {
     if (!dragState.current.isDragging) return;
-
     dragState.current.lastInteractionAt = Date.now();
-    const walk = (x - (scrollRef.current?.offsetLeft || 0) - dragState.current.startX) * 1.5;
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = dragState.current.scrollLeft - walk;
+    const diff = dragState.current.startX - x;
+    offsetRef.current = dragState.current.startOffset + diff;
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
     }
   };
 
@@ -141,34 +143,35 @@ const ProofCarousel = () => {
         </div>
       </div>
 
-      <div
-        ref={scrollRef}
-        className="flex gap-3 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing select-none px-4"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={resetDrag}
-        onMouseLeave={resetDrag}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={resetDrag}
-        onTouchCancel={resetDrag}
-      >
-        {/* Double the images for seamless loop feel */}
-        {[...proofImages, ...proofImages].map((img, i) => (
-          <div
-            key={i}
-            className="flex-shrink-0 w-[200px] md:w-[240px] rounded-lg overflow-hidden shadow-sm border border-border/50"
-          >
-            <img
-              src={img.src}
-              alt={img.alt}
-              loading="lazy"
-              draggable={false}
-              className="w-full h-[260px] md:h-[300px] object-cover pointer-events-none"
-            />
-          </div>
-        ))}
+      <div className="overflow-hidden">
+        <div
+          ref={trackRef}
+          className="flex gap-3 cursor-grab active:cursor-grabbing select-none px-4 will-change-transform"
+          style={{ width: 'max-content' }}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={resetDrag}
+          onMouseLeave={resetDrag}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={resetDrag}
+          onTouchCancel={resetDrag}
+        >
+          {[...proofImages, ...proofImages].map((img, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-[200px] md:w-[240px] rounded-lg overflow-hidden shadow-sm border border-border/50"
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                loading="lazy"
+                draggable={false}
+                className="w-full h-[260px] md:h-[300px] object-cover pointer-events-none"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
