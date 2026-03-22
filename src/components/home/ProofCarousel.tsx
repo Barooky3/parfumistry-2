@@ -15,22 +15,19 @@ const proofImages = [
 
 const ProofCarousel = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const dragState = useRef({ isDragging: false, startX: 0, scrollLeft: 0 });
 
-  // Auto-scroll
+  // Auto-scroll using refs to avoid re-render restarts
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     let raf: number;
-    let speed = 0.5;
+    const speed = 0.5;
 
     const step = () => {
-      if (!isDragging && el) {
+      if (!dragState.current.isDragging && el) {
         el.scrollLeft += speed;
-        // Loop: reset when reaching the end
-        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) {
+        if (el.scrollLeft >= el.scrollWidth / 2) {
           el.scrollLeft = 0;
         }
       }
@@ -38,33 +35,26 @@ const ProofCarousel = () => {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [isDragging]);
+  }, []);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
-    setScrollLeft(scrollRef.current?.scrollLeft || 0);
+  const handlePointerDown = (x: number) => {
+    dragState.current = {
+      isDragging: true,
+      startX: x - (scrollRef.current?.offsetLeft || 0),
+      scrollLeft: scrollRef.current?.scrollLeft || 0,
+    };
   };
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (scrollRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 1.5;
-    if (scrollRef.current) scrollRef.current.scrollLeft = scrollLeft - walk;
+  const handlePointerMove = (x: number) => {
+    if (!dragState.current.isDragging) return;
+    const walk = (x - (scrollRef.current?.offsetLeft || 0) - dragState.current.startX) * 1.5;
+    if (scrollRef.current) scrollRef.current.scrollLeft = dragState.current.scrollLeft - walk;
   };
-  const handleEnd = () => setIsDragging(false);
+  const handleEnd = () => { dragState.current.isDragging = false; };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].pageX - (scrollRef.current?.offsetLeft || 0));
-    setScrollLeft(scrollRef.current?.scrollLeft || 0);
-  };
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const x = e.touches[0].pageX - (scrollRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 1.5;
-    if (scrollRef.current) scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
+  const onMouseDown = (e: React.MouseEvent) => handlePointerDown(e.pageX);
+  const onMouseMove = (e: React.MouseEvent) => { if (dragState.current.isDragging) e.preventDefault(); handlePointerMove(e.pageX); };
+  const onTouchStart = (e: React.TouchEvent) => handlePointerDown(e.touches[0].pageX);
+  const onTouchMove = (e: React.TouchEvent) => handlePointerMove(e.touches[0].pageX);
 
   const rating = 4.4;
   const fullStars = Math.floor(rating);
