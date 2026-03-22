@@ -73,27 +73,29 @@ const ProofCarousel = () => {
   return (
     <section className="py-10 md:py-14 bg-background overflow-hidden">
       <div className="container mb-6">
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-0.5">
+        <div className="flex flex-col items-center gap-1.5">
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-foreground/70">Excellent</span>
+            <div className="flex items-center gap-[3px]">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="relative">
-                  <Star className="h-5 w-5 text-muted stroke-[1.5]" fill="currentColor" />
-                  <div
-                    className="absolute inset-0 overflow-hidden"
-                    style={{
-                      width: i < fullStars ? '100%' : i === fullStars ? `${partialFill}%` : '0%',
-                    }}
-                  >
-                    <Star className="h-5 w-5 text-accent stroke-[1.5]" fill="currentColor" />
-                  </div>
+                <div
+                  key={i}
+                  className="w-[22px] h-[22px] flex items-center justify-center"
+                  style={{
+                    background: i < fullStars
+                      ? '#00b67a'
+                      : i === fullStars
+                        ? `linear-gradient(90deg, #00b67a ${partialFill}%, #dcdce6 ${partialFill}%)`
+                        : '#dcdce6',
+                  }}
+                >
+                  <Star className="h-3.5 w-3.5 text-white stroke-0" fill="currentColor" />
                 </div>
               ))}
             </div>
-            <span className="text-sm font-medium text-foreground">{rating}/5</span>
           </div>
-          <p className="text-xs text-muted-foreground tracking-wide">
-            Based on {proofImages.length * 47}+ verified orders
+          <p className="text-xs text-muted-foreground">
+            Based on <span className="font-medium text-foreground/80">{proofImages.length * 47}+</span> verified orders · <span className="font-medium text-foreground/80">{rating}</span> out of 5
           </p>
         </div>
       </div>
