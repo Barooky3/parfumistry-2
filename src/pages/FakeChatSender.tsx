@@ -161,9 +161,12 @@ const FakeChatSender = () => {
 
   const createConversation = async () => {
     setCreating(true);
-    const data = await invoke({ action: 'create_conversation' });
+    const payload: any = { action: 'create_conversation' };
+    if (customName.trim()) payload.fake_name = customName.trim();
+    const data = await invoke(payload);
     if (data?.conversation) {
       setSelectedId(data.conversation.id);
+      setCustomName('');
     }
     setCreating(false);
   };
