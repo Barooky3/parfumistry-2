@@ -536,7 +536,7 @@ const AdminChat = () => {
               </div>
 
               {/* Input */}
-              <div className="border-t border-border px-2 py-2 flex gap-2 items-end flex-shrink-0 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+              <div className="border-t border-border px-3 py-2 flex gap-2 items-end flex-shrink-0 bg-card pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
                 <div className="flex gap-0.5 self-end pb-1">
                   <button onClick={() => setInput(prev => prev + '🤓')} className="text-lg hover:scale-110 transition-transform" title="Nerd">🤓</button>
                   <button onClick={() => setInput(prev => prev + '👍')} className="text-lg hover:scale-110 transition-transform" title="Thumbs up">👍</button>
@@ -546,7 +546,7 @@ const AdminChat = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
                   placeholder="Type a reply..."
-                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground resize-none max-h-[100px] min-h-[36px]"
+                  className="flex-1 bg-muted/50 text-sm outline-none placeholder:text-muted-foreground resize-none max-h-[100px] min-h-[36px] rounded-lg px-3 py-2 border border-border focus:border-accent transition-colors"
                   maxLength={2000}
                   rows={input.length > 100 ? 3 : 1}
                 />
