@@ -165,6 +165,13 @@ const FakeChatSender = () => {
     if (customName.trim()) payload.fake_name = customName.trim();
     const data = await invoke(payload);
     if (data?.conversation) {
+      const newConv: Conversation = {
+        id: data.conversation.id,
+        fake_name: data.conversation.fake_name,
+        updated_at: data.conversation.updated_at || new Date().toISOString(),
+        unread_count: 0,
+      };
+      setConversations(prev => [newConv, ...prev]);
       setSelectedId(data.conversation.id);
       setCustomName('');
     }
