@@ -37,9 +37,6 @@ const PaymentMethodExplainer = () => {
             <p className="font-semibold">
               As soon as I'm able to open a bank account, normal payment methods (card payments, direct PayPal, cash on delivery, etc.) will be added right away.
             </p>
-            <p>
-              <strong>Note:</strong> The order number shown on your payment receipt (e.g. <span className="font-mono">#92000148383033</span>) is <em>not</em> your actual order number. Your real order number will be shown on the confirmation page after checkout.
-            </p>
           </div>
         </div>
       )}
