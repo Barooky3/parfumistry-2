@@ -305,19 +305,19 @@ export const ChatWidget = () => {
                 </p>
               </div>
 
-              <div className="border-t border-border px-3 py-2 flex gap-2 shrink-0 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+              <div className="border-t border-border px-3 py-2 flex gap-2 shrink-0 bg-card pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Type a message..."
-                  className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  className="flex-1 bg-muted/50 text-sm outline-none placeholder:text-muted-foreground rounded-lg px-3 py-2 border border-border focus:border-accent transition-colors"
                   maxLength={1000}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim()}
-                  className="text-accent disabled:opacity-30 hover:opacity-70 transition-opacity"
+                  className="text-accent disabled:opacity-30 hover:opacity-70 transition-opacity self-center"
                 >
                   <Send className="h-5 w-5" />
                 </button>
