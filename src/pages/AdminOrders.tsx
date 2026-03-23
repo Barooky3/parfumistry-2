@@ -825,11 +825,19 @@ export default function AdminOrders() {
         </div>
 
         {activeTab === "chat" ? (
-          <div className="h-[75vh] min-h-[520px]">
+          <div className="h-[calc(100dvh-200px)] md:h-[75vh] md:min-h-[520px]">
             <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
               <AdminChatInbox />
             </Suspense>
           </div>
+        ) : activeTab === "fake_sender" ? (
+          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
+            <FakeChatSender />
+          </Suspense>
+        ) : activeTab === "malik_chat" ? (
+          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
+            <MalikChatInbox />
+          </Suspense>
         ) : activeTab === "live" ? (
           <LiveVisitorDashboard />
         ) : (
