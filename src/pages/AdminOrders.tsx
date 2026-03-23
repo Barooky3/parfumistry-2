@@ -754,7 +754,11 @@ export default function AdminOrders() {
             <h1 className="text-2xl font-bold tracking-tight">Order Management</h1>
             <p className="text-sm text-muted-foreground mt-1">Approve or reject pending orders</p>
           </div>
-          <Button variant="outline" size="sm" onClick={() => fetchOrders()} disabled={loading}>
+          <Button variant="outline" size="sm" onClick={() => {
+            fetchOrders();
+            fetchBannedUsers();
+            fetchBlockedUsers();
+          }} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
         </div>
