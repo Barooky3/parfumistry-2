@@ -79,7 +79,7 @@ export default function AdminOrders() {
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat" | "malik_chat" | "fake_sender">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   // Read URL search params for email/search filter (e.g. from chat link)
