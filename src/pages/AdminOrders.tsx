@@ -10,6 +10,8 @@ import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, Calen
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { lazy, Suspense } from "react";
 const AdminChatInbox = lazy(() => import("@/pages/AdminChat"));
+const MalikChatInbox = lazy(() => import("@/pages/MalikChat"));
+const FakeChatSender = lazy(() => import("@/pages/FakeChatSender"));
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
