@@ -177,6 +177,14 @@ const RevolutApp = () => {
           </p>
         </div>
 
+        {/* Region restriction disclaimer */}
+        <div className="flex gap-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 px-4 py-3 mb-4">
+          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+            <strong>Can't find the Revtag?</strong> This may be due to regional restrictions in your country. If you're unable to locate the account, please go back and use one of our other payment methods instead.
+          </p>
+        </div>
+
         {/* Why are payment methods like this */}
         <div className="mb-6">
           <PaymentMethodExplainer />
