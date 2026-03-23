@@ -31,6 +31,7 @@ const FakeChatSender = () => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [customName, setCustomName] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const tokenRef = useRef<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
