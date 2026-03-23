@@ -796,6 +796,32 @@ export default function AdminOrders() {
               Chat Inbox
             </button>
           )}
+          {user?.email === "ewhz3384@gmail.com" && (
+            <button
+              onClick={() => setActiveTab("fake_sender")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+                activeTab === "fake_sender"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <MessageCircle className="h-4 w-4 inline mr-1.5" />
+              Malik Chat
+            </button>
+          )}
+          {user?.email === "malikisthebiggestw@gmail.com" && (
+            <button
+              onClick={() => setActiveTab("malik_chat")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+                activeTab === "malik_chat"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <MessageCircle className="h-4 w-4 inline mr-1.5" />
+              Chat Inbox
+            </button>
+          )}
         </div>
 
         {activeTab === "chat" ? (
