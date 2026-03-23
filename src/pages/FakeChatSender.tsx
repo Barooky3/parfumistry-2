@@ -207,11 +207,21 @@ const FakeChatSender = () => {
       <div className="flex h-full min-h-0 border border-border rounded-xl overflow-hidden">
         {/* Sidebar */}
         <div className={`${selectedId ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 lg:w-96 flex-shrink-0 min-h-0 border-r border-border bg-card`}>
-          <div className="px-3 py-2 border-b border-border flex-shrink-0">
-            <Button size="sm" onClick={createConversation} disabled={creating} className="w-full gap-1.5 text-xs">
-              <Plus className="h-3.5 w-3.5" />
-              {creating ? 'Creating...' : 'New Fake Chat'}
-            </Button>
+          <div className="px-3 py-2 border-b border-border flex-shrink-0 space-y-1.5">
+            <div className="flex gap-1.5">
+              <input
+                type="text"
+                value={customName}
+                onChange={e => setCustomName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !creating && createConversation()}
+                placeholder="Name (optional)"
+                className="flex-1 min-w-0 text-xs px-2 py-1.5 rounded-md border border-input bg-background text-foreground placeholder:text-muted-foreground"
+              />
+              <Button size="sm" onClick={createConversation} disabled={creating} className="gap-1 text-xs flex-shrink-0">
+                <Plus className="h-3.5 w-3.5" />
+                {creating ? '...' : 'New'}
+              </Button>
+            </div>
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
             {loading ? (
