@@ -139,6 +139,65 @@ export type Database = {
         }
         Relationships: []
       }
+      fake_chat_conversations: {
+        Row: {
+          created_at: string
+          fake_name: string
+          hidden: boolean
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          fake_name: string
+          hidden?: boolean
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          fake_name?: string
+          hidden?: boolean
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fake_chat_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          message: string
+          read: boolean
+          sender_type: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean
+          sender_type?: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fake_chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "fake_chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           approval_token: string | null
