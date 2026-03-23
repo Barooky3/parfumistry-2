@@ -10,6 +10,8 @@ import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, Calen
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { lazy, Suspense } from "react";
 const AdminChatInbox = lazy(() => import("@/pages/AdminChat"));
+const MalikChatInbox = lazy(() => import("@/pages/MalikChat"));
+const FakeChatSender = lazy(() => import("@/pages/FakeChatSender"));
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -77,7 +79,7 @@ export default function AdminOrders() {
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat" | "malik_chat" | "fake_sender">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   // Read URL search params for email/search filter (e.g. from chat link)
@@ -794,14 +796,48 @@ export default function AdminOrders() {
               Chat Inbox
             </button>
           )}
+          {user?.email === "ewhz3384@gmail.com" && (
+            <button
+              onClick={() => setActiveTab("fake_sender")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+                activeTab === "fake_sender"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <MessageCircle className="h-4 w-4 inline mr-1.5" />
+              Malik Chat
+            </button>
+          )}
+          {user?.email === "malikisthebiggestw@gmail.com" && (
+            <button
+              onClick={() => setActiveTab("malik_chat")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+                activeTab === "malik_chat"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <MessageCircle className="h-4 w-4 inline mr-1.5" />
+              Chat Inbox
+            </button>
+          )}
         </div>
 
         {activeTab === "chat" ? (
-          <div className="h-[75vh] min-h-[520px]">
+          <div className="h-[calc(100dvh-200px)] md:h-[75vh] md:min-h-[520px]">
             <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
               <AdminChatInbox />
             </Suspense>
           </div>
+        ) : activeTab === "fake_sender" ? (
+          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
+            <FakeChatSender />
+          </Suspense>
+        ) : activeTab === "malik_chat" ? (
+          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
+            <MalikChatInbox />
+          </Suspense>
         ) : activeTab === "live" ? (
           <LiveVisitorDashboard />
         ) : (
