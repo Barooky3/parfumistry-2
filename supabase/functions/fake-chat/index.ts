@@ -90,17 +90,31 @@ Deno.serve(async (req) => {
     if (action === "create_conversation" && email === PRIMARY_ADMIN) {
       let name = fake_name;
       if (!name) {
-        // Pick random name from orders
+        // Get all unique customer names from orders
         const { data: orders } = await supabase
           .from("orders")
           .select("customer_name")
-          .limit(100);
-        if (orders && orders.length > 0) {
-          const names = [...new Set(orders.map((o: any) => o.customer_name).filter(Boolean))];
-          name = names[Math.floor(Math.random() * names.length)] || "Customer";
+          .limit(1000);
+        const allNames = orders && orders.length > 0
+          ? [...new Set(orders.map((o: any) => o.customer_name).filter(Boolean))]
+          : ["Alex", "Jordan", "Sam", "Chris", "Taylor", "Morgan", "Jamie", "Casey"];
+
+        // Get names already used in fake conversations
+        const { data: existingConvos } = await supabase
+          .from("fake_chat_conversations")
+          .select("fake_name")
+          .order("created_at", { ascending: true });
+        const usedNames = (existingConvos || []).map((c: any) => c.fake_name);
+
+        // Find first unused name
+        const unused = allNames.filter((n: string) => !usedNames.includes(n));
+        if (unused.length > 0) {
+          name = unused[0];
         } else {
-          const fallback = ["Alex", "Jordan", "Sam", "Chris", "Taylor", "Morgan", "Jamie", "Casey"];
-          name = fallback[Math.floor(Math.random() * fallback.length)];
+          // All exhausted — cycle: pick the name that was used earliest
+          const usedInOrder = allNames.filter((n: string) => usedNames.includes(n));
+          // Sort by first appearance in usedNames (earliest created first)
+          name = usedInOrder[0] || allNames[0];
         }
       }
 
