@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Send, ArrowLeft } from 'lucide-react';
+import { Send, ArrowLeft, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 
 const MALIK_EMAIL = "malikisthebiggestw@gmail.com";
