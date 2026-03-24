@@ -235,6 +235,13 @@ const MalikChatInbox = () => {
       <div className="flex h-full min-h-0 border border-border rounded-xl overflow-hidden">
         {/* Sidebar */}
         <div className={`${selectedId ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 lg:w-96 flex-shrink-0 min-h-0 border-r border-border bg-card`}>
+          {conversations.length > 0 && (
+            <div className="px-3 py-2 border-b border-border flex-shrink-0">
+              <Button size="sm" variant="destructive" onClick={clearAllChats} className="w-full gap-1 text-xs">
+                <Trash2 className="h-3 w-3" /> Clear All Chats
+              </Button>
+            </div>
+          )}
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch]">
             {loading ? (
               <div className="flex justify-center py-8">
