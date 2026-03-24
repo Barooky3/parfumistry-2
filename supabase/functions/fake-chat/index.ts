@@ -271,11 +271,21 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
 
-    if (action === "delete" && email === PRIMARY_ADMIN) {
+    if (action === "delete") {
       await supabase
         .from("fake_chat_conversations")
         .update({ hidden: true })
         .eq("id", conversation_id);
+
+      return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+
+    if (action === "clear_all") {
+      // Hide all non-hidden conversations
+      await supabase
+        .from("fake_chat_conversations")
+        .update({ hidden: true })
+        .eq("hidden", false);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }

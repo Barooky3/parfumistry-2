@@ -254,27 +254,37 @@ const MalikChatInbox = () => {
                 const hasUnread = conv.unread_count > 0;
                 const active = selectedId === conv.id;
                 return (
-                  <button
+                  <div
                     key={conv.id}
-                    onClick={() => setSelectedId(conv.id)}
-                    className={`w-full text-left px-4 py-3 border-b border-border transition-all duration-150 active:scale-[0.98] ${
+                    className={`flex items-center border-b border-border transition-all duration-150 ${
                       active ? 'bg-muted' : hasUnread ? 'bg-card hover:bg-muted/50' : 'opacity-50 hover:opacity-75'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`text-sm truncate ${hasUnread ? 'font-semibold text-foreground' : 'text-muted-foreground'}`}>
-                        {conv.fake_name}
-                      </span>
-                      {hasUnread && (
-                        <span className="flex-shrink-0 text-[10px] min-w-[18px] text-center px-1.5 py-0.5 rounded-full bg-accent text-accent-foreground font-medium">
-                          {conv.unread_count}
+                    <button
+                      onClick={() => setSelectedId(conv.id)}
+                      className="flex-1 text-left px-4 py-3 active:scale-[0.98] transition-transform"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`text-sm truncate ${hasUnread ? 'font-semibold text-foreground' : 'text-muted-foreground'}`}>
+                          {conv.fake_name}
                         </span>
-                      )}
-                    </div>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
-                      {new Date(conv.updated_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </button>
+                        {hasUnread && (
+                          <span className="flex-shrink-0 text-[10px] min-w-[18px] text-center px-1.5 py-0.5 rounded-full bg-accent text-accent-foreground font-medium">
+                            {conv.unread_count}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {new Date(conv.updated_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </button>
+                    <button
+                      onClick={() => deleteConversation(conv)}
+                      className="px-3 py-3 text-muted-foreground hover:text-destructive active:scale-90 transition-all"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 );
               })
             )}

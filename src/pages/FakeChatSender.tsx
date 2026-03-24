@@ -229,6 +229,11 @@ const FakeChatSender = () => {
                 {creating ? '...' : 'New'}
               </Button>
             </div>
+            {conversations.length > 0 && (
+              <Button size="sm" variant="destructive" onClick={clearAllChats} className="w-full gap-1 text-xs">
+                <Trash2 className="h-3 w-3" /> Clear All Chats
+              </Button>
+            )}
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
             {loading ? (
