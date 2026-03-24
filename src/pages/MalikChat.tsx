@@ -210,6 +210,20 @@ const MalikChatInbox = () => {
     setTimeout(() => inputRef.current?.focus(), 50);
   };
 
+  const deleteConversation = async (conv: Conversation) => {
+    setConversations(prev => prev.filter(c => c.id !== conv.id));
+    if (selectedId === conv.id) { setSelectedId(null); setMessages([]); }
+    await invoke({ action: 'delete', conversation_id: conv.id });
+  };
+
+  const clearAllChats = async () => {
+    if (!confirm('Clear ALL chats? This cannot be undone.')) return;
+    setConversations([]);
+    setSelectedId(null);
+    setMessages([]);
+    await invoke({ action: 'clear_all' });
+  };
+
   if (!isMalik) {
     return <div className="flex items-center justify-center min-h-[40vh]"><p className="text-muted-foreground">Access denied.</p></div>;
   }
