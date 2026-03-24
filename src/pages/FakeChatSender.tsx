@@ -199,10 +199,17 @@ const FakeChatSender = () => {
   };
 
   const deleteConversation = async (conv: Conversation) => {
-    // Optimistic remove
     setConversations(prev => prev.filter(c => c.id !== conv.id));
     if (selectedId === conv.id) { setSelectedId(null); setMessages([]); }
     await invoke({ action: 'delete', conversation_id: conv.id });
+  };
+
+  const clearAllChats = async () => {
+    if (!confirm('Clear ALL chats? This cannot be undone.')) return;
+    setConversations([]);
+    setSelectedId(null);
+    setMessages([]);
+    await invoke({ action: 'clear_all' });
   };
 
   if (!isPrimary) return null;
