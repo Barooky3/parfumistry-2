@@ -95,26 +95,37 @@ Deno.serve(async (req) => {
           .from("orders")
           .select("customer_name")
           .limit(1000);
+
+        // Filter out invalid names
+        const BLOCKED_NAMES = ["valued customer", "mubarak elkhabir"];
+        const isValidName = (n: string) => {
+          if (!n || n.trim().length === 0) return false;
+          const lower = n.trim().toLowerCase();
+          if (BLOCKED_NAMES.includes(lower)) return false;
+          // Reject names that are only digits/symbols (no letters)
+          if (!/[a-zA-Z]/.test(n)) return false;
+          return true;
+        };
+
         const allNames = orders && orders.length > 0
-          ? [...new Set(orders.map((o: any) => o.customer_name).filter(Boolean))]
+          ? [...new Set(orders.map((o: any) => o.customer_name).filter(isValidName))]
           : ["Alex", "Jordan", "Sam", "Chris", "Taylor", "Morgan", "Jamie", "Casey"];
 
-        // Get names already used in fake conversations
+        // Get names already used in active (non-deleted) fake conversations
         const { data: existingConvos } = await supabase
           .from("fake_chat_conversations")
-          .select("fake_name")
-          .order("created_at", { ascending: true });
-        const usedNames = (existingConvos || []).map((c: any) => c.fake_name);
+          .select("fake_name");
+        const usedNames = new Set((existingConvos || []).map((c: any) => c.fake_name));
 
-        // Find first unused name
-        const unused = allNames.filter((n: string) => !usedNames.includes(n));
+        // Filter to unused names only
+        const unused = allNames.filter((n: string) => !usedNames.has(n));
+
         if (unused.length > 0) {
-          name = unused[0];
+          // Truly random pick from unused names
+          name = unused[Math.floor(Math.random() * unused.length)];
         } else {
-          // All exhausted — cycle: pick the name that was used earliest
-          const usedInOrder = allNames.filter((n: string) => usedNames.includes(n));
-          // Sort by first appearance in usedNames (earliest created first)
-          name = usedInOrder[0] || allNames[0];
+          // All exhausted — random pick from all valid names (conversations were deleted so no actual duplicates)
+          name = allNames[Math.floor(Math.random() * allNames.length)];
         }
       }
 
