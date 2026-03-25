@@ -273,19 +273,37 @@ Deno.serve(async (req) => {
 
     if (action === "delete") {
       await supabase
+        .from("fake_chat_messages")
+        .delete()
+        .eq("conversation_id", conversation_id);
+
+      await supabase
         .from("fake_chat_conversations")
-        .update({ hidden: true })
+        .delete()
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
 
     if (action === "clear_all") {
-      // Hide all non-hidden conversations
-      await supabase
+      // Get all non-hidden conversation IDs, delete their messages, then delete conversations
+      const { data: allConvos } = await supabase
         .from("fake_chat_conversations")
-        .update({ hidden: true })
+        .select("id")
         .eq("hidden", false);
+
+      if (allConvos && allConvos.length > 0) {
+        const ids = allConvos.map((c: any) => c.id);
+        await supabase
+          .from("fake_chat_messages")
+          .delete()
+          .in("conversation_id", ids);
+
+        await supabase
+          .from("fake_chat_conversations")
+          .delete()
+          .in("id", ids);
+      }
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
