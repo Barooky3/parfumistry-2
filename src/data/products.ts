@@ -94,8 +94,8 @@ export const products: Product[] = [
     id: 'jpg-bundle',
     name: 'Fragrance Bundle "The JPG Collection"',
     brand: 'Parfumistry',
-    price: 38.99,
-    originalPrice: 155.96,
+    price: 33.99,
+    originalPrice: 135.96,
     category: 'bundle',
     description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion.',
     image: '',
@@ -113,8 +113,8 @@ export const products: Product[] = [
       { name: 'Le Beau Le Parfum', topNote: 'Coconut', heartNote: 'Tonka Bean', baseNote: 'Sandalwood', accentColor: '#003B5C' },
     ],
     variants: [
-      { ml: 75, price: 38.99, originalPrice: 155.96, inStock: true, label: 'All 75ml' },
-      { ml: 125, price: 44.99, originalPrice: 179.96, inStock: true, label: 'All 125ml' },
+      { ml: 75, price: 33.99, originalPrice: 135.96, inStock: true, label: 'All 75ml' },
+      { ml: 125, price: 39.99, originalPrice: 159.96, inStock: true, label: 'All 125ml' },
     ],
   },
 
