@@ -178,6 +178,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "block") {
+      // Hard delete messages then conversation
       await supabase
         .from("chat_messages")
         .delete()
@@ -185,7 +186,7 @@ Deno.serve(async (req) => {
 
       await supabase
         .from("chat_conversations")
-        .update({ blocked: true })
+        .delete()
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
@@ -201,9 +202,15 @@ Deno.serve(async (req) => {
     }
 
     if (action === "delete") {
+      // Hard delete messages then conversation
+      await supabase
+        .from("chat_messages")
+        .delete()
+        .eq("conversation_id", conversation_id);
+
       await supabase
         .from("chat_conversations")
-        .update({ hidden_from_admin: true })
+        .delete()
         .eq("id", conversation_id);
 
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
