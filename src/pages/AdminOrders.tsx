@@ -6,7 +6,8 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, MessageCircle } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, MessageCircle, Bot } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { lazy, Suspense } from "react";
 const AdminChatInbox = lazy(() => import("@/pages/AdminChat"));
@@ -146,6 +147,50 @@ export default function AdminOrders() {
   const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
+  const [autoChatEnabled, setAutoChatEnabled] = useState(true);
+  const [autoChatLoading, setAutoChatLoading] = useState(false);
+
+  // Fetch auto-chat enabled state
+  useEffect(() => {
+    if (user?.email === "ewhz3384@gmail.com") {
+      (async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto?action=status`,
+          { headers: { Authorization: `Bearer ${session.access_token}` } }
+        );
+        if (res.ok) {
+          const json = await res.json();
+          if (typeof json.enabled === 'boolean') setAutoChatEnabled(json.enabled);
+        }
+      })();
+    }
+  }, [user]);
+
+  const toggleAutoChat = async () => {
+    setAutoChatLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "toggle", enabled: !autoChatEnabled }),
+        }
+      );
+      if (res.ok) {
+        setAutoChatEnabled(!autoChatEnabled);
+        toast.success(`Auto chat ${!autoChatEnabled ? "enabled" : "disabled"}`);
+      }
+    } catch {
+      toast.error("Failed to toggle auto chat");
+    } finally {
+      setAutoChatLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
@@ -812,6 +857,17 @@ export default function AdminOrders() {
               <MessageCircle className="h-4 w-4 inline mr-1.5" />
               Malik Chat
             </button>
+           )}
+          {user?.email === "ewhz3384@gmail.com" && (
+            <div className="flex items-center gap-2 px-4 py-2">
+              <Bot className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Auto Chat</span>
+              <Switch
+                checked={autoChatEnabled}
+                onCheckedChange={toggleAutoChat}
+                disabled={autoChatLoading}
+              />
+            </div>
           )}
           {user?.email === "malikisthebiggestw@gmail.com" && (
             <button

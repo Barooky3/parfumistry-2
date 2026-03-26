@@ -155,6 +155,37 @@ Deno.serve(async (req) => {
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     const MALIK_ADMIN = "malikisthebiggestw@gmail.com";
 
+    // Handle status check (GET with ?action=status)
+    const url = new URL(req.url);
+    if (url.searchParams.get("action") === "status") {
+      const { data: stateRow } = await supabase
+        .from("fake_chat_auto_state")
+        .select("enabled")
+        .limit(1)
+        .single();
+      return new Response(
+        JSON.stringify({ enabled: stateRow?.enabled ?? true }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Handle toggle (POST with action=toggle)
+    if (req.method === "POST") {
+      try {
+        const body = await req.json();
+        if (body.action === "toggle" && typeof body.enabled === "boolean") {
+          await supabase
+            .from("fake_chat_auto_state")
+            .update({ enabled: body.enabled })
+            .neq("id", "00000000-0000-0000-0000-000000000000"); // update all rows
+          return new Response(
+            JSON.stringify({ success: true, enabled: body.enabled }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      } catch { /* not a toggle request, continue with normal flow */ }
+    }
+
     const now = new Date();
     let didSomething = false;
 
@@ -164,6 +195,13 @@ Deno.serve(async (req) => {
       .select("*")
       .limit(1)
       .single();
+
+    if (stateRow && stateRow.enabled === false) {
+      return new Response(
+        JSON.stringify({ success: true, did_something: false, reason: "disabled" }),
+        { headers: corsHeaders }
+      );
+    }
 
     if (stateRow && new Date(stateRow.next_question_at) <= now) {
       // Get a random unused name from orders

@@ -142,16 +142,19 @@ export type Database = {
       fake_chat_auto_state: {
         Row: {
           created_at: string
+          enabled: boolean
           id: string
           next_question_at: string
         }
         Insert: {
           created_at?: string
+          enabled?: boolean
           id?: string
           next_question_at?: string
         }
         Update: {
           created_at?: string
+          enabled?: boolean
           id?: string
           next_question_at?: string
         }
