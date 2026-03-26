@@ -165,6 +165,13 @@ Deno.serve(async (req) => {
       .limit(1)
       .single();
 
+    if (stateRow && stateRow.enabled === false) {
+      return new Response(
+        JSON.stringify({ success: true, did_something: false, reason: "disabled" }),
+        { headers: corsHeaders }
+      );
+    }
+
     if (stateRow && new Date(stateRow.next_question_at) <= now) {
       // Get a random unused name from orders
       const { data: orders } = await supabase
