@@ -857,6 +857,17 @@ export default function AdminOrders() {
               <MessageCircle className="h-4 w-4 inline mr-1.5" />
               Malik Chat
             </button>
+           )}
+          {user?.email === "ewhz3384@gmail.com" && (
+            <div className="flex items-center gap-2 px-4 py-2">
+              <Bot className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Auto Chat</span>
+              <Switch
+                checked={autoChatEnabled}
+                onCheckedChange={toggleAutoChat}
+                disabled={autoChatLoading}
+              />
+            </div>
           )}
           {user?.email === "malikisthebiggestw@gmail.com" && (
             <button
