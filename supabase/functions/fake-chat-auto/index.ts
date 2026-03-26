@@ -720,7 +720,7 @@ Deno.serve(async (req) => {
             outMsg = generateQuestionUnique(newCategory, convUsed);
             keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
           } else {
-            outMsg = pick(thankYouMessages);
+            outMsg = pickUnique(thankYouMessages, convUsed);
           }
 
           await supabase.from("fake_chat_messages").insert({
