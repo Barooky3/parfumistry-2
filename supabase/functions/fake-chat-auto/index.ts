@@ -723,14 +723,22 @@ Deno.serve(async (req) => {
           let keepAuto = false;
 
           if (isFollowUp) {
-            // Determine the original category from the first customer message
-            const firstCustomerMsg = (convMsgs || []).find((m: any) => m.sender_type === "customer");
-            const originalCategory = firstCustomerMsg
-              ? detectCategory(firstCustomerMsg.message)
-              : "shipping";
+            // Collect ALL categories already asked in this conversation
+            const customerMsgs = (convMsgs || []).filter((m: any) => m.sender_type === "customer");
+            const usedCategories = new Set(customerMsgs.map((m: any) => detectCategory(m.message)));
 
-            const newCategory = pickDifferentCategory(originalCategory);
-            outMsg = generateQuestionUnique(newCategory, convUsed);
+            // Pick a category not yet used in this conversation
+            const allCats = ["shipping", "proof", "cheap", "recommendation"];
+            const available = allCats.filter(c => !usedCategories.has(c));
+
+            // If all categories exhausted, fall back to thank-you instead
+            if (available.length === 0) {
+              outMsg = pickUnique(thankYouMessages, convUsed);
+            } else {
+              const newCategory = pick(available);
+              outMsg = generateQuestionUnique(newCategory, convUsed);
+              keepAuto = true;
+            }
             keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
           } else {
             outMsg = pickUnique(thankYouMessages, convUsed);
