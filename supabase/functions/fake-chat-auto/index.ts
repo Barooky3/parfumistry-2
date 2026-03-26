@@ -701,6 +701,19 @@ Deno.serve(async (req) => {
             .select("message, sender_type")
             .eq("conversation_id", conv.id)
             .order("created_at", { ascending: true });
+
+          // GUARD: Only send thank-you/follow-up if the admin actually replied
+          // Find the last message — if it's still a customer message, admin hasn't replied yet
+          const lastMsg = (convMsgs || []).length > 0 ? (convMsgs || [])[(convMsgs || []).length - 1] : null;
+          if (!lastMsg || lastMsg.sender_type !== "admin") {
+            // Admin hasn't replied yet — clear the stale auto_reply_due_at and skip
+            await supabase
+              .from("fake_chat_conversations")
+              .update({ auto_reply_due_at: null })
+              .eq("id", conv.id);
+            continue;
+          }
+
           const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
 
           // 25% chance: send a follow-up question instead of thank you
