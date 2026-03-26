@@ -24,10 +24,14 @@ const COUNTRIES = [
 ];
 
 // Mode interval configs: [questionMin, questionMax, thankYouMin, thankYouMax]
+// Mode interval configs: [questionMinMin, questionMaxMin, thankYouMinMin, thankYouMaxMin]
+// hyper_aggressive uses seconds internally (0.5-2 min questions, 2-5 min thanks)
 const MODE_INTERVALS: Record<string, [number, number, number, number]> = {
-  normal:     [10, 25, 1, 13],
-  relaxed:    [25, 45, 5, 20],
-  aggressive: [2, 8, 1, 7],
+  hyper_aggressive: [0.5, 2, 2, 5],
+  aggressive:       [2, 8, 1, 7],
+  normal:           [10, 25, 1, 13],
+  relaxed:          [25, 45, 5, 20],
+  hyper_relaxed:    [40, 60, 10, 30],
 };
 
 function shippingQuestions(country: string): string[] {
@@ -241,6 +245,44 @@ const thankYouMessages: string[] = [
   "thx",
   "cheers",
   "ok thank you!",
+  "legend, thank you!",
+  "that's really helpful, thanks",
+  "you're a star, thanks!",
+  "brilliant, thanks!",
+  "sweet, thanks for that",
+  "thanks so much for the quick reply",
+  "really appreciate the help 🙏",
+  "thanks for your time",
+  "that's exactly what I needed, thanks!",
+  "thanks, you've been really helpful",
+  "lovely, thank you!",
+  "much appreciated!",
+  "thank you, that clears things up",
+  "thanks for the fast response!",
+  "helpful as always, thanks",
+  "thank youu",
+  "thanks! will order now",
+  "perfect thanks, gonna place my order",
+  "great service, thanks!",
+  "thanks, I'll go ahead and buy it",
+  "wow thanks for the detailed reply",
+  "ok perfect, thanks a lot!",
+  "thanks! excited to receive it",
+  "amazing, thank you so much!",
+  "thanks bro",
+  "thanks! really appreciate it 😊",
+  "ah ok makes sense, thanks!",
+  "thanks for explaining that!",
+  "ok awesome, thank you!",
+  "you guys are great, thanks",
+  "thanks, I'll recommend you to my friends",
+  "thank you! can't wait for it to arrive",
+  "sound, cheers!",
+  "ta, thanks!",
+  "top, thanks!",
+  "dankjewel!",
+  "merci!",
+  "gracias, thanks!",
 ];
 
 const BLOCKED_NAMES = ["valued customer", "mubarak elkhabir"];
@@ -293,7 +335,7 @@ Deno.serve(async (req) => {
         const body = await req.json();
 
         if (body.action === "set_mode" && typeof body.mode === "string") {
-          const validModes = ["off", "normal", "relaxed", "aggressive"];
+          const validModes = ["off", "hyper_aggressive", "aggressive", "normal", "relaxed", "hyper_relaxed"];
           if (!validModes.includes(body.mode)) {
             return new Response(JSON.stringify({ error: "Invalid mode" }), { status: 400, headers: corsHeaders });
           }
