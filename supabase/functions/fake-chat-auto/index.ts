@@ -441,18 +441,7 @@ Deno.serve(async (req) => {
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
       const category = pick(["shipping", "proof", "cheap", "recommendation"]);
-      let message: string;
-
-      if (category === "shipping") {
-        const country = pick(COUNTRIES);
-        message = pick(shippingQuestions(country));
-      } else if (category === "proof") {
-        message = pick(proofQuestions);
-      } else if (category === "recommendation") {
-        message = pick(recommendationQuestions);
-      } else {
-        message = pick(cheapQuestions);
-      }
+      const message = generateQuestion(category);
 
       const { data: conv } = await supabase
         .from("fake_chat_conversations")
