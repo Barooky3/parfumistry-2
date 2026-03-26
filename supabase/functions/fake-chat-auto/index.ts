@@ -317,10 +317,10 @@ Deno.serve(async (req) => {
             read: false,
           });
 
-          // Clear the auto_reply_due_at so we don't send again
+          // Mark conversation as done so no more auto-replies are scheduled
           await supabase
             .from("fake_chat_conversations")
-            .update({ auto_reply_due_at: null, updated_at: now.toISOString() })
+            .update({ auto_reply_due_at: null, is_auto: false, updated_at: now.toISOString() })
             .eq("id", conv.id);
 
           // Email Malik about the thank you
