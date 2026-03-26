@@ -870,9 +870,11 @@ export default function AdminOrders() {
                 className="text-xs border rounded px-2 py-1 bg-background text-foreground"
               >
                 <option value="off">Off</option>
+                <option value="hyper_relaxed">Hyper Relaxed (40-60m)</option>
                 <option value="relaxed">Relaxed (25-45m)</option>
                 <option value="normal">Normal (10-25m)</option>
-                <option value="aggressive">Aggressive (2-10m)</option>
+                <option value="aggressive">Aggressive (2-8m)</option>
+                <option value="hyper_aggressive">Hyper Aggressive (30s-2m)</option>
               </select>
             </div>
           )}
