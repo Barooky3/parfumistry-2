@@ -279,7 +279,7 @@ Deno.serve(async (req) => {
       const unused = allNames.filter((n: string) => !usedNames.has(n));
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
-      const category = pick(["shipping", "proof", "cheap"]);
+      const category = pick(["shipping", "proof", "cheap", "recommendation"]);
       let message: string;
 
       if (category === "shipping") {
@@ -287,6 +287,8 @@ Deno.serve(async (req) => {
         message = pick(shippingQuestions(country));
       } else if (category === "proof") {
         message = pick(proofQuestions);
+      } else if (category === "recommendation") {
+        message = pick(recommendationQuestions);
       } else {
         message = pick(cheapQuestions);
       }
