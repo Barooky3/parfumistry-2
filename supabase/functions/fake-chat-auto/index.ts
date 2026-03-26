@@ -289,7 +289,7 @@ Deno.serve(async (req) => {
       }
 
       // Schedule next question in 25-45 minutes
-      const nextMinutes = randomMinutes(15, 40);
+      const nextMinutes = randomMinutes(10, 25);
       const nextAt = new Date(now.getTime() + nextMinutes * 60 * 1000);
       await supabase
         .from("fake_chat_auto_state")
@@ -376,7 +376,7 @@ Deno.serve(async (req) => {
         if (lastMsgs && lastMsgs.length > 0 && lastMsgs[0].sender_type === "admin") {
           // Malik replied — schedule a thank-you 5-40 minutes from his reply
           const replyTime = new Date(lastMsgs[0].created_at);
-          const delayMinutes = randomMinutes(5, 30);
+          const delayMinutes = randomMinutes(1, 20);
           const thankAt = new Date(replyTime.getTime() + delayMinutes * 60 * 1000);
 
           await supabase
