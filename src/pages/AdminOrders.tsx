@@ -191,6 +191,8 @@ export default function AdminOrders() {
       setAutoChatLoading(false);
     }
   };
+
+  useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       navigate("/", { replace: true });
     }
