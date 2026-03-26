@@ -76,6 +76,26 @@ function shippingQuestions(country: string): string[] {
     `I need it delivered to ${country} asap, is that possible?`,
     `how reliable is shipping to ${country}?`,
     `have you shipped to ${country} before?`,
+    `hiya, quick one - do you post to ${country}?`,
+    `just wanted to check before I order, do you send to ${country}?`,
+    `I'm based in ${country}, would love to order if you ship there`,
+    `a friend recommended you but I'm in ${country}, can I still buy?`,
+    `what's the estimated delivery for ${country}?`,
+    `do you use DHL or PostNL for ${country}?`,
+    `is shipping to ${country} insured?`,
+    `what happens if my package gets lost going to ${country}?`,
+    `do you ship discreetly to ${country}?`,
+    `I've ordered from other sites to ${country} and it always takes ages, how about you?`,
+    `would it be faster to ship to ${country} with express?`,
+    `hi! planning to buy a gift and need it in ${country} by next week, possible?`,
+    `is there a minimum order for free shipping to ${country}?`,
+    `can you ship multiple items to ${country} in one package?`,
+    `do you declare the full value for customs to ${country}?`,
+    `any issues with shipping perfume to ${country}?`,
+    `is airmail available to ${country}?`,
+    `does shipping to ${country} require a signature?`,
+    `I'm ordering from ${country}, will it arrive before Christmas?`,
+    `my last order from another store to ${country} got stuck in customs, does that happen with you?`,
   ];
 }
 
@@ -120,6 +140,28 @@ const proofQuestions: string[] = [
   "what happens if I receive a fake?",
   "do you offer refunds if authenticity is questionable?",
   "are these sealed and brand new?",
+  "my friend says if the price is too low they're always fake, is that true?",
+  "can you send me a photo of the actual bottle before shipping?",
+  "do the bottles come with the original packaging?",
+  "are these the same ones you'd find in a department store?",
+  "I read online that replica perfumes are everywhere, how do I know yours aren't?",
+  "do you have a physical store I can visit to check?",
+  "have you ever had a customer complain about getting a fake?",
+  "can I check the batch number on checkfresh when I receive it?",
+  "are these EU or US versions?",
+  "do you sell any testers? are those authentic too?",
+  "how long have you been selling perfumes?",
+  "I just want to be safe, can you reassure me these are real?",
+  "would you be willing to show proof on video call?",
+  "is your business registered? can I see proof?",
+  "do you have any certifications from the brands?",
+  "I saw your instagram but how do I know the photos are real?",
+  "can you show me the invoice from your supplier?",
+  "do these have the proper barcodes on them?",
+  "are the ingredients lists accurate on the boxes?",
+  "my girlfriend said I should ask for proof before buying, so here I am",
+  "do you test the perfumes yourself to confirm they're real?",
+  "have any influencers reviewed your products?",
 ];
 
 const cheapQuestions: string[] = [
@@ -163,6 +205,27 @@ const cheapQuestions: string[] = [
   "do you sell seconds or B-grade products?",
   "these are cheaper than duty free, how?",
   "no way these are real at this price, explain please",
+  "what's your secret to having such low prices?",
+  "I checked 5 other websites and you're the cheapest by far, why?",
+  "are you running a sale or is this the normal price?",
+  "do you have a coupon code? prices are already low but just asking",
+  "my budget is tight, are these really this cheap or will there be hidden costs?",
+  "is the shipping included in this price?",
+  "are there any additional fees I should know about?",
+  "I was going to buy from Sephora but your prices are way lower, what gives?",
+  "how come you're cheaper than Amazon too?",
+  "is the bottle size the same? maybe that's why it's cheaper?",
+  "are these mini bottles or full size at this price?",
+  "I keep seeing cheap perfume sites turn out to be scams, are you different?",
+  "do prices go even lower during Black Friday?",
+  "is there a bulk discount if I buy multiple?",
+  "the price difference is making me hesitant, can you explain?",
+  "my colleague bought from a cheap site and got fakes, how are you different?",
+  "are you an authorized retailer?",
+  "do you pay less tax or something to offer these prices?",
+  "I'm shocked at how cheap this is, what's the story?",
+  "even with shipping your prices beat everyone, how?",
+  "are these factory seconds or overruns?",
 ];
 
 const recommendationQuestions: string[] = [
@@ -216,6 +279,42 @@ const recommendationQuestions: string[] = [
   "what's the best bang for your buck perfume here?",
   "can you recommend something that works in both summer and winter?",
   "what perfume do you personally wear?",
+  "hey I'm new to fragrances, where should I start?",
+  "what's a good perfume for a 50 year old man?",
+  "my wife likes floral scents, what would she like from your store?",
+  "I want to smell good at the gym, any light options?",
+  "what's trending right now in men's fragrances?",
+  "I'm going on holiday, what's a good beach scent?",
+  "can you recommend something that projects well?",
+  "I like Aventus by Creed, do you have anything similar but cheaper?",
+  "what's a good cozy fragrance for staying home?",
+  "I need something for a graduation ceremony, any ideas?",
+  "what would you recommend for someone who hates sweet scents?",
+  "my dad loves old school fragrances, anything classic?",
+  "I want a signature scent, what's versatile enough?",
+  "what's a good perfume to wear to a dinner party?",
+  "any powdery fragrances you'd recommend?",
+  "I love the smell of coffee, any perfume like that?",
+  "what's something that smells clean like fresh laundry?",
+  "can you recommend a niche fragrance that's not too out there?",
+  "I want something spicy but not overwhelming",
+  "what do you recommend for cold rainy days?",
+  "my sister likes fruity scents, what should I get her?",
+  "what's a mature scent for a woman in her 40s?",
+  "I need a safe blind buy, what do you suggest?",
+  "what's a good layering combo from your store?",
+  "any amber-heavy fragrances you'd recommend?",
+  "I want something my colleagues will notice but not be bothered by",
+  "what's the best perfume for a romantic anniversary dinner?",
+  "I like YSL La Nuit de l'Homme, got anything in that style?",
+  "can you suggest something aquatic and fresh?",
+  "what's a good everyday scent that won't bore me?",
+  "I want to try something completely different from what I usually wear",
+  "what fragrance would you buy as a treat for yourself?",
+  "what's a sophisticated evening fragrance for a man?",
+  "I'm buying for my brother who's turning 18, any suggestions?",
+  "can you recommend a light fragrance for the office that won't bother anyone?",
+  "what's the most unique perfume in your collection?",
 ];
 
 const thankYouMessages: string[] = [
@@ -283,6 +382,59 @@ const thankYouMessages: string[] = [
   "dankjewel!",
   "merci!",
   "gracias, thanks!",
+  "you've been super helpful, thanks a lot",
+  "oh nice, that's good to know. thanks!",
+  "ahh ok I understand now, thank you",
+  "that puts my mind at ease, thanks!",
+  "ok I'm convinced, gonna order now. thanks!",
+  "class, thanks for that 👍",
+  "fair enough, thanks for explaining",
+  "ok cool I'll go for it then, cheers",
+  "thanks! just placed my order",
+  "great customer service, appreciate it",
+  "thanks for being so quick to respond",
+  "you've answered all my questions, thank you!",
+  "ace, thanks!",
+  "sorted, thanks!",
+  "thanks a million!",
+  "safe, appreciate it",
+  "bless, thank you!",
+  "respect, thanks for the info",
+  "wicked, thanks!",
+  "mint, cheers!",
+  "sick, thanks for helping out",
+  "thanks, that's all I needed to know",
+  "perfect, that answers my question",
+  "ok great, I feel better about ordering now, thanks",
+  "that's reassuring, thank you so much",
+  "I'm happy with that answer, thanks!",
+  "thanks! gonna tell my mates about your store",
+  "good to know, thanks for the help",
+  "that's what I wanted to hear, cheers",
+  "ok brilliant, ordering right now",
+  "thanks, really good service",
+  "you lot are class, thanks",
+  "thanks for the honesty, really appreciate it",
+  "ok nice one, I'll order today then",
+  "that makes total sense, thanks!",
+  "thanks! looking forward to receiving it 😄",
+  "super helpful, thanks for everything",
+  "danke!",
+  "bedankt!",
+  "obrigado, thanks!",
+  "tack!",
+  "kiitos!",
+  "tak!",
+  "tusind tak!",
+  "thanks, excellent service honestly",
+  "ok that's perfect, thanks so much for your help",
+  "you've sold me, placing my order now. thanks!",
+  "quality, thanks!",
+  "sound out, cheers!",
+  "thanks, will definitely be ordering again",
+  "can't fault the service, thanks",
+  "thanks for taking the time to explain",
+  "ok I'm sold, thank you!",
 ];
 
 const BLOCKED_NAMES = ["valued customer", "mubarak elkhabir"];
@@ -297,6 +449,13 @@ function isValidName(n: string): boolean {
 
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Pick from array avoiding any previously used messages
+function pickUnique<T>(arr: T[], used: Set<string>): T {
+  const available = arr.filter(item => !used.has(String(item)));
+  if (available.length > 0) return pick(available);
+  return pick(arr); // fallback if all used (shouldn't happen with this many)
 }
 
 function randomMinutes(min: number, max: number): number {
@@ -334,6 +493,21 @@ function generateQuestion(category: string): string {
     return pick(recommendationQuestions);
   } else {
     return pick(cheapQuestions);
+  }
+}
+
+// Generate a question that hasn't been used recently
+function generateQuestionUnique(category: string, used: Set<string>): string {
+  if (category === "shipping") {
+    const country = pick(COUNTRIES);
+    const qs = shippingQuestions(country);
+    return pickUnique(qs, used);
+  } else if (category === "proof") {
+    return pickUnique(proofQuestions, used);
+  } else if (category === "recommendation") {
+    return pickUnique(recommendationQuestions, used);
+  } else {
+    return pickUnique(cheapQuestions, used);
   }
 }
 
@@ -422,6 +596,15 @@ Deno.serve(async (req) => {
     const [qMin, qMax, tMin, tMax] = intervals;
 
     if (stateRow && new Date(stateRow.next_question_at) <= now) {
+      // Fetch recent customer messages globally to avoid repeats
+      const { data: recentMsgs } = await supabase
+        .from("fake_chat_messages")
+        .select("message")
+        .eq("sender_type", "customer")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      const globalUsed = new Set((recentMsgs || []).map((m: any) => m.message));
+
       // Get a random unused name from orders
       const { data: orders } = await supabase
         .from("orders")
@@ -441,7 +624,7 @@ Deno.serve(async (req) => {
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
       const category = pick(["shipping", "proof", "cheap", "recommendation"]);
-      const message = generateQuestion(category);
+      const message = generateQuestionUnique(category, globalUsed);
 
       const { data: conv } = await supabase
         .from("fake_chat_conversations")
@@ -512,6 +695,14 @@ Deno.serve(async (req) => {
     if (pendingReplies) {
       for (const conv of pendingReplies) {
         if (new Date(conv.auto_reply_due_at!) <= now) {
+          // Fetch all messages in this conversation to avoid repeats
+          const { data: convMsgs } = await supabase
+            .from("fake_chat_messages")
+            .select("message, sender_type")
+            .eq("conversation_id", conv.id)
+            .order("created_at", { ascending: true });
+          const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
+
           // 25% chance: send a follow-up question instead of thank you
           const isFollowUp = Math.random() < 0.25;
 
@@ -520,23 +711,16 @@ Deno.serve(async (req) => {
 
           if (isFollowUp) {
             // Determine the original category from the first customer message
-            const { data: firstMsgs } = await supabase
-              .from("fake_chat_messages")
-              .select("message")
-              .eq("conversation_id", conv.id)
-              .eq("sender_type", "customer")
-              .order("created_at", { ascending: true })
-              .limit(1);
-
-            const originalCategory = firstMsgs && firstMsgs.length > 0
-              ? detectCategory(firstMsgs[0].message)
+            const firstCustomerMsg = (convMsgs || []).find((m: any) => m.sender_type === "customer");
+            const originalCategory = firstCustomerMsg
+              ? detectCategory(firstCustomerMsg.message)
               : "shipping";
 
             const newCategory = pickDifferentCategory(originalCategory);
-            outMsg = generateQuestion(newCategory);
+            outMsg = generateQuestionUnique(newCategory, convUsed);
             keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
           } else {
-            outMsg = pick(thankYouMessages);
+            outMsg = pickUnique(thankYouMessages, convUsed);
           }
 
           await supabase.from("fake_chat_messages").insert({
