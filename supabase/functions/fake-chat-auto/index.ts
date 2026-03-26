@@ -300,7 +300,41 @@ function pick<T>(arr: T[]): T {
 }
 
 function randomMinutes(min: number, max: number): number {
-  return min + Math.floor(Math.random() * (max - min + 1));
+  return min + Math.random() * (max - min);
+}
+
+// Detect original question category from message text
+function detectCategory(msg: string): string {
+  const lower = msg.toLowerCase();
+  // shipping keywords
+  if (/ship|deliver|courier|shipping|customs|tracking|import tax|arrive/.test(lower)) return "shipping";
+  // proof keywords
+  if (/proof|authentic|legit|genuine|fake|counterfeit|batch code|real|scam|certificate/.test(lower)) return "proof";
+  // cheap keywords
+  if (/cheap|price|low|afford|discount|clearance|expensive|cost|grey market|wholesale|duty free/.test(lower)) return "cheap";
+  return "recommendation";
+}
+
+// Pick a different category, biased toward recommendation (50% chance recommendation, rest split)
+function pickDifferentCategory(original: string): string {
+  const allCats = ["shipping", "proof", "cheap", "recommendation"];
+  const others = allCats.filter(c => c !== original);
+  // 50% chance to pick recommendation if it's available in others
+  if (others.includes("recommendation") && Math.random() < 0.5) return "recommendation";
+  return pick(others);
+}
+
+function generateQuestion(category: string): string {
+  if (category === "shipping") {
+    const country = pick(COUNTRIES);
+    return pick(shippingQuestions(country));
+  } else if (category === "proof") {
+    return pick(proofQuestions);
+  } else if (category === "recommendation") {
+    return pick(recommendationQuestions);
+  } else {
+    return pick(cheapQuestions);
+  }
 }
 
 Deno.serve(async (req) => {
