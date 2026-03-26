@@ -300,7 +300,41 @@ function pick<T>(arr: T[]): T {
 }
 
 function randomMinutes(min: number, max: number): number {
-  return min + Math.floor(Math.random() * (max - min + 1));
+  return min + Math.random() * (max - min);
+}
+
+// Detect original question category from message text
+function detectCategory(msg: string): string {
+  const lower = msg.toLowerCase();
+  // shipping keywords
+  if (/ship|deliver|courier|shipping|customs|tracking|import tax|arrive/.test(lower)) return "shipping";
+  // proof keywords
+  if (/proof|authentic|legit|genuine|fake|counterfeit|batch code|real|scam|certificate/.test(lower)) return "proof";
+  // cheap keywords
+  if (/cheap|price|low|afford|discount|clearance|expensive|cost|grey market|wholesale|duty free/.test(lower)) return "cheap";
+  return "recommendation";
+}
+
+// Pick a different category, biased toward recommendation (50% chance recommendation, rest split)
+function pickDifferentCategory(original: string): string {
+  const allCats = ["shipping", "proof", "cheap", "recommendation"];
+  const others = allCats.filter(c => c !== original);
+  // 50% chance to pick recommendation if it's available in others
+  if (others.includes("recommendation") && Math.random() < 0.5) return "recommendation";
+  return pick(others);
+}
+
+function generateQuestion(category: string): string {
+  if (category === "shipping") {
+    const country = pick(COUNTRIES);
+    return pick(shippingQuestions(country));
+  } else if (category === "proof") {
+    return pick(proofQuestions);
+  } else if (category === "recommendation") {
+    return pick(recommendationQuestions);
+  } else {
+    return pick(cheapQuestions);
+  }
 }
 
 Deno.serve(async (req) => {
@@ -407,18 +441,7 @@ Deno.serve(async (req) => {
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
       const category = pick(["shipping", "proof", "cheap", "recommendation"]);
-      let message: string;
-
-      if (category === "shipping") {
-        const country = pick(COUNTRIES);
-        message = pick(shippingQuestions(country));
-      } else if (category === "proof") {
-        message = pick(proofQuestions);
-      } else if (category === "recommendation") {
-        message = pick(recommendationQuestions);
-      } else {
-        message = pick(cheapQuestions);
-      }
+      const message = generateQuestion(category);
 
       const { data: conv } = await supabase
         .from("fake_chat_conversations")
@@ -489,17 +512,47 @@ Deno.serve(async (req) => {
     if (pendingReplies) {
       for (const conv of pendingReplies) {
         if (new Date(conv.auto_reply_due_at!) <= now) {
-          const thankMsg = pick(thankYouMessages);
+          // 25% chance: send a follow-up question instead of thank you
+          const isFollowUp = Math.random() < 0.25;
+
+          let outMsg: string;
+          let keepAuto = false;
+
+          if (isFollowUp) {
+            // Determine the original category from the first customer message
+            const { data: firstMsgs } = await supabase
+              .from("fake_chat_messages")
+              .select("message")
+              .eq("conversation_id", conv.id)
+              .eq("sender_type", "customer")
+              .order("created_at", { ascending: true })
+              .limit(1);
+
+            const originalCategory = firstMsgs && firstMsgs.length > 0
+              ? detectCategory(firstMsgs[0].message)
+              : "shipping";
+
+            const newCategory = pickDifferentCategory(originalCategory);
+            outMsg = generateQuestion(newCategory);
+            keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
+          } else {
+            outMsg = pick(thankYouMessages);
+          }
+
           await supabase.from("fake_chat_messages").insert({
             conversation_id: conv.id,
             sender_type: "customer",
-            message: thankMsg,
+            message: outMsg,
             read: false,
           });
 
           await supabase
             .from("fake_chat_conversations")
-            .update({ auto_reply_due_at: null, is_auto: false, updated_at: now.toISOString() })
+            .update({
+              auto_reply_due_at: null,
+              is_auto: keepAuto,
+              updated_at: now.toISOString(),
+            })
             .eq("id", conv.id);
 
           if (RESEND_API_KEY) {
@@ -515,7 +568,7 @@ Deno.serve(async (req) => {
                     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
                       <h2 style="color: #333;">New customer message from ${conv.fake_name}</h2>
                       <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 0 0 12px;">
-                        <p style="margin: 0; color: #222; font-size: 15px; white-space: pre-wrap;">${thankMsg}</p>
+                        <p style="margin: 0; color: #222; font-size: 15px; white-space: pre-wrap;">${outMsg}</p>
                       </div>
                       <a href="https://profparfums.lovable.app/admin/orders" style="display: inline-block; background: #000; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">
                         View & Reply
