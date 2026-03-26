@@ -144,18 +144,21 @@ export type Database = {
           created_at: string
           enabled: boolean
           id: string
+          mode: string
           next_question_at: string
         }
         Insert: {
           created_at?: string
           enabled?: boolean
           id?: string
+          mode?: string
           next_question_at?: string
         }
         Update: {
           created_at?: string
           enabled?: boolean
           id?: string
+          mode?: string
           next_question_at?: string
         }
         Relationships: []
