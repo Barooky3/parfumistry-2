@@ -376,7 +376,7 @@ Deno.serve(async (req) => {
         if (lastMsgs && lastMsgs.length > 0 && lastMsgs[0].sender_type === "admin") {
           // Malik replied — schedule a thank-you 5-40 minutes from his reply
           const replyTime = new Date(lastMsgs[0].created_at);
-          const delayMinutes = randomMinutes(5, 40);
+          const delayMinutes = randomMinutes(5, 30);
           const thankAt = new Date(replyTime.getTime() + delayMinutes * 60 * 1000);
 
           await supabase
