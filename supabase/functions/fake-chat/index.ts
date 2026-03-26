@@ -212,43 +212,6 @@ Deno.serve(async (req) => {
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversation_id);
 
-      // Email notification to primary admin about malik's reply
-      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-      if (RESEND_API_KEY) {
-        const { data: conv } = await supabase
-          .from("fake_chat_conversations")
-          .select("fake_name")
-          .eq("id", conversation_id)
-          .single();
-
-        const preview = message.length > 150 ? message.substring(0, 150) + "..." : message;
-
-        try {
-          await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
-            body: JSON.stringify({
-              from: "ProfParfums <orders@profparfum.com>",
-              to: [PRIMARY_ADMIN],
-              subject: `💬 Malik replied to ${conv?.fake_name || "customer"}`,
-              html: `
-                <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
-                  <h2 style="color: #333;">Malik replied to ${conv?.fake_name || "customer"}</h2>
-                  <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 0 0 12px;">
-                    <p style="margin: 0; color: #222; font-size: 15px; white-space: pre-wrap;">${preview}</p>
-                  </div>
-                  <a href="https://profparfums.lovable.app/admin/orders" style="display: inline-block; background: #000; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">
-                    View Conversation
-                  </a>
-                </div>
-              `,
-            }),
-          });
-        } catch (e) {
-          console.error("Failed to email primary admin:", e);
-        }
-      }
-
       return new Response(JSON.stringify({ success: true, message_id: inserted?.id }), { headers: corsHeaders });
     }
 
