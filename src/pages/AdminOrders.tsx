@@ -147,8 +147,50 @@ export default function AdminOrders() {
   const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
+  const [autoChatEnabled, setAutoChatEnabled] = useState(true);
+  const [autoChatLoading, setAutoChatLoading] = useState(false);
 
+  // Fetch auto-chat enabled state
   useEffect(() => {
+    if (user?.email === "ewhz3384@gmail.com") {
+      (async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto?action=status`,
+          { headers: { Authorization: `Bearer ${session.access_token}` } }
+        );
+        if (res.ok) {
+          const json = await res.json();
+          if (typeof json.enabled === 'boolean') setAutoChatEnabled(json.enabled);
+        }
+      })();
+    }
+  }, [user]);
+
+  const toggleAutoChat = async () => {
+    setAutoChatLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "toggle", enabled: !autoChatEnabled }),
+        }
+      );
+      if (res.ok) {
+        setAutoChatEnabled(!autoChatEnabled);
+        toast.success(`Auto chat ${!autoChatEnabled ? "enabled" : "disabled"}`);
+      }
+    } catch {
+      toast.error("Failed to toggle auto chat");
+    } finally {
+      setAutoChatLoading(false);
+    }
+  };
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       navigate("/", { replace: true });
     }
