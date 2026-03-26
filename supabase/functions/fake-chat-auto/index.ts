@@ -25,9 +25,9 @@ const COUNTRIES = [
 
 // Mode interval configs: [questionMin, questionMax, thankYouMin, thankYouMax]
 const MODE_INTERVALS: Record<string, [number, number, number, number]> = {
-  normal:     [10, 25, 1, 20],
+  normal:     [10, 25, 1, 13],
   relaxed:    [25, 45, 5, 20],
-  aggressive: [2, 10, 3, 10],
+  aggressive: [2, 8, 1, 7],
 };
 
 function shippingQuestions(country: string): string[] {
