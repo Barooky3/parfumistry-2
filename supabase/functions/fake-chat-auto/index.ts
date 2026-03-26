@@ -581,6 +581,15 @@ Deno.serve(async (req) => {
     const [qMin, qMax, tMin, tMax] = intervals;
 
     if (stateRow && new Date(stateRow.next_question_at) <= now) {
+      // Fetch recent customer messages globally to avoid repeats
+      const { data: recentMsgs } = await supabase
+        .from("fake_chat_messages")
+        .select("message")
+        .eq("sender_type", "customer")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      const globalUsed = new Set((recentMsgs || []).map((m: any) => m.message));
+
       // Get a random unused name from orders
       const { data: orders } = await supabase
         .from("orders")
@@ -600,7 +609,7 @@ Deno.serve(async (req) => {
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
       const category = pick(["shipping", "proof", "cheap", "recommendation"]);
-      const message = generateQuestion(category);
+      const message = generateQuestionUnique(category, globalUsed);
 
       const { data: conv } = await supabase
         .from("fake_chat_conversations")
