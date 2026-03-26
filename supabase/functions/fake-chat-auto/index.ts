@@ -101,6 +101,34 @@ const cheapQuestions: string[] = [
   "why is everything priced so low?",
 ];
 
+const recommendationQuestions: string[] = [
+  "can you recommend a good perfume for a date night?",
+  "what's a good fragrance for a formal event?",
+  "any suggestions for a summer scent?",
+  "what perfume would you recommend for winter?",
+  "I need something for everyday use, any recommendations?",
+  "what's your best seller for men?",
+  "what's the most popular women's fragrance you have?",
+  "can you suggest something fresh and light?",
+  "I'm looking for something sweet and long-lasting, any ideas?",
+  "what would you recommend as a gift for my girlfriend?",
+  "any good masculine scents for the office?",
+  "what's a good unisex fragrance?",
+  "I want something that lasts all day, what do you suggest?",
+  "can you recommend something for a wedding?",
+  "what's a good spring fragrance?",
+  "do you have anything similar to Dior Sauvage?",
+  "what would you recommend for a teenager?",
+  "I like woody scents, what do you have?",
+  "any recommendations for a night out?",
+  "what's a good perfume that gets compliments?",
+  "can you suggest something romantic?",
+  "I need a fragrance for hot weather, any tips?",
+  "what's your personal favourite from the store?",
+  "any recommendations for someone who likes fresh and clean scents?",
+  "what perfume would impress on a first date?",
+];
+
 const thankYouMessages: string[] = [
   "thanks!",
   "thank you",
@@ -251,7 +279,7 @@ Deno.serve(async (req) => {
       const unused = allNames.filter((n: string) => !usedNames.has(n));
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
-      const category = pick(["shipping", "proof", "cheap"]);
+      const category = pick(["shipping", "proof", "cheap", "recommendation"]);
       let message: string;
 
       if (category === "shipping") {
@@ -259,6 +287,8 @@ Deno.serve(async (req) => {
         message = pick(shippingQuestions(country));
       } else if (category === "proof") {
         message = pick(proofQuestions);
+      } else if (category === "recommendation") {
+        message = pick(recommendationQuestions);
       } else {
         message = pick(cheapQuestions);
       }
