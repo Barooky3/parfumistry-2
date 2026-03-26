@@ -496,6 +496,21 @@ function generateQuestion(category: string): string {
   }
 }
 
+// Generate a question that hasn't been used recently
+function generateQuestionUnique(category: string, used: Set<string>): string {
+  if (category === "shipping") {
+    const country = pick(COUNTRIES);
+    const qs = shippingQuestions(country);
+    return pickUnique(qs, used);
+  } else if (category === "proof") {
+    return pickUnique(proofQuestions, used);
+  } else if (category === "recommendation") {
+    return pickUnique(recommendationQuestions, used);
+  } else {
+    return pickUnique(cheapQuestions, used);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
