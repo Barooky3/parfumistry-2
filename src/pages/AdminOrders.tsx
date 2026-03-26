@@ -147,7 +147,7 @@ export default function AdminOrders() {
   const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
-  const [autoChatEnabled, setAutoChatEnabled] = useState(true);
+  const [autoChatMode, setAutoChatMode] = useState<string>("normal");
   const [autoChatLoading, setAutoChatLoading] = useState(false);
 
   // Fetch auto-chat enabled state
