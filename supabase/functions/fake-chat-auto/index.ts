@@ -695,6 +695,14 @@ Deno.serve(async (req) => {
     if (pendingReplies) {
       for (const conv of pendingReplies) {
         if (new Date(conv.auto_reply_due_at!) <= now) {
+          // Fetch all messages in this conversation to avoid repeats
+          const { data: convMsgs } = await supabase
+            .from("fake_chat_messages")
+            .select("message, sender_type")
+            .eq("conversation_id", conv.id)
+            .order("created_at", { ascending: true });
+          const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
+
           // 25% chance: send a follow-up question instead of thank you
           const isFollowUp = Math.random() < 0.25;
 
@@ -703,20 +711,13 @@ Deno.serve(async (req) => {
 
           if (isFollowUp) {
             // Determine the original category from the first customer message
-            const { data: firstMsgs } = await supabase
-              .from("fake_chat_messages")
-              .select("message")
-              .eq("conversation_id", conv.id)
-              .eq("sender_type", "customer")
-              .order("created_at", { ascending: true })
-              .limit(1);
-
-            const originalCategory = firstMsgs && firstMsgs.length > 0
-              ? detectCategory(firstMsgs[0].message)
+            const firstCustomerMsg = (convMsgs || []).find((m: any) => m.sender_type === "customer");
+            const originalCategory = firstCustomerMsg
+              ? detectCategory(firstCustomerMsg.message)
               : "shipping";
 
             const newCategory = pickDifferentCategory(originalCategory);
-            outMsg = generateQuestion(newCategory);
+            outMsg = generateQuestionUnique(newCategory, convUsed);
             keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
           } else {
             outMsg = pick(thankYouMessages);
