@@ -863,11 +863,17 @@ export default function AdminOrders() {
             <div className="flex items-center gap-2 px-4 py-2">
               <Bot className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Auto Chat</span>
-              <Switch
-                checked={autoChatEnabled}
-                onCheckedChange={toggleAutoChat}
+              <select
+                value={autoChatMode}
+                onChange={(e) => setAutoChatModeRemote(e.target.value)}
                 disabled={autoChatLoading}
-              />
+                className="text-xs border rounded px-2 py-1 bg-background text-foreground"
+              >
+                <option value="off">Off</option>
+                <option value="relaxed">Relaxed (25-45m)</option>
+                <option value="normal">Normal (10-25m)</option>
+                <option value="aggressive">Aggressive (2-10m)</option>
+              </select>
             </div>
           )}
           {user?.email === "malikisthebiggestw@gmail.com" && (
