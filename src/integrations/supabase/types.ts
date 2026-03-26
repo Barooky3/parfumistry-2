@@ -139,26 +139,53 @@ export type Database = {
         }
         Relationships: []
       }
+      fake_chat_auto_state: {
+        Row: {
+          created_at: string
+          id: string
+          next_question_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          next_question_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          next_question_at?: string
+        }
+        Relationships: []
+      }
       fake_chat_conversations: {
         Row: {
+          auto_reply_due_at: string | null
           created_at: string
           fake_name: string
           hidden: boolean
           id: string
+          is_auto: boolean
+          next_auto_question_at: string | null
           updated_at: string
         }
         Insert: {
+          auto_reply_due_at?: string | null
           created_at?: string
           fake_name: string
           hidden?: boolean
           id?: string
+          is_auto?: boolean
+          next_auto_question_at?: string | null
           updated_at?: string
         }
         Update: {
+          auto_reply_due_at?: string | null
           created_at?: string
           fake_name?: string
           hidden?: boolean
           id?: string
+          is_auto?: boolean
+          next_auto_question_at?: string | null
           updated_at?: string
         }
         Relationships: []
