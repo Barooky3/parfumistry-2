@@ -147,10 +147,10 @@ export default function AdminOrders() {
   const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
-  const [autoChatEnabled, setAutoChatEnabled] = useState(true);
+  const [autoChatMode, setAutoChatMode] = useState<string>("normal");
   const [autoChatLoading, setAutoChatLoading] = useState(false);
 
-  // Fetch auto-chat enabled state
+  // Fetch auto-chat mode
   useEffect(() => {
     if (user?.email === "ewhz3384@gmail.com") {
       (async () => {
@@ -162,13 +162,14 @@ export default function AdminOrders() {
         );
         if (res.ok) {
           const json = await res.json();
-          if (typeof json.enabled === 'boolean') setAutoChatEnabled(json.enabled);
+          const currentMode = json.enabled === false ? "off" : (json.mode || "normal");
+          setAutoChatMode(currentMode);
         }
       })();
     }
   }, [user]);
 
-  const toggleAutoChat = async () => {
+  const setAutoChatModeRemote = async (newMode: string) => {
     setAutoChatLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -178,15 +179,15 @@ export default function AdminOrders() {
         {
           method: "POST",
           headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "toggle", enabled: !autoChatEnabled }),
+          body: JSON.stringify({ action: "set_mode", mode: newMode }),
         }
       );
       if (res.ok) {
-        setAutoChatEnabled(!autoChatEnabled);
-        toast.success(`Auto chat ${!autoChatEnabled ? "enabled" : "disabled"}`);
+        setAutoChatMode(newMode);
+        toast.success(`Auto chat: ${newMode}`);
       }
     } catch {
-      toast.error("Failed to toggle auto chat");
+      toast.error("Failed to change auto chat mode");
     } finally {
       setAutoChatLoading(false);
     }
@@ -862,11 +863,17 @@ export default function AdminOrders() {
             <div className="flex items-center gap-2 px-4 py-2">
               <Bot className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Auto Chat</span>
-              <Switch
-                checked={autoChatEnabled}
-                onCheckedChange={toggleAutoChat}
+              <select
+                value={autoChatMode}
+                onChange={(e) => setAutoChatModeRemote(e.target.value)}
                 disabled={autoChatLoading}
-              />
+                className="text-xs border rounded px-2 py-1 bg-background text-foreground"
+              >
+                <option value="off">Off</option>
+                <option value="relaxed">Relaxed (25-45m)</option>
+                <option value="normal">Normal (10-25m)</option>
+                <option value="aggressive">Aggressive (2-10m)</option>
+              </select>
             </div>
           )}
           {user?.email === "malikisthebiggestw@gmail.com" && (

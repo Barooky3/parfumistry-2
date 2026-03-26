@@ -23,7 +23,12 @@ const COUNTRIES = [
   'Algeria','Senegal','Ivory Coast','Cameroon','Tanzania','Ethiopia','Mauritius',
 ];
 
-// --- Question templates ---
+// Mode interval configs: [questionMin, questionMax, thankYouMin, thankYouMax]
+const MODE_INTERVALS: Record<string, [number, number, number, number]> = {
+  normal:     [10, 25, 1, 20],
+  relaxed:    [25, 45, 5, 20],
+  aggressive: [2, 10, 3, 10],
+};
 
 function shippingQuestions(country: string): string[] {
   return [
@@ -160,30 +165,50 @@ Deno.serve(async (req) => {
     if (url.searchParams.get("action") === "status") {
       const { data: stateRow } = await supabase
         .from("fake_chat_auto_state")
-        .select("enabled")
+        .select("enabled, mode")
         .limit(1)
         .single();
       return new Response(
-        JSON.stringify({ enabled: stateRow?.enabled ?? true }),
+        JSON.stringify({ enabled: stateRow?.enabled ?? true, mode: stateRow?.mode ?? "normal" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Handle toggle (POST with action=toggle)
+    // Handle set-mode (POST with action=set_mode)
     if (req.method === "POST") {
       try {
         const body = await req.json();
+
+        if (body.action === "set_mode" && typeof body.mode === "string") {
+          const validModes = ["off", "normal", "relaxed", "aggressive"];
+          if (!validModes.includes(body.mode)) {
+            return new Response(JSON.stringify({ error: "Invalid mode" }), { status: 400, headers: corsHeaders });
+          }
+
+          const enabled = body.mode !== "off";
+          await supabase
+            .from("fake_chat_auto_state")
+            .update({ enabled, mode: body.mode === "off" ? "normal" : body.mode })
+            .neq("id", "00000000-0000-0000-0000-000000000000");
+
+          return new Response(
+            JSON.stringify({ success: true, enabled, mode: body.mode }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Legacy toggle support
         if (body.action === "toggle" && typeof body.enabled === "boolean") {
           await supabase
             .from("fake_chat_auto_state")
             .update({ enabled: body.enabled })
-            .neq("id", "00000000-0000-0000-0000-000000000000"); // update all rows
+            .neq("id", "00000000-0000-0000-0000-000000000000");
           return new Response(
             JSON.stringify({ success: true, enabled: body.enabled }),
             { headers: { ...corsHeaders, "Content-Type": "application/json" } }
           );
         }
-      } catch { /* not a toggle request, continue with normal flow */ }
+      } catch { /* not a mode/toggle request, continue with normal flow */ }
     }
 
     const now = new Date();
@@ -202,6 +227,10 @@ Deno.serve(async (req) => {
         { headers: corsHeaders }
       );
     }
+
+    const mode = stateRow?.mode || "normal";
+    const intervals = MODE_INTERVALS[mode] || MODE_INTERVALS.normal;
+    const [qMin, qMax, tMin, tMax] = intervals;
 
     if (stateRow && new Date(stateRow.next_question_at) <= now) {
       // Get a random unused name from orders
@@ -222,7 +251,6 @@ Deno.serve(async (req) => {
       const unused = allNames.filter((n: string) => !usedNames.has(n));
       const name = unused.length > 0 ? pick(unused) : pick(allNames);
 
-      // Pick a random question category (evenly distributed)
       const category = pick(["shipping", "proof", "cheap"]);
       let message: string;
 
@@ -235,7 +263,6 @@ Deno.serve(async (req) => {
         message = pick(cheapQuestions);
       }
 
-      // Create conversation
       const { data: conv } = await supabase
         .from("fake_chat_conversations")
         .insert({ fake_name: name, is_auto: true })
@@ -243,7 +270,6 @@ Deno.serve(async (req) => {
         .single();
 
       if (conv) {
-        // Insert message
         await supabase.from("fake_chat_messages").insert({
           conversation_id: conv.id,
           sender_type: "customer",
@@ -256,7 +282,6 @@ Deno.serve(async (req) => {
           .update({ updated_at: now.toISOString() })
           .eq("id", conv.id);
 
-        // Email Malik
         if (RESEND_API_KEY) {
           const preview = message.length > 150 ? message.substring(0, 150) + "..." : message;
           try {
@@ -288,8 +313,8 @@ Deno.serve(async (req) => {
         didSomething = true;
       }
 
-      // Schedule next question in 25-45 minutes
-      const nextMinutes = randomMinutes(10, 25);
+      // Schedule next question using mode intervals
+      const nextMinutes = randomMinutes(qMin, qMax);
       const nextAt = new Date(now.getTime() + nextMinutes * 60 * 1000);
       await supabase
         .from("fake_chat_auto_state")
@@ -298,7 +323,6 @@ Deno.serve(async (req) => {
     }
 
     // ─── 2. Check for auto conversations needing a thank-you reply ───
-    // Find auto conversations where Malik replied and auto_reply_due_at is set and past
     const { data: pendingReplies } = await supabase
       .from("fake_chat_conversations")
       .select("id, fake_name, auto_reply_due_at")
@@ -308,7 +332,6 @@ Deno.serve(async (req) => {
     if (pendingReplies) {
       for (const conv of pendingReplies) {
         if (new Date(conv.auto_reply_due_at!) <= now) {
-          // Send thank you
           const thankMsg = pick(thankYouMessages);
           await supabase.from("fake_chat_messages").insert({
             conversation_id: conv.id,
@@ -317,13 +340,11 @@ Deno.serve(async (req) => {
             read: false,
           });
 
-          // Mark conversation as done so no more auto-replies are scheduled
           await supabase
             .from("fake_chat_conversations")
             .update({ auto_reply_due_at: null, is_auto: false, updated_at: now.toISOString() })
             .eq("id", conv.id);
 
-          // Email Malik about the thank you
           if (RESEND_API_KEY) {
             try {
               await fetch("https://api.resend.com/emails", {
@@ -356,7 +377,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ─── 3. Check for auto conversations where Malik just replied but no thank-you is scheduled ───
+    // ─── 3. Schedule thank-you for auto convos where admin replied ───
     const { data: autoConvos } = await supabase
       .from("fake_chat_conversations")
       .select("id")
@@ -365,7 +386,6 @@ Deno.serve(async (req) => {
 
     if (autoConvos) {
       for (const conv of autoConvos) {
-        // Get the last message
         const { data: lastMsgs } = await supabase
           .from("fake_chat_messages")
           .select("sender_type, created_at")
@@ -374,9 +394,8 @@ Deno.serve(async (req) => {
           .limit(1);
 
         if (lastMsgs && lastMsgs.length > 0 && lastMsgs[0].sender_type === "admin") {
-          // Malik replied — schedule a thank-you 5-40 minutes from his reply
           const replyTime = new Date(lastMsgs[0].created_at);
-          const delayMinutes = randomMinutes(1, 20);
+          const delayMinutes = randomMinutes(tMin, tMax);
           const thankAt = new Date(replyTime.getTime() + delayMinutes * 60 * 1000);
 
           await supabase
