@@ -747,6 +747,20 @@ Deno.serve(async (req) => {
 
           const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
 
+          // ─── GUARD: If admin's reply is a question/open-ended, go silent ───
+          // A real customer would answer the question, not say "thanks".
+          // Since the bot can't answer contextually, just end the convo.
+          const adminMsg = lastMsg.message.trim();
+          const isAdminQuestion = adminMsg.endsWith("?") || 
+            /\b(what|which|how|where|when|who|why|can you|could you|do you|are you|tell me|let me know)\b/i.test(adminMsg);
+          if (isAdminQuestion) {
+            await supabase
+              .from("fake_chat_conversations")
+              .update({ auto_reply_due_at: null, is_auto: false })
+              .eq("id", conv.id);
+            continue;
+          }
+
           // ─── 50% chance: say NOTHING at all (just end the convo silently) ───
           if (Math.random() < 0.5) {
             await supabase
