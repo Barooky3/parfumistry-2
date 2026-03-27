@@ -317,125 +317,184 @@ const recommendationQuestions: string[] = [
   "what's the most unique perfume in your collection?",
 ];
 
-const thankYouMessages: string[] = [
-  "thanks!",
-  "thank you",
-  "appreciate it",
-  "thanks a lot",
-  "cheers, thanks",
-  "thank you so much",
-  "thanks for letting me know",
-  "thanks for the info",
-  "great, thanks!",
-  "awesome, thank you",
-  "nice one, thanks",
-  "ok thanks",
-  "alright thanks",
-  "perfect, thank you",
-  "cool thanks",
-  "thanks mate",
-  "thank you for explaining",
-  "that makes sense, thanks",
-  "got it, thanks!",
-  "appreciated 👍",
-  "ok cool, thank you!",
-  "thanks for getting back to me",
-  "ty",
-  "thx",
+// ──── Dynamic response generator ────
+// Instead of a static list, we generate unique closing messages on the fly
+// using combinatorial templates. This produces thousands of unique outputs.
+
+// Response TONES — each generates different style messages
+const OPENERS = [
+  "ok", "alright", "ah ok", "oh ok", "right", "gotcha", "ah right",
+  "oh right", "ah I see", "oh I see", "fair enough", "makes sense",
+  "oh nice", "cool", "sweet", "great", "perfect", "lovely", "brilliant",
+  "amazing", "awesome", "ace", "class", "sound", "mint", "wicked", "top",
+  "sorted", "nice one", "decent", "sick", "quality", "mega", "brill",
+  "oh wow", "ah perfect", "good stuff", "that's great", "oh that's good",
+];
+
+const REACTIONS = [
+  "that clears things up",
+  "I get it now",
+  "that's exactly what I needed to know",
+  "I feel way better about this",
+  "glad I asked",
+  "wasn't sure before but now I am",
+  "I was on the fence but not anymore",
+  "good to know",
+  "I understand now",
+  "that answers my question",
+  "I was worried for nothing",
+  "this is really helpful",
+  "you've been really clear about it",
+  "that's way more reasonable than I thought",
+  "honestly didn't expect such a good answer",
+  "ok I trust you on that",
+  "you clearly know what you're talking about",
+  "I can tell you guys are legit",
+  "that's actually really reassuring",
+  "I appreciate you taking the time",
+  "wasn't expecting such a detailed answer",
+  "ok that makes total sense",
+  "I've asked other stores the same thing and no one explained it this well",
+  "fair play for being so upfront about it",
+  "ok I'm not worried anymore",
+  "I had my doubts but you've cleared them",
+];
+
+const CLOSERS_POSITIVE = [
+  "gonna go ahead and order",
+  "placing my order now",
+  "I'll order today",
+  "gonna grab one",
+  "adding to cart right now",
+  "I'll go for it",
+  "ordering now",
+  "just gonna buy it",
+  "I'm in, ordering",
+  "take my money lol",
+  "shutting up and ordering now",
+  "brb placing an order",
+  "say no more, I'm buying",
+];
+
+const CLOSERS_NEUTRAL = [
   "cheers",
-  "ok thank you!",
-  "legend, thank you!",
-  "that's really helpful, thanks",
-  "you're a star, thanks!",
-  "brilliant, thanks!",
-  "sweet, thanks for that",
-  "thanks so much for the quick reply",
-  "really appreciate the help 🙏",
-  "thanks for your time",
-  "that's exactly what I needed, thanks!",
-  "thanks, you've been really helpful",
-  "lovely, thank you!",
-  "much appreciated!",
-  "thank you, that clears things up",
-  "thanks for the fast response!",
-  "helpful as always, thanks",
-  "thank youu",
-  "thanks! will order now",
-  "perfect thanks, gonna place my order",
-  "great service, thanks!",
-  "thanks, I'll go ahead and buy it",
-  "wow thanks for the detailed reply",
-  "ok perfect, thanks a lot!",
-  "thanks! excited to receive it",
-  "amazing, thank you so much!",
-  "thanks bro",
-  "thanks! really appreciate it 😊",
-  "ah ok makes sense, thanks!",
-  "thanks for explaining that!",
-  "ok awesome, thank you!",
-  "you guys are great, thanks",
-  "thanks, I'll recommend you to my friends",
-  "thank you! can't wait for it to arrive",
-  "sound, cheers!",
-  "ta, thanks!",
-  "top, thanks!",
+  "appreciate it",
+  "thanks for that",
+  "really helpful",
+  "good service honestly",
+  "you've been great",
+  "top service",
+  "respect",
+  "🙏",
+  "👍",
+  "😊",
+  "legend",
+  "will definitely recommend you",
+  "gonna tell my mates about this",
+  "will come back for sure",
+  "bookmarking this store",
+];
+
+const CLOSERS_SIMPLE = [
+  "", // no closer at all
+  "cheers",
+  "thanks",
+  "👍",
+  "appreciate it",
+  "🙏",
+];
+
+// Completely standalone responses that don't follow any template
+const STANDALONE_RESPONSES = [
+  "perfect 👍",
+  "say less, ordering now",
+  "bet",
+  "love that, thanks",
+  "all good then",
+  "nuff said",
+  "exactly what I wanted to hear",
+  "you guys are class",
+  "excellent service ngl",
+  "fair play",
+  "respect for being honest",
+  "ok sick",
+  "beautiful, ordering rn",
+  "you've convinced me",
+  "I'm sold",
+  "was skeptical but not anymore tbh",
+  "ok I trust it",
+  "this is why I like smaller stores over big chains",
+  "honestly better service than any big store I've tried",
+  "my mate was right about you lot",
+  "glad my friend recommended you",
+  "ok cool I'll try one and see",
+  "gonna start with one and if it's good I'll be back for more",
+  "ordering one now, if it's legit I'll buy more",
+  "one more thing actually nah nvm you already answered it lol",
+  "my gf is gonna be happy with this",
+  "this is for my brother's birthday so fingers crossed it arrives on time",
+  "been looking for a good store for ages, think I found it",
+  "you lot reply faster than Amazon support lmao",
+  "ok I'm done asking questions, time to actually buy something 😂",
+  "sorry for all the questions btw, just wanted to be sure",
+  "didn't mean to interrogate you haha, just being careful",
+  "right, I've taken enough of your time. gonna order now",
+  "ok you've passed the vibe check, ordering",
+  "this was genuinely helpful, rare these days",
+  "wish more stores were this transparent",
+  "real ones 💯",
   "dankjewel!",
   "merci!",
-  "gracias, thanks!",
-  "you've been super helpful, thanks a lot",
-  "oh nice, that's good to know. thanks!",
-  "ahh ok I understand now, thank you",
-  "that puts my mind at ease, thanks!",
-  "ok I'm convinced, gonna order now. thanks!",
-  "class, thanks for that 👍",
-  "fair enough, thanks for explaining",
-  "ok cool I'll go for it then, cheers",
-  "thanks! just placed my order",
-  "great customer service, appreciate it",
-  "thanks for being so quick to respond",
-  "you've answered all my questions, thank you!",
-  "ace, thanks!",
-  "sorted, thanks!",
-  "thanks a million!",
-  "safe, appreciate it",
-  "bless, thank you!",
-  "respect, thanks for the info",
-  "wicked, thanks!",
-  "mint, cheers!",
-  "sick, thanks for helping out",
-  "thanks, that's all I needed to know",
-  "perfect, that answers my question",
-  "ok great, I feel better about ordering now, thanks",
-  "that's reassuring, thank you so much",
-  "I'm happy with that answer, thanks!",
-  "thanks! gonna tell my mates about your store",
-  "good to know, thanks for the help",
-  "that's what I wanted to hear, cheers",
-  "ok brilliant, ordering right now",
-  "thanks, really good service",
-  "you lot are class, thanks",
-  "thanks for the honesty, really appreciate it",
-  "ok nice one, I'll order today then",
-  "that makes total sense, thanks!",
-  "thanks! looking forward to receiving it 😄",
-  "super helpful, thanks for everything",
   "danke!",
   "bedankt!",
-  "obrigado, thanks!",
+  "gracias!",
+  "obrigado!",
   "tack!",
   "kiitos!",
   "tak!",
-  "tusind tak!",
-  "thanks, excellent service honestly",
-  "ok that's perfect, thanks so much for your help",
-  "you've sold me, placing my order now. thanks!",
-  "quality, thanks!",
-  "sound out, cheers!",
-  "thanks, will definitely be ordering again",
-  "can't fault the service, thanks",
-  "thanks for taking the time to explain",
-  "ok I'm sold, thank you!",
 ];
+
+// Generate a unique response dynamically — never the same twice
+function generateClosingResponse(usedInConvo: Set<string>): string {
+  // Try up to 20 times to get something unique
+  for (let attempt = 0; attempt < 20; attempt++) {
+    let msg: string;
+    const roll = Math.random();
+
+    if (roll < 0.35) {
+      // Pattern 1: opener + reaction
+      msg = `${pick(OPENERS)}, ${pick(REACTIONS)}`;
+    } else if (roll < 0.55) {
+      // Pattern 2: opener + closer (short)
+      const closer = pick(CLOSERS_SIMPLE);
+      const opener = pick(OPENERS);
+      msg = closer ? `${opener}, ${closer}` : opener;
+    } else if (roll < 0.70) {
+      // Pattern 3: reaction + action closer
+      const action = pick(CLOSERS_POSITIVE);
+      msg = `${pick(REACTIONS)}. ${action}`;
+    } else if (roll < 0.82) {
+      // Pattern 4: opener + reaction + neutral closer
+      msg = `${pick(OPENERS)}, ${pick(REACTIONS)}. ${pick(CLOSERS_NEUTRAL)}`;
+    } else {
+      // Pattern 5: standalone
+      msg = pick(STANDALONE_RESPONSES);
+    }
+
+    // Clean up: capitalize first letter, trim
+    msg = msg.trim();
+    if (msg.length > 0) {
+      // Randomly decide capitalization style (some people don't capitalize)
+      if (Math.random() > 0.6) {
+        msg = msg.charAt(0).toUpperCase() + msg.slice(1);
+      }
+    }
+
+    if (!usedInConvo.has(msg)) return msg;
+  }
+  // Ultimate fallback: just pick a standalone
+  return pick(STANDALONE_RESPONSES);
+}
 
 const BLOCKED_NAMES = ["valued customer", "mubarak elkhabir"];
 
@@ -716,32 +775,36 @@ Deno.serve(async (req) => {
 
           const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
 
-          // 25% chance: send a follow-up question instead of thank you
+          // ─── 50% chance: say NOTHING at all (just end the convo silently) ───
+          if (Math.random() < 0.5) {
+            await supabase
+              .from("fake_chat_conversations")
+              .update({ auto_reply_due_at: null, is_auto: false })
+              .eq("id", conv.id);
+            continue;
+          }
+
+          // Of the remaining 50%, 25% chance of follow-up question (~12.5% overall)
           const isFollowUp = Math.random() < 0.25;
 
           let outMsg: string;
           let keepAuto = false;
 
           if (isFollowUp) {
-            // Collect ALL categories already asked in this conversation
             const customerMsgs = (convMsgs || []).filter((m: any) => m.sender_type === "customer");
             const usedCategories = new Set(customerMsgs.map((m: any) => detectCategory(m.message)));
-
-            // Pick a category not yet used in this conversation
             const allCats = ["shipping", "proof", "cheap", "recommendation"];
             const available = allCats.filter(c => !usedCategories.has(c));
 
-            // If all categories exhausted, fall back to thank-you instead
             if (available.length === 0) {
-              outMsg = pickUnique(thankYouMessages, convUsed);
+              outMsg = generateClosingResponse(convUsed);
             } else {
               const newCategory = pick(available);
               outMsg = generateQuestionUnique(newCategory, convUsed);
               keepAuto = true;
             }
-            keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
           } else {
-            outMsg = pickUnique(thankYouMessages, convUsed);
+            outMsg = generateClosingResponse(convUsed);
           }
 
           await supabase.from("fake_chat_messages").insert({
