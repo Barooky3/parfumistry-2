@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, Search } from 'lucide-react';
+import { useState } from 'react';
 import { lazy, Suspense } from 'react';
+import { Input } from '@/components/ui/input';
 import ProofCarousel from '@/components/home/ProofCarousel';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product';
@@ -16,6 +18,15 @@ const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').t
 const Index = () => {
   const bestsellers = getBestsellers();
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const features = [
     { label: t('hero.instantDelivery') },
@@ -137,10 +148,20 @@ const Index = () => {
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
         <div className="container">
-          <div className="text-center mb-8 md:mb-12">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12">
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
               {t('home.currentBestSellers')}
             </h2>
+            <form onSubmit={handleSearch} className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={t('shop.searchPlaceholder') || 'Search fragrances...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-10 rounded-none border-border bg-background text-sm"
+              />
+            </form>
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-5">
