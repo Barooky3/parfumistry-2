@@ -407,42 +407,14 @@ const CLOSERS_SIMPLE = [
 // Completely standalone responses that don't follow any template
 const STANDALONE_RESPONSES = [
   "perfect 👍",
-  "say less, ordering now",
-  "bet",
-  "love that, thanks",
   "all good then",
-  "nuff said",
-  "exactly what I wanted to hear",
-  "you guys are class",
-  "excellent service ngl",
   "fair play",
-  "respect for being honest",
-  "ok sick",
-  "beautiful, ordering rn",
-  "you've convinced me",
-  "I'm sold",
-  "was skeptical but not anymore tbh",
-  "ok I trust it",
-  "this is why I like smaller stores over big chains",
-  "honestly better service than any big store I've tried",
-  "my mate was right about you lot",
-  "glad my friend recommended you",
   "ok cool I'll try one and see",
   "gonna start with one and if it's good I'll be back for more",
   "ordering one now, if it's legit I'll buy more",
-  "one more thing actually nah nvm you already answered it lol",
-  "my gf is gonna be happy with this",
-  "this is for my brother's birthday so fingers crossed it arrives on time",
-  "been looking for a good store for ages, think I found it",
-  "you lot reply faster than Amazon support lmao",
-  "ok I'm done asking questions, time to actually buy something 😂",
   "sorry for all the questions btw, just wanted to be sure",
   "didn't mean to interrogate you haha, just being careful",
   "right, I've taken enough of your time. gonna order now",
-  "ok you've passed the vibe check, ordering",
-  "this was genuinely helpful, rare these days",
-  "wish more stores were this transparent",
-  "real ones 💯",
   "dankjewel!",
   "merci!",
   "danke!",
@@ -774,6 +746,20 @@ Deno.serve(async (req) => {
           }
 
           const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
+
+          // ─── GUARD: If admin's reply is a question/open-ended, go silent ───
+          // A real customer would answer the question, not say "thanks".
+          // Since the bot can't answer contextually, just end the convo.
+          const adminMsg = lastMsg.message.trim();
+          const isAdminQuestion = adminMsg.endsWith("?") || 
+            /\b(what|which|how|where|when|who|why|can you|could you|do you|are you|tell me|let me know)\b/i.test(adminMsg);
+          if (isAdminQuestion) {
+            await supabase
+              .from("fake_chat_conversations")
+              .update({ auto_reply_due_at: null, is_auto: false })
+              .eq("id", conv.id);
+            continue;
+          }
 
           // ─── 50% chance: say NOTHING at all (just end the convo silently) ───
           if (Math.random() < 0.5) {
