@@ -407,6 +407,8 @@ const CLOSERS_SIMPLE = [
 // Completely standalone responses that don't follow any template
 const STANDALONE_RESPONSES = [
   "perfect 👍",
+  "bet",
+  "say less, ordering now",
   "all good then",
   "fair play",
   "ok cool I'll try one and see",
