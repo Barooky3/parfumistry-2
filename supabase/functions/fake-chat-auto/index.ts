@@ -775,32 +775,36 @@ Deno.serve(async (req) => {
 
           const convUsed = new Set((convMsgs || []).filter((m: any) => m.sender_type === "customer").map((m: any) => m.message));
 
-          // 25% chance: send a follow-up question instead of thank you
+          // ─── 50% chance: say NOTHING at all (just end the convo silently) ───
+          if (Math.random() < 0.5) {
+            await supabase
+              .from("fake_chat_conversations")
+              .update({ auto_reply_due_at: null, is_auto: false })
+              .eq("id", conv.id);
+            continue;
+          }
+
+          // Of the remaining 50%, 25% chance of follow-up question (~12.5% overall)
           const isFollowUp = Math.random() < 0.25;
 
           let outMsg: string;
           let keepAuto = false;
 
           if (isFollowUp) {
-            // Collect ALL categories already asked in this conversation
             const customerMsgs = (convMsgs || []).filter((m: any) => m.sender_type === "customer");
             const usedCategories = new Set(customerMsgs.map((m: any) => detectCategory(m.message)));
-
-            // Pick a category not yet used in this conversation
             const allCats = ["shipping", "proof", "cheap", "recommendation"];
             const available = allCats.filter(c => !usedCategories.has(c));
 
-            // If all categories exhausted, fall back to thank-you instead
             if (available.length === 0) {
-              outMsg = pickUnique(thankYouMessages, convUsed);
+              outMsg = generateClosingResponse(convUsed);
             } else {
               const newCategory = pick(available);
               outMsg = generateQuestionUnique(newCategory, convUsed);
               keepAuto = true;
             }
-            keepAuto = true; // stay is_auto so another thank-you gets scheduled after admin replies
           } else {
-            outMsg = pickUnique(thankYouMessages, convUsed);
+            outMsg = generateClosingResponse(convUsed);
           }
 
           await supabase.from("fake_chat_messages").insert({
