@@ -554,7 +554,7 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    const MALIK_ADMIN = "malikisthebiggestw@gmail.com";
+    const PRIMARY_ADMIN = "ewhz3384@gmail.com";
 
     // Handle status check (GET with ?action=status)
     const url = new URL(req.url);
@@ -686,7 +686,7 @@ Deno.serve(async (req) => {
               headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
               body: JSON.stringify({
                 from: "ProfParfums <orders@profparfum.com>",
-                to: [MALIK_ADMIN],
+                to: [PRIMARY_ADMIN],
                 subject: `💬 New message from ${name}`,
                 html: `
                   <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
@@ -818,7 +818,7 @@ Deno.serve(async (req) => {
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
                 body: JSON.stringify({
                   from: "ProfParfums <orders@profparfum.com>",
-                  to: [MALIK_ADMIN],
+                  to: [PRIMARY_ADMIN],
                   subject: `💬 New message from ${conv.fake_name}`,
                   html: `
                     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">

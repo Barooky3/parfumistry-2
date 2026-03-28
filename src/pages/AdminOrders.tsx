@@ -29,7 +29,7 @@ import {
 import { products } from "@/data/products";
 import { Product } from "@/types/product";
 
-const ADMIN_EMAILS = ["ewhz3384@gmail.com", "malikisthebiggestw@gmail.com"];
+const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
 
 // State for delete confirmation dialog - replaces native confirm() which breaks when "don't ask again" is checked
 
@@ -877,19 +877,6 @@ export default function AdminOrders() {
                 <option value="hyper_aggressive">Hyper Aggressive (30s-2m)</option>
               </select>
             </div>
-          )}
-          {user?.email === "malikisthebiggestw@gmail.com" && (
-            <button
-              onClick={() => setActiveTab("malik_chat")}
-              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                activeTab === "malik_chat"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <MessageCircle className="h-4 w-4 inline mr-1.5" />
-              Chat Inbox
-            </button>
           )}
         </div>
 
