@@ -6,8 +6,7 @@ const corsHeaders = {
 };
 
 const PRIMARY_ADMIN = "ewhz3384@gmail.com";
-const MALIK_ADMIN = "malikisthebiggestw@gmail.com";
-const ALLOWED = [PRIMARY_ADMIN, MALIK_ADMIN];
+const ALLOWED = [PRIMARY_ADMIN];
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
