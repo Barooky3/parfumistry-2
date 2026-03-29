@@ -30,6 +30,7 @@ export interface Product {
     heart: string[];
     base: string[];
   };
+  scentNoteImages?: Record<string, string>;
   scentNotesImage?: string;
   accentColor?: string; // HSL color matching the bottle/juice
   image: string;
