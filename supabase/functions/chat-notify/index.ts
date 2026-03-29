@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
 
   try {
     const { conversation_id } = await req.json();
+    const cutoffIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
     // Check if conversation is blocked — silently skip
     const supabase = createClient(
@@ -20,24 +21,32 @@ Deno.serve(async (req) => {
     );
     const { data: conv } = await supabase
       .from("chat_conversations")
-      .select("blocked")
+      .select("blocked, user_email, user_name")
       .eq("id", conversation_id)
       .single();
 
-    if (conv?.blocked) {
+    if (!conv) {
+      return new Response(JSON.stringify({ success: true, skipped: true }), { headers: corsHeaders });
+    }
+
+    const { data: oldApprovedOrder } = await supabase
+      .from("orders")
+      .select("id")
+      .eq("status", "approved")
+      .lt("created_at", cutoffIso)
+      .ilike("customer_email", conv.user_email)
+      .limit(1)
+      .maybeSingle();
+
+    // Silently skip notifications for blocked users and customers with approved orders older than 24h
+    if (conv.blocked || oldApprovedOrder) {
       return new Response(JSON.stringify({ success: true, skipped: true }), { headers: corsHeaders });
     }
 
     // Send email notification to admin
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (RESEND_API_KEY) {
-      const { data: convoData } = await supabase
-        .from("chat_conversations")
-        .select("user_email, user_name")
-        .eq("id", conversation_id)
-        .single();
-
-      const customerName = convoData?.user_name || convoData?.user_email || "A customer";
+      const customerName = conv.user_name || conv.user_email || "A customer";
       const SITE_URL = "https://profparfums.lovable.app";
 
       try {
