@@ -53,8 +53,25 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ conversations: [] }), { headers: corsHeaders });
       }
 
-      const convIds = convos.map(c => c.id);
       const emails = [...new Set(convos.map(c => c.user_email))];
+      const cutoffIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+      const { data: oldApprovedRows } = await supabase
+        .from("orders")
+        .select("customer_email")
+        .in("customer_email", emails)
+        .eq("status", "approved")
+        .lt("created_at", cutoffIso);
+
+      const oldApprovedEmails = new Set((oldApprovedRows || []).map((row) => row.customer_email?.toLowerCase()));
+      const visibleConvos = convos.filter((conv) => !oldApprovedEmails.has(conv.user_email.toLowerCase()));
+
+      if (visibleConvos.length === 0) {
+        return new Response(JSON.stringify({ conversations: [] }), { headers: corsHeaders });
+      }
+
+      const convIds = visibleConvos.map(c => c.id);
+      const visibleEmails = [...new Set(visibleConvos.map(c => c.user_email))];
 
       const [unreadRes, orderRes] = await Promise.all([
         supabase
@@ -66,7 +83,7 @@ Deno.serve(async (req) => {
         supabase
           .from("orders")
           .select("customer_email")
-          .in("customer_email", emails),
+          .in("customer_email", visibleEmails),
       ]);
 
       const unreadMap: Record<string, number> = {};
@@ -83,7 +100,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      const results = convos.map(conv => ({
+      const results = visibleConvos.map(conv => ({
         ...conv,
         unread_count: unreadMap[conv.id] || 0,
         order_count: orderMap[conv.user_email] || 0,
