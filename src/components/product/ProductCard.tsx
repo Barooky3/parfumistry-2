@@ -1,6 +1,6 @@
 import { forwardRef, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Flame } from 'lucide-react';
+import { Flame, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
