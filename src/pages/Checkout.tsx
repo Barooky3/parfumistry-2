@@ -295,14 +295,6 @@ const Checkout = () => {
           </div>
         </div>
 
-        {/* Delivery estimate - compact */}
-        <div className="flex items-center gap-2.5 rounded-lg border border-border bg-muted/30 px-4 py-3 mb-6 text-xs">
-          <span>📦</span>
-          <span className="text-muted-foreground">
-            <span className="font-semibold text-foreground">DHL Delivery</span> — EU & UK: 4–6 days · Worldwide: 6–8 days · Tracking by email
-          </span>
-        </div>
-
         {/* Order Summary */}
         <div className="border border-border rounded-lg p-4 mb-8">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">Order summary</h2>
