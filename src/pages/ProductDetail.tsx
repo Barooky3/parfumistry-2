@@ -92,12 +92,13 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           <span className="text-foreground truncate">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 mb-12 md:mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 mb-12 md:mb-24 items-start">
           {/* Image */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
+            className="lg:sticky lg:top-8"
           >
             {(() => {
               const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
