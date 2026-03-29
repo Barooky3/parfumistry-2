@@ -472,10 +472,6 @@ const Checkout = () => {
             </span>
           </Button>
 
-          <p className="text-xs text-center text-muted-foreground">
-            Looking for another payment method?{' '}
-            <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Contact us on TikTok</a>
-          </p>
 
           <PaymentMethodExplainer />
 
