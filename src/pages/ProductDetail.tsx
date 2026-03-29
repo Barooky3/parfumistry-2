@@ -234,6 +234,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 <ScentNotesVisual 
                   scentNotes={product.scentNotes} 
                   accentColor={product.accentColor}
+                  noteImages={product.scentNoteImages}
                 />
               </div>
             )}
