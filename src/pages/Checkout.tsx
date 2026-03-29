@@ -240,8 +240,72 @@ const Checkout = () => {
           <h1 className="font-display text-2xl text-foreground">{t('checkout.title')}</h1>
         </div>
 
-        {/* Order Items - compact */}
-        <div className="border border-border rounded-lg p-4 mb-6">
+        {/* Form fields */}
+        <div className="space-y-4 mb-6">
+          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground">Your details</h2>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="text-xs text-muted-foreground mb-1.5 block">First name *</Label>
+              <Input value={formData.firstName} onChange={(e) => updateFormData('firstName', e.target.value)} placeholder="John" className="h-11 bg-background" />
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground mb-1.5 block">Last name *</Label>
+              <Input value={formData.lastName} onChange={(e) => updateFormData('lastName', e.target.value)} placeholder="Doe" className="h-11 bg-background" />
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-xs text-muted-foreground mb-1.5 block">Email *</Label>
+            <Input type="email" value={formData.email} onChange={(e) => updateFormData('email', e.target.value)} placeholder="you@example.com" className="h-11 bg-background" />
+            <p className="text-[10px] text-muted-foreground mt-1">{t('checkout.emailHelper')}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs text-muted-foreground mb-1.5 block">Confirm email *</Label>
+            <Input type="email" value={formData.confirmEmail} onChange={(e) => updateFormData('confirmEmail', e.target.value)} placeholder="Confirm your email"
+              className={cn("h-11 bg-background", formData.confirmEmail && formData.confirmEmail !== formData.email && "border-destructive")}
+            />
+            {formData.confirmEmail && formData.confirmEmail !== formData.email && (
+              <p className="text-[10px] text-destructive mt-1">Emails do not match</p>
+            )}
+          </div>
+
+          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground pt-2">Shipping address</h2>
+
+          <div>
+            <Label className="text-xs text-muted-foreground mb-1.5 block">Country *</Label>
+            <CountryCombobox value={formData.country} onSelect={(value) => updateFormData('country', value)} />
+          </div>
+
+          <div>
+            <Label className="text-xs text-muted-foreground mb-1.5 block">Street address *</Label>
+            <Input value={formData.streetAddress} onChange={(e) => updateFormData('streetAddress', e.target.value)} placeholder="123 Main Street" className="h-11 bg-background" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="text-xs text-muted-foreground mb-1.5 block">Postal code *</Label>
+              <Input value={formData.postalCode} onChange={(e) => updateFormData('postalCode', e.target.value)} placeholder="1234 AB" className="h-11 bg-background" />
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground mb-1.5 block">City *</Label>
+              <Input value={formData.city} onChange={(e) => updateFormData('city', e.target.value)} placeholder="Amsterdam" className="h-11 bg-background" />
+            </div>
+          </div>
+        </div>
+
+        {/* Delivery estimate - compact */}
+        <div className="flex items-center gap-2.5 rounded-lg border border-border bg-muted/30 px-4 py-3 mb-6 text-xs">
+          <span>📦</span>
+          <span className="text-muted-foreground">
+            <span className="font-semibold text-foreground">DHL Delivery</span> — EU & UK: 4–6 days · Worldwide: 6–8 days · Tracking by email
+          </span>
+        </div>
+
+        {/* Order Summary */}
+        <div className="border border-border rounded-lg p-4 mb-8">
+          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">Order summary</h2>
           <div className="space-y-3">
             {items.map((item) => {
               const cartKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
@@ -310,7 +374,7 @@ const Checkout = () => {
               {formData.country ? (
                 <span className="text-foreground">{formatPrice(shippingCost)}</span>
               ) : (
-                <span className="text-muted-foreground italic">Select country below</span>
+                <span className="text-muted-foreground italic">Select country above</span>
               )}
             </div>
             <div className="flex justify-between pt-2 border-t border-border">
@@ -319,69 +383,6 @@ const Checkout = () => {
                 <span className="text-lg font-bold text-foreground">{formatPrice(currentTotal)}</span>
                 <p className="text-[10px] text-muted-foreground">Tax included</p>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Delivery estimate - compact */}
-        <div className="flex items-center gap-2.5 rounded-lg border border-border bg-muted/30 px-4 py-3 mb-6 text-xs">
-          <span>📦</span>
-          <span className="text-muted-foreground">
-            <span className="font-semibold text-foreground">DHL Delivery</span> — EU & UK: 4–6 days · Worldwide: 6–8 days · Tracking by email
-          </span>
-        </div>
-
-        {/* Form fields */}
-        <div className="space-y-4 mb-8">
-          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground">Your details</h2>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">First name *</Label>
-              <Input value={formData.firstName} onChange={(e) => updateFormData('firstName', e.target.value)} placeholder="John" className="h-11 bg-background" />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Last name *</Label>
-              <Input value={formData.lastName} onChange={(e) => updateFormData('lastName', e.target.value)} placeholder="Doe" className="h-11 bg-background" />
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-xs text-muted-foreground mb-1.5 block">Email *</Label>
-            <Input type="email" value={formData.email} onChange={(e) => updateFormData('email', e.target.value)} placeholder="you@example.com" className="h-11 bg-background" />
-            <p className="text-[10px] text-muted-foreground mt-1">{t('checkout.emailHelper')}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs text-muted-foreground mb-1.5 block">Confirm email *</Label>
-            <Input type="email" value={formData.confirmEmail} onChange={(e) => updateFormData('confirmEmail', e.target.value)} placeholder="Confirm your email"
-              className={cn("h-11 bg-background", formData.confirmEmail && formData.confirmEmail !== formData.email && "border-destructive")}
-            />
-            {formData.confirmEmail && formData.confirmEmail !== formData.email && (
-              <p className="text-[10px] text-destructive mt-1">Emails do not match</p>
-            )}
-          </div>
-
-          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground pt-2">Shipping address</h2>
-
-          <div>
-            <Label className="text-xs text-muted-foreground mb-1.5 block">Country *</Label>
-            <CountryCombobox value={formData.country} onSelect={(value) => updateFormData('country', value)} />
-          </div>
-
-          <div>
-            <Label className="text-xs text-muted-foreground mb-1.5 block">Street address *</Label>
-            <Input value={formData.streetAddress} onChange={(e) => updateFormData('streetAddress', e.target.value)} placeholder="123 Main Street" className="h-11 bg-background" />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Postal code *</Label>
-              <Input value={formData.postalCode} onChange={(e) => updateFormData('postalCode', e.target.value)} placeholder="1234 AB" className="h-11 bg-background" />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">City *</Label>
-              <Input value={formData.city} onChange={(e) => updateFormData('city', e.target.value)} placeholder="Amsterdam" className="h-11 bg-background" />
             </div>
           </div>
         </div>
