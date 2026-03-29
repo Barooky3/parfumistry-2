@@ -1,6 +1,6 @@
 import { forwardRef, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Flame } from 'lucide-react';
+import { Flame, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
@@ -109,6 +109,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       };
     }, [showButtons]);
 
+    const isBundle = product.isBundle || product.category === 'bundle';
+
     return (
       <motion.div 
         ref={(node) => {
@@ -117,11 +119,21 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           else if (ref) ref.current = node;
           (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
-        className={cn('group', className)}
+        className={cn(
+          'group relative',
+          isBundle && 'ring-2 ring-accent rounded-md',
+          className
+        )}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
         onTouchStart={handleTouchStart}
       >
+        {/* Bundle Star Badge */}
+        {isBundle && (
+          <div className="absolute -top-2 -left-2 z-40 bg-accent text-accent-foreground rounded-full p-1.5 shadow-md">
+            <Star size={14} fill="currentColor" />
+          </div>
+        )}
         {/* Image Container */}
         <Link 
           to={`/product/${product.id}`} 
