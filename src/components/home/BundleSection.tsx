@@ -128,6 +128,12 @@ export const BundleSection = () => {
             Or choose from our already made bundles
           </p>
         </motion.div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {bundles.map((bundle, index) => (
+            <BundleCard key={bundle.id} bundle={bundle} index={index} />
+          ))}
+        </div>
       </div>
     </section>
   );
