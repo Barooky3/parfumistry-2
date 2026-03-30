@@ -33,6 +33,7 @@ const ProofUpload = lazy(() => import("./pages/ProofUpload"));
 const EmailPreview = lazy(() => import("./pages/EmailPreview"));
 const AdminChat = lazy(() => import("./pages/AdminChat"));
 const ChatReply = lazy(() => import("./pages/ChatReply"));
+const CustomBundle = lazy(() => import("./pages/CustomBundle"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -83,6 +84,7 @@ const App = () => (
                 <Route path="/email-preview" element={<EmailPreview />} />
                 <Route path="/admin/chat" element={<AdminChat />} />
                 <Route path="/admin/chat-reply" element={<ChatReply />} />
+                <Route path="/custom-bundle" element={<CustomBundle />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
