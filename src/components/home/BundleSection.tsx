@@ -110,24 +110,9 @@ export const BundleSection = () => {
           <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground mb-3">
             Check out the fragrance bundles
           </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto">
+          <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto mb-6">
             Save when you bundle these products together
           </p>
-        </motion.div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {bundles.map((bundle, index) => (
-            <BundleCard key={bundle.id} bundle={bundle} index={index} />
-          ))}
-        </div>
-
-        <motion.div
-          className="text-center mt-10"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
           <Link to="/custom-bundle">
             <Button
               size="lg"
@@ -138,6 +123,9 @@ export const BundleSection = () => {
           </Link>
           <p className="text-xs text-muted-foreground mt-3">
             Pick any 5 fragrances at special bundle prices
+          </p>
+          <p className="text-sm text-muted-foreground mt-6 mb-2">
+            Or choose from our already made bundles
           </p>
         </motion.div>
       </div>
