@@ -116,7 +116,7 @@ export const BundleSection = () => {
           <Link to="/custom-bundle">
             <Button
               size="lg"
-              className="rounded-none text-xs font-medium tracking-[0.15em] uppercase border-foreground bg-foreground text-background hover:bg-accent hover:text-accent-foreground hover:border-accent px-8 py-6"
+              className="rounded-none text-sm md:text-base font-semibold tracking-[0.12em] uppercase bg-accent text-accent-foreground hover:bg-accent/90 px-12 py-7 md:px-16 md:py-8 shadow-lg hover:shadow-xl transition-all"
             >
               ✨ Make Your Own Bundle
             </Button>
