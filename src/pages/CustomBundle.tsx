@@ -258,8 +258,19 @@ const CustomBundle = () => {
                   </h3>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{variant.ml}ml</span>
-                    <span className="text-sm font-semibold text-foreground">€{bundlePrice.toFixed(2)}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] line-through text-muted-foreground">€{variant.price.toFixed(2)}</span>
+                      <span className="text-sm font-bold text-accent">€{bundlePrice.toFixed(2)}</span>
+                    </div>
                   </div>
+                  {(() => {
+                    const savings = Math.round((1 - bundlePrice / variant.price) * 100);
+                    return (
+                      <div className="mt-1 text-[10px] font-semibold text-accent uppercase tracking-wider">
+                        Save {savings}%
+                      </div>
+                    );
+                  })()}
                 </div>
               </motion.div>
             );
