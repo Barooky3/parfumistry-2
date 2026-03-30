@@ -120,6 +120,26 @@ export const BundleSection = () => {
             <BundleCard key={bundle.id} bundle={bundle} index={index} />
           ))}
         </div>
+
+        <motion.div
+          className="text-center mt-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <Link to="/custom-bundle">
+            <Button
+              size="lg"
+              className="rounded-none text-xs font-medium tracking-[0.15em] uppercase border-foreground bg-foreground text-background hover:bg-accent hover:text-accent-foreground hover:border-accent px-8 py-6"
+            >
+              ✨ Make Your Own Bundle
+            </Button>
+          </Link>
+          <p className="text-xs text-muted-foreground mt-3">
+            Pick any 5 fragrances at special bundle prices
+          </p>
+        </motion.div>
       </div>
     </section>
   );
