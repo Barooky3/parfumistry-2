@@ -5,10 +5,17 @@ import { getFragrances } from '@/data/products';
 import { Product, ProductVariant } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { cn } from '@/lib/utils';
-import { X, Sparkles, Plus, Search, ShoppingBag } from 'lucide-react';
+import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const MAX_ITEMS = 5;
+
+// Designer brands that should appear first (shuffled among themselves)
+const DESIGNER_BRANDS = [
+  'Dior', 'Tom Ford', 'Louis Vuitton', 'Creed', 'Prada', 'Valentino',
+  'Giorgio Armani', 'Jean Paul Gaultier', 'Versace', 'Viktor & Rolf',
+  'Paco Rabanne', 'Yves Saint Laurent', 'Parfums de Marly', 'Xerjoff',
+];
 
 interface BundleSelection {
   product: Product;
@@ -22,14 +29,26 @@ const getBundlePrice = (variantPrice: number): number => {
   return 19.99;
 };
 
-// Get the largest/standard variant for a product
+// Get the largest/standard variant for a product (even if out of stock)
 const getStandardVariant = (product: Product): ProductVariant | null => {
   if (!product.variants || product.variants.length === 0) return null;
-  const inStock = product.variants.filter(v => v.inStock);
-  if (inStock.length === 0) return null;
-  // Pick the largest ml variant
-  return inStock.reduce((best, v) => v.ml > best.ml ? v : best, inStock[0]);
+  // Pick the largest ml variant regardless of stock
+  return product.variants.reduce((best, v) => v.ml > best.ml ? v : best, product.variants[0]);
 };
+
+// Seeded shuffle so order is stable per session but random
+const shuffleArray = <T,>(arr: T[], seed: number): T[] => {
+  const shuffled = [...arr];
+  let s = seed;
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    s = (s * 16807 + 0) % 2147483647;
+    const j = s % (i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+const SESSION_SEED = Math.floor(Math.random() * 2147483647);
 
 const CustomBundle = () => {
   const [selections, setSelections] = useState<BundleSelection[]>([]);
@@ -39,7 +58,10 @@ const CustomBundle = () => {
   const { addItem } = useCart();
 
   const fragrances = useMemo(() => {
-    return getFragrances().filter(p => p.inStock && p.variants && p.variants.length > 0);
+    const all = getFragrances().filter(p => p.variants && p.variants.length > 0);
+    const designers = all.filter(p => DESIGNER_BRANDS.includes(p.brand));
+    const others = all.filter(p => !DESIGNER_BRANDS.includes(p.brand));
+    return [...shuffleArray(designers, SESSION_SEED), ...shuffleArray(others, SESSION_SEED + 1)];
   }, []);
 
   const filteredFragrances = useMemo(() => {
@@ -51,11 +73,14 @@ const CustomBundle = () => {
   }, [fragrances, search]);
 
   const totalPrice = selections.reduce((sum, s) => sum + s.bundlePrice, 0);
+  const totalOriginal = selections.reduce((sum, s) => sum + s.variant.price, 0);
+  const totalSavings = totalOriginal - totalPrice;
 
   const handleSelect = (product: Product) => {
     if (selections.length >= MAX_ITEMS) return;
+    if (!product.inStock) return;
     const variant = getStandardVariant(product);
-    if (!variant) return;
+    if (!variant || !variant.inStock) return;
     const bundlePrice = getBundlePrice(variant.price);
     setSelections(prev => [...prev, { product, variant, bundlePrice }]);
   };
@@ -150,6 +175,17 @@ const CustomBundle = () => {
                   />
                 ))}
               </div>
+              {/* Savings badge */}
+              {selections.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center gap-1 bg-accent/15 text-accent px-2.5 py-1 rounded-full text-xs font-semibold"
+                >
+                  <Tag size={12} />
+                  You save €{totalSavings.toFixed(2)}
+                </motion.div>
+              )}
             </div>
             <Button
               onClick={handleAddToCart}
@@ -211,27 +247,33 @@ const CustomBundle = () => {
             const variant = getStandardVariant(product);
             if (!variant) return null;
             const bundlePrice = getBundlePrice(variant.price);
+            const isOutOfStock = !product.inStock || !variant.inStock;
+            const isDisabled = isFull || isOutOfStock;
 
             return (
               <motion.div
                 key={product.id}
                 className={cn(
-                  "border border-border bg-background overflow-hidden transition-all group cursor-pointer",
+                  "border border-border bg-background overflow-hidden transition-all group relative",
                   timesSelected > 0 && "ring-2 ring-accent",
-                  isFull && timesSelected === 0 && "opacity-40"
+                  isDisabled && timesSelected === 0 ? "opacity-50" : "cursor-pointer"
                 )}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-20px" }}
-                whileHover={!isFull ? { y: -4, transition: { duration: 0.2 } } : {}}
-                onClick={() => !isFull && handleSelect(product)}
+                whileHover={!isDisabled ? { y: -4, transition: { duration: 0.2 } } : {}}
+                onClick={() => !isDisabled && handleSelect(product)}
               >
                 {/* Image */}
                 <div className="aspect-square bg-secondary flex items-center justify-center p-4 relative overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    className={cn(
+                      "w-full h-full object-contain transition-transform duration-300",
+                      !isDisabled && "group-hover:scale-105",
+                      isOutOfStock && "grayscale"
+                    )}
                     loading="lazy"
                   />
                   {timesSelected > 0 && (
@@ -239,7 +281,14 @@ const CustomBundle = () => {
                       {timesSelected}
                     </div>
                   )}
-                  {!isFull && timesSelected === 0 && (
+                  {isOutOfStock && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-background/90 px-3 py-1.5 rounded-md border border-border">
+                        Out of Stock
+                      </span>
+                    </div>
+                  )}
+                  {!isDisabled && timesSelected === 0 && (
                     <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-accent text-accent-foreground rounded-full p-2 shadow-lg">
                         <Plus size={18} />
