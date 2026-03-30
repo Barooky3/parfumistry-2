@@ -30,6 +30,7 @@ const getBundlePriceTier = (variantPrice: number): string => {
 
 const CustomBundle = () => {
   const [selections, setSelections] = useState<BundleSelection[]>([]);
+  const [bundleName, setBundleName] = useState('');
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const navigate = useNavigate();
   const { addItem } = useCart();
@@ -55,7 +56,7 @@ const CustomBundle = () => {
     // Create a custom bundle product
     const bundleProduct: Product = {
       id: `custom-bundle-${Date.now()}`,
-      name: 'Custom Bundle (' + selections.map(s => s.product.name).join(', ') + ')',
+      name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => s.product.name).join(', ') + ')',
       brand: 'Parfumistry',
       price: totalPrice,
       category: 'bundle',
@@ -81,9 +82,19 @@ const CustomBundle = () => {
           <h1 className="font-display text-2xl md:text-4xl text-foreground mb-2">
             Make Your Own Bundle
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto">
+          <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto mb-4">
             Pick any 5 fragrances and build your perfect collection at bundle prices
           </p>
+          <div className="max-w-sm mx-auto">
+            <input
+              type="text"
+              value={bundleName}
+              onChange={(e) => setBundleName(e.target.value)}
+              placeholder="Name your bundle..."
+              maxLength={40}
+              className="w-full text-center bg-secondary border border-border rounded-none px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
         </motion.div>
 
         {/* Sticky summary bar */}
