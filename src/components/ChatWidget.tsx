@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { MessageCircle, X, Send, LogIn } from 'lucide-react';
+import { MessageCircle, X, Send, Mail } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
 import ChatMessageContent from '@/components/chat/ChatMessageContent';
 
 interface Message {
@@ -12,6 +12,22 @@ interface Message {
   message: string;
   created_at: string;
   isLocal?: boolean;
+}
+
+const GUEST_STORAGE_KEY = 'chat_guest_session';
+
+function getGuestSession(): { guestId: string; email: string } | null {
+  try {
+    const raw = localStorage.getItem(GUEST_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.guestId && parsed.email) return parsed;
+  } catch {}
+  return null;
+}
+
+function saveGuestSession(guestId: string, email: string) {
+  localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify({ guestId, email }));
 }
 
 export const ChatWidget = () => {
@@ -26,7 +42,14 @@ export const ChatWidget = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
 
-  // Update customer_last_seen_at every time chat opens
+  // Guest state
+  const [guestEmail, setGuestEmail] = useState('');
+  const [guestSession, setGuestSession] = useState<{ guestId: string; email: string } | null>(getGuestSession());
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const isGuest = !user && !!guestSession;
+
+  // Update customer_last_seen_at every time chat opens (authenticated)
   useEffect(() => {
     if (!user || !open || !conversationId) return;
     supabase
@@ -36,14 +59,13 @@ export const ChatWidget = () => {
       .then();
   }, [user, open, conversationId]);
 
-  // Load or create conversation when user is logged in and chat opens
+  // Load conversation for authenticated users
   useEffect(() => {
     if (!user || !open) return;
     if (loadedRef.current && conversationId) return;
 
     const loadConversation = async () => {
       setLoading(true);
-      // Fetch ALL conversations to check if any are blocked
       const { data: convos } = await supabase
         .from('chat_conversations')
         .select('*')
@@ -53,7 +75,6 @@ export const ChatWidget = () => {
       if (convos && convos.length > 0) {
         const anyBlocked = convos.some(c => c.blocked === true);
         if (anyBlocked) {
-          // Silently blocked: show empty chat as if fresh, no indication of block
           setIsBlocked(true);
           loadedRef.current = true;
           setMessages([]);
@@ -71,7 +92,6 @@ export const ChatWidget = () => {
           .order('created_at', { ascending: true });
         setMessages(msgs || []);
 
-        // Mark customer as having seen messages now
         await supabase
           .from('chat_conversations')
           .update({ customer_last_seen_at: new Date().toISOString() })
@@ -84,9 +104,61 @@ export const ChatWidget = () => {
     loadConversation();
   }, [user, open, conversationId]);
 
-  // Realtime subscription
+  // Load conversation for guest users
   useEffect(() => {
-    if (!conversationId) return;
+    if (user || !guestSession || !open) return;
+    if (loadedRef.current && conversationId) return;
+
+    const loadGuestConversation = async () => {
+      setLoading(true);
+      try {
+        const { data } = await supabase.functions.invoke('guest-chat', {
+          body: { action: 'load', guest_id: guestSession.guestId, email: guestSession.email },
+        });
+
+        if (data?.blocked) {
+          setIsBlocked(true);
+          setMessages([]);
+        } else {
+          setIsBlocked(false);
+          setConversationId(data?.conversation_id || null);
+          setMessages(data?.messages || []);
+        }
+      } catch (err) {
+        console.error('Guest load error:', err);
+      }
+      loadedRef.current = true;
+      setLoading(false);
+    };
+
+    loadGuestConversation();
+  }, [user, guestSession, open, conversationId]);
+
+  // Poll for new messages (guest only, since no realtime)
+  useEffect(() => {
+    if (!isGuest || !conversationId || !open) {
+      if (pollRef.current) clearInterval(pollRef.current);
+      return;
+    }
+
+    const poll = async () => {
+      try {
+        const { data } = await supabase.functions.invoke('guest-chat', {
+          body: { action: 'poll', guest_id: guestSession!.guestId, email: guestSession!.email, conversation_id: conversationId },
+        });
+        if (data?.messages) {
+          setMessages(data.messages);
+        }
+      } catch {}
+    };
+
+    pollRef.current = setInterval(poll, 8000);
+    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+  }, [isGuest, conversationId, open, guestSession]);
+
+  // Realtime subscription (authenticated only)
+  useEffect(() => {
+    if (!user || !conversationId) return;
 
     const channel = supabase
       .channel(`chat-${conversationId}`)
@@ -99,7 +171,6 @@ export const ChatWidget = () => {
         const newMsg = payload.new as Message;
         setMessages(prev => {
           if (prev.some(m => m.id === newMsg.id)) return prev;
-          // Replace local optimistic duplicate
           const localDupe = prev.findIndex(m =>
             m.isLocal &&
             m.sender_type === newMsg.sender_type &&
@@ -116,7 +187,6 @@ export const ChatWidget = () => {
         if (newMsg.sender_type === 'admin') {
           setOpen(true);
           setUnreadCount(0);
-          // Mark as seen immediately if chat is open
           if (conversationId) {
             supabase
               .from('chat_conversations')
@@ -133,7 +203,6 @@ export const ChatWidget = () => {
       }, (payload) => {
         const updated = payload.new as any;
         if (updated.blocked) {
-          // Silently block: keep any local messages visible, just prevent future DB writes
           setIsBlocked(true);
           setConversationId(null);
           loadedRef.current = true;
@@ -142,9 +211,9 @@ export const ChatWidget = () => {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [conversationId]);
+  }, [user, conversationId]);
 
-  // Load convo ID when closed for realtime notifications
+  // Load convo ID when closed for realtime notifications (authenticated)
   useEffect(() => {
     if (!user || conversationId) return;
     const loadConvoId = async () => {
@@ -174,12 +243,12 @@ export const ChatWidget = () => {
     }
   }, [messages]);
 
-  const sendMessage = useCallback(async () => {
+  // Send message (authenticated)
+  const sendAuthMessage = useCallback(async () => {
     if (!input.trim() || !user) return;
     const text = input.trim();
     setInput('');
 
-    // Optimistic local message (shown even if blocked for silent blocking)
     const localMsg: Message = {
       id: crypto.randomUUID(),
       sender_type: 'customer',
@@ -189,7 +258,6 @@ export const ChatWidget = () => {
     };
     setMessages(prev => [...prev, localMsg]);
 
-    // Silently block: don't send, don't create new conversations
     if (isBlocked) return;
 
     let convId = conversationId;
@@ -230,12 +298,62 @@ export const ChatWidget = () => {
     });
   }, [input, user, isBlocked, conversationId]);
 
+  // Send message (guest)
+  const sendGuestMessage = useCallback(async () => {
+    if (!input.trim() || !guestSession) return;
+    const text = input.trim();
+    setInput('');
+
+    const localMsg: Message = {
+      id: crypto.randomUUID(),
+      sender_type: 'customer',
+      message: text,
+      created_at: new Date().toISOString(),
+      isLocal: true,
+    };
+    setMessages(prev => [...prev, localMsg]);
+
+    if (isBlocked) return;
+
+    try {
+      const { data } = await supabase.functions.invoke('guest-chat', {
+        body: {
+          action: 'send',
+          guest_id: guestSession.guestId,
+          email: guestSession.email,
+          message: text,
+          conversation_id: conversationId,
+        },
+      });
+
+      if (data?.conversation_id && !conversationId) {
+        setConversationId(data.conversation_id);
+      }
+    } catch (err) {
+      console.error('Guest send error:', err);
+    }
+  }, [input, guestSession, isBlocked, conversationId]);
+
+  const sendMessage = user ? sendAuthMessage : sendGuestMessage;
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
   }, [sendMessage]);
+
+  const handleGuestStart = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = guestEmail.trim();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return;
+    const guestId = crypto.randomUUID();
+    saveGuestSession(guestId, trimmed);
+    setGuestSession({ guestId, email: trimmed });
+    loadedRef.current = false;
+  };
+
+  const canChat = user || isGuest;
 
   return (
     <>
@@ -264,18 +382,24 @@ export const ChatWidget = () => {
             </button>
           </div>
 
-          {!user ? (
+          {!canChat ? (
             <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
-              <LogIn className="h-10 w-10 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Please log in or create an account to start chatting with our support team.</p>
-              <div className="flex gap-2">
-                <Button asChild size="sm">
-                  <Link to="/login" onClick={() => setOpen(false)}>Log In</Link>
+              <Mail className="h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Enter your email to start chatting with our support team. We'll notify you by email when we reply.</p>
+              <form onSubmit={handleGuestStart} className="w-full space-y-3">
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={guestEmail}
+                  onChange={e => setGuestEmail(e.target.value)}
+                  className="h-11 bg-background border-border rounded-lg focus:border-accent text-sm"
+                  required
+                  maxLength={255}
+                />
+                <Button type="submit" size="sm" className="w-full">
+                  Start Chat
                 </Button>
-                <Button asChild size="sm" variant="outline">
-                  <Link to="/signup" onClick={() => setOpen(false)}>Sign Up</Link>
-                </Button>
-              </div>
+              </form>
             </div>
           ) : (
             <div className="flex-1 min-h-0 flex flex-col">
