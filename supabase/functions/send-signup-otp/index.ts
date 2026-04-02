@@ -25,9 +25,10 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
     }),
   });
 
+  const resBody = await res.text();
+  console.log("Resend response status:", res.status, "body:", resBody);
   if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error("Resend API error (" + res.status + "): " + errBody);
+    throw new Error("Resend API error (" + res.status + "): " + resBody);
   }
 }
 
@@ -99,7 +100,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error sending OTP:", error);
     return new Response(
-      JSON.stringify({ error: "Unable to send verification code" }),
+      JSON.stringify({ error: "Unable to send verification code", debug: String(error) }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
