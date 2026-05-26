@@ -24,9 +24,7 @@ interface BundleSelection {
 }
 
 const getBundlePrice = (variantPrice: number): number => {
-  if (variantPrice <= 28) return 9.99;
-  if (variantPrice <= 39) return 14.99;
-  return 19.99;
+  return Math.round(variantPrice * 0.55 * 100) / 100;
 };
 
 // Standard size targets by brand
