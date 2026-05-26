@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
                 <li>Email address (for order confirmation and shipping updates)</li>
                 <li>Name and billing address (for payment processing)</li>
                 <li>Payment information (processed securely through our payment providers)</li>
-                <li>Purchase history (to provide access to your digital products)</li>
+                <li>Purchase history (to manage your orders and returns)</li>
               </ul>
             </section>
 
