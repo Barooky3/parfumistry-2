@@ -22,10 +22,10 @@ const FIELDS: Array<{
   right: string;
   center?: string;
 }> = [
-  { key: 'season', label: 'SEASON', left: 'Summer', right: 'Winter' },
-  { key: 'longevity', label: 'LONGEVITY', left: '< 4 hours', right: '> 12 hours' },
-  { key: 'gender_tendency', label: 'GENDER TENDENCY', left: 'Masculine', right: 'Feminine', center: 'Unisex' },
-  { key: 'uniqueness', label: 'UNIQUENESS', left: 'Mainstream', right: 'Niche' },
+  { key: 'season', label: 'Season', left: 'Summer', right: 'Winter' },
+  { key: 'longevity', label: 'Longevity', left: '< 4h', right: '12h+' },
+  { key: 'gender_tendency', label: 'Gender', left: 'Masculine', right: 'Feminine', center: 'Unisex' },
+  { key: 'uniqueness', label: 'Uniqueness', left: 'Mainstream', right: 'Niche' },
 ];
 
 interface Props {
@@ -71,51 +71,66 @@ export const ProductAttributes = ({ productId }: Props) => {
   };
 
   return (
-    <div className="relative bg-secondary/40 p-5 md:p-6">
-      {isAdmin && !editing && (
-        <button
-          onClick={startEdit}
-          className="absolute top-3 right-3 p-1.5 rounded-full bg-background/80 hover:bg-background text-foreground/70 hover:text-foreground transition"
-          aria-label="Edit attributes"
-        >
-          <Pencil className="h-3.5 w-3.5" />
-        </button>
-      )}
-      {isAdmin && editing && (
-        <div className="absolute top-3 right-3 flex gap-1">
-          <button
-            onClick={save}
-            disabled={saving}
-            className="p-1.5 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50"
-            aria-label="Save"
-          >
-            <Check className="h-3.5 w-3.5" />
-          </button>
-          <button
-            onClick={() => setEditing(false)}
-            className="p-1.5 rounded-full bg-background/80 hover:bg-background text-foreground/70 transition"
-            aria-label="Cancel"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
+    <div className="relative bg-background/40 backdrop-blur-md border border-border/60 p-6 md:p-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-6 bg-accent" />
+          <h3 className="text-[10px] tracking-[0.3em] uppercase text-foreground/80 font-medium">
+            Fragrance Profile
+          </h3>
         </div>
-      )}
+        {isAdmin && !editing && (
+          <button
+            onClick={startEdit}
+            className="p-1.5 text-foreground/50 hover:text-accent transition-colors"
+            aria-label="Edit attributes"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+        )}
+        {isAdmin && editing && (
+          <div className="flex gap-1">
+            <button
+              onClick={save}
+              disabled={saving}
+              className="p-1.5 text-accent hover:opacity-80 transition disabled:opacity-50"
+              aria-label="Save"
+            >
+              <Check className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => setEditing(false)}
+              className="p-1.5 text-foreground/50 hover:text-foreground transition"
+              aria-label="Cancel"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-7">
         {FIELDS.map((f) => {
           const value = editing ? draft[f.key] : attrs[f.key];
           return (
             <div key={f.key}>
-              <p className="text-[11px] font-bold tracking-[0.15em] text-foreground mb-3">
+              <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-3">
                 {f.label}
               </p>
-              <div className="relative h-2 bg-muted rounded-sm">
+              <div className="relative h-[2px] bg-border/80">
+                {/* filled portion */}
+                <div
+                  className="absolute top-0 left-0 h-full bg-accent/40"
+                  style={{ width: `${value}%` }}
+                />
+                {/* indicator */}
                 <div
                   className={cn(
-                    "absolute top-1/2 -translate-y-1/2 w-3 h-5 bg-accent",
-                    editing ? "cursor-pointer" : ""
+                    "absolute top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent shadow-[0_0_8px_hsl(var(--accent)/0.6)] transition-all",
+                    editing && "h-5"
                   )}
-                  style={{ left: `calc(${value}% - 6px)` }}
+                  style={{ left: `calc(${value}% - 1px)` }}
                 />
                 {editing && (
                   <input
@@ -126,13 +141,13 @@ export const ProductAttributes = ({ productId }: Props) => {
                     onChange={(e) =>
                       setDraft({ ...draft, [f.key]: Number(e.target.value) })
                     }
-                    className="absolute inset-0 w-full opacity-0 cursor-pointer"
+                    className="absolute -inset-y-3 inset-x-0 w-full opacity-0 cursor-pointer"
                   />
                 )}
               </div>
-              <div className={cn("flex mt-2 text-xs text-muted-foreground", f.center ? "justify-between" : "justify-between")}>
+              <div className="flex justify-between mt-3 text-[10px] tracking-[0.15em] uppercase text-foreground/60">
                 <span>{f.left}</span>
-                {f.center && <span>{f.center}</span>}
+                {f.center && <span className="text-accent/80">{f.center}</span>}
                 <span>{f.right}</span>
               </div>
             </div>
