@@ -152,6 +152,10 @@ const Checkout = () => {
            formData.firstName && formData.lastName && formData.country && formData.streetAddress && formData.postalCode && formData.city;
   };
 
+  const isAddressComplete = () => {
+    return formData.country && formData.streetAddress && formData.postalCode && formData.city;
+  };
+
   const handleApplyDiscount = () => {
     setIsApplyingDiscount(true);
     setTimeout(() => {
