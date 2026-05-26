@@ -39,7 +39,14 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { action, conversation_id, message, user_email } = await req.json();
+    let body: any = {};
+    try {
+      const raw = await req.text();
+      body = raw ? JSON.parse(raw) : {};
+    } catch {
+      body = {};
+    }
+    const { action, conversation_id, message, user_email } = body;
 
     if (action === "list_conversations") {
       const { data: convos } = await supabase
