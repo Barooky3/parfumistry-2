@@ -733,7 +733,6 @@ export default function AdminOrders() {
           <Button variant="outline" size="sm" onClick={() => {
             fetchOrders();
             fetchBannedUsers();
-            fetchBlockedUsers();
           }} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
@@ -763,68 +762,9 @@ export default function AdminOrders() {
             <Radio className="h-4 w-4 inline mr-1.5" />
             Live Visitors
           </button>
-          {user?.email === "ewhz3384@gmail.com" && (
-            <button
-              onClick={() => setActiveTab("chat")}
-              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                activeTab === "chat"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <MessageCircle className="h-4 w-4 inline mr-1.5" />
-              Chat Inbox
-            </button>
-          )}
-          {user?.email === "ewhz3384@gmail.com" && (
-            <button
-              onClick={() => setActiveTab("fake_sender")}
-              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                activeTab === "fake_sender"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <MessageCircle className="h-4 w-4 inline mr-1.5" />
-              Malik Chat
-            </button>
-           )}
-          {user?.email === "ewhz3384@gmail.com" && (
-            <div className="flex items-center gap-2 px-4 py-2">
-              <Bot className="h-4 w-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Auto Chat</span>
-              <select
-                value={autoChatMode}
-                onChange={(e) => setAutoChatModeRemote(e.target.value)}
-                disabled={autoChatLoading}
-                className="text-xs border rounded px-2 py-1 bg-background text-foreground"
-              >
-                <option value="off">Off</option>
-                <option value="hyper_relaxed">Hyper Relaxed (40-60m)</option>
-                <option value="relaxed">Relaxed (25-45m)</option>
-                <option value="normal">Normal (10-25m)</option>
-                <option value="aggressive">Aggressive (2-8m)</option>
-                <option value="hyper_aggressive">Hyper Aggressive (30s-2m)</option>
-              </select>
-            </div>
-          )}
         </div>
 
-        {activeTab === "chat" ? (
-          <div className="h-[calc(100dvh-200px)] md:h-[75vh] md:min-h-[520px]">
-            <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-              <AdminChatInbox />
-            </Suspense>
-          </div>
-        ) : activeTab === "fake_sender" ? (
-          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-            <FakeChatSender />
-          </Suspense>
-        ) : activeTab === "malik_chat" ? (
-          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-            <MalikChatInbox />
-          </Suspense>
-        ) : activeTab === "live" ? (
+        {activeTab === "live" ? (
           <LiveVisitorDashboard />
         ) : (
         <>
