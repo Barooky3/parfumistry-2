@@ -196,7 +196,7 @@ const Index = () => {
           <div className="max-w-lg mx-auto text-center">
             <img src={logo} alt="Parfumistry" width={800} height={533} loading="lazy" className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
-              {t('home.joinFamily')}
+              Join Parfumistry
             </h2>
             <p className="text-sm text-muted-foreground mb-6">
               {t('home.exclusiveOffers')}
