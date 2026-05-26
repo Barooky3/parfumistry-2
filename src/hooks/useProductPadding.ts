@@ -94,7 +94,7 @@ export const computePaddingAndScale = (override: PaddingOverride | null) => {
   const translateY = (override.padding_top - override.padding_bottom) / 2;
 
   const innerStyle: React.CSSProperties = {
-    transform: `scale(${imageScale}) translate(${translateX}rem, ${translateY}rem)`,
+    transform: `translate(${translateX}rem, ${translateY}rem) scale(${imageScale})`,
     transformOrigin: 'center bottom',
     width: '100%',
     height: '100%',
