@@ -378,6 +378,43 @@ const Checkout = () => {
           </div>
         </div>
 
+        {/* Shipping method */}
+        <div className="border border-border rounded-lg p-4 mb-8">
+          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">Shipping method</h2>
+          <div className="space-y-2">
+            {([
+              { id: 'standard' as ShippingMethod, label: 'Standard Shipping', price: 3.99, eta: 'EU & UK: 4–6 business days · International: 6–8 business days' },
+              { id: 'express' as ShippingMethod, label: 'Express Shipping', price: 12.99, eta: 'Worldwide: 2–4 business days' },
+            ]).map((opt) => {
+              const selected = shippingMethod === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setShippingMethod(opt.id)}
+                  className={cn(
+                    "w-full text-left flex items-center gap-3 rounded-md border px-3 py-3 transition-colors",
+                    selected ? "border-accent bg-accent/5" : "border-border bg-background hover:border-accent/50"
+                  )}
+                >
+                  <span className={cn(
+                    "h-4 w-4 rounded-full border flex items-center justify-center flex-shrink-0",
+                    selected ? "border-accent" : "border-muted-foreground/50"
+                  )}>
+                    {selected && <span className="h-2 w-2 rounded-full bg-accent" />}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">{opt.label}</p>
+                    <p className="text-[11px] text-muted-foreground">{opt.eta}</p>
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">{formatPrice(opt.price)}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
         {/* Order Summary */}
         <div className="border border-border rounded-lg p-4 mb-8">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">Order summary</h2>
