@@ -6,13 +6,9 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, MessageCircle, Bot } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
-import { lazy, Suspense } from "react";
-const AdminChatInbox = lazy(() => import("@/pages/AdminChat"));
-const MalikChatInbox = lazy(() => import("@/pages/MalikChat"));
-const FakeChatSender = lazy(() => import("@/pages/FakeChatSender"));
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -80,7 +76,7 @@ export default function AdminOrders() {
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "live" | "chat" | "malik_chat" | "fake_sender">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   // Read URL search params for email/search filter (e.g. from chat link)
@@ -144,54 +140,8 @@ export default function AdminOrders() {
   const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
   const [manualSending, setManualSending] = useState(false);
   const [bannedEmails, setBannedEmails] = useState<Set<string>>(new Set());
-  const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
-  const [autoChatMode, setAutoChatMode] = useState<string>("normal");
-  const [autoChatLoading, setAutoChatLoading] = useState(false);
-
-  // Fetch auto-chat mode
-  useEffect(() => {
-    if (user?.email === "ewhz3384@gmail.com") {
-      (async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
-        const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto?action=status`,
-          { headers: { Authorization: `Bearer ${session.access_token}` } }
-        );
-        if (res.ok) {
-          const json = await res.json();
-          const currentMode = json.enabled === false ? "off" : (json.mode || "normal");
-          setAutoChatMode(currentMode);
-        }
-      })();
-    }
-  }, [user]);
-
-  const setAutoChatModeRemote = async (newMode: string) => {
-    setAutoChatLoading(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "set_mode", mode: newMode }),
-        }
-      );
-      if (res.ok) {
-        setAutoChatMode(newMode);
-        toast.success(`Auto chat: ${newMode}`);
-      }
-    } catch {
-      toast.error("Failed to change auto chat mode");
-    } finally {
-      setAutoChatLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
@@ -239,30 +189,10 @@ export default function AdminOrders() {
     if (data) setBannedEmails(new Set(data.map(d => d.email.toLowerCase())));
   };
 
-  const fetchBlockedUsers = async () => {
-    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-chat`,
-        { headers: { Authorization: `Bearer ${session.access_token}` } }
-      );
-      if (res.ok) {
-        const json = await res.json();
-        const blocked = (json.conversations || [])
-          .filter((c: any) => c.blocked)
-          .map((c: any) => c.user_email.toLowerCase());
-        setBlockedEmails(new Set(blocked));
-      }
-    } catch {}
-  };
-
   useEffect(() => {
     if (ADMIN_EMAILS.includes(user?.email || "")) {
       fetchOrders(true);
       fetchBannedUsers();
-      fetchBlockedUsers();
     }
   }, [user]);
 
@@ -803,7 +733,6 @@ export default function AdminOrders() {
           <Button variant="outline" size="sm" onClick={() => {
             fetchOrders();
             fetchBannedUsers();
-            fetchBlockedUsers();
           }} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
@@ -833,68 +762,9 @@ export default function AdminOrders() {
             <Radio className="h-4 w-4 inline mr-1.5" />
             Live Visitors
           </button>
-          {user?.email === "ewhz3384@gmail.com" && (
-            <button
-              onClick={() => setActiveTab("chat")}
-              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                activeTab === "chat"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <MessageCircle className="h-4 w-4 inline mr-1.5" />
-              Chat Inbox
-            </button>
-          )}
-          {user?.email === "ewhz3384@gmail.com" && (
-            <button
-              onClick={() => setActiveTab("fake_sender")}
-              className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                activeTab === "fake_sender"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              <MessageCircle className="h-4 w-4 inline mr-1.5" />
-              Malik Chat
-            </button>
-           )}
-          {user?.email === "ewhz3384@gmail.com" && (
-            <div className="flex items-center gap-2 px-4 py-2">
-              <Bot className="h-4 w-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Auto Chat</span>
-              <select
-                value={autoChatMode}
-                onChange={(e) => setAutoChatModeRemote(e.target.value)}
-                disabled={autoChatLoading}
-                className="text-xs border rounded px-2 py-1 bg-background text-foreground"
-              >
-                <option value="off">Off</option>
-                <option value="hyper_relaxed">Hyper Relaxed (40-60m)</option>
-                <option value="relaxed">Relaxed (25-45m)</option>
-                <option value="normal">Normal (10-25m)</option>
-                <option value="aggressive">Aggressive (2-8m)</option>
-                <option value="hyper_aggressive">Hyper Aggressive (30s-2m)</option>
-              </select>
-            </div>
-          )}
         </div>
 
-        {activeTab === "chat" ? (
-          <div className="h-[calc(100dvh-200px)] md:h-[75vh] md:min-h-[520px]">
-            <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-              <AdminChatInbox />
-            </Suspense>
-          </div>
-        ) : activeTab === "fake_sender" ? (
-          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-            <FakeChatSender />
-          </Suspense>
-        ) : activeTab === "malik_chat" ? (
-          <Suspense fallback={<div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" /></div>}>
-            <MalikChatInbox />
-          </Suspense>
-        ) : activeTab === "live" ? (
+        {activeTab === "live" ? (
           <LiveVisitorDashboard />
         ) : (
         <>
@@ -1305,11 +1175,6 @@ export default function AdminOrders() {
                         {bannedEmails.has(order.customer_email.toLowerCase()) && (
                           <Badge className="bg-destructive/10 text-destructive border-destructive/30 text-[10px]">
                             <Ban className="h-3 w-3 mr-0.5" /> Banned
-                          </Badge>
-                        )}
-                        {blockedEmails.has(order.customer_email.toLowerCase()) && (
-                          <Badge className="bg-orange-500/10 text-orange-600 border-orange-500/30 text-[10px]">
-                            <MessageCircle className="h-3 w-3 mr-0.5" /> Inbox Blocked
                           </Badge>
                         )}
                       </div>

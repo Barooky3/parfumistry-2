@@ -10,7 +10,7 @@ const WelcomePopup = lazy(() => import('@/components/WelcomePopup').then(m => ({
 const VisitorTracker = lazy(() => import('@/components/VisitorTracker').then(m => ({ default: m.VisitorTracker })));
 const RejectionNotificationPopup = lazy(() => import('@/components/RejectionNotificationPopup').then(m => ({ default: m.RejectionNotificationPopup })));
 const BannedUserPopup = lazy(() => import('@/components/BannedUserPopup').then(m => ({ default: m.BannedUserPopup })));
-const ChatWidget = lazy(() => import('@/components/ChatWidget').then(m => ({ default: m.ChatWidget })));
+
 
 interface LayoutProps {
   children: ReactNode;
@@ -47,7 +47,7 @@ export const Layout = ({ children }: LayoutProps) => {
           <VisitorTracker />
           <RejectionNotificationPopup />
           <BannedUserPopup />
-          <ChatWidget />
+          
         </Suspense>
       )}
     </div>
