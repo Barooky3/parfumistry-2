@@ -31,8 +31,6 @@ const RevolutApp = lazy(() => import("./pages/RevolutApp"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ProofUpload = lazy(() => import("./pages/ProofUpload"));
 const EmailPreview = lazy(() => import("./pages/EmailPreview"));
-const AdminChat = lazy(() => import("./pages/AdminChat"));
-const ChatReply = lazy(() => import("./pages/ChatReply"));
 const CustomBundle = lazy(() => import("./pages/CustomBundle"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
