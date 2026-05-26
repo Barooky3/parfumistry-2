@@ -145,10 +145,14 @@ const Rewarble = () => {
             <div className="flex gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">1</span>
               <div>
-                <p className="text-sm font-medium text-foreground">Purchase a Rewarble gift card</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a card closest to your order amount ({orderTotalNum > 0 ? `€${orderTotal} is your cart total, so your card should be ${getCardRecommendation(orderTotalNum, currency)}` : 'see checkout'}) using one of the many supported payment methods.
-                </p>
+                <p className="text-sm font-medium text-foreground">Purchase a Visa Rewarble gift card on G2A</p>
+                {orderTotalNum > 0 ? (
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    Your cart total is <strong>€{orderTotal}</strong>, so the closest Visa Rewarble card that covers it is <strong>{getVisaRewarbleCard(orderTotalNum).label}</strong>. Tap the button below — it opens G2A with a search for that exact card. Pick the cheapest listing from a trusted seller, then check out on G2A using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard, and many more).
+                  </p>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-0.5">Buy a card closest to your order amount — see your cart total at checkout.</p>
+                )}
                 <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Mastercard</span>
@@ -158,23 +162,28 @@ const Rewarble = () => {
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">& more</span>
                 </div>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
-                  onClick={() => window.open('https://www.g2a.com/revolut-gift-card-5-eur-by-rewarble-global-i10000504736016', '_blank')}>
-                  <ExternalLink className="h-3 w-3 mr-1.5" />Buy Rewarble Card
+                  onClick={() => window.open(orderTotalNum > 0 ? getVisaRewarbleCard(orderTotalNum).url : 'https://www.g2a.com/search?query=Visa+Rewarble', '_blank')}>
+                  <ExternalLink className="h-3 w-3 mr-1.5" />
+                  {orderTotalNum > 0 ? `Find ${getVisaRewarbleCard(orderTotalNum).label} Visa Rewarble on G2A` : 'Find Visa Rewarble on G2A'}
                 </Button>
               </div>
             </div>
             <div className="flex gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">2</span>
               <div>
-                <p className="text-sm font-medium text-foreground">Paste your code below</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Enter the Rewarble code you received after purchasing.</p>
+                <p className="text-sm font-medium text-foreground">Get your Rewarble code by email</p>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                  Right after purchase, G2A sends the Visa Rewarble code straight to the email you used at G2A checkout — usually within a minute or two. Open the email, copy the 16-character code (letters and numbers — <strong>not</strong> the long order number that starts with <strong>#</strong>), come back to this page, and paste it into the field below.
+                </p>
               </div>
             </div>
             <div className="flex gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
               <div>
                 <p className="text-sm font-medium text-foreground">Confirm your payment</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Your code is sent to Rewarble for validation. Funds are only released once delivery to your address is complete.</p>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                  Press the green "Confirm Payment" button at the bottom. Your code is sent to Rewarble for validation, your order is placed as pending, and you'll get a confirmation email. Funds are only released to me once your delivery has arrived safely.
+                </p>
               </div>
             </div>
             <div className="mt-2 pt-3 border-t border-border">
