@@ -258,11 +258,12 @@ const Checkout = () => {
             <p className="text-center text-sm font-mono font-semibold text-accent mb-4">Order #{completedOrderNumber}</p>
           )}
           <p className="text-muted-foreground text-center mb-2">
-            {completedPaymentMethod === 'revolut' ? t('checkout.thankYouRevolut')
+            {completedPaymentMethod === 'cod' ? 'Your Cash on Delivery order has been received. Our team will review it shortly and confirm your delivery time.'
+              : completedPaymentMethod === 'revolut' ? t('checkout.thankYouRevolut')
               : completedPaymentMethod === 'rewarble' ? t('checkout.thankYouGiftCard')
               : t('checkout.thankYouPaypal')}
           </p>
-          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble') && (
+          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble' || completedPaymentMethod === 'cod') && (
             <p className="text-sm text-muted-foreground text-center mb-10">{t('checkout.thankYouPatience')}</p>
           )}
           {completedPaymentMethod === 'paypal' && (
