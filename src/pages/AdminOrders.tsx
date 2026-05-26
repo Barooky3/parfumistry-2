@@ -140,54 +140,8 @@ export default function AdminOrders() {
   const [manualCatalogueSearch, setManualCatalogueSearch] = useState("");
   const [manualSending, setManualSending] = useState(false);
   const [bannedEmails, setBannedEmails] = useState<Set<string>>(new Set());
-  const [blockedEmails, setBlockedEmails] = useState<Set<string>>(new Set());
   const [remoteSearchResults, setRemoteSearchResults] = useState<any[]>([]);
   const [remoteSearching, setRemoteSearching] = useState(false);
-  const [autoChatMode, setAutoChatMode] = useState<string>("normal");
-  const [autoChatLoading, setAutoChatLoading] = useState(false);
-
-  // Fetch auto-chat mode
-  useEffect(() => {
-    if (user?.email === "ewhz3384@gmail.com") {
-      (async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
-        const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto?action=status`,
-          { headers: { Authorization: `Bearer ${session.access_token}` } }
-        );
-        if (res.ok) {
-          const json = await res.json();
-          const currentMode = json.enabled === false ? "off" : (json.mode || "normal");
-          setAutoChatMode(currentMode);
-        }
-      })();
-    }
-  }, [user]);
-
-  const setAutoChatModeRemote = async (newMode: string) => {
-    setAutoChatLoading(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fake-chat-auto`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "set_mode", mode: newMode }),
-        }
-      );
-      if (res.ok) {
-        setAutoChatMode(newMode);
-        toast.success(`Auto chat: ${newMode}`);
-      }
-    } catch {
-      toast.error("Failed to change auto chat mode");
-    } finally {
-      setAutoChatLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (!authLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
