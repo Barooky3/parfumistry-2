@@ -112,6 +112,11 @@ const Checkout = () => {
     return null;
   });
   const [sampleOpen, setSampleOpen] = useState(false);
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(() => {
+    const saved = sessionStorage.getItem('checkoutShippingMethod');
+    return (saved === 'express' ? 'express' : 'standard') as ShippingMethod;
+  });
+  useEffect(() => { sessionStorage.setItem('checkoutShippingMethod', shippingMethod); }, [shippingMethod]);
 
   const sampleOptions = getFragrances();
 
