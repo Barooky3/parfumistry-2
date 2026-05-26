@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Minus, Move, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Maximize, X, ZoomIn, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -24,7 +25,6 @@ const sides: { key: Side; label: string; icon: typeof ChevronUp }[] = [
 export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: PaddingAdjusterProps) => {
   const override = useProductPadding(productId);
   const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [local, setLocal] = useState<PaddingOverride>({
     padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0, scale: 1,
   });
@@ -33,20 +33,12 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
     if (override) setLocal(override);
   }, [override]);
 
-  // Block navigation clicks from reaching the parent Link when the adjuster is open
+  // Lock background scroll while panel is open
   useEffect(() => {
     if (!open) return;
-    const blockNavigation = (e: MouseEvent) => {
-      // Only prevent navigation, don't stop propagation so child clicks still work
-      if (containerRef.current?.contains(e.target as Node)) {
-        e.preventDefault();
-      }
-    };
-    const parent = containerRef.current?.closest('a');
-    if (parent) {
-      parent.addEventListener('click', blockNavigation, true);
-      return () => parent.removeEventListener('click', blockNavigation, true);
-    }
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
   }, [open]);
 
   const updateAndSave = (next: PaddingOverride) => {
@@ -92,151 +84,166 @@ export const PaddingAdjuster = ({ productId, productName, variant = 'card' }: Pa
 
   const isDetail = variant === 'detail';
 
-  if (!open) {
-    return (
-      <button
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true); }}
-        className={`absolute ${isDetail ? 'top-4 right-4 w-8 h-8' : 'top-2 right-2 w-6 h-6'} z-50 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors`}
-        title="Adjust padding & scale"
-      >
-        <Move className={isDetail ? 'w-4 h-4' : 'w-3 h-3'} />
-      </button>
-    );
-  }
+  const stopAll = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-  const inputClass = `bg-transparent border border-white/30 text-white text-center font-mono rounded focus:outline-none focus:border-blue-400 ${isDetail ? 'w-14 h-7 text-xs' : 'w-10 h-5 text-[8px]'}`;
-  const btnSize = isDetail ? 'h-7 w-7' : 'h-5 w-5';
-  const iconSize = isDetail ? 'w-3.5 h-3.5' : 'w-2.5 h-2.5';
-  const labelClass = isDetail ? 'text-[10px]' : 'text-[8px]';
-
-  return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 z-50 bg-black/85 rounded-sm flex flex-col items-center justify-center gap-1.5 p-3 overflow-y-auto"
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+  const triggerBtn = (
+    <button
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true); }}
       onPointerDown={(e) => e.stopPropagation()}
-      onPointerUp={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
-      onMouseUp={(e) => e.stopPropagation()}
+      className={`absolute ${isDetail ? 'top-4 right-4 w-9 h-9' : 'top-2 right-2 w-7 h-7'} z-50 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors`}
+      title="Adjust padding & scale"
     >
-      <button
-        onClick={() => setOpen(false)}
-        className="absolute top-2 right-2 text-white/70 hover:text-white"
+      <Move className={isDetail ? 'w-4 h-4' : 'w-3.5 h-3.5'} />
+    </button>
+  );
+
+  if (!open) return triggerBtn;
+
+  // Identical panel on every device: fixed-size centered modal via portal.
+  const panel = (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70"
+      onClick={(e) => { stopAll(e); setOpen(false); }}
+      onPointerDown={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+    >
+      <div
+        className="relative w-[320px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto bg-neutral-900 border border-white/15 rounded-lg shadow-2xl p-4 flex flex-col gap-3"
+        onClick={stopAll}
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
-        <X className={isDetail ? 'w-5 h-5' : 'w-3.5 h-3.5'} />
-      </button>
-
-      <div className="flex items-center gap-2 mb-0.5">
-        <p className={`${isDetail ? 'text-xs' : 'text-[8px]'} text-white/80 font-medium truncate`}>{productName}</p>
         <button
-          onClick={() => updateAndSave({ padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0, scale: 1 })}
-          className={`flex items-center gap-0.5 ${isDetail ? 'text-[10px]' : 'text-[7px]'} text-red-400 hover:text-red-300 transition-colors`}
-          title="Reset all"
+          onClick={() => setOpen(false)}
+          className="absolute top-2 right-2 text-white/70 hover:text-white p-1"
+          aria-label="Close"
         >
-          <RotateCcw className={isDetail ? 'w-3 h-3' : 'w-2.5 h-2.5'} />
-          Reset
+          <X className="w-4 h-4" />
         </button>
-      </div>
 
-      {/* Scale Slider */}
-      <div className="w-full px-1" onClick={(e) => e.stopPropagation()} onPointerUp={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-1.5 mb-1">
-          <ZoomIn className={`${iconSize} text-blue-400`} />
-          <span className={`${labelClass} text-blue-400 font-medium`}>Scale</span>
-          <input
-            type="number"
-            step="0.05"
-            min="0.1"
-            max="5"
-            value={local.scale}
-            onChange={(e) => handleScaleInput(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-            className={`${inputClass} border-blue-400/50`}
-          />
-        </div>
-        <Slider
-          value={[local.scale]}
-          onValueChange={handleScaleChange}
-          min={0.1}
-          max={3}
-          step={0.05}
-          className="w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:bg-blue-400"
-        />
-        <div className="flex justify-between mt-0.5">
-          <span className="text-[7px] text-white/40">0.1x</span>
-          <span className="text-[7px] text-white/40">1x</span>
-          <span className="text-[7px] text-white/40">3x</span>
-        </div>
-      </div>
-
-      <div className="w-full h-px bg-white/10 my-0.5" />
-
-      {/* All padding control */}
-      <div className="flex items-center gap-1.5">
-        <Button
-          size="sm"
-          variant="ghost"
-          className={`${btnSize} p-0 text-white hover:bg-white/20`}
-          onClick={() => adjust('all', -STEP)}
-        >
-          <Minus className={iconSize} />
-        </Button>
-        <div className="flex items-center gap-1">
-          <Maximize className={iconSize + ' text-white/70'} />
-          <span className={`${labelClass} text-white/70`}>All</span>
-          <input
-            type="number"
-            step="0.25"
-            value={local.padding_top === local.padding_right && local.padding_right === local.padding_bottom && local.padding_bottom === local.padding_left ? local.padding_top : ''}
-            placeholder="—"
-            onChange={(e) => handleAllInputChange(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-            className={inputClass}
-          />
-        </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          className={`${btnSize} p-0 text-white hover:bg-white/20`}
-          onClick={() => adjust('all', STEP)}
-        >
-          <Plus className={iconSize} />
-        </Button>
-      </div>
-
-      {/* Individual sides */}
-      {sides.map(({ key, label, icon: Icon }) => (
-        <div key={key} className="flex items-center gap-1.5">
-          <Button
-            size="sm"
-            variant="ghost"
-            className={`${btnSize} p-0 text-white hover:bg-white/20`}
-            onClick={() => adjust(key, -STEP)}
+        <div className="flex items-center justify-between gap-3 pr-6">
+          <p className="text-xs text-white/90 font-medium truncate">{productName}</p>
+          <button
+            onClick={() => updateAndSave({ padding_top: 0, padding_right: 0, padding_bottom: 0, padding_left: 0, scale: 1 })}
+            className="flex items-center gap-1 text-[10px] text-red-400 hover:text-red-300 transition-colors shrink-0"
+            title="Reset all"
           >
-            <Minus className={iconSize} />
-          </Button>
-          <div className="flex items-center gap-1">
-            <Icon className={iconSize + ' text-white/70'} />
-            <span className={`${labelClass} text-white/70 w-6`}>{label}</span>
+            <RotateCcw className="w-3 h-3" />
+            Reset
+          </button>
+        </div>
+
+        {/* Scale slider */}
+        <div className="w-full">
+          <div className="flex items-center gap-2 mb-1.5">
+            <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
+            <span className="text-[11px] text-blue-400 font-medium flex-1">Scale</span>
             <input
               type="number"
-              step="0.25"
-              value={local[key]}
-              onChange={(e) => handleInputChange(key, e.target.value)}
+              step="0.05"
+              min="0.1"
+              max="5"
+              value={local.scale}
+              onChange={(e) => handleScaleInput(e.target.value)}
               onClick={(e) => e.stopPropagation()}
-              className={inputClass}
+              className="bg-transparent border border-blue-400/50 text-white text-center font-mono rounded focus:outline-none focus:border-blue-400 w-16 h-7 text-xs"
             />
           </div>
-          <Button
-            size="sm"
-            variant="ghost"
-            className={`${btnSize} p-0 text-white hover:bg-white/20`}
-            onClick={() => adjust(key, STEP)}
-          >
-            <Plus className={iconSize} />
-          </Button>
+          <Slider
+            value={[local.scale]}
+            onValueChange={handleScaleChange}
+            min={0.1}
+            max={3}
+            step={0.05}
+            className="w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:bg-blue-400"
+          />
+          <div className="flex justify-between mt-1">
+            <span className="text-[9px] text-white/40">0.1x</span>
+            <span className="text-[9px] text-white/40">1x</span>
+            <span className="text-[9px] text-white/40">3x</span>
+          </div>
         </div>
-      ))}
+
+        <div className="w-full h-px bg-white/10" />
+
+        {/* All padding control */}
+        <Row
+          icon={<Maximize className="w-3.5 h-3.5 text-white/70" />}
+          label="All"
+          value={local.padding_top === local.padding_right && local.padding_right === local.padding_bottom && local.padding_bottom === local.padding_left ? String(local.padding_top) : ''}
+          placeholder="—"
+          onMinus={() => adjust('all', -STEP)}
+          onPlus={() => adjust('all', STEP)}
+          onChange={handleAllInputChange}
+        />
+
+        {sides.map(({ key, label, icon: Icon }) => (
+          <Row
+            key={key}
+            icon={<Icon className="w-3.5 h-3.5 text-white/70" />}
+            label={label}
+            value={String(local[key])}
+            onMinus={() => adjust(key, -STEP)}
+            onPlus={() => adjust(key, STEP)}
+            onChange={(v) => handleInputChange(key, v)}
+          />
+        ))}
+      </div>
     </div>
   );
+
+  return (
+    <>
+      {triggerBtn}
+      {typeof document !== 'undefined' && createPortal(panel, document.body)}
+    </>
+  );
 };
+
+interface RowProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  placeholder?: string;
+  onMinus: () => void;
+  onPlus: () => void;
+  onChange: (v: string) => void;
+}
+
+const Row = ({ icon, label, value, placeholder, onMinus, onPlus, onChange }: RowProps) => (
+  <div className="flex items-center gap-2">
+    <Button
+      size="sm"
+      variant="ghost"
+      className="h-8 w-8 p-0 text-white hover:bg-white/20 shrink-0"
+      onClick={onMinus}
+    >
+      <Minus className="w-3.5 h-3.5" />
+    </Button>
+    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+      {icon}
+      <span className="text-[11px] text-white/70 w-12">{label}</span>
+      <input
+        type="number"
+        step="0.25"
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-transparent border border-white/30 text-white text-center font-mono rounded focus:outline-none focus:border-blue-400 flex-1 min-w-0 h-7 text-xs"
+      />
+    </div>
+    <Button
+      size="sm"
+      variant="ghost"
+      className="h-8 w-8 p-0 text-white hover:bg-white/20 shrink-0"
+      onClick={onPlus}
+    >
+      <Plus className="w-3.5 h-3.5" />
+    </Button>
+  </div>
+);
