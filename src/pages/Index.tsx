@@ -90,12 +90,8 @@ const Index = () => {
               />
             </div>
             
-            <p 
-              className="text-sm md:text-base text-white/70 mb-6 max-w-md mx-auto leading-relaxed -mt-2 hero-text-animate"
-              style={{ minHeight: '1.5em' }}
-            >
-              Premium fragrances. Cheap shipping. Unmatched prices.
-            </p>
+            
+
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 hero-buttons-animate">
               <Button 
