@@ -90,12 +90,8 @@ const Index = () => {
               />
             </div>
             
-            <p 
-              className="text-sm md:text-base text-white/70 mb-6 max-w-md mx-auto leading-relaxed -mt-2 hero-text-animate"
-              style={{ minHeight: '1.5em' }}
-            >
-              Premium fragrances. Cheap shipping. Unmatched prices.
-            </p>
+            
+
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 hero-buttons-animate">
               <Button 
@@ -200,7 +196,7 @@ const Index = () => {
           <div className="max-w-lg mx-auto text-center">
             <img src={logo} alt="Parfumistry" width={800} height={533} loading="lazy" className="h-14 md:h-16 w-auto mx-auto mb-5 opacity-80" />
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
-              {t('home.joinFamily')}
+              Join Parfumistry
             </h2>
             <p className="text-sm text-muted-foreground mb-6">
               {t('home.exclusiveOffers')}
