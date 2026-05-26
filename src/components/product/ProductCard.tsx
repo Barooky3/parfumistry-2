@@ -287,21 +287,21 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             </p>
           )}
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-baseline gap-1.5">
             <span className="text-sm font-semibold text-foreground">
               {formatPrice(product.price)}
             </span>
+            {product.variants && product.variants.length > 0 && (
+              <span className="text-[10px] text-muted-foreground">
+                / {product.variants[0].ml}ml
+              </span>
+            )}
             {hasDiscount && (
               <span className="text-xs text-muted-foreground line-through">
                 {formatPrice(product.originalPrice!)}
               </span>
             )}
           </div>
-          {product.variants && product.variants.length > 0 && (
-            <p className="text-[9px] text-muted-foreground tracking-wide">
-              {product.variants.map(v => `${v.ml}ml`).join(' · ')}
-            </p>
-          )}
         </div>
       </motion.div>
     );
