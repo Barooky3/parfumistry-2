@@ -173,7 +173,7 @@ const Checkout = () => {
   const appliedDiscountRef = useRef(appliedDiscount);
   appliedDiscountRef.current = appliedDiscount;
 
-  const shippingCost = formData.country ? getShippingCost(formData.country) : 0;
+  const shippingCost = formData.country ? getShippingCost(formData.country, shippingMethod) : 0;
   const currentTotal = (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice) + shippingCost;
 
   const buildOrderContext = () => {
