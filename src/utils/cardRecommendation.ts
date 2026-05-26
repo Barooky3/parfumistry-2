@@ -42,4 +42,30 @@ export function getCardRecommendation(eurTotal: number, _userCurrency: Currency)
 
   const symbol = CARD_SYMBOLS[bestCurrency];
   return `${symbol}${bestDenom}`;
+  return `${symbol}${bestDenom}`;
+}
+
+// Visa Rewarble cards actually listed on G2A (EUR denominations)
+const VISA_REWARBLE_DENOMS_EUR = [5, 10, 15, 25, 50, 100];
+
+export interface VisaRewarbleCard {
+  denom: number;
+  label: string; // e.g. "€25"
+  url: string;   // G2A search URL for that specific card
+}
+
+/**
+ * Returns the smallest Visa Rewarble EUR card on G2A that fully covers the cart total.
+ * The url points to a G2A search for that specific denomination.
+ */
+export function getVisaRewarbleCard(eurTotal: number): VisaRewarbleCard {
+  const denom =
+    VISA_REWARBLE_DENOMS_EUR.find((d) => d >= eurTotal - 0.01) ??
+    VISA_REWARBLE_DENOMS_EUR[VISA_REWARBLE_DENOMS_EUR.length - 1];
+  const query = encodeURIComponent(`Visa Rewarble ${denom} EUR`);
+  return {
+    denom,
+    label: `€${denom}`,
+    url: `https://www.g2a.com/search?query=${query}`,
+  };
 }
