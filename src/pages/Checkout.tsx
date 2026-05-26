@@ -560,13 +560,13 @@ const Checkout = () => {
           {/* Delivery info */}
           <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border text-xs text-muted-foreground">
             <span>📦</span>
-            <span><span className="font-medium text-foreground">DHL Delivery</span> — EU & UK: 4–6 days · Worldwide: 6–8 days · Tracking by email</span>
+            <span><span className="font-medium text-foreground">DHL Delivery</span> — {shippingMethod === 'express' ? 'Express: 2–4 business days worldwide' : 'Standard: EU & UK 4–6 days · International 6–8 days'} · Tracking by email</span>
           </div>
         </div>
 
         {/* Delivery timeline */}
         <div className="mb-8">
-          <DeliveryInfo />
+          <DeliveryInfo method={shippingMethod} />
         </div>
 
         {/* Payment buttons */}
