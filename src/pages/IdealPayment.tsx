@@ -9,7 +9,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
-import { getCardRecommendation } from '@/utils/cardRecommendation';
 
 const IdealPayment = () => {
   const { toast } = useToast();
@@ -144,7 +143,7 @@ const IdealPayment = () => {
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a Rewarble gift card</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Buy a card closest to your order amount ({orderTotalNum > 0 ? `€${orderTotal} is your cart total, so your card should be ${getCardRecommendation(orderTotalNum, currency)}` : 'see checkout'}). At checkout, select <strong>iDEAL</strong> as your payment method.
+                  Buy a card closest to your cart total. At checkout, select <strong>iDEAL</strong> as your payment method.
                 </p>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
                   onClick={() => window.open('https://skine.com/en-ie/rewarble?utm_source=rewarble.com', '_blank')}>
