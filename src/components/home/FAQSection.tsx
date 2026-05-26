@@ -4,8 +4,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 const faqs = [
   {
-    question: "Why are the fragrances so cheap?",
-    answer: "Our fragrances are sourced from reputable grey-market suppliers. Retail stores often clear older inventory in bulk to make room for new stock, selling it at heavily discounted prices.\n\nWhile most perfumes have a shelf life of around eight years, the ones we offer typically have about three to six years remaining. The scent and performance remain the same—lasting around 7–8 hours on the skin—but the shorter remaining shelf life allows us to sell them at significantly lower prices."
+    question: "Why are the fragrances so cheap, is there a catch?",
+    answer: "You may have noticed that these perfumes are more expensive than the fake ones but cheaper than the real ones. The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers.\n\nA normal perfume lasts for 8 years before expiry, the ones we sell lasts for 2-5 years before expiry, so these have the normal smell and last 7-8 hours on skin, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap.\n\nYou get dhl tracking number after ordering, if you don't mind us using your name we can post a vid packing your order, and you can also return if you don't like them or have issues, we have a full return and refund policy on the site: https://parfumistry.store/return-policy"
   },
   {
     question: "What is the shipping like?",
