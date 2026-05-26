@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 const faqs = [
   {
     question: "Why are the fragrances so cheap, is there a catch?",
-    answer: "You may have noticed that these perfumes are more expensive than the fake ones but cheaper than the real ones. The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers.\n\nA normal perfume lasts for 8 years before expiry, the ones we sell lasts for 2-5 years before expiry, so these have the normal smell and last 7-8 hours on skin, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap.\n\nYou get dhl tracking number after ordering, if you don't mind us using your name we can post a vid packing your order, and you can also return if you don't like them or have issues, we have a full return and refund policy on the site: https://parfumistry.store/return-policy"
+    answer: "why-cheap"
   },
   {
     question: "How can I know my package will be shipped?",
@@ -50,7 +50,13 @@ export const FAQSection = () => {
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-                  {faq.answer === "return-policy" ? (
+                  {faq.answer === "why-cheap" ? (
+                    <span>
+                      You may have noticed that these perfumes are more expensive than the fake ones but cheaper than the real ones. The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers.{"\n\n"}
+                      A normal perfume lasts for 8 years before expiry, the ones we sell lasts for 2-5 years before expiry, so these have the normal smell and last 7-8 hours on skin, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap.{"\n\n"}
+                      You get a DHL tracking number after ordering, if you don't mind us using your name we can post a vid packing your order, and you can also return if you don't like them or have issues, we have a full return and <Link to="/return-policy" className="text-accent font-medium hover:underline">refund policy</Link> on the site.
+                    </span>
+                  ) : faq.answer === "return-policy" ? (
                     <span>
                       We offer a relatively flexible return and refund policy. Please read it{' '}
                       <Link to="/return-policy" className="text-accent font-medium hover:underline">here</Link>.
