@@ -8,6 +8,10 @@ const faqs = [
     answer: "You may have noticed that these perfumes are more expensive than the fake ones but cheaper than the real ones. The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers.\n\nA normal perfume lasts for 8 years before expiry, the ones we sell lasts for 2-5 years before expiry, so these have the normal smell and last 7-8 hours on skin, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap.\n\nYou get dhl tracking number after ordering, if you don't mind us using your name we can post a vid packing your order, and you can also return if you don't like them or have issues, we have a full return and refund policy on the site: https://parfumistry.store/return-policy"
   },
   {
+    question: "How can I know my package will be shipped?",
+    answer: "packaging-video"
+  },
+  {
     question: "What is the shipping like?",
     answer: "Shipping times take around 4–6 business days to all countries in the EU and UK, and 6–8 business days outside of the EU."
   },
@@ -54,8 +58,14 @@ export const FAQSection = () => {
                   ) : faq.answer === "tiktok-help" ? (
                     <span>
                       Message us on our{' '}
-                      <a href="https://www.tiktok.com/@profparfumz" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">tik tok</a>
+                      <a href="https://www.tiktok.com/@parfumistry" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">tik tok</a>
                       {' '}and we'll help you choose based on your goals and intended purpose!
+                    </span>
+                  ) : faq.answer === "packaging-video" ? (
+                    <span>
+                      As an optional service, we allow customers to see a video of their items being packaged in real time and their name visible, with bonus samples and gifts added if you consent to it being posted. If you{' '}
+                      <a href="https://www.tiktok.com/@parfumistry" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">message us on TikTok</a>
+                      {' '}and give us your order number and email as soon as you order, we'll send you a video of us packing your exact items with your name showing in the background for authenticity, it will only be posted with your consent.
                     </span>
                   ) : faq.answer === "tiktok-payment" ? (
                     <span>
