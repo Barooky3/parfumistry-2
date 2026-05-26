@@ -613,6 +613,10 @@ const Checkout = () => {
         <div className="space-y-3">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground">Choose payment</h2>
 
+          <Link to="/return-policy" className="flex items-center justify-center gap-2 rounded-lg border border-accent bg-accent/10 px-4 py-2.5 text-xs font-semibold text-accent transition-all hover:bg-accent hover:text-accent-foreground">
+            📋 Read our return and refund policy before purchasing →
+          </Link>
+
           {isProcessing && (
             <div className="flex flex-col items-center justify-center py-6 gap-3">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -697,10 +701,6 @@ const Checkout = () => {
 
 
           <PaymentMethodExplainer />
-
-          <Link to="/return-policy" className="flex items-center justify-center gap-2 rounded-lg border border-accent bg-accent/10 px-4 py-2.5 text-xs font-semibold text-accent transition-all hover:bg-accent hover:text-accent-foreground">
-            📋 Read our return and refund policy before purchasing →
-          </Link>
 
           <p className="text-[10px] text-muted-foreground/60 text-center">
             By completing this purchase you agree to our terms and conditions
