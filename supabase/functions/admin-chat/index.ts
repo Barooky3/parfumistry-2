@@ -168,7 +168,7 @@ Deno.serve(async (req) => {
               Authorization: `Bearer ${RESEND_API_KEY}`,
             },
             body: JSON.stringify({
-              from: "ProfParfums <orders@parfumistry.net>",
+              from: "Parfumistry <orders@parfumistry.net>",
               to: [user_email],
               subject: "💬 New reply from Parfumistry Support",
               html: `

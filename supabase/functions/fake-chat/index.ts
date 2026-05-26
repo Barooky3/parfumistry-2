@@ -173,7 +173,7 @@ Deno.serve(async (req) => {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
             body: JSON.stringify({
-              from: "ProfParfums <orders@parfumistry.net>",
+              from: "Parfumistry <orders@parfumistry.net>",
               to: [MALIK_ADMIN],
               subject: `💬 New message from ${customerName}`,
               html: `
