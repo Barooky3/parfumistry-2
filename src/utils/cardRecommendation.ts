@@ -59,9 +59,10 @@ export interface VisaRewarbleCard {
  * The url points to a G2A search for that specific denomination.
  */
 export function getVisaRewarbleCard(eurTotal: number): VisaRewarbleCard {
-  const denom =
-    VISA_REWARBLE_DENOMS_EUR.find((d) => d >= eurTotal - 0.01) ??
-    VISA_REWARBLE_DENOMS_EUR[VISA_REWARBLE_DENOMS_EUR.length - 1];
+  const denom = VISA_REWARBLE_DENOMS_EUR.reduce((best, d) =>
+    Math.abs(d - eurTotal) < Math.abs(best - eurTotal) ? d : best,
+    VISA_REWARBLE_DENOMS_EUR[0]
+  );
   const query = encodeURIComponent(`Visa Rewarble ${denom} EUR`);
   return {
     denom,
