@@ -478,16 +478,16 @@ const Checkout = () => {
             <div className="flex-1 h-px bg-border" />
           </div>
 
-          {/* Revolut */}
+          {/* Cash on Delivery */}
           <Button
             type="button"
             disabled={!isFormValid() || isProcessing}
-            className="w-full h-12 rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2a2f35] text-white"
-            onClick={() => handlePayment('revolut')}
+            className="w-full h-12 rounded-lg text-sm font-bold tracking-wide bg-emerald-700 hover:bg-emerald-800 text-white"
+            onClick={handleCashOnDelivery}
           >
             <span className="flex items-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/><path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/></svg>
-              Pay with Revolut
+              {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : '💶'}
+              Cash on Delivery
             </span>
           </Button>
 
