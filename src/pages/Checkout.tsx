@@ -229,7 +229,7 @@ const Checkout = () => {
       return;
     }
     if (formData.city.trim().toLowerCase() !== 'portlaoise') {
-      toast({ title: 'Not available in your city', description: 'Cash on Delivery is only available in Portlaoise.', variant: 'destructive' });
+      toast({ title: 'Not available in your city', description: 'Cash on Delivery is only available in Ireland - Portlaoise.', variant: 'destructive' });
       return;
     }
     if (isProcessing) return;
