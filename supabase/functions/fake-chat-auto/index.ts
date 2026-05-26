@@ -685,7 +685,7 @@ Deno.serve(async (req) => {
               method: "POST",
               headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
               body: JSON.stringify({
-                from: "ProfParfums <orders@parfumistry.net>",
+                from: "Parfumistry <orders@parfumistry.net>",
                 to: [PRIMARY_ADMIN],
                 subject: `💬 New message from ${name}`,
                 html: `
@@ -817,7 +817,7 @@ Deno.serve(async (req) => {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
                 body: JSON.stringify({
-                  from: "ProfParfums <orders@parfumistry.net>",
+                  from: "Parfumistry <orders@parfumistry.net>",
                   to: [PRIMARY_ADMIN],
                   subject: `💬 New message from ${conv.fake_name}`,
                   html: `
