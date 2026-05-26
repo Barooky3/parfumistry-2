@@ -517,6 +517,11 @@ const Checkout = () => {
           </div>
         </div>
 
+        {/* Delivery timeline */}
+        <div className="mb-8">
+          <DeliveryInfo />
+        </div>
+
         {/* Payment buttons */}
         <div className="space-y-3">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground">Choose payment</h2>
