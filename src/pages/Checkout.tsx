@@ -176,6 +176,17 @@ const Checkout = () => {
       quantity: item.quantity, selectedMl: item.selectedMl,
       affiliateUrl: item.product.affiliateUrl,
     }));
+    if (freeSample) {
+      cartItems.push({
+        name: `${freeSample.name} — Free 2ml Sample 🎁`,
+        brand: freeSample.brand,
+        image: freeSample.image,
+        price: 0,
+        quantity: 1,
+        selectedMl: 2,
+        affiliateUrl: '',
+      });
+    }
     const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
     sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
       cartItems, email: fd.email,
