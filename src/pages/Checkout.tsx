@@ -184,6 +184,51 @@ const Checkout = () => {
     navigate(`/${route}?total=${finalTotal.toFixed(2)}`);
   };
 
+  const handleCashOnDelivery = async () => {
+    if (!isFormValid()) {
+      toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+      return;
+    }
+    if (formData.country.trim().toLowerCase() !== 'ireland') {
+      toast({ title: 'Not available in your country', description: 'Cash on Delivery is only available in Ireland.', variant: 'destructive' });
+      return;
+    }
+    if (formData.city.trim().toLowerCase() !== 'portlaoise') {
+      toast({ title: 'Not available in your city', description: 'Cash on Delivery is only available in Portlaoise.', variant: 'destructive' });
+      return;
+    }
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try {
+      buildOrderContext();
+      const ctx = JSON.parse(sessionStorage.getItem('checkoutOrderContext') || '{}');
+      const { data } = await supabase.functions.invoke('request-order-approval', {
+        body: {
+          orderItems: ctx.cartItems,
+          customerEmail: ctx.email,
+          customerName: ctx.customerName,
+          shippingAddress: ctx.shippingAddress,
+          totalAmount: ctx.totalAmount,
+          paymentMethod: 'cod',
+          giftCardCode: 'CASH ON DELIVERY — Portlaoise, Ireland',
+          discountCode: ctx.discountCode || null,
+          discountPercent: ctx.discountPercent || 0,
+          idempotencyKey: crypto.randomUUID(),
+        },
+      });
+      clearCart();
+      sessionStorage.removeItem('checkoutOrderContext');
+      sessionStorage.removeItem('checkoutFormData');
+      const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
+      navigate(`/checkout?completed=cod${orderNum}`);
+    } catch (err) {
+      console.error('COD order error:', err);
+      toast({ title: 'Order error', description: 'Could not complete your order. Please try again.', variant: 'destructive' });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   if (items.length === 0 && !isCompleted) {
     return (
       <div className="min-h-screen flex items-center justify-center py-16 bg-background">
