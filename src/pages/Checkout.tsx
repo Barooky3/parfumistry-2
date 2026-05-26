@@ -44,9 +44,12 @@ const EU_UK_COUNTRIES = new Set([
   'Malta', 'Monaco', 'Liechtenstein', 'Andorra', 'San Marino',
 ]);
 
-const getShippingCost = (country: string): number => {
+type ShippingMethod = 'standard' | 'express';
+
+const getShippingCost = (country: string, method: ShippingMethod = 'standard'): number => {
   if (!country) return 0;
-  return EU_UK_COUNTRIES.has(country) ? 3.99 : 4.99;
+  if (method === 'express') return 12.99;
+  return 3.99;
 };
 
 const VALID_CODES: Record<string, number> = {
@@ -109,6 +112,11 @@ const Checkout = () => {
     return null;
   });
   const [sampleOpen, setSampleOpen] = useState(false);
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>(() => {
+    const saved = sessionStorage.getItem('checkoutShippingMethod');
+    return (saved === 'express' ? 'express' : 'standard') as ShippingMethod;
+  });
+  useEffect(() => { sessionStorage.setItem('checkoutShippingMethod', shippingMethod); }, [shippingMethod]);
 
   const sampleOptions = getFragrances();
 
@@ -165,7 +173,7 @@ const Checkout = () => {
   const appliedDiscountRef = useRef(appliedDiscount);
   appliedDiscountRef.current = appliedDiscount;
 
-  const shippingCost = formData.country ? getShippingCost(formData.country) : 0;
+  const shippingCost = formData.country ? getShippingCost(formData.country, shippingMethod) : 0;
   const currentTotal = (appliedDiscount ? totalPrice * (1 - appliedDiscount.percent / 100) : totalPrice) + shippingCost;
 
   const buildOrderContext = () => {
@@ -188,7 +196,7 @@ const Checkout = () => {
         affiliateUrl: '',
       });
     }
-    const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
+    const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country, shippingMethod);
     sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
       cartItems, email: fd.email,
       customerName: `${fd.firstName} ${fd.lastName}`,
@@ -196,6 +204,8 @@ const Checkout = () => {
       totalAmount: finalTotal.toFixed(2),
       discountCode: appliedDiscountRef.current?.code || null,
       discountPercent: appliedDiscountRef.current?.percent || 0,
+      shippingMethod,
+      shippingCost: getShippingCost(fd.country, shippingMethod),
     }));
     return finalTotal;
   };
@@ -368,6 +378,43 @@ const Checkout = () => {
           </div>
         </div>
 
+        {/* Shipping method */}
+        <div className="border border-border rounded-lg p-4 mb-8">
+          <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">Shipping method</h2>
+          <div className="space-y-2">
+            {([
+              { id: 'standard' as ShippingMethod, label: 'Standard Shipping', price: 3.99, eta: 'EU & UK: 4–6 business days · International: 6–8 business days' },
+              { id: 'express' as ShippingMethod, label: 'Express Shipping', price: 12.99, eta: 'Worldwide: 2–4 business days' },
+            ]).map((opt) => {
+              const selected = shippingMethod === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setShippingMethod(opt.id)}
+                  className={cn(
+                    "w-full text-left flex items-center gap-3 rounded-md border px-3 py-3 transition-colors",
+                    selected ? "border-accent bg-accent/5" : "border-border bg-background hover:border-accent/50"
+                  )}
+                >
+                  <span className={cn(
+                    "h-4 w-4 rounded-full border flex items-center justify-center flex-shrink-0",
+                    selected ? "border-accent" : "border-muted-foreground/50"
+                  )}>
+                    {selected && <span className="h-2 w-2 rounded-full bg-accent" />}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">{opt.label}</p>
+                    <p className="text-[11px] text-muted-foreground">{opt.eta}</p>
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">{formatPrice(opt.price)}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
         {/* Order Summary */}
         <div className="border border-border rounded-lg p-4 mb-8">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">Order summary</h2>
@@ -513,13 +560,13 @@ const Checkout = () => {
           {/* Delivery info */}
           <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border text-xs text-muted-foreground">
             <span>📦</span>
-            <span><span className="font-medium text-foreground">DHL Delivery</span> — EU & UK: 4–6 days · Worldwide: 6–8 days · Tracking by email</span>
+            <span><span className="font-medium text-foreground">DHL Delivery</span> — {shippingMethod === 'express' ? 'Express: 2–4 business days worldwide' : 'Standard: EU & UK 4–6 days · International 6–8 days'} · Tracking by email</span>
           </div>
         </div>
 
         {/* Delivery timeline */}
         <div className="mb-8">
-          <DeliveryInfo />
+          <DeliveryInfo method={shippingMethod} />
         </div>
 
         {/* Payment buttons */}

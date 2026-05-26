@@ -17,13 +17,17 @@ const addBusinessDays = (start: Date, days: number): Date => {
   return result;
 };
 
-export const DeliveryInfo = () => {
+interface DeliveryInfoProps {
+  method?: 'standard' | 'express';
+}
+
+export const DeliveryInfo = ({ method = 'standard' }: DeliveryInfoProps) => {
   const { t } = useLanguage();
   const today = new Date();
   const orderDate = today;
   const orderReadyEnd = addBusinessDays(today, 1);
-  const deliveryStart = addBusinessDays(today, 4);
-  const deliveryEnd = addBusinessDays(today, 6);
+  const deliveryStart = addBusinessDays(today, method === 'express' ? 2 : 4);
+  const deliveryEnd = addBusinessDays(today, method === 'express' ? 4 : 6);
 
   const steps = [
     {
