@@ -13,7 +13,8 @@ import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ChevronsUpDown, Check } from 'lucide-react';
+import { ChevronsUpDown, Check, Gift, X } from 'lucide-react';
+import { getFragrances } from '@/data/products';
 
 const COUNTRIES = [
   'Netherlands', 'Belgium', 'Germany', 'France', 'United Kingdom', 'Spain', 'Italy',
@@ -101,6 +102,14 @@ const Checkout = () => {
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
+  const [freeSample, setFreeSample] = useState<{ id: string; name: string; brand: string; image: string } | null>(() => {
+    const saved = sessionStorage.getItem('checkoutFreeSample');
+    if (saved) { try { return JSON.parse(saved); } catch {} }
+    return null;
+  });
+  const [sampleOpen, setSampleOpen] = useState(false);
+
+  const sampleOptions = getFragrances();
 
   const [formData, setFormData] = useState(() => {
     const saved = sessionStorage.getItem('checkoutFormData');
@@ -109,6 +118,10 @@ const Checkout = () => {
   });
 
   useEffect(() => { sessionStorage.setItem('checkoutFormData', JSON.stringify(formData)); }, [formData]);
+  useEffect(() => {
+    if (freeSample) sessionStorage.setItem('checkoutFreeSample', JSON.stringify(freeSample));
+    else sessionStorage.removeItem('checkoutFreeSample');
+  }, [freeSample]);
 
   useEffect(() => {
     const completed = searchParams.get('completed');
@@ -163,6 +176,17 @@ const Checkout = () => {
       quantity: item.quantity, selectedMl: item.selectedMl,
       affiliateUrl: item.product.affiliateUrl,
     }));
+    if (freeSample) {
+      cartItems.push({
+        name: `${freeSample.name} — Free 2ml Sample 🎁`,
+        brand: freeSample.brand,
+        image: freeSample.image,
+        price: 0,
+        quantity: 1,
+        selectedMl: 2,
+        affiliateUrl: '',
+      });
+    }
     const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
     sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
       cartItems, email: fd.email,
@@ -219,6 +243,8 @@ const Checkout = () => {
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
+      sessionStorage.removeItem('checkoutFreeSample');
+      setFreeSample(null);
       const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
       navigate(`/checkout?completed=cod${orderNum}`);
     } catch (err) {
@@ -372,6 +398,65 @@ const Checkout = () => {
               );
             })}
           </div>
+
+          {/* Free 2ml sample picker */}
+          <div className="mt-4 pt-3 border-t border-border">
+            <div className="flex items-start gap-2 mb-2">
+              <Gift className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-foreground">Pick a FREE 2ml sample 🎁</p>
+                <p className="text-[10px] text-muted-foreground">Try any fragrance from our store — on the house, so you know what to get next.</p>
+              </div>
+            </div>
+            {freeSample ? (
+              <div className="flex items-center gap-2 bg-accent/10 border border-accent/30 rounded-md px-3 py-2">
+                <img src={freeSample.image} alt={freeSample.name} className="w-8 h-9 object-contain bg-secondary/50 rounded" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-foreground truncate">{freeSample.name}</p>
+                  <p className="text-[10px] text-muted-foreground">2ml sample · FREE</p>
+                </div>
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setFreeSample(null)}>
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            ) : (
+              <Popover open={sampleOpen} onOpenChange={setSampleOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" className="w-full h-10 justify-between bg-background border-dashed border-accent/50 text-xs font-medium text-accent hover:bg-accent/5">
+                    Choose your free sample
+                    <ChevronsUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search fragrance..." />
+                    <CommandList>
+                      <CommandEmpty>No fragrance found.</CommandEmpty>
+                      <CommandGroup>
+                        {sampleOptions.map((p) => (
+                          <CommandItem
+                            key={p.id}
+                            value={`${p.brand} ${p.name}`}
+                            onSelect={() => {
+                              setFreeSample({ id: p.id, name: p.name, brand: p.brand, image: p.image });
+                              setSampleOpen(false);
+                            }}
+                          >
+                            <img src={p.image} alt="" className="w-6 h-7 object-contain mr-2 bg-secondary/50 rounded" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium truncate">{p.name}</p>
+                              <p className="text-[10px] text-muted-foreground truncate">{p.brand}</p>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
+
 
           {/* Discount code inline */}
           <div className="flex gap-2 mt-4 pt-3 border-t border-border">
