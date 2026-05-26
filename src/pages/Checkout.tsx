@@ -196,7 +196,7 @@ const Checkout = () => {
         affiliateUrl: '',
       });
     }
-    const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country);
+    const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country, shippingMethod);
     sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
       cartItems, email: fd.email,
       customerName: `${fd.firstName} ${fd.lastName}`,
@@ -204,6 +204,8 @@ const Checkout = () => {
       totalAmount: finalTotal.toFixed(2),
       discountCode: appliedDiscountRef.current?.code || null,
       discountPercent: appliedDiscountRef.current?.percent || 0,
+      shippingMethod,
+      shippingCost: getShippingCost(fd.country, shippingMethod),
     }));
     return finalTotal;
   };
