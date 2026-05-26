@@ -47,7 +47,7 @@ export const Layout = ({ children }: LayoutProps) => {
           <VisitorTracker />
           <RejectionNotificationPopup />
           <BannedUserPopup />
-          <ChatWidget />
+          
         </Suspense>
       )}
     </div>
