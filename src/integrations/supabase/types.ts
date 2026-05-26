@@ -134,6 +134,39 @@ export type Database = {
         }
         Relationships: []
       }
+      product_attributes: {
+        Row: {
+          created_at: string
+          gender_tendency: number
+          id: string
+          longevity: number
+          product_id: string
+          season: number
+          uniqueness: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          gender_tendency?: number
+          id?: string
+          longevity?: number
+          product_id: string
+          season?: number
+          uniqueness?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          gender_tendency?: number
+          id?: string
+          longevity?: number
+          product_id?: string
+          season?: number
+          uniqueness?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_padding_overrides: {
         Row: {
           id: string
