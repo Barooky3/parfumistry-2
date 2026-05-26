@@ -17,7 +17,7 @@ const PrivacyPolicy = () => {
                 When you make a purchase on Parfumistry, we collect the following information:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Email address (for order confirmation and delivery of digital products)</li>
+                <li>Email address (for order confirmation and shipping updates)</li>
                 <li>Name and billing address (for payment processing)</li>
                 <li>Payment information (processed securely through our payment providers)</li>
                 <li>Purchase history (to provide access to your digital products)</li>
