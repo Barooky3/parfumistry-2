@@ -44,9 +44,12 @@ const EU_UK_COUNTRIES = new Set([
   'Malta', 'Monaco', 'Liechtenstein', 'Andorra', 'San Marino',
 ]);
 
-const getShippingCost = (country: string): number => {
+type ShippingMethod = 'standard' | 'express';
+
+const getShippingCost = (country: string, method: ShippingMethod = 'standard'): number => {
   if (!country) return 0;
-  return EU_UK_COUNTRIES.has(country) ? 3.99 : 4.99;
+  if (method === 'express') return 12.99;
+  return 3.99;
 };
 
 const VALID_CODES: Record<string, number> = {
