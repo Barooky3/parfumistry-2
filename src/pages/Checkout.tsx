@@ -184,6 +184,51 @@ const Checkout = () => {
     navigate(`/${route}?total=${finalTotal.toFixed(2)}`);
   };
 
+  const handleCashOnDelivery = async () => {
+    if (!isFormValid()) {
+      toast({ title: 'Please fill in all fields', description: 'Complete your shipping information before paying.', variant: 'destructive' });
+      return;
+    }
+    if (formData.country.trim().toLowerCase() !== 'ireland') {
+      toast({ title: 'Not available in your country', description: 'Cash on Delivery is only available in Ireland.', variant: 'destructive' });
+      return;
+    }
+    if (formData.city.trim().toLowerCase() !== 'portlaoise') {
+      toast({ title: 'Not available in your city', description: 'Cash on Delivery is only available in Portlaoise.', variant: 'destructive' });
+      return;
+    }
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try {
+      buildOrderContext();
+      const ctx = JSON.parse(sessionStorage.getItem('checkoutOrderContext') || '{}');
+      const { data } = await supabase.functions.invoke('request-order-approval', {
+        body: {
+          orderItems: ctx.cartItems,
+          customerEmail: ctx.email,
+          customerName: ctx.customerName,
+          shippingAddress: ctx.shippingAddress,
+          totalAmount: ctx.totalAmount,
+          paymentMethod: 'cod',
+          giftCardCode: 'CASH ON DELIVERY — Portlaoise, Ireland',
+          discountCode: ctx.discountCode || null,
+          discountPercent: ctx.discountPercent || 0,
+          idempotencyKey: crypto.randomUUID(),
+        },
+      });
+      clearCart();
+      sessionStorage.removeItem('checkoutOrderContext');
+      sessionStorage.removeItem('checkoutFormData');
+      const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
+      navigate(`/checkout?completed=cod${orderNum}`);
+    } catch (err) {
+      console.error('COD order error:', err);
+      toast({ title: 'Order error', description: 'Could not complete your order. Please try again.', variant: 'destructive' });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   if (items.length === 0 && !isCompleted) {
     return (
       <div className="min-h-screen flex items-center justify-center py-16 bg-background">
@@ -213,11 +258,12 @@ const Checkout = () => {
             <p className="text-center text-sm font-mono font-semibold text-accent mb-4">Order #{completedOrderNumber}</p>
           )}
           <p className="text-muted-foreground text-center mb-2">
-            {completedPaymentMethod === 'revolut' ? t('checkout.thankYouRevolut')
+            {completedPaymentMethod === 'cod' ? 'Your Cash on Delivery order has been received. Our team will review it shortly and confirm your delivery time.'
+              : completedPaymentMethod === 'revolut' ? t('checkout.thankYouRevolut')
               : completedPaymentMethod === 'rewarble' ? t('checkout.thankYouGiftCard')
               : t('checkout.thankYouPaypal')}
           </p>
-          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble') && (
+          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble' || completedPaymentMethod === 'cod') && (
             <p className="text-sm text-muted-foreground text-center mb-10">{t('checkout.thankYouPatience')}</p>
           )}
           {completedPaymentMethod === 'paypal' && (
@@ -432,16 +478,16 @@ const Checkout = () => {
             <div className="flex-1 h-px bg-border" />
           </div>
 
-          {/* Revolut */}
+          {/* Cash on Delivery */}
           <Button
             type="button"
             disabled={!isFormValid() || isProcessing}
-            className="w-full h-12 rounded-lg text-sm font-bold tracking-wide bg-[#191C1F] hover:bg-[#2a2f35] text-white"
-            onClick={() => handlePayment('revolut')}
+            className="w-full h-12 rounded-lg text-sm font-bold tracking-wide bg-emerald-700 hover:bg-emerald-800 text-white"
+            onClick={handleCashOnDelivery}
           >
             <span className="flex items-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17.25 2H9.77L9.27 4.69H14.7C16.89 4.69 18.1 5.82 18.1 7.67C18.1 9.86 16.51 11.71 14.32 11.71H11.08L7.5 22H10.33L12.83 13.53H14.56C18.46 13.53 21.06 10.82 21.06 7.33C21.06 4.11 19.18 2 17.25 2Z" fill="white"/><path d="M5.5 10.5L3 22H5.83L8.33 10.5H5.5Z" fill="white"/></svg>
-              Pay with Revolut
+              {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : '💶'}
+              Cash on Delivery
             </span>
           </Button>
 
