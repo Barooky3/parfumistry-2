@@ -366,16 +366,39 @@ const Checkout = () => {
             <Input value={formData.streetAddress} onChange={(e) => updateFormData('streetAddress', e.target.value)} placeholder="123 Main Street" className="h-11 bg-background" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Postal code *</Label>
-              <Input value={formData.postalCode} onChange={(e) => updateFormData('postalCode', e.target.value)} placeholder="1234 AB" className="h-11 bg-background" />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">City *</Label>
-              <Input value={formData.city} onChange={(e) => updateFormData('city', e.target.value)} placeholder="Amsterdam" className="h-11 bg-background" />
-            </div>
-          </div>
+          {(() => {
+            const c = formData.country;
+            const locale: Record<string, { postalLabel: string; postalPlaceholder: string; cityLabel: string; cityPlaceholder: string }> = {
+              'Ireland': { postalLabel: 'Eircode *', postalPlaceholder: 'D02 XY45', cityLabel: 'County *', cityPlaceholder: 'Dublin' },
+              'United Kingdom': { postalLabel: 'Postcode *', postalPlaceholder: 'SW1A 1AA', cityLabel: 'Town/City *', cityPlaceholder: 'London' },
+              'United States': { postalLabel: 'ZIP code *', postalPlaceholder: '10001', cityLabel: 'City *', cityPlaceholder: 'New York' },
+              'Canada': { postalLabel: 'Postal code *', postalPlaceholder: 'K1A 0B1', cityLabel: 'City/Province *', cityPlaceholder: 'Toronto' },
+              'Germany': { postalLabel: 'PLZ *', postalPlaceholder: '10115', cityLabel: 'Stadt *', cityPlaceholder: 'Berlin' },
+              'Italy': { postalLabel: 'CAP *', postalPlaceholder: '00100', cityLabel: 'Città *', cityPlaceholder: 'Roma' },
+              'Spain': { postalLabel: 'Código postal *', postalPlaceholder: '28001', cityLabel: 'Ciudad *', cityPlaceholder: 'Madrid' },
+              'France': { postalLabel: 'Code postal *', postalPlaceholder: '75001', cityLabel: 'Ville *', cityPlaceholder: 'Paris' },
+              'Netherlands': { postalLabel: 'Postcode *', postalPlaceholder: '1234 AB', cityLabel: 'Stad *', cityPlaceholder: 'Amsterdam' },
+              'Portugal': { postalLabel: 'Código postal *', postalPlaceholder: '1000-001', cityLabel: 'Cidade *', cityPlaceholder: 'Lisboa' },
+              'Australia': { postalLabel: 'Postcode *', postalPlaceholder: '2000', cityLabel: 'Suburb/State *', cityPlaceholder: 'Sydney NSW' },
+              'Japan': { postalLabel: '郵便番号 *', postalPlaceholder: '100-0001', cityLabel: '市区町村 *', cityPlaceholder: '東京' },
+              'Brazil': { postalLabel: 'CEP *', postalPlaceholder: '01310-100', cityLabel: 'Cidade *', cityPlaceholder: 'São Paulo' },
+              'Mexico': { postalLabel: 'Código postal *', postalPlaceholder: '01000', cityLabel: 'Ciudad *', cityPlaceholder: 'CDMX' },
+            };
+            const l = locale[c] || { postalLabel: 'Postal code *', postalPlaceholder: '1234 AB', cityLabel: 'City *', cityPlaceholder: 'Amsterdam' };
+            return (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs text-muted-foreground mb-1.5 block">{l.postalLabel}</Label>
+                  <Input value={formData.postalCode} onChange={(e) => updateFormData('postalCode', e.target.value)} placeholder={l.postalPlaceholder} className="h-11 bg-background" />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground mb-1.5 block">{l.cityLabel}</Label>
+                  <Input value={formData.city} onChange={(e) => updateFormData('city', e.target.value)} placeholder={l.cityPlaceholder} className="h-11 bg-background" />
+                </div>
+              </div>
+            );
+          })()}
+
         </div>
 
         {/* Shipping method */}
