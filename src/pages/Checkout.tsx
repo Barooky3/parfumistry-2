@@ -102,6 +102,14 @@ const Checkout = () => {
   const [discountCode, setDiscountCode] = useState('');
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; percent: number } | null>(null);
+  const [freeSample, setFreeSample] = useState<{ id: string; name: string; brand: string; image: string } | null>(() => {
+    const saved = sessionStorage.getItem('checkoutFreeSample');
+    if (saved) { try { return JSON.parse(saved); } catch {} }
+    return null;
+  });
+  const [sampleOpen, setSampleOpen] = useState(false);
+
+  const sampleOptions = getFragrances();
 
   const [formData, setFormData] = useState(() => {
     const saved = sessionStorage.getItem('checkoutFormData');
@@ -110,6 +118,10 @@ const Checkout = () => {
   });
 
   useEffect(() => { sessionStorage.setItem('checkoutFormData', JSON.stringify(formData)); }, [formData]);
+  useEffect(() => {
+    if (freeSample) sessionStorage.setItem('checkoutFreeSample', JSON.stringify(freeSample));
+    else sessionStorage.removeItem('checkoutFreeSample');
+  }, [freeSample]);
 
   useEffect(() => {
     const completed = searchParams.get('completed');
