@@ -1152,7 +1152,7 @@ export const products: Product[] = [
     id: 'le-male-le-parfum',
     name: 'Le Male Le Parfum',
     brand: 'Jean Paul Gaultier',
-    price: 14.39,
+    price: 26.39,
     category: 'men',
     description: 'Best JPG in my opinion. A complex fragrance with an oriental character. The opening blends warm spices and woods, creating a luxurious and enveloping feel.',
     scentNotes: {
@@ -1173,10 +1173,9 @@ export const products: Product[] = [
     affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH',
     inStock: true,
     featured: true,
-    hotDeal: true,
     variants: [
-      { ml: 75, price: 14.39, inStock: true },
-      { ml: 125, price: 20.39, inStock: true },
+      { ml: 75, price: 26.39, inStock: true },
+      { ml: 125, price: 33.59, inStock: true },
     ],
   },
   // ===== ADDITIONAL PRODUCTS =====
