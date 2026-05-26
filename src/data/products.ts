@@ -109,8 +109,8 @@ export const products: Product[] = [
       { name: 'Le Beau Le Parfum', topNote: 'Coconut', heartNote: 'Tonka Bean', baseNote: 'Sandalwood', accentColor: '#003B5C' },
     ],
     variants: [
-      { ml: 75, price: 34.99, inStock: true, label: 'All 75ml' },
-      { ml: 125, price: 43.99, inStock: true, label: 'All 125ml' },
+      { ml: 75, price: 40.24, inStock: true, label: 'All 75ml' },
+      { ml: 125, price: 50.59, inStock: true, label: 'All 125ml' },
     ],
   },
 
