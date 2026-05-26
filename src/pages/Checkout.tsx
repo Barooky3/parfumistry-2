@@ -397,6 +397,65 @@ const Checkout = () => {
             })}
           </div>
 
+          {/* Free 2ml sample picker */}
+          <div className="mt-4 pt-3 border-t border-border">
+            <div className="flex items-start gap-2 mb-2">
+              <Gift className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-foreground">Pick a FREE 2ml sample 🎁</p>
+                <p className="text-[10px] text-muted-foreground">Try any fragrance from our store — on the house, so you know what to get next.</p>
+              </div>
+            </div>
+            {freeSample ? (
+              <div className="flex items-center gap-2 bg-accent/10 border border-accent/30 rounded-md px-3 py-2">
+                <img src={freeSample.image} alt={freeSample.name} className="w-8 h-9 object-contain bg-secondary/50 rounded" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-foreground truncate">{freeSample.name}</p>
+                  <p className="text-[10px] text-muted-foreground">2ml sample · FREE</p>
+                </div>
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setFreeSample(null)}>
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            ) : (
+              <Popover open={sampleOpen} onOpenChange={setSampleOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" className="w-full h-10 justify-between bg-background border-dashed border-accent/50 text-xs font-medium text-accent hover:bg-accent/5">
+                    Choose your free sample
+                    <ChevronsUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search fragrance..." />
+                    <CommandList>
+                      <CommandEmpty>No fragrance found.</CommandEmpty>
+                      <CommandGroup>
+                        {sampleOptions.map((p) => (
+                          <CommandItem
+                            key={p.id}
+                            value={`${p.brand} ${p.name}`}
+                            onSelect={() => {
+                              setFreeSample({ id: p.id, name: p.name, brand: p.brand, image: p.image });
+                              setSampleOpen(false);
+                            }}
+                          >
+                            <img src={p.image} alt="" className="w-6 h-7 object-contain mr-2 bg-secondary/50 rounded" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium truncate">{p.name}</p>
+                              <p className="text-[10px] text-muted-foreground truncate">{p.brand}</p>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
+
+
           {/* Discount code inline */}
           <div className="flex gap-2 mt-4 pt-3 border-t border-border">
             <Input
