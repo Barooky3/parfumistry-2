@@ -168,12 +168,15 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const formatPrice = useCallback((priceInEur: number) => {
     const info = CURRENCIES.find(c => c.code === currency) || CURRENCIES[0];
     const converted = priceInEur * info.rate;
+    const zeroDecimalCurrencies = ['JPY', 'KRW', 'VND', 'IDR', 'CLP', 'COP', 'HUF', 'ISK'];
+    const isZeroDecimal = zeroDecimalCurrencies.includes(info.code);
+    const finalPrice = isZeroDecimal ? converted : Math.floor(converted) + 0.99;
     return new Intl.NumberFormat(info.locale, {
       style: 'currency',
       currency: info.code,
-      minimumFractionDigits: info.code === 'JPY' || info.code === 'KRW' || info.code === 'VND' || info.code === 'IDR' || info.code === 'CLP' || info.code === 'COP' || info.code === 'HUF' || info.code === 'ISK' ? 0 : 2,
-      maximumFractionDigits: info.code === 'JPY' || info.code === 'KRW' || info.code === 'VND' || info.code === 'IDR' || info.code === 'CLP' || info.code === 'COP' || info.code === 'HUF' || info.code === 'ISK' ? 0 : 2,
-    }).format(converted);
+      minimumFractionDigits: isZeroDecimal ? 0 : 2,
+      maximumFractionDigits: isZeroDecimal ? 0 : 2,
+    }).format(finalPrice);
   }, [currency]);
 
   return (

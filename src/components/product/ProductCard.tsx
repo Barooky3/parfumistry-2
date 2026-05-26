@@ -297,6 +297,11 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               </span>
             )}
           </div>
+          {product.variants && product.variants.length > 0 && (
+            <p className="text-[9px] text-muted-foreground tracking-wide">
+              {product.variants.map(v => `${v.ml}ml`).join(' · ')}
+            </p>
+          )}
         </div>
       </motion.div>
     );
