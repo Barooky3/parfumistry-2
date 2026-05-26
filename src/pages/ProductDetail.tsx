@@ -12,6 +12,7 @@ import { getProductById, getFeaturedProducts } from '@/data/products';
 import { ProductCard, ScentNotesVisual } from '@/components/product';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { BundleContents } from '@/components/product/BundleContents';
+import { ProductAttributes } from '@/components/product/ProductAttributes';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 
@@ -98,7 +99,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="lg:sticky lg:top-8"
+            className="lg:sticky lg:top-8 space-y-6"
           >
             {(() => {
               const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
@@ -144,6 +145,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               );
             })()}
+            <ProductAttributes productId={product.id} />
           </motion.div>
 
           {/* Info */}
