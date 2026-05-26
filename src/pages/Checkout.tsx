@@ -243,6 +243,8 @@ const Checkout = () => {
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
       sessionStorage.removeItem('checkoutFormData');
+      sessionStorage.removeItem('checkoutFreeSample');
+      setFreeSample(null);
       const orderNum = data?.orderNumber ? `&order=${data.orderNumber}` : '';
       navigate(`/checkout?completed=cod${orderNum}`);
     } catch (err) {
