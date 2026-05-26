@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
+import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, ShoppingBag, Tag, Loader2, Shield, Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -514,6 +515,11 @@ const Checkout = () => {
             <span>📦</span>
             <span><span className="font-medium text-foreground">DHL Delivery</span> — EU & UK: 4–6 days · Worldwide: 6–8 days · Tracking by email</span>
           </div>
+        </div>
+
+        {/* Delivery timeline */}
+        <div className="mb-8">
+          <DeliveryInfo />
         </div>
 
         {/* Payment buttons */}
