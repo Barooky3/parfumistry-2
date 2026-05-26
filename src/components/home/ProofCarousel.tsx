@@ -133,7 +133,7 @@ const ProofCarousel = () => {
             <span className="text-sm font-semibold text-foreground">{rating}</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            Based on {proofImages.length * 47}+ verified reviews
+            Based on 40+ verified reviews
           </p>
           <div className="flex items-center gap-1.5 mt-0.5 opacity-60">
             <span className="text-[10px] tracking-wide text-muted-foreground">Verified by</span>
