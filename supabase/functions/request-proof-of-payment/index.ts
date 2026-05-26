@@ -112,7 +112,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Parfumistry <orders@profparfum.com>",
+        from: "Parfumistry <orders@parfumistry.net>",
         to: [order.customer_email],
         reply_to: ADMIN_EMAIL,
         subject: order.order_number ? `Proof of Payment Required — Order #${order.order_number} — Parfumistry` : "Proof of Payment Required — Parfumistry",

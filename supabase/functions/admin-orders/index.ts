@@ -289,7 +289,7 @@ serve(async (req) => {
               method: "POST",
               headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
               body: JSON.stringify({
-                from: "Parfumistry Orders <orders@profparfum.com>",
+                from: "Parfumistry Orders <orders@parfumistry.net>",
                 to: ADMIN_EMAILS,
                 subject: invoiceSubject,
                 html: invoiceHtml,
@@ -401,7 +401,7 @@ serve(async (req) => {
             method: "POST",
             headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: "Parfumistry <orders@profparfum.com>",
+              from: "Parfumistry <orders@parfumistry.net>",
               to: [order.customer_email],
               reply_to: "ewhz3384@gmail.com",
               subject: order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry",

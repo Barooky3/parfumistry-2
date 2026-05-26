@@ -235,7 +235,7 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Parfumistry Orders <orders@profparfum.com>",
+      from: "Parfumistry Orders <orders@parfumistry.net>",
       to: Array.isArray(to) ? to : [to],
       subject,
       html: htmlContent,

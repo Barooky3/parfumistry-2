@@ -471,7 +471,7 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Parfumistry <orders@profparfum.com>",
+      from: "Parfumistry <orders@parfumistry.net>",
       to: [to],
       subject,
       html: htmlContent,
