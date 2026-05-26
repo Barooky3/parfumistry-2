@@ -162,7 +162,7 @@ const Rewarble = () => {
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">& more</span>
                 </div>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
-                  onClick={() => window.open(orderTotalNum > 0 ? getVisaRewarbleCard(orderTotalNum).url : 'https://www.g2a.com/search?query=Visa+Rewarble', '_blank')}>
+                  onClick={() => window.open(orderTotalNum > 0 ? getVisaRewarbleCard(orderTotalNum).url : 'https://www.g2a.com/search?query=PayPal+Rewarble', '_blank')}>
                   <ExternalLink className="h-3 w-3 mr-1.5" />
                   {orderTotalNum > 0 ? `Find ${getVisaRewarbleCard(orderTotalNum).label} PayPal Rewarble on G2A` : 'Find PayPal Rewarble on G2A'}
                 </Button>
