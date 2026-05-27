@@ -50,12 +50,14 @@ Deno.serve(async (req) => {
     const matched = !!order;
     const ipHint = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
 
-    await supabase.from("tracking_lookups").insert({
-      email: cleanEmail,
-      order_number: numericOrder,
-      matched,
-      ip_hint: ipHint,
-    });
+    if (!skipHistory) {
+      await supabase.from("tracking_lookups").insert({
+        email: cleanEmail,
+        order_number: numericOrder,
+        matched,
+        ip_hint: ipHint,
+      });
+    }
 
     if (!matched) {
       return new Response(
