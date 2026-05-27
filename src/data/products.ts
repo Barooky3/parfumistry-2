@@ -11,7 +11,7 @@ import leMaleElixirLifestyle from '@/assets/products/le-male-elixir-lifestyle.pn
 import erosParfumLifestyle from '@/assets/products/eros-parfum-lifestyle.png';
 import imaginationLifestyle from '@/assets/products/imagination-lifestyle.png';
 import strongerWithYouIntenselyLifestyle from '@/assets/products/stronger-with-you-intensely-lifestyle.png';
-import bornInRomaIntenseLifestyle2 from '@/assets/products/born-in-roma-intense-lifestyle-2.png';
+import bornInRomaLifestyle from '@/assets/products/born-in-roma-lifestyle.png';
 import leMaleElixirLifestyle2 from '@/assets/products/le-male-elixir-lifestyle-2.png';
 import leMaleLeParfumLifestyle from '@/assets/products/le-male-le-parfum-lifestyle.png';
 
@@ -403,7 +403,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A3A',
     image: '/images/scent-notes/born-in-roma-intense.png',
-    additionalImages: [bornInRomaIntenseLifestyle, bornInRomaIntenseLifestyle2],
+    additionalImages: [bornInRomaIntenseLifestyle],
     imagePadding: 'p-[1.3rem] md:p-[2.925rem]',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
@@ -462,6 +462,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B4513',
     image: 'https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=1200',
+    additionalImages: [bornInRomaLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
