@@ -105,7 +105,7 @@ const ProofCarousel = () => {
   const onTouchStart = (e: React.TouchEvent) => handlePointerDown(e.touches[0].pageX);
   const onTouchMove = (e: React.TouchEvent) => handlePointerMove(e.touches[0].pageX);
 
-  const rating = 4.6;
+  const rating = 4.4;
   const fullStars = Math.floor(rating);
   const partialFill = (rating - fullStars) * 100;
 
@@ -117,14 +117,14 @@ const ProofCarousel = () => {
             <div className="flex items-center gap-[3px]">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="relative">
-                  <Star className="h-[18px] w-[18px] text-muted-foreground/30" fill="currentColor" strokeWidth={0} />
+                  <Star className="h-[18px] w-[18px] text-[#dcdce6] stroke-0" fill="currentColor" />
                   <div
                     className="absolute inset-0 overflow-hidden"
                     style={{
                       width: i < fullStars ? '100%' : i === fullStars ? `${partialFill}%` : '0%',
                     }}
                   >
-                    <Star className="h-[18px] w-[18px] fill-accent text-accent" strokeWidth={0} />
+                    <Star className="h-[18px] w-[18px] text-[#ffc700] stroke-0" fill="currentColor" />
                   </div>
                 </div>
               ))}

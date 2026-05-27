@@ -224,24 +224,6 @@ export type Database = {
         }
         Relationships: []
       }
-      review_order: {
-        Row: {
-          id: number
-          order_ids: Json
-          updated_at: string
-        }
-        Insert: {
-          id?: number
-          order_ids?: Json
-          updated_at?: string
-        }
-        Update: {
-          id?: number
-          order_ids?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
       reviews: {
         Row: {
           created_at: string
