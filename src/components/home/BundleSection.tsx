@@ -60,8 +60,8 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
                 src={bundle.image}
                 alt={bundle.name}
                 className={cn(
-                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
-                  hasOverride && "object-contain"
+                  "w-full h-full transition-transform duration-300 group-hover:scale-105",
+                  hasOverride ? "object-contain object-bottom" : "object-cover"
                 )}
                 loading="lazy"
               />
