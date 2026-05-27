@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User, ChevronDown, LogOut } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown, LogOut, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency, CURRENCIES, Currency } from '@/contexts/CurrencyContext';
