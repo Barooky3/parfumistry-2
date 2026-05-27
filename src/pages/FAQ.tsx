@@ -66,7 +66,7 @@ const FAQ = () => {
                   {faq.answer === "why-cheap" ? (
                     <span>
                       You may have noticed that these perfumes are more expensive than the fake ones but cheaper than the real ones. The perfumes come from a grey market supplier. Shops often have to get rid of old stock to make space for new stock. These shops then sell their old stock in bulk at ridiculously low prices to grey market suppliers.{"\n\n"}
-                      A normal perfume lasts for 8 years before expiry, the ones we sell lasts for 2-5 years before expiry, so these have the normal smell and last 7-8 hours on skin, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap.{"\n\n"}
+                      A normal perfume lasts for 10-15 years before expiry, the ones we sell lasts for 2-5 years before expiry, so these have normal smell and last 7-8 hours on skin, but with reduced shelf life meaning they expire earlier. Thats why we can sell for so cheap. This wont affect most people HOWEVER if you have a collection of perfumes youll naturally use them slower, so we dont reccomend you buy from us if you own 10+ fragrances.{"\n\n"}
                       You get a DHL tracking number after ordering, if you don't mind us using your name we can post a vid packing your order, and you can also return if you don't like them or have issues, we have a full return and <Link to="/return-policy" className="text-accent font-medium hover:underline">refund policy</Link> on the site.
                     </span>
                   ) : faq.answer === "return-policy" ? (
