@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, Star } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
+import ReviewsAdmin from "@/components/admin/ReviewsAdmin";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
