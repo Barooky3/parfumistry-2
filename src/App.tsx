@@ -82,6 +82,7 @@ const App = () => (
                 <Route path="/proof" element={<ProofUpload />} />
                 <Route path="/email-preview" element={<EmailPreview />} />
                 <Route path="/custom-bundle" element={<CustomBundle />} />
+                <Route path="/faq" element={<FAQ />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
