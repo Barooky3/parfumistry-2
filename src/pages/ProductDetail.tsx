@@ -24,6 +24,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [quantity] = useState(1);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
