@@ -14,6 +14,7 @@ export interface DbReview {
   text: string | null;
   status: 'pending' | 'approved';
   is_admin_added: boolean;
+  images: string[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -29,6 +30,7 @@ export interface UnifiedReview {
   status?: 'pending' | 'approved';
   user_id?: string | null;
   isOwn?: boolean;
+  images?: string[];
 }
 
 const formatDate = (iso: string) =>
@@ -56,6 +58,7 @@ const dbToUnified = (r: DbReview, currentUserId?: string | null): UnifiedReview 
   status: r.status,
   user_id: r.user_id,
   isOwn: !!currentUserId && r.user_id === currentUserId,
+  images: Array.isArray(r.images) ? r.images : [],
 });
 
 /**
@@ -109,6 +112,7 @@ export const submitReview = async (params: {
   customer_email: string;
   rating: number;
   text: string;
+  images?: string[];
 }) => {
   return supabase.from('reviews').insert({
     user_id: params.user_id,
@@ -118,6 +122,7 @@ export const submitReview = async (params: {
     text: params.text.slice(0, 1000) || null,
     status: 'pending',
     is_admin_added: false,
+    images: params.images ?? [],
   });
 };
 
@@ -125,6 +130,7 @@ export const adminAddReview = async (params: {
   customer_name: string;
   rating: number;
   text: string;
+  images?: string[];
 }) => {
   return supabase.from('reviews').insert({
     user_id: null,
@@ -134,6 +140,7 @@ export const adminAddReview = async (params: {
     text: params.text.slice(0, 1000) || null,
     status: 'approved',
     is_admin_added: true,
+    images: params.images ?? [],
   });
 };
 

@@ -164,6 +164,21 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
       <p className={`text-sm mt-2 ${review.text ? 'text-foreground/90' : 'italic text-muted-foreground'}`}>
         {review.text || 'Rating submitted - no written feedback'}
       </p>
+      {review.images && review.images.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-3">
+          {review.images.map((url, idx) => (
+            <a
+              key={url + idx}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-20 h-20 rounded overflow-hidden border border-border/60 hover:border-accent transition-colors"
+            >
+              <img src={url} alt={`Review photo ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+            </a>
+          ))}
+        </div>
+      )}
       {showTranslateBtn && (
         <div className="mt-2">
           <button
