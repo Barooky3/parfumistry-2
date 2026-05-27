@@ -13,10 +13,12 @@ import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 interface ProductCardProps {
   product: Product;
   className?: string;
+  /** Image aspect ratio. Defaults to portrait (3/4). Pass "square" for 1:1. */
+  imageAspect?: 'portrait' | 'square';
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className }, ref) => {
+  ({ product, className, imageAspect = 'portrait' }, ref) => {
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
