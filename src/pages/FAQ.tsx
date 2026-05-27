@@ -82,14 +82,6 @@ const FAQ = () => {
                       <a href="https://www.tiktok.com/@parfumistry" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">message us on TikTok</a>
                       {' '}and give us your order number and email as soon as you order, we'll send you a video of us packing your exact items with your name showing in the background for authenticity, it will only be posted with your consent.
                     </span>
-                  ) : faq.answer === "tiktok-payment" ? (
-                    <span>
-                      Since I'm currently under 17, I don't have access to a proper bank account yet. This means I'm unable to set up traditional payment processing (like credit card terminals or direct bank transfers).{'\n\n'}
-                      For now, Rewarble codes and app-based payments are the only way I can securely accept payments. I know it's not the most convenient — but there's not much I can do. If you're in doubt or don't trust it, please do some research on Rewarble, and don't hesitate to ask me questions on{' '}
-                      <a href="https://www.tiktok.com/@parfumistry" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">TikTok</a>{' '}
-                      if you're confused!{'\n\n'}
-                      As soon as I'm able to open a bank account, normal payment methods (card payments, direct PayPal, cash on delivery, etc.) will be added right away.
-                    </span>
                   ) : (
                     faq.answer
                   )}
