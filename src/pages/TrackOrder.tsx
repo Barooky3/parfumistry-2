@@ -89,13 +89,7 @@ const TrackOrder = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Track Your Order | Parfumistry</title>
-        <meta
-          name="description"
-          content="Track your Parfumistry order using your email and order number."
-        />
-      </Helmet>
+
 
       <main className="min-h-screen bg-background py-16 px-4">
         <div className="max-w-xl mx-auto">
