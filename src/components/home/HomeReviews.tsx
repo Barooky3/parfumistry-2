@@ -7,7 +7,7 @@ import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 8;
 
 const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) => {
   const cls = size === 'lg' ? 'h-5 w-5' : 'h-3.5 w-3.5';
@@ -70,48 +70,17 @@ const HomeReviews = () => {
   return (
     <section id="reviews-section" className="py-14 md:py-20 bg-background">
       <div className="container">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12">
-          <div>
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground mb-3">
-              Customer Reviews
-            </h2>
-          </div>
-          {user ? (
-            <Button
-              onClick={() => setSubmitOpen(true)}
-              className="rounded-none whitespace-nowrap"
-              size="sm"
-            >
-              <Plus className="h-4 w-4 mr-1.5" />
-              {isAdmin ? 'Add review' : 'Leave a review'}
-            </Button>
-          ) : (
-            <Button
-              asChild
-              className="rounded-none whitespace-nowrap"
-              size="sm"
-            >
-              <Link to="/login">
-                <LogIn className="h-4 w-4 mr-1.5" />
-                Log in to review
-              </Link>
-            </Button>
-          )}
+        <div className="mb-10 md:mb-14">
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3">
+            Customer Reviews
+          </h2>
+          <p className="text-sm text-muted-foreground max-w-2xl">
+            See what customers around the world are saying about Parfumistry. All reviews are from verified customers.
+          </p>
         </div>
-        <p className="text-[11px] text-muted-foreground leading-relaxed max-w-xl mb-8 md:mb-12 -mt-6">
-          Once you receive your products, please consider leaving a review. If you leave a legitimate review with a verified order then you'll receive a free gift on your next order. If images of the products you received are also present in the review then you can receive extra samples. Simply hit us up on TikTok{' '}
-          <a
-            href="https://www.tiktok.com/@fragranceprofs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-accent transition-colors"
-          >
-            @fragranceprofs
-          </a>{' '}
-          and show proof of review.
-        </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+        {/* Top: stats (left) + CTA box (right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-10 md:mb-14">
           {/* Left: Summary */}
           <div>
             <div className="flex items-end gap-2 mb-2">
@@ -146,85 +115,126 @@ const HomeReviews = () => {
             </div>
           </div>
 
-          {/* Right: Reviews list */}
-          <div>
-            {/* Filter buttons */}
-            <div className="flex flex-wrap items-center gap-2 mb-5">
+          {/* Right: CTA box */}
+          <div className="bg-card/40 border border-border/60 rounded-2xl p-6 md:p-8 flex flex-col justify-center">
+            {user ? (
+              <Button
+                onClick={() => setSubmitOpen(true)}
+                className="rounded-full whitespace-nowrap self-start"
+                size="lg"
+              >
+                <Plus className="h-4 w-4 mr-1.5" />
+                {isAdmin ? 'Add review' : 'Leave a Review'}
+              </Button>
+            ) : (
+              <Button
+                asChild
+                className="rounded-full whitespace-nowrap self-start"
+                size="lg"
+              >
+                <Link to="/login">
+                  <LogIn className="h-4 w-4 mr-1.5" />
+                  Log in to Review
+                </Link>
+              </Button>
+            )}
+            <p className="text-[11px] text-muted-foreground leading-relaxed mt-5">
+              Once you receive your products, please consider leaving a review. If you leave a legitimate review with a verified order then you'll receive a free gift on your next order. If images of the products you received are also present in the review then you can receive extra samples. Simply hit us up on TikTok{' '}
+              <a
+                href="https://www.tiktok.com/@fragranceprofs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-accent transition-colors"
+              >
+                @fragranceprofs
+              </a>{' '}
+              and show proof of review.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom: Reviews list spanning full width */}
+        <div>
+          <div className="flex flex-wrap items-center gap-2 mb-5">
+            <button
+              onClick={() => handleFilter('all')}
+              className={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors ${
+                filter === 'all'
+                  ? 'bg-accent text-accent-foreground border-accent'
+                  : 'bg-transparent text-muted-foreground border-border hover:border-accent hover:text-foreground'
+              }`}
+            >
+              All
+            </button>
+            {[5, 4, 3, 2, 1].map((star) => (
               <button
-                onClick={() => handleFilter('all')}
-                className={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors ${
-                  filter === 'all'
+                key={star}
+                onClick={() => handleFilter(star)}
+                className={`px-3 py-1.5 text-xs uppercase tracking-wider border inline-flex items-center gap-1 transition-colors ${
+                  filter === star
                     ? 'bg-accent text-accent-foreground border-accent'
                     : 'bg-transparent text-muted-foreground border-border hover:border-accent hover:text-foreground'
                 }`}
               >
-                All
-              </button>
-              {[5, 4, 3, 2, 1].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => handleFilter(star)}
-                  className={`px-3 py-1.5 text-xs uppercase tracking-wider border inline-flex items-center gap-1 transition-colors ${
-                    filter === star
-                      ? 'bg-accent text-accent-foreground border-accent'
-                      : 'bg-transparent text-muted-foreground border-border hover:border-accent hover:text-foreground'
+                {star}
+                <Star
+                  className={`h-3 w-3 ${
+                    filter === star ? 'fill-accent-foreground text-accent-foreground' : 'fill-accent text-accent'
                   }`}
-                >
-                  {star}
-                  <Star
-                    className={`h-3 w-3 ${
-                      filter === star ? 'fill-accent-foreground text-accent-foreground' : 'fill-accent text-accent'
-                    }`}
-                  />
-                </button>
+                />
+              </button>
+            ))}
+          </div>
+
+          <p className="text-xs text-muted-foreground mb-4">
+            Newest first · Showing {pageReviews.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–
+            {(currentPage - 1) * PAGE_SIZE + pageReviews.length} of {filtered.length} reviews
+          </p>
+
+          {pageReviews.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-10 text-center">
+              No reviews match this filter.
+            </p>
+          ) : (
+            <div className="divide-y divide-border">
+              {pageReviews.map((review) => (
+                <ReviewItem
+                  key={review.id}
+                  review={review}
+                  isAdmin={isAdmin}
+                  onChanged={refresh}
+                />
               ))}
             </div>
+          )}
 
-            {pageReviews.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-10 text-center">
-                No reviews match this filter.
-              </p>
-            ) : (
-              <div className="divide-y divide-border">
-                {pageReviews.map((review) => (
-                  <ReviewItem
-                    key={review.id}
-                    review={review}
-                    isAdmin={isAdmin}
-                    onChanged={refresh}
-                  />
-                ))}
-              </div>
-            )}
-
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-8 pt-4 border-t border-border">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="rounded-none"
-                >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Previous
-                </Button>
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="rounded-none"
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
-              </div>
-            )}
-          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-8 pt-4 border-t border-border">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="rounded-none"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Previous
+              </Button>
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="rounded-none"
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
