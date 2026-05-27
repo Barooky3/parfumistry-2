@@ -90,11 +90,13 @@ export const computePaddingAndScale = (override: PaddingOverride | null) => {
   if (!hasAny) return { innerStyle: undefined, hasOverride: false };
 
   const imageScale = override.scale;
-  const translateX = (override.padding_left - override.padding_right) / 2;
-  const translateY = (override.padding_top - override.padding_bottom) / 2;
+  // Use % units so adjustments scale with container size (consistent across desktop/mobile).
+  // Each padding unit ≈ 2.5% of container, matching the prior ~rem feel on a typical card.
+  const translateX = (override.padding_left - override.padding_right) * 2.5;
+  const translateY = (override.padding_top - override.padding_bottom) * 2.5;
 
   const innerStyle: React.CSSProperties = {
-    transform: `translate(${translateX}rem, ${translateY}rem) scale(${imageScale})`,
+    transform: `translate(${translateX}%, ${translateY}%) scale(${imageScale})`,
     transformOrigin: 'center bottom',
     width: '100%',
     height: '100%',
