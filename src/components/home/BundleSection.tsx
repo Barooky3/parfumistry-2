@@ -143,7 +143,7 @@ export const BundleSection = () => {
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 md:gap-6 max-w-6xl mx-auto">
           {bundles.map((bundle, index) => (
             <BundleCard key={bundle.id} bundle={bundle} index={index} />
           ))}
