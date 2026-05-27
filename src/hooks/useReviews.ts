@@ -90,7 +90,6 @@ const subscribeSettings = (cb: () => void) => {
 };
 const notify = () => { listeners.forEach((l) => l()); };
 
-let remoteLoaded = false;
 let remoteLoadPromise: Promise<void> | null = null;
 const loadRemoteSettings = async (): Promise<void> => {
   if (remoteLoadPromise) return remoteLoadPromise;
@@ -109,7 +108,6 @@ const loadRemoteSettings = async (): Promise<void> => {
       writeLS(REVIEW_ORDER_KEY, settingsState.order);
       writeLS(SEED_OVERRIDES_KEY, settingsState.overrides);
       writeLS(HIDDEN_SEEDS_KEY, settingsState.hidden);
-      remoteLoaded = true;
       notify();
     }
   })();
@@ -202,36 +200,6 @@ export const useReviewOrder = () => {
   const s = useReviewSettings();
   const setOrder = (ids: string[]) => { void saveRemoteReviewOrder(ids); };
   return [s.order, setOrder] as const;
-};
-
-// One-time admin seeder: push this device's local settings up if DB is still empty.
-export const seedRemoteSettingsFromLocal = async () => {
-  const { data } = await supabase
-    .from('review_order' as any)
-    .select('order_ids, seed_overrides, hidden_seeds')
-    .eq('id', 1)
-    .maybeSingle();
-  const d = (data || {}) as any;
-  const patch: any = {};
-  const remoteOrder = Array.isArray(d.order_ids) ? d.order_ids : [];
-  const remoteOverrides = d.seed_overrides && typeof d.seed_overrides === 'object' ? d.seed_overrides : {};
-  const remoteHidden = Array.isArray(d.hidden_seeds) ? d.hidden_seeds : [];
-  if (remoteOrder.length === 0 && settingsState.order.length > 0) patch.order_ids = settingsState.order;
-  if (Object.keys(remoteOverrides).length === 0 && Object.keys(settingsState.overrides).length > 0)
-    patch.seed_overrides = settingsState.overrides;
-  if (remoteHidden.length === 0 && settingsState.hidden.length > 0) patch.hidden_seeds = settingsState.hidden;
-  if (Object.keys(patch).length > 0) {
-    await saveRemoteSettings(patch);
-  }
-};
-
-// Force-push this session's local state, overwriting remote. Use to make this device authoritative.
-export const forceSyncLocalToRemote = async () => {
-  await saveRemoteSettings({
-    order_ids: settingsState.order,
-    seed_overrides: settingsState.overrides,
-    hidden_seeds: settingsState.hidden,
-  });
 };
 
 
