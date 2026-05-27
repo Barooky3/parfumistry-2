@@ -125,7 +125,6 @@ const HomeReviews = () => {
     // merge with any existing order so unseen ids aren't lost
     const merged = [...next, ...order.filter((id) => !next.includes(id))];
     setOrder(merged);
-    saveRemoteReviewOrder(merged);
   };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
