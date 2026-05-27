@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Star, Plus, ChevronLeft, ChevronRight, LogIn, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useReviews, applyReviewOrder, useReviewOrder, saveRemoteReviewOrder, getLocalReviewOrder, fetchRemoteReviewOrder } from '@/hooks/useReviews';
+import { useReviews, applyReviewOrder, useReviewOrder, forceSyncLocalToRemote } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
@@ -81,20 +81,20 @@ const HomeReviews = () => {
 
   const [order, setOrder] = useReviewOrder();
 
-  // One-time: if admin has a local order from before, push it to the server so it becomes universal.
+  // One-time per device: push this admin device's local state (order, edits, deletions)
+  // up to the shared store so it overrides every other device.
+  const SYNC_FLAG = 'parfumistry_reviews_force_synced_v2';
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
     if (!isAdmin) return;
-    const local = getLocalReviewOrder();
-    if (local.length === 0) return;
+    if (typeof window === 'undefined') return;
+    if (localStorage.getItem(SYNC_FLAG)) return;
     seededRef.current = true;
-    fetchRemoteReviewOrder().then((remote) => {
-      if (remote.length === 0) {
-        saveRemoteReviewOrder(local).then(() => setOrder(local));
-      }
+    forceSyncLocalToRemote().then(() => {
+      try { localStorage.setItem(SYNC_FLAG, '1'); } catch {}
     });
-  }, [isAdmin, setOrder]);
+  }, [isAdmin]);
 
   const sorted = useMemo(() => {
     const base = [...visibleReviews].sort((a, b) => {
