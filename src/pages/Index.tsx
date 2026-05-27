@@ -142,6 +142,10 @@ const Index = () => {
       {/* Proof Photo Carousel */}
       <ProofCarousel />
 
+      {/* Track Your Order */}
+      <HomeTrackOrder />
+
+
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
         <div className="container">
