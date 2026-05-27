@@ -224,6 +224,33 @@ export type Database = {
         }
         Relationships: []
       }
+      tracking_lookups: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          ip_hint: string | null
+          matched: boolean
+          order_number: number
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          ip_hint?: string | null
+          matched?: boolean
+          order_number: number
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          ip_hint?: string | null
+          matched?: boolean
+          order_number?: number
+        }
+        Relationships: []
+      }
       visitor_sessions: {
         Row: {
           browser: string | null
