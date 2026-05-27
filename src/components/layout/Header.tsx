@@ -76,8 +76,22 @@ export const Header = () => {
             </span>
           </Link>
 
+          {/* FAQ Button — prominent, between logo and nav */}
+          <Link
+            to="/#faq"
+            className={cn(
+              'hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-xs tracking-[0.12em] uppercase transition-all',
+              location.hash === '#faq'
+                ? 'bg-accent text-accent-foreground shadow-md'
+                : 'bg-accent/90 text-accent-foreground hover:bg-accent shadow-sm hover:shadow-md'
+            )}
+          >
+            <HelpCircle className="h-4 w-4" />
+            FAQ
+          </Link>
+
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-10 ml-16">
+          <nav className="hidden md:flex items-center gap-10 ml-auto">
             {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
