@@ -83,21 +83,21 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
           )}
         </div>
         
-        <div className="p-5">
-          <h3 className="font-display text-base md:text-lg text-foreground mb-2 group-hover:text-accent transition-colors line-clamp-2">
+        <div className="p-3 md:p-5">
+          <h3 className="font-display text-sm md:text-lg text-foreground mb-2 group-hover:text-accent transition-colors line-clamp-2">
             {bundle.name}
           </h3>
-          <p className="text-xs text-muted-foreground mb-4 line-clamp-2">
+          <p className="hidden md:block text-xs text-muted-foreground mb-4 line-clamp-2">
             {bundle.description}
           </p>
-          <div className="flex items-center justify-between">
-            <span className="text-lg font-semibold text-foreground">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+            <span className="text-sm md:text-lg font-semibold text-foreground whitespace-nowrap">
               From €{bundle.price.toFixed(2)}
             </span>
             <Button 
               variant="outline"
               size="sm"
-              className="text-[10px] font-medium tracking-[0.1em] uppercase rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background"
+              className="w-full md:w-auto h-8 md:h-9 px-2 md:px-3 text-[9px] md:text-[10px] font-medium tracking-[0.1em] uppercase rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background"
             >
               Shop now
             </Button>
