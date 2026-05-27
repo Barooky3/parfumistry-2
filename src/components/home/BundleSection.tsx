@@ -11,10 +11,10 @@ import React from 'react';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com'];
 
 const BUNDLE_TAGS: Record<string, string> = {
-  'evening-sweetheart-bundle': 'Evening Sweetheart for Winter',
-  'young-playboy-bundle': 'Young Playboy for Winter and Summer',
-  'sleek-and-clean-bundle': 'Sleek and Clean for Summer',
-  'jpg-bundle': 'JPG for All Seasons',
+  'evening-sweetheart-bundle': 'Winter',
+  'young-playboy-bundle': 'Winter & Summer',
+  'sleek-and-clean-bundle': 'Summer',
+  'jpg-bundle': 'All Seasons',
 };
 
 const getBundleTag = (id: string): string | undefined => BUNDLE_TAGS[id];
