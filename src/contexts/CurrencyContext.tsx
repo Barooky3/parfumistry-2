@@ -142,24 +142,94 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     const stored = localStorage.getItem('profparfums-currency');
     if (stored) return; // User already has a preference
 
+    const applyCountry = (countryCode?: string | null) => {
+      if (!countryCode) return false;
+      const cc = countryCode.toUpperCase();
+      if (COUNTRY_CODE_CURRENCY_MAP[cc]) {
+        const detected = COUNTRY_CODE_CURRENCY_MAP[cc];
+        setCurrencyState(detected);
+        localStorage.setItem('profparfums-currency', detected);
+        return true;
+      }
+      return false;
+    };
+
+    // Multi-provider geo lookup with timezone fallback for maximum accuracy
     const detectCurrency = async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) });
-        if (!response.ok) return;
-        const data = await response.json();
-        const countryCode = data.country_code as string;
-        if (countryCode && COUNTRY_CODE_CURRENCY_MAP[countryCode]) {
-          const detected = COUNTRY_CODE_CURRENCY_MAP[countryCode];
-          setCurrencyState(detected);
-          localStorage.setItem('profparfums-currency', detected);
+      // Provider list — each returns an ISO alpha-2 country code
+      const providers: Array<() => Promise<string | null>> = [
+        async () => {
+          const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+          if (!r.ok) return null;
+          const d = await r.json();
+          return d?.country_code || null;
+        },
+        async () => {
+          const r = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
+          if (!r.ok) return null;
+          const d = await r.json();
+          return d?.country_code || null;
+        },
+        async () => {
+          const r = await fetch('https://get.geojs.io/v1/ip/country.json', { signal: AbortSignal.timeout(4000) });
+          if (!r.ok) return null;
+          const d = await r.json();
+          return d?.country || null;
+        },
+        async () => {
+          const r = await fetch('https://api.country.is/', { signal: AbortSignal.timeout(4000) });
+          if (!r.ok) return null;
+          const d = await r.json();
+          return d?.country || null;
+        },
+      ];
+
+      for (const provider of providers) {
+        try {
+          const cc = await provider();
+          if (applyCountry(cc)) return;
+        } catch {
+          // try next provider
         }
+      }
+
+      // Final fallback: derive country from browser timezone
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        const tzCountry: Record<string, string> = {
+          'Europe/Sofia': 'BG', 'Europe/Berlin': 'DE', 'Europe/Paris': 'FR',
+          'Europe/London': 'GB', 'Europe/Amsterdam': 'NL', 'Europe/Brussels': 'BE',
+          'Europe/Madrid': 'ES', 'Europe/Rome': 'IT', 'Europe/Vienna': 'AT',
+          'Europe/Warsaw': 'PL', 'Europe/Prague': 'CZ', 'Europe/Budapest': 'HU',
+          'Europe/Bucharest': 'RO', 'Europe/Athens': 'GR', 'Europe/Helsinki': 'FI',
+          'Europe/Stockholm': 'SE', 'Europe/Oslo': 'NO', 'Europe/Copenhagen': 'DK',
+          'Europe/Dublin': 'IE', 'Europe/Lisbon': 'PT', 'Europe/Zurich': 'CH',
+          'Europe/Zagreb': 'HR', 'Europe/Ljubljana': 'SI', 'Europe/Bratislava': 'SK',
+          'Europe/Tallinn': 'EE', 'Europe/Riga': 'LV', 'Europe/Vilnius': 'LT',
+          'Europe/Belgrade': 'RS', 'Europe/Sarajevo': 'BA', 'Europe/Skopje': 'MK',
+          'Europe/Podgorica': 'ME', 'Europe/Tirane': 'AL', 'Europe/Chisinau': 'MD',
+          'Europe/Kiev': 'UA', 'Europe/Kyiv': 'UA', 'Europe/Istanbul': 'TR',
+          'Europe/Moscow': 'RU', 'America/New_York': 'US', 'America/Chicago': 'US',
+          'America/Denver': 'US', 'America/Los_Angeles': 'US', 'America/Phoenix': 'US',
+          'America/Toronto': 'CA', 'America/Vancouver': 'CA', 'America/Mexico_City': 'MX',
+          'America/Sao_Paulo': 'BR', 'America/Argentina/Buenos_Aires': 'AR',
+          'America/Bogota': 'CO', 'America/Lima': 'PE', 'America/Santiago': 'CL',
+          'Asia/Tokyo': 'JP', 'Asia/Shanghai': 'CN', 'Asia/Seoul': 'KR',
+          'Asia/Dubai': 'AE', 'Asia/Riyadh': 'SA', 'Asia/Kolkata': 'IN',
+          'Asia/Singapore': 'SG', 'Asia/Bangkok': 'TH', 'Asia/Jakarta': 'ID',
+          'Asia/Manila': 'PH', 'Africa/Cairo': 'EG', 'Africa/Johannesburg': 'ZA',
+          'Africa/Lagos': 'NG', 'Africa/Casablanca': 'MA',
+          'Australia/Sydney': 'AU', 'Australia/Melbourne': 'AU', 'Pacific/Auckland': 'NZ',
+        };
+        applyCountry(tzCountry[tz]);
       } catch {
-        // Silently fail - keep EUR default
+        // keep EUR default
       }
     };
 
     detectCurrency();
   }, []);
+
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c);
