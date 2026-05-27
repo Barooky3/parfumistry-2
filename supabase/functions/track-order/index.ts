@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, orderNumber } = await req.json();
+    const { email, orderNumber, skipHistory } = await req.json();
 
     const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const rawNum = typeof orderNumber === "string" || typeof orderNumber === "number"
