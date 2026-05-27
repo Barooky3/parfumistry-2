@@ -136,7 +136,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   ) : (
                     <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center">
                       <img 
-                        src={product.image} 
+                        src={(product.additionalImages && product.additionalImages.length > 0 ? [product.image, ...product.additionalImages] : [product.image])[selectedImageIndex] || product.image} 
                         alt={product.name} 
                         className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
                         loading="eager"
@@ -144,6 +144,25 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                     </div>
                   )}
                 </div>
+              );
+            })()}
+            {product.additionalImages && product.additionalImages.length > 0 && !product.bundleImages && (
+              <div className="flex gap-3 px-1">
+                {[product.image, ...product.additionalImages].map((src, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImageIndex(idx)}
+                    className={cn(
+                      "w-20 h-20 md:w-24 md:h-24 bg-secondary overflow-hidden border-2 transition-all flex items-center justify-center",
+                      selectedImageIndex === idx ? "border-accent" : "border-transparent opacity-70 hover:opacity-100"
+                    )}
+                    aria-label={`View image ${idx + 1}`}
+                  >
+                    <img src={src} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            )}
               );
             })()}
             <ProductAttributes productId={product.id} />
