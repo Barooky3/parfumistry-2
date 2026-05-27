@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, orderNumber } = await req.json();
+    const { email, orderNumber, skipHistory } = await req.json();
 
     const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const rawNum = typeof orderNumber === "string" || typeof orderNumber === "number"
@@ -50,12 +50,14 @@ Deno.serve(async (req) => {
     const matched = !!order;
     const ipHint = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
 
-    await supabase.from("tracking_lookups").insert({
-      email: cleanEmail,
-      order_number: numericOrder,
-      matched,
-      ip_hint: ipHint,
-    });
+    if (!skipHistory) {
+      await supabase.from("tracking_lookups").insert({
+        email: cleanEmail,
+        order_number: numericOrder,
+        matched,
+        ip_hint: ipHint,
+      });
+    }
 
     if (!matched) {
       return new Response(

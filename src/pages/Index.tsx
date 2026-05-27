@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { lazy, Suspense } from 'react';
 import { Input } from '@/components/ui/input';
 import ProofCarousel from '@/components/home/ProofCarousel';
+import HomeTrackOrder from '@/components/home/HomeTrackOrder';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product';
 import { getBestsellers } from '@/data/products';
@@ -140,6 +141,10 @@ const Index = () => {
 
       {/* Proof Photo Carousel */}
       <ProofCarousel />
+
+      {/* Track Your Order */}
+      <HomeTrackOrder />
+
 
       {/* Bestsellers Section */}
       <section className="py-14 md:py-20 bg-background">
