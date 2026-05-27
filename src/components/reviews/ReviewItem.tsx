@@ -3,7 +3,7 @@ import { Star, BadgeCheck, Clock, Pencil, Trash2, Check, X, Languages, Loader2 }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { UnifiedReview, adminUpdateReview, adminDeleteReview } from '@/hooks/useReviews';
+import { UnifiedReview, adminUpdateReview, adminDeleteReview, adminAddReview, hideSeedReview } from '@/hooks/useReviews';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
