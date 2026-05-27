@@ -7,7 +7,7 @@ import ProofCarousel from '@/components/home/ProofCarousel';
 import HomeTrackOrder from '@/components/home/HomeTrackOrder';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product';
-import { getBestsellers } from '@/data/products';
+import { getBestsellers, products } from '@/data/products';
 import { BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
@@ -22,8 +22,8 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredBestsellers = searchQuery.trim()
-    ? allBestsellers.filter(p =>
+  const filteredProducts = searchQuery.trim()
+    ? products.filter(p =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.brand.toLowerCase().includes(searchQuery.toLowerCase())
       )
@@ -171,14 +171,14 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-5">
-            {filteredBestsellers.slice(0, 10).map((product) => (
+            {filteredProducts.slice(0, 10).map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
               </div>
             ))}
           </div>
           
-          {searchQuery.trim() && filteredBestsellers.length === 0 && (
+          {searchQuery.trim() && filteredProducts.length === 0 && (
             <p className="text-center text-muted-foreground py-8">
               No fragrances found matching "{searchQuery}"
             </p>
