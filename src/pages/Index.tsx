@@ -171,14 +171,14 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-5">
-            {filteredBestsellers.slice(0, 10).map((product) => (
+            {filteredProducts.slice(0, 10).map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
               </div>
             ))}
           </div>
           
-          {searchQuery.trim() && filteredBestsellers.length === 0 && (
+          {searchQuery.trim() && filteredProducts.length === 0 && (
             <p className="text-center text-muted-foreground py-8">
               No fragrances found matching "{searchQuery}"
             </p>
