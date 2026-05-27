@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Star, Plus, ChevronLeft, ChevronRight, LogIn, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useReviews, applyReviewOrder, useReviewOrder, saveRemoteReviewOrder } from '@/hooks/useReviews';
+import { useReviews, applyReviewOrder, useReviewOrder, saveRemoteReviewOrder, getLocalReviewOrder, fetchRemoteReviewOrder } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
@@ -80,6 +80,21 @@ const HomeReviews = () => {
   const [page, setPage] = useState(1);
 
   const [order, setOrder] = useReviewOrder();
+
+  // One-time: if admin has a local order from before, push it to the server so it becomes universal.
+  const seededRef = useRef(false);
+  useEffect(() => {
+    if (seededRef.current) return;
+    if (!isAdmin) return;
+    const local = getLocalReviewOrder();
+    if (local.length === 0) return;
+    seededRef.current = true;
+    fetchRemoteReviewOrder().then((remote) => {
+      if (remote.length === 0) {
+        saveRemoteReviewOrder(local).then(() => setOrder(local));
+      }
+    });
+  }, [isAdmin, setOrder]);
 
   const sorted = useMemo(() => {
     const base = [...visibleReviews].sort((a, b) => {
