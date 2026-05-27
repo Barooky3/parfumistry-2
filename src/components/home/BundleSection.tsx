@@ -10,6 +10,15 @@ import React from 'react';
 
 const ADMIN_EMAILS = ['ewhz3384@gmail.com'];
 
+const BUNDLE_TAGS: Record<string, string> = {
+  'evening-sweetheart-bundle': 'Evening Sweetheart for Winter',
+  'young-playboy-bundle': 'Young Playboy for Winter and Summer',
+  'sleek-and-clean-bundle': 'Sleek and Clean for Summer',
+  'jpg-bundle': 'JPG for All Seasons',
+};
+
+const getBundleTag = (id: string): string | undefined => BUNDLE_TAGS[id];
+
 const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
   const { user } = useAuth();
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || '');
