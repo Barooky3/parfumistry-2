@@ -1,5 +1,6 @@
 import { Product } from '@/types/product';
 import laytonImage from '@/assets/products/layton.png';
+import althairLifestyle from '@/assets/products/althair-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -172,6 +173,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4A76A',
     image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-althair-7480525.png?v=1768068548&width=1200',
+    additionalImages: [althairLifestyle],
     affiliateUrl: '/product/althair',
     inStock: true,
     featured: true,

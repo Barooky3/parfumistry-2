@@ -34,6 +34,7 @@ export interface Product {
   scentNotesImage?: string;
   accentColor?: string; // HSL color matching the bottle/juice
   image: string;
+  additionalImages?: string[];
   affiliateUrl: string;
   inStock: boolean;
   featured?: boolean;
