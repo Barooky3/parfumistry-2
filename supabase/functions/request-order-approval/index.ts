@@ -67,9 +67,7 @@ function buildApprovalEmailHtml(
     </td></tr>`;
   }).join("");
 
-  const addressText = shippingAddress
-    ? [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ")
-    : "N/A";
+  const addressText = shippingAddress?.country || "N/A";
 
   const orderNumRow = orderNumber
     ? `<tr><td style="padding:4px 0;color:#999;width:120px;">Order #:</td><td style="padding:4px 0;"><strong>#${orderNumber}</strong></td></tr>`
