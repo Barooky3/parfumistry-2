@@ -360,6 +360,21 @@ export default function AdminOrders() {
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
 
+  // Live counter for Rewarble / iDEAL / PayPal (all use 'rewarble' ref prefix)
+  const liveCounter = useMemo(() => {
+    const resetDate = new Date(liveResetAt);
+    let gross = 0;
+    let count = 0;
+    for (const o of approvedOrders) {
+      const ref = o.checkout_reference || "";
+      if (!ref.startsWith("rewarble")) continue;
+      if (new Date(o.created_at) < resetDate) continue;
+      gross += o.total_amount;
+      count++;
+    }
+    return { gross, count, net: gross - adSpend };
+  }, [approvedOrders, liveResetAt, adSpend]);
+
   // Order statistics by country with time filter
   const countryStats = useMemo(() => {
     const now = new Date();
