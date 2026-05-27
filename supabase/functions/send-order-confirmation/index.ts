@@ -247,7 +247,13 @@ function buildEmailHtml(
   orderNumber?: number | null,
   discountCode?: string | null,
   discountPercent?: number | null,
+  shippingMethod?: string | null,
 ): string {
+  const isExpress = shippingMethod === 'express';
+  const trackingDays = isExpress ? '1 business day' : '2 business days';
+  const shippingCopy = isExpress
+    ? 'Express Shipping via DHL<br>Worldwide: 2&ndash;4 business days'
+    : 'Shipping via DHL<br>EU &amp; UK: 4&ndash;6 business days &middot; Rest of World: 6&ndash;8 business days';
   const year = new Date().getFullYear();
   const orderNumSection = orderNumber
     ? `<p style="font-size: 13px; color: #999; margin: 0 0 8px 0;">Order Number: <strong style="color: #1a1a1a; font-size: 15px;">#${orderNumber}</strong></p>`
