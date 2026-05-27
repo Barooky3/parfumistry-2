@@ -6,7 +6,6 @@ import { CartDrawer } from './CartDrawer';
 
 // Lazy-load non-critical widgets to reduce initial main-thread work
 const SocialProofPopup = lazy(() => import('@/components/SocialProofPopup').then(m => ({ default: m.SocialProofPopup })));
-const WelcomePopup = lazy(() => import('@/components/WelcomePopup').then(m => ({ default: m.WelcomePopup })));
 const VisitorTracker = lazy(() => import('@/components/VisitorTracker').then(m => ({ default: m.VisitorTracker })));
 const RejectionNotificationPopup = lazy(() => import('@/components/RejectionNotificationPopup').then(m => ({ default: m.RejectionNotificationPopup })));
 const BannedUserPopup = lazy(() => import('@/components/BannedUserPopup').then(m => ({ default: m.BannedUserPopup })));
@@ -43,11 +42,9 @@ export const Layout = ({ children }: LayoutProps) => {
       {showDeferred && (
         <Suspense fallback={null}>
           <SocialProofPopup />
-          <WelcomePopup />
           <VisitorTracker />
           <RejectionNotificationPopup />
           <BannedUserPopup />
-          
         </Suspense>
       )}
     </div>
