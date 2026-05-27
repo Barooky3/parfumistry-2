@@ -17,7 +17,7 @@ function escapeHtml(text: string): string {
 
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
-const SITE_URL = "https://parfumistry.com";
+const SITE_URL = "https://parfumistry.net";
 
 // Actual perfume bottle images from profparfums.store
 // IMPORTANT: More specific keys MUST come before less specific ones to avoid prefix matching bugs
