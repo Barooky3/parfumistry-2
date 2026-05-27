@@ -166,7 +166,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-accent hover:text-accent hover:bg-transparent"
+                className="h-9 w-9 md:h-10 md:w-10 text-accent hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/account" aria-label="My Account">
@@ -177,7 +177,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+                className="h-9 w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/login" aria-label="Account">
@@ -190,7 +190,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="relative h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className="relative h-9 w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
               onClick={toggleCart}
               aria-label="Open cart"
             >
@@ -206,7 +206,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className="md:hidden h-9 w-9 text-foreground hover:text-accent hover:bg-transparent"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
