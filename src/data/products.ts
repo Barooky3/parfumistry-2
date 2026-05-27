@@ -1,4 +1,5 @@
 import { Product } from '@/types/product';
+import laytonImage from '@/assets/products/layton.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -884,7 +885,7 @@ export const products: Product[] = [
       'Pepper': '/scent-notes/pepper.png',
     },
     accentColor: '#6A5ACD',
-    image: 'https://profparfums.store/cdn/shop/files/parfums-de-marly-layton-9771652.png?v=1768068489&width=1200',
+    image: laytonImage,
     affiliateUrl: '/product/layton',
     inStock: true,
     featured: true,
