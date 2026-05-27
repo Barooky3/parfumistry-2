@@ -132,7 +132,7 @@ export const SocialProofPopup = () => {
   }, [scheduleNext]);
 
   useEffect(() => {
-    const initialTimeout = setTimeout(showNotification, 8000);
+    const initialTimeout = setTimeout(showNotification, 12000);
     return () => {
       clearTimeout(initialTimeout);
       if (timerRef.current) clearTimeout(timerRef.current);
