@@ -7,7 +7,7 @@ import ProofCarousel from '@/components/home/ProofCarousel';
 import HomeTrackOrder from '@/components/home/HomeTrackOrder';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product';
-import { getBestsellers } from '@/data/products';
+import { getBestsellers, products } from '@/data/products';
 import { BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
