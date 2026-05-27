@@ -1,13 +1,11 @@
-import { forwardRef, useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Flame, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
-import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
