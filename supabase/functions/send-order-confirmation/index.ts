@@ -370,13 +370,20 @@ function buildAdminInvoiceHtml(
   const itemRows = items.map((item, i) => {
     const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
-    const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
-    const productLink = getProductLink(item.name, item.brand, item.affiliateUrl);
+    const isSample = item.price === 0 || /sample/i.test(item.name);
+    const cleanName = item.name.replace(/\s*[—-]\s*Free\s*2ml\s*Sample\s*🎁?/i, '').trim();
+    const bg = isSample ? "#fdf8ee" : (i % 2 === 0 ? "#ffffff" : "#fafaf8");
+    const productLink = getProductLink(cleanName, item.brand, item.affiliateUrl);
+    const sampleTag = isSample
+      ? `<span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 6px;border-radius:3px;margin-right:6px;">FREE SAMPLE 🎁</span>`
+      : '';
+    const priceCell = isSample ? `<span style="color:#c9a96e;font-weight:600;">FREE</span>` : `€${item.price.toFixed(2)}`;
+    const totalCell = isSample ? `<span style="color:#c9a96e;font-weight:600;">€0.00</span>` : `€${lineTotal}`;
     return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <a href="${productLink}" style="color:#c9a96e;font-weight:500;text-decoration:none;">(link)</a></td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${sampleTag}${item.brand} — ${cleanName}${mlLabel} <a href="${productLink}" style="color:#c9a96e;font-weight:500;text-decoration:none;">(link)</a></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">${priceCell}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">${totalCell}</td>
     </tr>`;
   }).join("");
 
