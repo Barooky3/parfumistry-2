@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Star, ArrowRight, Plus } from 'lucide-react';
+import { Star, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useReviews } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
+
+const PAGE_SIZE = 6;
 
 const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) => {
   const cls = size === 'lg' ? 'h-5 w-5' : 'h-3.5 w-3.5';
@@ -23,23 +24,29 @@ const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'l
 const HomeReviews = () => {
   const { visibleReviews, isAdmin, refresh } = useReviews();
   const [submitOpen, setSubmitOpen] = useState(false);
+  const [filter, setFilter] = useState<number | 'all'>('all');
+  const [page, setPage] = useState(1);
 
-  // Sort: pending-own first (so user sees their own), then by date desc (db before seed naturally)
   const sorted = useMemo(() => {
     return [...visibleReviews].sort((a, b) => {
       if (a.isOwn && a.status === 'pending' && !(b.isOwn && b.status === 'pending')) return -1;
       if (b.isOwn && b.status === 'pending' && !(a.isOwn && a.status === 'pending')) return 1;
-      // db approved before seed
       if (a.source === 'db' && b.source === 'seed') return -1;
       if (b.source === 'db' && a.source === 'seed') return 1;
       return 0;
     });
   }, [visibleReviews]);
 
-  const previewReviews = sorted.slice(0, 4);
+  const filtered = useMemo(() => {
+    if (filter === 'all') return sorted;
+    return sorted.filter((r) => r.rating === filter);
+  }, [sorted, filter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageReviews = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const stats = useMemo(() => {
-    // Stats include all approved reviews (seed + db approved). Exclude own-pending from public-facing avg.
     const approved = visibleReviews.filter((r) => r.status === 'approved');
     const total = approved.length;
     const avg = total === 0 ? 0 : approved.reduce((s, r) => s + r.rating, 0) / total;
@@ -51,6 +58,11 @@ const HomeReviews = () => {
   }, [visibleReviews]);
 
   const maxCount = Math.max(...stats.counts.map((c) => c.count), 1);
+
+  const handleFilter = (val: number | 'all') => {
+    setFilter(val);
+    setPage(1);
+  };
 
   return (
     <section className="py-14 md:py-20 bg-background">
@@ -85,7 +97,13 @@ const HomeReviews = () => {
 
             <div className="space-y-2 max-w-md">
               {stats.counts.map(({ star, count }) => (
-                <div key={star} className="flex items-center gap-3 text-sm">
+                <button
+                  key={star}
+                  onClick={() => handleFilter(star)}
+                  className={`w-full flex items-center gap-3 text-sm group transition-opacity ${
+                    filter !== 'all' && filter !== star ? 'opacity-50 hover:opacity-100' : ''
+                  }`}
+                >
                   <span className="text-muted-foreground w-3">{star}</span>
                   <Star className="h-3.5 w-3.5 fill-accent text-accent shrink-0" />
                   <div className="flex-1 h-2 bg-muted/40 rounded-full overflow-hidden">
@@ -95,37 +113,89 @@ const HomeReviews = () => {
                     />
                   </div>
                   <span className="text-muted-foreground w-6 text-right">{count}</span>
-                </div>
+                </button>
               ))}
             </div>
           </div>
 
-          {/* Right: Preview reviews */}
+          {/* Right: Reviews list */}
           <div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-5 uppercase tracking-wider">
-              <span>All ratings</span>
-              <span>·</span>
-              <span>Newest first</span>
-            </div>
-
-            <div className="divide-y divide-border">
-              {previewReviews.map((review) => (
-                <ReviewItem
-                  key={review.id}
-                  review={review}
-                  isAdmin={isAdmin}
-                  onChanged={refresh}
-                />
+            {/* Filter buttons */}
+            <div className="flex flex-wrap items-center gap-2 mb-5">
+              <button
+                onClick={() => handleFilter('all')}
+                className={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors ${
+                  filter === 'all'
+                    ? 'bg-accent text-accent-foreground border-accent'
+                    : 'bg-transparent text-muted-foreground border-border hover:border-accent hover:text-foreground'
+                }`}
+              >
+                All
+              </button>
+              {[5, 4, 3, 2, 1].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => handleFilter(star)}
+                  className={`px-3 py-1.5 text-xs uppercase tracking-wider border inline-flex items-center gap-1 transition-colors ${
+                    filter === star
+                      ? 'bg-accent text-accent-foreground border-accent'
+                      : 'bg-transparent text-muted-foreground border-border hover:border-accent hover:text-foreground'
+                  }`}
+                >
+                  {star}
+                  <Star
+                    className={`h-3 w-3 ${
+                      filter === star ? 'fill-accent-foreground text-accent-foreground' : 'fill-accent text-accent'
+                    }`}
+                  />
+                </button>
               ))}
             </div>
 
-            <Link
-              to="/reviews"
-              className="inline-flex items-center gap-2 text-accent hover:text-accent/80 text-sm font-medium mt-8 group"
-            >
-              View all reviews
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+            {pageReviews.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-10 text-center">
+                No reviews match this filter.
+              </p>
+            ) : (
+              <div className="divide-y divide-border">
+                {pageReviews.map((review) => (
+                  <ReviewItem
+                    key={review.id}
+                    review={review}
+                    isAdmin={isAdmin}
+                    onChanged={refresh}
+                  />
+                ))}
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-8 pt-4 border-t border-border">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-none"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Previous
+                </Button>
+                <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-none"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
