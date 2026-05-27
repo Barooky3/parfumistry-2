@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Star, BadgeCheck, Check, Trash2, RefreshCw, Plus, Inbox } from 'lucide-react';
+import { Star, Check, Trash2, RefreshCw, Plus, Inbox } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { adminApproveReview, adminDeleteReview, DbReview } from '@/hooks/useReviews';
