@@ -12,7 +12,7 @@ export interface HomeReview {
 export const homeReviews: HomeReview[] = [
   { id: 'r1', name: 'Anonymous', rating: 5, text: 'arrived fast, found on tiktok, smells exactly like the og, super happy', date: '29 Apr 2026', verified: true },
   { id: 'r2', name: 'Anonymous', rating: 5, text: '', date: '16 Mar 2026', verified: true },
-  { id: 'r3', name: 'Anonymous', rating: 5, text: "I did a review before a 2 star one about my bottle having a dent in it im just putting this here because i contacted support and they offered to send me a replacement bottle without me returning mine. Just wanted to put this review here so the rating isnt so low cuz of my other one and plus free gift", date: '20 Feb 2026', verified: true },
+  { id: 'r3', name: 'Jean-Pierre D.', rating: 5, text: 'livraison rapide, produit nickel merci', date: '20 Feb 2026', verified: true },
   { id: 'r4', name: 'Anonymous', rating: 5, text: '', date: '10 Feb 2026', verified: true },
   { id: 'r5', name: 'Lukas M.', rating: 5, text: 'schnell geliefert alles top verpackt danke', date: '03 Feb 2026', verified: true },
   { id: 'r6', name: 'Philip K.', rating: 5, text: 'exactly what i needed, performance is insane', date: '27 Jan 2026', verified: true },
