@@ -62,10 +62,9 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           </div>
         )}
         {/* Image Container */}
-        <Link 
-          to={`/product/${product.id}`} 
+        <Link
+          to={`/product/${product.id}`}
           className="block relative mb-2.5"
-          onClick={handleCardClick}
         >
          {(() => {
             const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
