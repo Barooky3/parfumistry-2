@@ -21,7 +21,7 @@ export const homeReviews: HomeReview[] = [
   { id: 'r9', name: 'Michael S.', rating: 5, text: 'alles cool, offseason bestellung kam problemlos', date: '06 Jan 2026', verified: true },
   { id: 'r10', name: 'Anonymous', rating: 5, text: 'discreet packaging, no complaints', date: '30 Dec 2025', verified: true },
   { id: 'r11', name: 'James T.', rating: 5, text: 'winter scent sorted, will reorder', date: '23 Dec 2025', verified: true },
-  { id: 'r12', name: 'Carmen S.', rating: 4, text: 'gute qualität, versand nach spanien etwas langsam', date: '16 Dec 2025', verified: true },
+  { id: 'r12', name: 'Carmen S.', rating: 4, text: 'buena calidad, el envío a España un poco lento', date: '16 Dec 2025', verified: true },
   { id: 'r13', name: 'Stefan B.', rating: 5, text: 'top produkt und schneller versand danke', date: '09 Dec 2025', verified: true },
   { id: 'r14', name: 'Anonymous', rating: 5, text: 'reliable, discreet, happy with it', date: '02 Dec 2025', verified: true },
   { id: 'r15', name: 'Julia W.', rating: 5, text: 'diskrete verpackung produkt passt empfehlung', date: '25 Nov 2025', verified: true },
