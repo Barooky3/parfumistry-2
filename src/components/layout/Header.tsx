@@ -284,7 +284,7 @@ export const Header = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: (navLinkKeys.length + 1) * 0.05, duration: 0.3 }}
+                transition={{ delay: (navLinkKeys.length + 2) * 0.05, duration: 0.3 }}
               >
                 <LanguageSelector mobile />
               </motion.div>
@@ -292,7 +292,7 @@ export const Header = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: (navLinkKeys.length + 2) * 0.05, duration: 0.3 }}
+                transition={{ delay: (navLinkKeys.length + 3) * 0.05, duration: 0.3 }}
               >
                 <div className="py-3">
                   <select
