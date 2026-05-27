@@ -203,6 +203,11 @@ const Index = () => {
       {/* Bundle Section */}
       <BundleSection />
 
+      {/* Customer Reviews */}
+      <Suspense fallback={null}>
+        <HomeReviews />
+      </Suspense>
+
       {/* FAQ Section */}
       <FAQSection />
 
