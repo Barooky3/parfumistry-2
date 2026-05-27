@@ -14,6 +14,10 @@ import strongerWithYouIntenselyLifestyle from '@/assets/products/stronger-with-y
 import bornInRomaLifestyle from '@/assets/products/born-in-roma-lifestyle.png';
 import leMaleElixirLifestyle2 from '@/assets/products/le-male-elixir-lifestyle-2.png';
 import leMaleLeParfumLifestyle from '@/assets/products/le-male-le-parfum-lifestyle.png';
+import theMostWantedParfumLifestyle from '@/assets/products/the-most-wanted-parfum-lifestyle.png';
+import leBeauLeParfumLifestyle from '@/assets/products/le-beau-le-parfum-lifestyle.png';
+import yslYEdpLifestyle from '@/assets/products/ysl-y-edp-lifestyle.png';
+import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -980,6 +984,7 @@ export const products: Product[] = [
     },
     accentColor: '#003B5C',
     image: 'https://profparfums.store/cdn/shop/files/CD9D450B-B45D-4AB9-9750-9BD6AD00DB2F_png_only_1.png?v=1768068490&width=1200',
+    additionalImages: [leBeauLeParfumLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
@@ -1136,6 +1141,7 @@ export const products: Product[] = [
     },
     accentColor: '#C9A96E',
     image: 'https://profparfums.store/cdn/shop/files/product_3_matched_1.png?v=1768068488&width=1200',
+    additionalImages: [theMostWantedParfumLifestyle],
     affiliateUrl: '/product/the-most-wanted-parfum',
     inStock: true,
     featured: true,
@@ -1359,6 +1365,7 @@ export const products: Product[] = [
     },
     accentColor: '#3A3A8C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-myslf-eau-de-parfum-1896916.png?v=1768068488&width=1200',
+    additionalImages: [myselfEdpLifestyle],
     affiliateUrl: '/product/myself-edp',
     inStock: true,
     variants: [
@@ -1429,6 +1436,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
+    additionalImages: [yslYEdpLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
