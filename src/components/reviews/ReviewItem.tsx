@@ -58,7 +58,7 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
   const [translating, setTranslating] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
 
-  const canEdit = isAdmin;
+  const canEdit = isAdmin || (review.source === 'db' && review.isOwn);
   const showTranslateBtn = !!review.text && isLikelyNonEnglish(review.text);
 
   const handleTranslate = async () => {
@@ -93,11 +93,14 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
         text: editText,
       });
     } else {
-      const res = await adminUpdateReview(review.id, {
+      const patch: any = {
         customer_name: editName,
         rating: editRating,
         text: editText || null,
-      });
+      };
+      // Non-admin edits go back to pending for re-approval
+      if (!isAdmin) patch.status = 'pending';
+      const res = await adminUpdateReview(review.id, patch);
       if (res.error) {
         setBusy(false);
         toast({ title: 'Update failed', description: res.error.message, variant: 'destructive' });
@@ -105,7 +108,7 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
       }
     }
     setBusy(false);
-    toast({ title: 'Review updated' });
+    toast({ title: isAdmin ? 'Review updated' : 'Review updated — pending re-approval' });
     setEditing(false);
     onChanged?.();
   };
