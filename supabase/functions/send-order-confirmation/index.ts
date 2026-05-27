@@ -17,7 +17,7 @@ function escapeHtml(text: string): string {
 
 const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
-const SITE_URL = "https://parfumistry.com";
+const SITE_URL = "https://parfumistry.net";
 
 // Actual perfume bottle images from profparfums.store
 // IMPORTANT: More specific keys MUST come before less specific ones to avoid prefix matching bugs
@@ -247,7 +247,13 @@ function buildEmailHtml(
   orderNumber?: number | null,
   discountCode?: string | null,
   discountPercent?: number | null,
+  shippingMethod?: string | null,
 ): string {
+  const isExpress = shippingMethod === 'express';
+  const trackingDays = isExpress ? '1 business day' : '2 business days';
+  const shippingCopy = isExpress
+    ? 'Express Shipping via DHL<br>Worldwide: 2&ndash;4 business days'
+    : 'Shipping via DHL<br>EU &amp; UK: 4&ndash;6 business days &middot; Rest of World: 6&ndash;8 business days';
   const year = new Date().getFullYear();
   const orderNumSection = orderNumber
     ? `<p style="font-size: 13px; color: #999; margin: 0 0 8px 0;">Order Number: <strong style="color: #1a1a1a; font-size: 15px;">#${orderNumber}</strong></p>`
@@ -288,7 +294,7 @@ function buildEmailHtml(
     orderNumSection,
     '<p style="font-size: 15px; color: #333; margin: 0 0 6px 0; line-height: 1.6;">Hi <strong>' + escapeHtml(customerName) + '</strong>,</p>',
     '<div style="background-color: #faf9f6; border: 2px solid #c9a96e; padding: 16px 24px; border-radius: 8px; text-align: center; margin-bottom: 24px;">',
-    '<p style="font-size: 16px; color: #1a1a1a; margin: 0; font-weight: 500; line-height: 1.6;">📦 Your order has been confirmed and is being prepared for shipment. You will receive your <strong>DHL</strong> tracking number within <strong>2 business days</strong>.</p>',
+    '<p style="font-size: 16px; color: #1a1a1a; margin: 0; font-weight: 500; line-height: 1.6;">📦 Your order has been confirmed and is being prepared for shipment. You will receive your <strong>DHL</strong> tracking number within <strong>' + trackingDays + '</strong>.</p>',
     '</div>',
     '</div>',
 
@@ -314,7 +320,7 @@ function buildEmailHtml(
 
     '<div style="padding: 0 32px; margin-bottom: 24px;">',
     '<div style="background-color: #f0f7f0; border: 1px solid #d4e8d4; padding: 16px 24px; border-radius: 8px; text-align: center;">',
-    '<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">&#128666; Shipping via DHL<br>EU &amp; UK: 4&ndash;6 business days &middot; Rest of World: 6&ndash;8 business days</p>',
+    '<p style="font-size: 14px; color: #2d6a2d; margin: 0; font-weight: 500;">&#128666; ' + shippingCopy + '</p>',
     '</div></div>',
 
     '<div style="padding: 0 32px 32px 32px;">',
@@ -528,7 +534,8 @@ serve(async (req) => {
     const origin = "https://parfumistry.com";
     const itemsHtml = buildItemsHtml(normalizedItems, origin);
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent);
+    const shippingMethod = (shippingAddress as any)?.shippingMethod || null;
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent, shippingMethod);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - Parfumistry` : "Order Confirmed - Parfumistry";
     await sendEmail(customerEmail, emailSubject, html);
