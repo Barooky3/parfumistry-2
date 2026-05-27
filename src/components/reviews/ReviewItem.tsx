@@ -82,6 +82,9 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
       setTranslating(false);
     }
   };
+
+  const handleSave = async () => {
+    setBusy(true);
     const res = await adminUpdateReview(review.id, {
       customer_name: editName,
       rating: editRating,
