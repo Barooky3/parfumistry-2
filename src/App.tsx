@@ -34,7 +34,7 @@ const EmailPreview = lazy(() => import("./pages/EmailPreview"));
 const CustomBundle = lazy(() => import("./pages/CustomBundle"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TrackOrder = lazy(() => import("./pages/TrackOrder"));
-const AllReviews = lazy(() => import("./pages/AllReviews"));
+
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
