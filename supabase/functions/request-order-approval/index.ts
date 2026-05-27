@@ -67,9 +67,7 @@ function buildApprovalEmailHtml(
     </td></tr>`;
   }).join("");
 
-  const addressText = shippingAddress
-    ? [shippingAddress.line1, shippingAddress.city, shippingAddress.postalCode, shippingAddress.country].filter(Boolean).join(", ")
-    : "N/A";
+  const addressText = shippingAddress?.country || "N/A";
 
   const orderNumRow = orderNumber
     ? `<tr><td style="padding:4px 0;color:#999;width:120px;">Order #:</td><td style="padding:4px 0;"><strong>#${orderNumber}</strong></td></tr>`
@@ -87,7 +85,7 @@ function buildApprovalEmailHtml(
       ${orderNumRow}
       <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(customerName)}</strong></td></tr>
       <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(customerEmail)}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Address:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Country:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Total:</td><td style="padding:4px 0;"><strong>€${totalAmount}</strong></td></tr>
     </table>
     <div style="text-align:center;margin-top:24px;margin-bottom:16px;">
@@ -223,11 +221,16 @@ serve(async (req) => {
 
     const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
     const checkoutRef = idempotencyKey ? refPrefix + "-idem-" + idempotencyKey : refPrefix + "-" + Date.now();
+    // Privacy: do NOT store full address. Only persist country + shipping method.
+    const minimalShipping = {
+      country: shippingAddress?.country || null,
+      shippingMethod: (shippingAddress as any)?.shippingMethod || null,
+    };
     const { data: order, error: dbError } = await supabase.from("orders").insert({
       checkout_reference: checkoutRef,
       customer_email: customerEmail,
       customer_name: customerName || "Valued Customer",
-      shipping_address: shippingAddress || {},
+      shipping_address: minimalShipping,
       order_items: normalizedItems,
       total_amount: parseFloat(calculatedTotal),
       status: "pending_approval",
@@ -251,7 +254,7 @@ serve(async (req) => {
       customerEmail,
       normalizedItems,
       calculatedTotal,
-      shippingAddress || {},
+      { country: shippingAddress?.country },
       supabaseUrl,
       paymentMethod,
       giftCardCode,
