@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User, ChevronDown, LogOut } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, ChevronDown, LogOut, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency, CURRENCIES, Currency } from '@/contexts/CurrencyContext';
@@ -76,8 +76,22 @@ export const Header = () => {
             </span>
           </Link>
 
+          {/* FAQ Button — prominent, between logo and nav */}
+          <Link
+            to="/#faq"
+            className={cn(
+              'hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-xs tracking-[0.12em] uppercase transition-all',
+              location.hash === '#faq'
+                ? 'bg-accent text-accent-foreground shadow-md'
+                : 'bg-accent/90 text-accent-foreground hover:bg-accent shadow-sm hover:shadow-md'
+            )}
+          >
+            <HelpCircle className="h-4 w-4" />
+            FAQ
+          </Link>
+
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-10 ml-16">
+          <nav className="hidden md:flex items-center gap-10 ml-auto">
             {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
@@ -227,10 +241,28 @@ export const Header = () => {
                   </Link>
                 </motion.div>
               ))}
+              {/* Mobile FAQ Link */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinkKeys.length * 0.05, duration: 0.3 }}
+              >
+                <Link
+                  to="/#faq"
+                  className={cn(
+                    'text-sm font-medium tracking-[0.1em] py-3 transition-colors border-b border-border block',
+                    location.hash === '#faq'
+                      ? 'text-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  FAQ
+                </Link>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (navLinkKeys.length + 1) * 0.05, duration: 0.3 }}
               >
                 {user ? (
                   <Link
@@ -252,7 +284,7 @@ export const Header = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: (navLinkKeys.length + 1) * 0.05, duration: 0.3 }}
+                transition={{ delay: (navLinkKeys.length + 2) * 0.05, duration: 0.3 }}
               >
                 <LanguageSelector mobile />
               </motion.div>
@@ -260,7 +292,7 @@ export const Header = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: (navLinkKeys.length + 2) * 0.05, duration: 0.3 }}
+                transition={{ delay: (navLinkKeys.length + 3) * 0.05, duration: 0.3 }}
               >
                 <div className="py-3">
                   <select
