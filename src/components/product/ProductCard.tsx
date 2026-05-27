@@ -17,46 +17,18 @@ interface ProductCardProps {
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
-    const { addItem, toggleCart } = useCart();
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
-    const navigate = useNavigate();
-    const [showButtons, setShowButtons] = useState(false);
-    const cardRef = useRef<HTMLDivElement>(null);
     const paddingOverride = useProductPadding(product.id);
-    
+
     const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
     const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
-    
+
     const hasDiscount = product.originalPrice && product.originalPrice > product.price;
     const discountPercent = hasDiscount
       ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
       : 0;
-
-    const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const firstVariant = product.variants?.[0];
-      if (firstVariant) {
-        addItem(product, firstVariant.ml, firstVariant.price);
-      } else {
-        addItem(product);
-      }
-      toggleCart();
-    };
-
-    const handleBuyNow = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const firstVariant = product.variants?.[0];
-      if (firstVariant) {
-        addItem(product, firstVariant.ml, firstVariant.price);
-      } else {
-        addItem(product);
-      }
-      navigate('/checkout');
-    };
 
     // Get top 3 scent notes to display (combine all types)
     const getScentNotesDisplay = () => {
@@ -70,53 +42,11 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     };
 
     const scentNotes = getScentNotesDisplay();
-
-    // Handle touch for mobile - show buttons on touch
-    const handleTouchStart = () => {
-      setShowButtons(true);
-    };
-
-    // Handle card tap for navigation
-    const handleCardClick = (e: React.MouseEvent) => {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      
-      if (isTouchDevice && !showButtons) {
-        // If buttons not showing yet, show them and prevent navigation
-        e.preventDefault();
-        setShowButtons(true);
-      }
-      // If buttons are showing, allow normal navigation
-    };
-
-    // Close buttons when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-        if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
-          setShowButtons(false);
-        }
-      };
-
-      if (showButtons) {
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside);
-      }
-
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        document.removeEventListener('touchstart', handleClickOutside);
-      };
-    }, [showButtons]);
-
     const isBundle = product.isBundle || product.category === 'bundle';
 
     return (
-      <motion.div 
-        ref={(node) => {
-          // Handle both refs
-          if (typeof ref === 'function') ref(node);
-          else if (ref) ref.current = node;
-          (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        }}
+      <motion.div
+        ref={ref}
         className={cn(
           'group relative',
           isBundle && 'ring-2 ring-accent rounded-md',
@@ -124,7 +54,6 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         )}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-        onTouchStart={handleTouchStart}
       >
         {/* Bundle Star Badge */}
         {isBundle && (
