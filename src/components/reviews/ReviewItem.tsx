@@ -86,19 +86,12 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
   const handleSave = async () => {
     setBusy(true);
     if (review.source === 'seed') {
-      // Seed reviews aren't in DB — convert by inserting a new approved review and hiding the seed.
-      const res = await adminAddReview({
-        customer_name: editName,
+      // Store override locally so the seed keeps its position in the list.
+      setSeedOverride(review.id, {
+        name: editName,
         rating: editRating,
         text: editText,
-        images: review.images ?? [],
       });
-      if (res.error) {
-        setBusy(false);
-        toast({ title: 'Update failed', description: res.error.message, variant: 'destructive' });
-        return;
-      }
-      hideSeedReview(review.id);
     } else {
       const res = await adminUpdateReview(review.id, {
         customer_name: editName,
