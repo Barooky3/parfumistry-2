@@ -241,10 +241,28 @@ export const Header = () => {
                   </Link>
                 </motion.div>
               ))}
+              {/* Mobile FAQ Link */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinkKeys.length * 0.05, duration: 0.3 }}
+              >
+                <Link
+                  to="/#faq"
+                  className={cn(
+                    'text-sm font-medium tracking-[0.1em] py-3 transition-colors border-b border-border block',
+                    location.hash === '#faq'
+                      ? 'text-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  FAQ
+                </Link>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (navLinkKeys.length + 1) * 0.05, duration: 0.3 }}
               >
                 {user ? (
                   <Link
