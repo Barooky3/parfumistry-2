@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Star } from 'lucide-react';
+import { Star, ChevronRight } from 'lucide-react';
 
 const proofImages = [
   { src: '/images/proof/aventus-absolu.webp', alt: 'Aventus Absolu' },
