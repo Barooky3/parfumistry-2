@@ -34,6 +34,7 @@ const EmailPreview = lazy(() => import("./pages/EmailPreview"));
 const CustomBundle = lazy(() => import("./pages/CustomBundle"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TrackOrder = lazy(() => import("./pages/TrackOrder"));
+const AllReviews = lazy(() => import("./pages/AllReviews"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -85,6 +86,7 @@ const App = () => (
                 <Route path="/custom-bundle" element={<CustomBundle />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/track-submit" element={<TrackOrder />} />
+                <Route path="/reviews" element={<AllReviews />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

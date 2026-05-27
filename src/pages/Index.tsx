@@ -15,6 +15,7 @@ const logo = '/images/logo.png';
 
 // Lazy-load BrandNavigation since it uses framer-motion eagerly
 const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').then(m => ({ default: m.BrandNavigation })));
+const HomeReviews = lazy(() => import('@/components/home/HomeReviews'));
 
 const Index = () => {
   const allBestsellers = getBestsellers();
@@ -201,6 +202,11 @@ const Index = () => {
 
       {/* Bundle Section */}
       <BundleSection />
+
+      {/* Customer Reviews */}
+      <Suspense fallback={null}>
+        <HomeReviews />
+      </Suspense>
 
       {/* FAQ Section */}
       <FAQSection />
