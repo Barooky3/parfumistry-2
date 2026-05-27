@@ -42,11 +42,9 @@ export const Layout = ({ children }: LayoutProps) => {
       {showDeferred && (
         <Suspense fallback={null}>
           <SocialProofPopup />
-          <WelcomePopup />
           <VisitorTracker />
           <RejectionNotificationPopup />
           <BannedUserPopup />
-          
         </Suspense>
       )}
     </div>
