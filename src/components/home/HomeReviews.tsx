@@ -68,7 +68,7 @@ const HomeReviews = () => {
   };
 
   return (
-    <section className="py-14 md:py-20 bg-background">
+    <section id="reviews-section" className="py-14 md:py-20 bg-background">
       <div className="container">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12">
           <div>
