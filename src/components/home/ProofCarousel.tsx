@@ -139,9 +139,10 @@ const ProofCarousel = () => {
               const el = document.getElementById('reviews-section');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="mt-1.5 text-[10px] tracking-wide uppercase text-muted-foreground border border-border/60 px-3 py-1 hover:border-accent hover:text-accent transition-colors"
+            className="mt-2 group inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase text-foreground bg-secondary/80 border border-border/80 px-4 py-2 rounded-full hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
           >
             Read all reviews
+            <ChevronRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </button>
         </div>
       </div>
