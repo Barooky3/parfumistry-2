@@ -36,6 +36,20 @@ export interface UnifiedReview {
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
+const dbToUnified = (r: DbReview, currentUserId?: string | null): UnifiedReview => ({
+  id: r.id,
+  name: r.customer_name || 'Anonymous',
+  rating: r.rating,
+  text: r.text || '',
+  date: formatDate(r.created_at),
+  verified: true,
+  source: 'db',
+  status: r.status,
+  user_id: r.user_id,
+  isOwn: !!currentUserId && r.user_id === currentUserId,
+  images: Array.isArray(r.images) ? r.images : [],
+});
+
 // ---------------- Shared settings store (DB-backed, with localStorage cache) ----------------
 
 const SEED_OVERRIDES_KEY = 'parfumistry_seed_review_overrides';
@@ -232,6 +246,8 @@ export const useReviews = () => {
   const [dbReviews, setDbReviews] = useState<DbReview[]>([]);
   const [loading, setLoading] = useState(true);
   const isAdmin = user?.email === ADMIN_EMAIL;
+  // Subscribe to shared settings so this hook re-renders when overrides/hidden/order change
+  useReviewSettings();
 
   const fetchReviews = useCallback(async () => {
     setLoading(true);
