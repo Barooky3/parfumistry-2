@@ -462,6 +462,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B4513',
     image: 'https://profparfums.store/cdn/shop/files/valentino-born-in-roma-8991381.png?v=1768068487&width=1200',
+    additionalImages: [bornInRomaLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
