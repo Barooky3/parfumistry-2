@@ -1,5 +1,6 @@
 import { Product } from '@/types/product';
 import laytonImage from '@/assets/products/layton.png';
+import althairLifestyle from '@/assets/products/althair-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
