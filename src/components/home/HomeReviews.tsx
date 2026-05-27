@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Star, Plus, ChevronLeft, ChevronRight, LogIn, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useReviews, applyReviewOrder, setReviewOrder, getReviewOrder } from '@/hooks/useReviews';
+import { useReviews, applyReviewOrder, useReviewOrder, saveRemoteReviewOrder, getLocalReviewOrder, fetchRemoteReviewOrder } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
@@ -79,7 +79,22 @@ const HomeReviews = () => {
   const [filter, setFilter] = useState<number | 'all'>('all');
   const [page, setPage] = useState(1);
 
-  const [orderVersion, setOrderVersion] = useState(0);
+  const [order, setOrder] = useReviewOrder();
+
+  // One-time: if admin has a local order from before, push it to the server so it becomes universal.
+  const seededRef = useRef(false);
+  useEffect(() => {
+    if (seededRef.current) return;
+    if (!isAdmin) return;
+    const local = getLocalReviewOrder();
+    if (local.length === 0) return;
+    seededRef.current = true;
+    fetchRemoteReviewOrder().then((remote) => {
+      if (remote.length === 0) {
+        saveRemoteReviewOrder(local).then(() => setOrder(local));
+      }
+    });
+  }, [isAdmin, setOrder]);
 
   const sorted = useMemo(() => {
     const base = [...visibleReviews].sort((a, b) => {
@@ -89,9 +104,8 @@ const HomeReviews = () => {
       if (b.source === 'db' && a.source === 'seed') return 1;
       return 0;
     });
-    return applyReviewOrder(base);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleReviews, orderVersion]);
+    return applyReviewOrder(base, order);
+  }, [visibleReviews, order]);
 
   const filtered = useMemo(() => {
     if (filter === 'all') return sorted;
@@ -109,10 +123,9 @@ const HomeReviews = () => {
     if (from === -1 || to === -1) return;
     const next = arrayMove(ids, from, to);
     // merge with any existing order so unseen ids aren't lost
-    const existing = getReviewOrder();
-    const merged = [...next, ...existing.filter((id) => !next.includes(id))];
-    setReviewOrder(merged);
-    setOrderVersion((v) => v + 1);
+    const merged = [...next, ...order.filter((id) => !next.includes(id))];
+    setOrder(merged);
+    saveRemoteReviewOrder(merged);
   };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
