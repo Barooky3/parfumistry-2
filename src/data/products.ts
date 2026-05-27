@@ -1,6 +1,9 @@
 import { Product } from '@/types/product';
 import laytonImage from '@/assets/products/layton.png';
 import althairLifestyle from '@/assets/products/althair-lifestyle.png';
+import laytonLifestyle from '@/assets/products/layton-lifestyle.png';
+import delinaLifestyle from '@/assets/products/delina-lifestyle.png';
+import bornInRomaIntenseLifestyle from '@/assets/products/born-in-roma-intense-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -389,6 +392,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A3A',
     image: '/images/scent-notes/born-in-roma-intense.png',
+    additionalImages: [bornInRomaIntenseLifestyle],
     imagePadding: 'p-[1.3rem] md:p-[2.925rem]',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
@@ -508,6 +512,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8A0BF',
     image: 'https://profparfums.store/cdn/shop/files/second_image_matched_dimensions_smaller.png?v=1768068548&width=1200',
+    additionalImages: [delinaLifestyle],
     affiliateUrl: '/product/delina',
     inStock: true,
     featured: true,
@@ -888,6 +893,7 @@ export const products: Product[] = [
     },
     accentColor: '#6A5ACD',
     image: laytonImage,
+    additionalImages: [laytonLifestyle],
     affiliateUrl: '/product/layton',
     inStock: true,
     featured: true,
