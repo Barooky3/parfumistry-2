@@ -60,9 +60,6 @@ const HomeReviews = () => {
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground mb-3">
               Customer Reviews
             </h2>
-            <p className="text-sm md:text-base text-muted-foreground max-w-2xl">
-              See what fragrance lovers around the world are saying about Parfumistry. All reviews are from verified customers.
-            </p>
           </div>
           <Button
             onClick={() => setSubmitOpen(true)}

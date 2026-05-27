@@ -66,9 +66,6 @@ const AllReviews = () => {
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-3">
               Customer Reviews
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground max-w-2xl">
-              See what fragrance lovers around the world are saying about Parfumistry. All reviews are from verified customers.
-            </p>
           </div>
           <Button onClick={() => setSubmitOpen(true)} className="rounded-none whitespace-nowrap" size="sm">
             <Plus className="h-4 w-4 mr-1.5" />
