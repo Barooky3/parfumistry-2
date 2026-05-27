@@ -6,7 +6,7 @@ import { CURRENCIES } from "@/contexts/CurrencyContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown } from "lucide-react";
+import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, Star } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
@@ -126,6 +126,14 @@ export default function AdminOrders() {
     try { return JSON.parse(localStorage.getItem("admin_live_reset_history") || "[]"); } catch { return []; }
   });
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [hassanMarked, setHassanMarked] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set();
+    try { return new Set(JSON.parse(localStorage.getItem("admin_hassan_marked") || "[]")); } catch { return new Set(); }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("admin_hassan_marked", JSON.stringify(Array.from(hassanMarked)));
+  }, [hassanMarked]);
 
   useEffect(() => {
     localStorage.setItem("admin_live_reset_at", liveResetAt);
@@ -1355,7 +1363,7 @@ export default function AdminOrders() {
               const pm = getPaymentMethod(order.checkout_reference);
 
               return (
-                <div key={order.id} className="border rounded-lg p-5 bg-card">
+                <div key={order.id} className={`border rounded-lg p-5 ${hassanMarked.has(order.id) ? "bg-yellow-50 border-yellow-300" : "bg-card"}`}>
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
@@ -1530,6 +1538,20 @@ export default function AdminOrders() {
                       disabled={actionLoading.has(order.id + "-dismiss")}
                     >
                       <Trash2 className="h-4 w-4 mr-1" /> {actionLoading.has(order.id + "-dismiss") ? "Removing..." : "Remove"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className={hassanMarked.has(order.id) ? "text-yellow-700 bg-yellow-100 hover:bg-yellow-200" : "text-muted-foreground"}
+                      onClick={() => {
+                        setHassanMarked((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(order.id)) next.delete(order.id); else next.add(order.id);
+                          return next;
+                        });
+                      }}
+                    >
+                      <Star className="h-4 w-4 mr-1" /> Hassan
                     </Button>
                     <Button
                       size="sm"
