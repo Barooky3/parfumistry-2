@@ -70,28 +70,26 @@ export const Header = () => {
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center shrink-0">
             <span className="text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
-              Parfumistry
+              Pafory
             </span>
           </Link>
 
-          {/* FAQ Button — prominent, between logo and nav */}
-          <Link
-            to="/#faq"
-            className={cn(
-              'hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-xs tracking-[0.12em] uppercase transition-all',
-              location.hash === '#faq'
-                ? 'bg-accent text-accent-foreground shadow-md'
-                : 'bg-accent/90 text-accent-foreground hover:bg-accent shadow-sm hover:shadow-md'
-            )}
-          >
-            <HelpCircle className="h-4 w-4" />
-            FAQ
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-10 ml-auto">
+          {/* Desktop Navigation + FAQ */}
+          <nav className="hidden md:flex items-center gap-6 ml-8 mr-auto">
+            <Link
+              to="/#faq"
+              className={cn(
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.1em] uppercase transition-all',
+                location.hash === '#faq'
+                  ? 'bg-accent text-accent-foreground'
+                  : 'bg-accent/80 text-accent-foreground hover:bg-accent'
+              )}
+            >
+              <HelpCircle className="h-3 w-3" />
+              FAQ
+            </Link>
             {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
