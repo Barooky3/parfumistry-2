@@ -1,13 +1,62 @@
 import { useMemo, useState } from 'react';
-import { Star, Plus, ChevronLeft, ChevronRight, LogIn } from 'lucide-react';
+import { Star, Plus, ChevronLeft, ChevronRight, LogIn, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useReviews } from '@/hooks/useReviews';
+import { useReviews, applyReviewOrder, setReviewOrder, getReviewOrder } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const PAGE_SIZE = 8;
+
+const SortableReviewRow = ({
+  id,
+  isAdmin,
+  children,
+}: {
+  id: string;
+  isAdmin: boolean;
+  children: React.ReactNode;
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    background: isDragging ? 'hsl(var(--muted) / 0.3)' : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="relative flex items-start">
+      {isAdmin && (
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="mt-6 mr-2 p-1 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
+          aria-label="Drag to reorder"
+        >
+          <GripVertical className="h-4 w-4" />
+        </button>
+      )}
+      <div className="flex-1 min-w-0">{children}</div>
+    </div>
+  );
+};
 
 const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) => {
   const cls = size === 'lg' ? 'h-5 w-5' : 'h-3.5 w-3.5';
