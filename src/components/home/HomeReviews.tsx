@@ -1,13 +1,62 @@
 import { useMemo, useState } from 'react';
-import { Star, Plus, ChevronLeft, ChevronRight, LogIn } from 'lucide-react';
+import { Star, Plus, ChevronLeft, ChevronRight, LogIn, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useReviews } from '@/hooks/useReviews';
+import { useReviews, applyReviewOrder, setReviewOrder, getReviewOrder } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const PAGE_SIZE = 8;
+
+const SortableReviewRow = ({
+  id,
+  isAdmin,
+  children,
+}: {
+  id: string;
+  isAdmin: boolean;
+  children: React.ReactNode;
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    background: isDragging ? 'hsl(var(--muted) / 0.3)' : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="relative flex items-start">
+      {isAdmin && (
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="mt-6 mr-2 p-1 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
+          aria-label="Drag to reorder"
+        >
+          <GripVertical className="h-4 w-4" />
+        </button>
+      )}
+      <div className="flex-1 min-w-0">{children}</div>
+    </div>
+  );
+};
 
 const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) => {
   const cls = size === 'lg' ? 'h-5 w-5' : 'h-3.5 w-3.5';
@@ -30,20 +79,41 @@ const HomeReviews = () => {
   const [filter, setFilter] = useState<number | 'all'>('all');
   const [page, setPage] = useState(1);
 
+  const [orderVersion, setOrderVersion] = useState(0);
+
   const sorted = useMemo(() => {
-    return [...visibleReviews].sort((a, b) => {
+    const base = [...visibleReviews].sort((a, b) => {
       if (a.isOwn && a.status === 'pending' && !(b.isOwn && b.status === 'pending')) return -1;
       if (b.isOwn && b.status === 'pending' && !(a.isOwn && a.status === 'pending')) return 1;
       if (a.source === 'db' && b.source === 'seed') return -1;
       if (b.source === 'db' && a.source === 'seed') return 1;
       return 0;
     });
-  }, [visibleReviews]);
+    return applyReviewOrder(base);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleReviews, orderVersion]);
 
   const filtered = useMemo(() => {
     if (filter === 'all') return sorted;
     return sorted.filter((r) => r.rating === filter);
   }, [sorted, filter]);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  const handleDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    const ids = sorted.map((r) => r.id);
+    const from = ids.indexOf(String(active.id));
+    const to = ids.indexOf(String(over.id));
+    if (from === -1 || to === -1) return;
+    const next = arrayMove(ids, from, to);
+    // merge with any existing order so unseen ids aren't lost
+    const existing = getReviewOrder();
+    const merged = [...next, ...existing.filter((id) => !next.includes(id))];
+    setReviewOrder(merged);
+    setOrderVersion((v) => v + 1);
+  };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -198,7 +268,8 @@ const HomeReviews = () => {
           </div>
 
           <p className="text-xs text-muted-foreground mb-4">
-            Newest first · Showing {pageReviews.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–
+            {isAdmin ? 'Admin: drag the handle to reorder · ' : 'Newest first · '}
+            Showing {pageReviews.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–
             {(currentPage - 1) * PAGE_SIZE + pageReviews.length} of {filtered.length} reviews
           </p>
 
@@ -207,16 +278,17 @@ const HomeReviews = () => {
               No reviews match this filter.
             </p>
           ) : (
-            <div className="divide-y divide-border">
-              {pageReviews.map((review) => (
-                <ReviewItem
-                  key={review.id}
-                  review={review}
-                  isAdmin={isAdmin}
-                  onChanged={refresh}
-                />
-              ))}
-            </div>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={pageReviews.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+                <div className="divide-y divide-border">
+                  {pageReviews.map((review) => (
+                    <SortableReviewRow key={review.id} id={review.id} isAdmin={isAdmin}>
+                      <ReviewItem review={review} isAdmin={isAdmin} onChanged={refresh} />
+                    </SortableReviewRow>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           )}
 
           {totalPages > 1 && (

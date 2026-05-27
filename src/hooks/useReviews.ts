@@ -99,6 +99,29 @@ export const hideSeedReview = (id: string) => {
   if (!list.includes(id)) localStorage.setItem(HIDDEN_SEEDS_KEY, JSON.stringify([...list, id]));
 };
 
+const REVIEW_ORDER_KEY = 'parfumistry_review_order';
+export const getReviewOrder = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(REVIEW_ORDER_KEY) || '[]');
+  } catch {
+    return [];
+  }
+};
+export const setReviewOrder = (ids: string[]) => {
+  localStorage.setItem(REVIEW_ORDER_KEY, JSON.stringify(ids));
+};
+export const applyReviewOrder = <T extends { id: string }>(items: T[]): T[] => {
+  const order = getReviewOrder();
+  if (order.length === 0) return items;
+  const idx = new Map(order.map((id, i) => [id, i]));
+  return [...items].sort((a, b) => {
+    const ai = idx.has(a.id) ? (idx.get(a.id) as number) : Number.MAX_SAFE_INTEGER;
+    const bi = idx.has(b.id) ? (idx.get(b.id) as number) : Number.MAX_SAFE_INTEGER;
+    return ai - bi;
+  });
+};
+
 /**
  * Returns merged reviews (seed + db) visible to the current viewer.
  * - Anyone sees approved reviews
