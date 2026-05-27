@@ -9,6 +9,11 @@ import erosEnergyLifestyle from '@/assets/products/eros-energy-lifestyle.png';
 import erosFlameLifestyle from '@/assets/products/eros-flame-lifestyle.png';
 import leMaleElixirLifestyle from '@/assets/products/le-male-elixir-lifestyle.png';
 import erosParfumLifestyle from '@/assets/products/eros-parfum-lifestyle.png';
+import imaginationLifestyle from '@/assets/products/imagination-lifestyle.png';
+import strongerWithYouIntenselyLifestyle from '@/assets/products/stronger-with-you-intensely-lifestyle.png';
+import bornInRomaIntenseLifestyle2 from '@/assets/products/born-in-roma-intense-lifestyle-2.png';
+import leMaleElixirLifestyle2 from '@/assets/products/le-male-elixir-lifestyle-2.png';
+import leMaleLeParfumLifestyle from '@/assets/products/le-male-le-parfum-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -398,7 +403,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A3A',
     image: '/images/scent-notes/born-in-roma-intense.png',
-    additionalImages: [bornInRomaIntenseLifestyle],
+    additionalImages: [bornInRomaIntenseLifestyle, bornInRomaIntenseLifestyle2],
     imagePadding: 'p-[1.3rem] md:p-[2.925rem]',
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
@@ -808,6 +813,7 @@ export const products: Product[] = [
     },
     accentColor: '#F5C542',
     image: 'https://profparfums.store/cdn/shop/files/product_4_matched_1.png?v=1768068548&width=1200',
+    additionalImages: [imaginationLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
@@ -939,6 +945,7 @@ export const products: Product[] = [
     },
     accentColor: '#C0392B',
     image: 'https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=1200',
+    additionalImages: [strongerWithYouIntenselyLifestyle],
     affiliateUrl: '/product/stronger-with-you-intensely',
     inStock: true,
     featured: true,
@@ -1100,6 +1107,7 @@ export const products: Product[] = [
     },
     accentColor: '#C58917',
     image: 'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=1200',
+    additionalImages: [leMaleElixirLifestyle2],
     affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
@@ -1188,6 +1196,7 @@ export const products: Product[] = [
     },
     accentColor: '#000000',
     image: 'https://profparfums.store/cdn/shop/files/jean-paul-gaultier-le-male-le-parfum-9203208.png?v=1768068486&width=1200',
+    additionalImages: [leMaleLeParfumLifestyle],
     affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH',
     inStock: true,
     featured: true,
