@@ -79,10 +79,10 @@ export const Header = () => {
           {/* Desktop Navigation + FAQ */}
           <nav className="hidden md:flex items-center gap-6 ml-8 mr-auto">
             <Link
-              to="/#faq"
+              to="/faq"
               className={cn(
                 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.1em] uppercase transition-all',
-                location.hash === '#faq'
+                location.pathname === '/faq'
                   ? 'bg-accent text-accent-foreground'
                   : 'bg-accent/80 text-accent-foreground hover:bg-accent'
               )}
