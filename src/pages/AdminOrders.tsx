@@ -814,10 +814,23 @@ export default function AdminOrders() {
             <Radio className="h-4 w-4 inline mr-1.5" />
             Live Visitors
           </button>
+          <button
+            onClick={() => setActiveTab("reviews")}
+            className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+              activeTab === "reviews"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            <Star className="h-4 w-4 inline mr-1.5" />
+            Reviews
+          </button>
         </div>
 
         {activeTab === "live" ? (
           <LiveVisitorDashboard />
+        ) : activeTab === "reviews" ? (
+          <ReviewsAdmin />
         ) : (
         <>
 
