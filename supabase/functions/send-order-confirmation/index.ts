@@ -534,7 +534,8 @@ serve(async (req) => {
     const origin = "https://parfumistry.com";
     const itemsHtml = buildItemsHtml(normalizedItems, origin);
 
-    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent);
+    const shippingMethod = (shippingAddress as any)?.shippingMethod || null;
+    const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent, shippingMethod);
 
     const emailSubject = orderNumber ? `Order #${orderNumber} Confirmed - Parfumistry` : "Order Confirmed - Parfumistry";
     await sendEmail(customerEmail, emailSubject, html);
