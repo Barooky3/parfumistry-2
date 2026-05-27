@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Check, X, RefreshCw, Package, Mail, Search, Trash2, Pencil, Plus, CalendarIcon, ImageIcon, ExternalLink, Users, Radio, Ban, BarChart3, Globe, ChevronDown, Star } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import LiveVisitorDashboard from "@/components/admin/LiveVisitorDashboard";
+import ReviewsAdmin from "@/components/admin/ReviewsAdmin";
 import { startOfDay, endOfDay, subDays, startOfMonth, subMonths, startOfWeek, isWithinInterval, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -76,7 +77,7 @@ export default function AdminOrders() {
   const [transitioning, setTransitioning] = useState(false);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "live">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "live" | "reviews">("orders");
   const [customerEmailFilter, setCustomerEmailFilter] = useState<string>("");
 
   // Read URL search params for email/search filter (e.g. from chat link)
@@ -813,10 +814,23 @@ export default function AdminOrders() {
             <Radio className="h-4 w-4 inline mr-1.5" />
             Live Visitors
           </button>
+          <button
+            onClick={() => setActiveTab("reviews")}
+            className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
+              activeTab === "reviews"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            <Star className="h-4 w-4 inline mr-1.5" />
+            Reviews
+          </button>
         </div>
 
         {activeTab === "live" ? (
           <LiveVisitorDashboard />
+        ) : activeTab === "reviews" ? (
+          <ReviewsAdmin />
         ) : (
         <>
 
