@@ -117,14 +117,14 @@ const ProofCarousel = () => {
             <div className="flex items-center gap-[3px]">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="relative">
-                  <Star className="h-[18px] w-[18px] text-[#dcdce6] stroke-0" fill="currentColor" />
+                  <Star className="h-[18px] w-[18px] text-muted-foreground/30" fill="currentColor" strokeWidth={0} />
                   <div
                     className="absolute inset-0 overflow-hidden"
                     style={{
                       width: i < fullStars ? '100%' : i === fullStars ? `${partialFill}%` : '0%',
                     }}
                   >
-                    <Star className="h-[18px] w-[18px] text-[#ffc700] stroke-0" fill="currentColor" />
+                    <Star className="h-[18px] w-[18px] fill-accent text-accent" strokeWidth={0} />
                   </div>
                 </div>
               ))}
