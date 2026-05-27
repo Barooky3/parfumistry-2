@@ -120,6 +120,12 @@ export default function AdminOrders() {
   });
   const [adSpendDialogOpen, setAdSpendDialogOpen] = useState(false);
   const [adSpendInput, setAdSpendInput] = useState("");
+  type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number };
+  const [resetHistory, setResetHistory] = useState<ResetHistoryEntry[]>(() => {
+    if (typeof window === "undefined") return [];
+    try { return JSON.parse(localStorage.getItem("admin_live_reset_history") || "[]"); } catch { return []; }
+  });
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("admin_live_reset_at", liveResetAt);
@@ -127,6 +133,9 @@ export default function AdminOrders() {
   useEffect(() => {
     localStorage.setItem("admin_ad_spend", String(adSpend));
   }, [adSpend]);
+  useEffect(() => {
+    localStorage.setItem("admin_live_reset_history", JSON.stringify(resetHistory));
+  }, [resetHistory]);
 
   // Rejection notes state
   const [rejectingOrder, setRejectingOrder] = useState<Order | null>(null);
