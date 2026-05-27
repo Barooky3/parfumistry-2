@@ -98,6 +98,9 @@ export const computePaddingAndScale = (override: PaddingOverride | null) => {
     transformOrigin: 'center bottom',
     width: '100%',
     height: '100%',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   };
 
   return { innerStyle, hasOverride: true };
