@@ -36,121 +36,20 @@ export interface UnifiedReview {
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-const dbToUnified = (r: DbReview, currentUserId?: string | null): UnifiedReview => ({
-  id: r.id,
-  name: r.customer_name || 'Anonymous',
-  rating: r.rating,
-  text: r.text || '',
-  date: formatDate(r.created_at),
-  verified: true,
-  source: 'db',
-  status: r.status,
-  user_id: r.user_id,
-  isOwn: !!currentUserId && r.user_id === currentUserId,
-  images: Array.isArray(r.images) ? r.images : [],
-});
-
-// ---------------- Shared settings store (DB-backed, with localStorage cache) ----------------
-
 const SEED_OVERRIDES_KEY = 'parfumistry_seed_review_overrides';
-const HIDDEN_SEEDS_KEY = 'parfumistry_hidden_seed_reviews';
-const REVIEW_ORDER_KEY = 'parfumistry_review_order';
-
 type SeedOverride = { name?: string; rating?: number; text?: string; images?: string[] };
-
-interface ReviewSettings {
-  order: string[];
-  overrides: Record<string, SeedOverride>;
-  hidden: string[];
-}
-
-const readLS = <T,>(key: string, fallback: T): T => {
-  if (typeof window === 'undefined') return fallback;
+export const getSeedOverrides = (): Record<string, SeedOverride> => {
+  if (typeof window === 'undefined') return {};
   try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : fallback;
+    return JSON.parse(localStorage.getItem(SEED_OVERRIDES_KEY) || '{}');
   } catch {
-    return fallback;
+    return {};
   }
 };
-const writeLS = (key: string, val: unknown) => {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
-};
-
-const settingsState: ReviewSettings = {
-  order: readLS<string[]>(REVIEW_ORDER_KEY, []),
-  overrides: readLS<Record<string, SeedOverride>>(SEED_OVERRIDES_KEY, {}),
-  hidden: readLS<string[]>(HIDDEN_SEEDS_KEY, []),
-};
-
-const listeners = new Set<() => void>();
-const subscribeSettings = (cb: () => void) => {
-  listeners.add(cb);
-  return () => { listeners.delete(cb); };
-};
-const notify = () => { listeners.forEach((l) => l()); };
-
-let remoteLoaded = false;
-let remoteLoadPromise: Promise<void> | null = null;
-const loadRemoteSettings = async (): Promise<void> => {
-  if (remoteLoadPromise) return remoteLoadPromise;
-  remoteLoadPromise = (async () => {
-    const { data, error } = await supabase
-      .from('review_order' as any)
-      .select('order_ids, seed_overrides, hidden_seeds')
-      .eq('id', 1)
-      .maybeSingle();
-    if (!error && data) {
-      const d = data as any;
-      if (Array.isArray(d.order_ids)) settingsState.order = d.order_ids as string[];
-      if (d.seed_overrides && typeof d.seed_overrides === 'object')
-        settingsState.overrides = d.seed_overrides as Record<string, SeedOverride>;
-      if (Array.isArray(d.hidden_seeds)) settingsState.hidden = d.hidden_seeds as string[];
-      writeLS(REVIEW_ORDER_KEY, settingsState.order);
-      writeLS(SEED_OVERRIDES_KEY, settingsState.overrides);
-      writeLS(HIDDEN_SEEDS_KEY, settingsState.hidden);
-      remoteLoaded = true;
-      notify();
-    }
-  })();
-  return remoteLoadPromise;
-};
-
-const saveRemoteSettings = async (patch: Partial<{ order_ids: string[]; seed_overrides: Record<string, SeedOverride>; hidden_seeds: string[] }>) => {
-  return supabase
-    .from('review_order' as any)
-    .upsert({ id: 1, ...patch, updated_at: new Date().toISOString() });
-};
-
-// Public sync getters (read current cache)
-export const getSeedOverrides = (): Record<string, SeedOverride> => settingsState.overrides;
-export const getHiddenSeedIds = (): string[] => settingsState.hidden;
-export const getLocalReviewOrder = (): string[] => settingsState.order;
-
-// Public mutations — update cache, persist locally, push to DB, notify subscribers
 export const setSeedOverride = (id: string, patch: SeedOverride) => {
-  const all = { ...settingsState.overrides };
+  const all = getSeedOverrides();
   all[id] = { ...(all[id] || {}), ...patch };
-  settingsState.overrides = all;
-  writeLS(SEED_OVERRIDES_KEY, all);
-  notify();
-  void saveRemoteSettings({ seed_overrides: all });
-};
-
-export const hideSeedReview = (id: string) => {
-  if (settingsState.hidden.includes(id)) return;
-  const next = [...settingsState.hidden, id];
-  settingsState.hidden = next;
-  writeLS(HIDDEN_SEEDS_KEY, next);
-  notify();
-  void saveRemoteSettings({ hidden_seeds: next });
-};
-
-export const saveRemoteReviewOrder = async (ids: string[]) => {
-  settingsState.order = ids;
-  writeLS(REVIEW_ORDER_KEY, ids);
-  notify();
-  return saveRemoteSettings({ order_ids: ids });
+  localStorage.setItem(SEED_OVERRIDES_KEY, JSON.stringify(all));
 };
 
 const buildSeedAsUnified = (): UnifiedReview[] => {
@@ -172,6 +71,46 @@ const buildSeedAsUnified = (): UnifiedReview[] => {
   });
 };
 
+const dbToUnified = (r: DbReview, currentUserId?: string | null): UnifiedReview => ({
+  id: r.id,
+  name: r.customer_name || 'Anonymous',
+  rating: r.rating,
+  text: r.text || '',
+  date: formatDate(r.created_at),
+  verified: true,
+  source: 'db',
+  status: r.status,
+  user_id: r.user_id,
+  isOwn: !!currentUserId && r.user_id === currentUserId,
+  images: Array.isArray(r.images) ? r.images : [],
+});
+
+const HIDDEN_SEEDS_KEY = 'parfumistry_hidden_seed_reviews';
+export const getHiddenSeedIds = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(HIDDEN_SEEDS_KEY) || '[]');
+  } catch {
+    return [];
+  }
+};
+export const hideSeedReview = (id: string) => {
+  const list = getHiddenSeedIds();
+  if (!list.includes(id)) localStorage.setItem(HIDDEN_SEEDS_KEY, JSON.stringify([...list, id]));
+};
+
+const REVIEW_ORDER_KEY = 'parfumistry_review_order';
+export const getLocalReviewOrder = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(REVIEW_ORDER_KEY) || '[]');
+  } catch {
+    return [];
+  }
+};
+const setLocalReviewOrder = (ids: string[]) => {
+  try { localStorage.setItem(REVIEW_ORDER_KEY, JSON.stringify(ids)); } catch {}
+};
 export const applyReviewOrder = <T extends { id: string }>(items: T[], order: string[]): T[] => {
   if (!order || order.length === 0) return items;
   const idx = new Map(order.map((id, i) => [id, i]));
@@ -183,57 +122,38 @@ export const applyReviewOrder = <T extends { id: string }>(items: T[], order: st
 };
 
 export const fetchRemoteReviewOrder = async (): Promise<string[]> => {
-  await loadRemoteSettings();
-  return settingsState.order;
+  const { data, error } = await supabase
+    .from('review_order' as any)
+    .select('order_ids')
+    .eq('id', 1)
+    .maybeSingle();
+  if (error || !data) return [];
+  const arr = (data as any).order_ids;
+  return Array.isArray(arr) ? (arr as string[]) : [];
 };
 
-// Hook: subscribes to settings store and triggers loading from DB
-const useReviewSettings = () => {
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    const unsub = subscribeSettings(() => setTick((t) => t + 1));
-    void loadRemoteSettings();
-    return unsub;
-  }, []);
-  return settingsState;
+export const saveRemoteReviewOrder = async (ids: string[]) => {
+  setLocalReviewOrder(ids);
+  return supabase
+    .from('review_order' as any)
+    .upsert({ id: 1, order_ids: ids, updated_at: new Date().toISOString() });
 };
 
 export const useReviewOrder = () => {
-  const s = useReviewSettings();
-  const setOrder = (ids: string[]) => { void saveRemoteReviewOrder(ids); };
-  return [s.order, setOrder] as const;
+  const [order, setOrder] = useState<string[]>(() => getLocalReviewOrder());
+  useEffect(() => {
+    let cancelled = false;
+    fetchRemoteReviewOrder().then((remote) => {
+      if (cancelled) return;
+      if (remote.length > 0) {
+        setOrder(remote);
+        setLocalReviewOrder(remote);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+  return [order, setOrder] as const;
 };
-
-// One-time admin seeder: push this device's local settings up if DB is still empty.
-export const seedRemoteSettingsFromLocal = async () => {
-  const { data } = await supabase
-    .from('review_order' as any)
-    .select('order_ids, seed_overrides, hidden_seeds')
-    .eq('id', 1)
-    .maybeSingle();
-  const d = (data || {}) as any;
-  const patch: any = {};
-  const remoteOrder = Array.isArray(d.order_ids) ? d.order_ids : [];
-  const remoteOverrides = d.seed_overrides && typeof d.seed_overrides === 'object' ? d.seed_overrides : {};
-  const remoteHidden = Array.isArray(d.hidden_seeds) ? d.hidden_seeds : [];
-  if (remoteOrder.length === 0 && settingsState.order.length > 0) patch.order_ids = settingsState.order;
-  if (Object.keys(remoteOverrides).length === 0 && Object.keys(settingsState.overrides).length > 0)
-    patch.seed_overrides = settingsState.overrides;
-  if (remoteHidden.length === 0 && settingsState.hidden.length > 0) patch.hidden_seeds = settingsState.hidden;
-  if (Object.keys(patch).length > 0) {
-    await saveRemoteSettings(patch);
-  }
-};
-
-// Force-push this session's local state, overwriting remote. Use to make this device authoritative.
-export const forceSyncLocalToRemote = async () => {
-  await saveRemoteSettings({
-    order_ids: settingsState.order,
-    seed_overrides: settingsState.overrides,
-    hidden_seeds: settingsState.hidden,
-  });
-};
-
 
 /**
  * Returns merged reviews (seed + db) visible to the current viewer.
@@ -246,8 +166,6 @@ export const useReviews = () => {
   const [dbReviews, setDbReviews] = useState<DbReview[]>([]);
   const [loading, setLoading] = useState(true);
   const isAdmin = user?.email === ADMIN_EMAIL;
-  // Subscribe to shared settings so this hook re-renders when overrides/hidden/order change
-  useReviewSettings();
 
   const fetchReviews = useCallback(async () => {
     setLoading(true);
