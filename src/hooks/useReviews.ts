@@ -100,7 +100,7 @@ export const hideSeedReview = (id: string) => {
 };
 
 const REVIEW_ORDER_KEY = 'parfumistry_review_order';
-export const getReviewOrder = (): string[] => {
+export const getLocalReviewOrder = (): string[] => {
   if (typeof window === 'undefined') return [];
   try {
     return JSON.parse(localStorage.getItem(REVIEW_ORDER_KEY) || '[]');
@@ -108,18 +108,51 @@ export const getReviewOrder = (): string[] => {
     return [];
   }
 };
-export const setReviewOrder = (ids: string[]) => {
-  localStorage.setItem(REVIEW_ORDER_KEY, JSON.stringify(ids));
+const setLocalReviewOrder = (ids: string[]) => {
+  try { localStorage.setItem(REVIEW_ORDER_KEY, JSON.stringify(ids)); } catch {}
 };
-export const applyReviewOrder = <T extends { id: string }>(items: T[]): T[] => {
-  const order = getReviewOrder();
-  if (order.length === 0) return items;
+export const applyReviewOrder = <T extends { id: string }>(items: T[], order: string[]): T[] => {
+  if (!order || order.length === 0) return items;
   const idx = new Map(order.map((id, i) => [id, i]));
   return [...items].sort((a, b) => {
     const ai = idx.has(a.id) ? (idx.get(a.id) as number) : Number.MAX_SAFE_INTEGER;
     const bi = idx.has(b.id) ? (idx.get(b.id) as number) : Number.MAX_SAFE_INTEGER;
     return ai - bi;
   });
+};
+
+export const fetchRemoteReviewOrder = async (): Promise<string[]> => {
+  const { data, error } = await supabase
+    .from('review_order' as any)
+    .select('order_ids')
+    .eq('id', 1)
+    .maybeSingle();
+  if (error || !data) return [];
+  const arr = (data as any).order_ids;
+  return Array.isArray(arr) ? (arr as string[]) : [];
+};
+
+export const saveRemoteReviewOrder = async (ids: string[]) => {
+  setLocalReviewOrder(ids);
+  return supabase
+    .from('review_order' as any)
+    .upsert({ id: 1, order_ids: ids, updated_at: new Date().toISOString() });
+};
+
+export const useReviewOrder = () => {
+  const [order, setOrder] = useState<string[]>(() => getLocalReviewOrder());
+  useEffect(() => {
+    let cancelled = false;
+    fetchRemoteReviewOrder().then((remote) => {
+      if (cancelled) return;
+      if (remote.length > 0) {
+        setOrder(remote);
+        setLocalReviewOrder(remote);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+  return [order, setOrder] as const;
 };
 
 /**
