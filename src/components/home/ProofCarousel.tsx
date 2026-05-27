@@ -134,14 +134,15 @@ const ProofCarousel = () => {
           <p className="text-xs text-muted-foreground">
             Based on 40+ verified reviews
           </p>
-          <div className="flex items-center gap-1.5 mt-0.5 opacity-60">
-            <span className="text-[10px] tracking-wide text-muted-foreground">Verified by</span>
-            <svg width="70" height="14" viewBox="0 0 70 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <text x="0" y="11" fontFamily="Inter, sans-serif" fontSize="10.5" fontWeight="700" fill="hsl(var(--foreground))">Judge.me</text>
-              <circle cx="64" cy="7" r="5" fill="#55b685"/>
-              <path d="M61.5 7l1.8 1.8 3.2-3.6" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
+          <button
+            onClick={() => {
+              const el = document.getElementById('reviews-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="mt-1.5 text-[10px] tracking-wide uppercase text-muted-foreground border border-border/60 px-3 py-1 hover:border-accent hover:text-accent transition-colors"
+          >
+            Read all reviews
+          </button>
         </div>
       </div>
 
