@@ -4,6 +4,11 @@ import althairLifestyle from '@/assets/products/althair-lifestyle.png';
 import laytonLifestyle from '@/assets/products/layton-lifestyle.png';
 import delinaLifestyle from '@/assets/products/delina-lifestyle.png';
 import bornInRomaIntenseLifestyle from '@/assets/products/born-in-roma-intense-lifestyle.png';
+import aventusAbsoluLifestyle from '@/assets/products/aventus-absolu-lifestyle.png';
+import erosEnergyLifestyle from '@/assets/products/eros-energy-lifestyle.png';
+import erosFlameLifestyle from '@/assets/products/eros-flame-lifestyle.png';
+import leMaleElixirLifestyle from '@/assets/products/le-male-elixir-lifestyle.png';
+import erosParfumLifestyle from '@/assets/products/eros-parfum-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -304,6 +309,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A1A2E',
     image: 'https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=1200',
+    additionalImages: [aventusAbsoluLifestyle],
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
@@ -607,6 +613,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4C72E',
     image: 'https://profparfums.store/cdn/shop/files/yellow_resized_to_red_d0d3284b-0228-4acd-8b37-3765a0c838d8.png?v=1768068547&width=1200',
+    additionalImages: [erosEnergyLifestyle],
     affiliateUrl: '/product/eros-energy',
     inStock: true,
     variants: [
@@ -641,6 +648,7 @@ export const products: Product[] = [
     },
     accentColor: '#C0392B',
     image: 'https://profparfums.store/cdn/shop/files/A2B6CEE1-52D5-4900-AE35-97311C0903DF_transparent_1.png?v=1768068490&width=1200',
+    additionalImages: [erosFlameLifestyle],
     affiliateUrl: '/product/eros-flame',
     inStock: true,
     variants: [
@@ -675,6 +683,7 @@ export const products: Product[] = [
     },
     accentColor: '#1E90FF',
     image: 'https://profparfums.store/cdn/shop/files/versace-eros-2404971.png?v=1768068489&width=1200',
+    additionalImages: [erosParfumLifestyle],
     affiliateUrl: '/product/eros-parfum',
     inStock: false,
     variants: [
@@ -1091,6 +1100,7 @@ export const products: Product[] = [
     },
     accentColor: '#C58917',
     image: 'https://profparfums.store/cdn/shop/files/F5DB0F17-85A7-4892-BB9E-F7BE8D91B966_converted_1.png?v=1768068488&width=1200',
+    additionalImages: [leMaleElixirLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
