@@ -107,7 +107,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               return (
                 <div 
                   className={cn(
-                    "aspect-square md:aspect-[3/4] bg-secondary flex items-end justify-center relative overflow-hidden",
+                    "aspect-square bg-secondary flex items-end justify-center relative overflow-hidden",
                     !hasOverride && product.imagePadding
                   )}
                 >
