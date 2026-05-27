@@ -164,6 +164,28 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
       <p className={`text-sm mt-2 ${review.text ? 'text-foreground/90' : 'italic text-muted-foreground'}`}>
         {review.text || 'Rating submitted - no written feedback'}
       </p>
+      {showTranslateBtn && (
+        <div className="mt-1.5">
+          <button
+            type="button"
+            onClick={handleTranslate}
+            disabled={translating}
+            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-60"
+          >
+            {translating ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Languages className="h-3 w-3" />
+            )}
+            {translation && showTranslation ? 'Show original' : 'Translate to English'}
+          </button>
+          {translation && showTranslation && (
+            <p className="text-sm mt-1.5 text-foreground/80 italic border-l-2 border-accent/40 pl-2">
+              {translation}
+            </p>
+          )}
+        </div>
+      )}
       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
         <span className="text-foreground/70">{review.name}</span>
         {review.verified && (
