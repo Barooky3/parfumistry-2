@@ -933,6 +933,115 @@ export default function AdminOrders() {
           </div>
         )}
 
+        {/* Live Counter — Rewarble / iDEAL / PayPal */}
+        <div className="mb-6 border rounded-lg p-4 bg-card">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                Live Counter — Rewarble / iDEAL / PayPal
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Since {format(new Date(liveResetAt), "dd MMM yyyy, HH:mm")} · {liveCounter.count} approved orders
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs"
+                onClick={() => {
+                  setAdSpendInput("");
+                  setAdSpendDialogOpen(true);
+                }}
+              >
+                Ad Budget
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs"
+                onClick={() => {
+                  if (confirm("Reset live counter and ad spend? This starts a new day.")) {
+                    setLiveResetAt(new Date().toISOString());
+                    setAdSpend(0);
+                  }
+                }}
+              >
+                <RefreshCw className="h-3 w-3 mr-1" />
+                Reset Day
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4 items-end">
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">Gross</p>
+              <p className="text-sm font-semibold">€{liveCounter.gross.toFixed(2)}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">Ad Spend</p>
+              <p className="text-sm font-semibold text-destructive">−€{adSpend.toFixed(2)}</p>
+            </div>
+            <div className="text-center border-l pl-4">
+              <p className="text-xs text-muted-foreground">Net Total</p>
+              <p
+                className={`text-lg font-bold ${
+                  liveCounter.net < 0 ? "text-destructive" : "text-primary"
+                }`}
+              >
+                €{liveCounter.net.toFixed(2)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Ad Spend</DialogTitle>
+              <DialogDescription>
+                Enter the amount (in €) spent on ads. It will be subtracted from
+                the live net total. Current ad spend: €{adSpend.toFixed(2)}
+              </DialogDescription>
+            </DialogHeader>
+            <Input
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="e.g. 25.00"
+              value={adSpendInput}
+              onChange={(e) => setAdSpendInput(e.target.value)}
+              autoFocus
+            />
+            <DialogFooter className="gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setAdSpend(0);
+                  setAdSpendDialogOpen(false);
+                  toast.success("Ad spend cleared");
+                }}
+              >
+                Clear all
+              </Button>
+              <Button
+                onClick={() => {
+                  const amt = parseFloat(adSpendInput);
+                  if (isNaN(amt) || amt <= 0) {
+                    toast.error("Enter a valid amount");
+                    return;
+                  }
+                  setAdSpend((prev) => prev + amt);
+                  setAdSpendDialogOpen(false);
+                  toast.success(`Added €${amt.toFixed(2)} ad spend`);
+                }}
+              >
+                Add
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+
         {/* Order Statistics by Country */}
         {allOrders.length > 0 && (
           <div className="mb-6 border rounded-lg bg-card">
