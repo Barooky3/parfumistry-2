@@ -81,13 +81,12 @@ export const Header = () => {
             <Link
               to="/faq"
               className={cn(
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.1em] uppercase transition-all',
-                location.pathname === '/faq'
-                  ? 'bg-accent text-accent-foreground'
-                  : 'bg-accent/80 text-accent-foreground hover:bg-accent'
+                'relative flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-bold tracking-[0.12em] uppercase transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95',
+                'bg-accent text-accent-foreground ring-2 ring-accent/40 ring-offset-2 ring-offset-background',
+                location.pathname === '/faq' && 'ring-accent'
               )}
             >
-              <HelpCircle className="h-3 w-3" />
+              <HelpCircle className="h-3.5 w-3.5" strokeWidth={2.5} />
               FAQ
             </Link>
             {navLinkKeys.map((link) => (
@@ -106,8 +105,21 @@ export const Header = () => {
             ))}
           </nav>
 
+          {/* Mobile FAQ pill — prominent, always visible */}
+          <Link
+            to="/faq"
+            className={cn(
+              'md:hidden flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase shadow-md ring-1 ring-accent/50 transition-all active:scale-95 shrink-0',
+              'bg-accent text-accent-foreground'
+            )}
+            aria-label="FAQ"
+          >
+            <HelpCircle className="h-3 w-3" strokeWidth={2.5} />
+            FAQ
+          </Link>
+
           {/* Right Actions */}
-          <div className="flex items-center gap-3 pl-6">
+          <div className="flex items-center gap-1.5 md:gap-3 md:pl-6">
             {/* Currency Dropdown - aromaeu style */}
             <div ref={currencyRef} className="relative hidden md:block mr-1">
               <button
@@ -154,7 +166,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-accent hover:text-accent hover:bg-transparent"
+                className="h-9 w-9 md:h-10 md:w-10 text-accent hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/account" aria-label="My Account">
@@ -165,7 +177,7 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+                className="h-9 w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/login" aria-label="Account">
@@ -178,7 +190,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="relative h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className="relative h-9 w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
               onClick={toggleCart}
               aria-label="Open cart"
             >
@@ -194,7 +206,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden h-10 w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className="md:hidden h-9 w-9 text-foreground hover:text-accent hover:bg-transparent"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
