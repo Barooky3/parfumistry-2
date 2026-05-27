@@ -103,15 +103,17 @@ const FAQ = () => {
           </Accordion>
 
           <div className="text-center mt-10">
-            <p className="text-sm text-muted-foreground mb-4">
-              Still have questions?
+            <p className="text-sm text-muted-foreground">
+              Still have questions? Contact us on{' '}
+              <a
+                href="https://www.tiktok.com/@fragranceprofs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent font-semibold hover:underline"
+              >
+                TikTok @fragranceprofs
+              </a>
             </p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-accent text-accent-foreground text-xs font-semibold tracking-[0.1em] uppercase rounded-sm hover:bg-accent/90 transition-colors"
-            >
-              Contact Us
-            </Link>
           </div>
         </motion.div>
       </div>
