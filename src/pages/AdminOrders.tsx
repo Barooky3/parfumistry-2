@@ -971,7 +971,21 @@ export default function AdminOrders() {
                 className="text-xs"
                 onClick={() => {
                   if (confirm("Reset live counter and ad spend? This starts a new day.")) {
-                    setLiveResetAt(new Date().toISOString());
+                    const now = new Date().toISOString();
+                    setResetHistory((prev) => [
+                      {
+                        id: now,
+                        resetAt: now,
+                        periodStart: liveResetAt,
+                        periodEnd: now,
+                        gross: liveCounter.gross,
+                        adSpend: adSpend,
+                        net: liveCounter.net,
+                        count: liveCounter.count,
+                      },
+                      ...prev,
+                    ].slice(0, 200));
+                    setLiveResetAt(now);
                     setAdSpend(0);
                   }
                 }}
