@@ -1,10 +1,21 @@
 import { useState } from 'react';
-import { Star, BadgeCheck, Clock, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Star, BadgeCheck, Clock, Pencil, Trash2, Check, X, Languages, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { UnifiedReview, adminUpdateReview, adminDeleteReview } from '@/hooks/useReviews';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+
+// Heuristic: treat text as non-English if it contains common non-English markers
+// (diacritics or frequent foreign stop-words). Good enough for review snippets.
+const NON_ENGLISH_WORDS = /\b(und|der|die|das|ist|nicht|mit|auch|sehr|schnell|alles|gut|für|über|gerne|wieder|danke|bestellung|versand|qualität|verpackung|empfehlung|bin|hab|ich|merci|livraison|rapide|produit|nickel|tous|excellent|sillage|équipe|discrète|prodotto|consegna|spedizione|ottimo|perfetto|tutto|gentile|comunque|muy|rapido|perfecto|gracias|envío|bardzo|dobra|jakość|szybka|przesyłka|polski)\b/i;
+const DIACRITICS = /[äöüßéèêàâçñíóúîôûœ]/i;
+
+const isLikelyNonEnglish = (text: string) => {
+  if (!text || text.trim().length < 3) return false;
+  return DIACRITICS.test(text) || NON_ENGLISH_WORDS.test(text);
+};
 
 const RatingStars = ({
   rating,
@@ -43,8 +54,34 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
   const [editText, setEditText] = useState(review.text);
   const [editRating, setEditRating] = useState(review.rating);
   const [busy, setBusy] = useState(false);
+  const [translation, setTranslation] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
 
   const canEdit = isAdmin && review.source === 'db';
+  const showTranslateBtn = !!review.text && isLikelyNonEnglish(review.text);
+
+  const handleTranslate = async () => {
+    if (translation) {
+      setShowTranslation((v) => !v);
+      return;
+    }
+    setTranslating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('translate-text', {
+        body: { text: review.text },
+      });
+      if (error) throw error;
+      const t = (data as { translation?: string })?.translation?.trim();
+      if (!t) throw new Error('Empty translation');
+      setTranslation(t);
+      setShowTranslation(true);
+    } catch (e: any) {
+      toast({ title: 'Translation failed', description: e?.message ?? 'Try again', variant: 'destructive' });
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   const handleSave = async () => {
     setBusy(true);
@@ -127,6 +164,28 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
       <p className={`text-sm mt-2 ${review.text ? 'text-foreground/90' : 'italic text-muted-foreground'}`}>
         {review.text || 'Rating submitted - no written feedback'}
       </p>
+      {showTranslateBtn && (
+        <div className="mt-1.5">
+          <button
+            type="button"
+            onClick={handleTranslate}
+            disabled={translating}
+            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-60"
+          >
+            {translating ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Languages className="h-3 w-3" />
+            )}
+            {translation && showTranslation ? 'Show original' : 'Translate to English'}
+          </button>
+          {translation && showTranslation && (
+            <p className="text-sm mt-1.5 text-foreground/80 italic border-l-2 border-accent/40 pl-2">
+              {translation}
+            </p>
+          )}
+        </div>
+      )}
       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
         <span className="text-foreground/70">{review.name}</span>
         {review.verified && (
