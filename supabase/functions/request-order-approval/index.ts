@@ -254,7 +254,7 @@ serve(async (req) => {
       customerEmail,
       normalizedItems,
       calculatedTotal,
-      shippingAddress || {},
+      { country: shippingAddress?.country },
       supabaseUrl,
       paymentMethod,
       giftCardCode,
