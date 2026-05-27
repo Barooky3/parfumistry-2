@@ -109,6 +109,25 @@ export default function AdminOrders() {
   const [customFrom, setCustomFrom] = useState<Date | undefined>();
   const [customTo, setCustomTo] = useState<Date | undefined>();
 
+  // Live counter (Rewarble/iDEAL/PayPal) — persisted in localStorage
+  const [liveResetAt, setLiveResetAt] = useState<string>(() => {
+    if (typeof window === "undefined") return new Date().toISOString();
+    return localStorage.getItem("admin_live_reset_at") || new Date().toISOString();
+  });
+  const [adSpend, setAdSpend] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    return parseFloat(localStorage.getItem("admin_ad_spend") || "0") || 0;
+  });
+  const [adSpendDialogOpen, setAdSpendDialogOpen] = useState(false);
+  const [adSpendInput, setAdSpendInput] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("admin_live_reset_at", liveResetAt);
+  }, [liveResetAt]);
+  useEffect(() => {
+    localStorage.setItem("admin_ad_spend", String(adSpend));
+  }, [adSpend]);
+
   // Rejection notes state
   const [rejectingOrder, setRejectingOrder] = useState<Order | null>(null);
   const [rejectionNotes, setRejectionNotes] = useState("");
