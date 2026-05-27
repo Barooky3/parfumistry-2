@@ -17,10 +17,17 @@ const logo = '/images/logo.png';
 const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').then(m => ({ default: m.BrandNavigation })));
 
 const Index = () => {
-  const bestsellers = getBestsellers();
+  const allBestsellers = getBestsellers();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredBestsellers = searchQuery.trim()
+    ? allBestsellers.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : allBestsellers;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -164,12 +171,18 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-5">
-            {bestsellers.slice(0, 10).map((product) => (
+            {filteredBestsellers.slice(0, 10).map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
               </div>
             ))}
           </div>
+          
+          {searchQuery.trim() && filteredBestsellers.length === 0 && (
+            <p className="text-center text-muted-foreground py-8">
+              No fragrances found matching "{searchQuery}"
+            </p>
+          )}
           
           <div className="text-center mt-10">
             <Button 
