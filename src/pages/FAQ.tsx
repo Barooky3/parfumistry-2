@@ -28,10 +28,6 @@ const faqs = [
     question: "What if i dont know what to choose?",
     answer: "tiktok-help"
   },
-  {
-    question: "Why can't I pay with a credit card or PayPal directly?",
-    answer: "tiktok-payment"
-  }
 ];
 
 const FAQ = () => {
