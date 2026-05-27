@@ -36,16 +36,40 @@ export interface UnifiedReview {
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-const seedAsUnified: UnifiedReview[] = seedReviews.map((r: HomeReview) => ({
-  id: `seed-${r.id}`,
-  name: r.name,
-  rating: r.rating,
-  text: r.text,
-  date: r.date,
-  verified: r.verified,
-  source: 'seed',
-  status: 'approved',
-}));
+const SEED_OVERRIDES_KEY = 'parfumistry_seed_review_overrides';
+type SeedOverride = { name?: string; rating?: number; text?: string; images?: string[] };
+export const getSeedOverrides = (): Record<string, SeedOverride> => {
+  if (typeof window === 'undefined') return {};
+  try {
+    return JSON.parse(localStorage.getItem(SEED_OVERRIDES_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+export const setSeedOverride = (id: string, patch: SeedOverride) => {
+  const all = getSeedOverrides();
+  all[id] = { ...(all[id] || {}), ...patch };
+  localStorage.setItem(SEED_OVERRIDES_KEY, JSON.stringify(all));
+};
+
+const buildSeedAsUnified = (): UnifiedReview[] => {
+  const overrides = getSeedOverrides();
+  return seedReviews.map((r: HomeReview) => {
+    const id = `seed-${r.id}`;
+    const o = overrides[id] || {};
+    return {
+      id,
+      name: o.name ?? r.name,
+      rating: o.rating ?? r.rating,
+      text: o.text ?? r.text,
+      date: r.date,
+      verified: r.verified,
+      source: 'seed' as const,
+      status: 'approved' as const,
+      images: o.images,
+    };
+  });
+};
 
 const dbToUnified = (r: DbReview, currentUserId?: string | null): UnifiedReview => ({
   id: r.id,
