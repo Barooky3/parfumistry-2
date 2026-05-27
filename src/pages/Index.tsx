@@ -99,10 +99,13 @@ const Index = () => {
               />
             </div>
             
-            
-
+            {/* Tagline */}
+            <p className="font-display text-lg md:text-xl lg:text-2xl text-white/70 tracking-[0.2em] uppercase mb-4 hero-tagline-animate">
+              The Fragrance Library
+            </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 hero-buttons-animate">
+
               <Button 
                 size="lg" 
                 className="h-12 px-10 text-[11px] font-medium tracking-[0.15em] uppercase bg-accent text-accent-foreground hover:bg-accent/90 rounded-none active:scale-[0.98] transition-all"
