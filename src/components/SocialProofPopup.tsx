@@ -77,7 +77,7 @@ function randomMinutesAgo(): string {
 }
 
 function randomInterval(): number {
-  return (Math.floor(Math.random() * 16) + 20) * 1000; // 20-35 seconds
+  return (Math.floor(Math.random() * 21) + 28) * 1000; // 28-49 seconds
 }
 
 export const SocialProofPopup = () => {
@@ -132,7 +132,7 @@ export const SocialProofPopup = () => {
   }, [scheduleNext]);
 
   useEffect(() => {
-    const initialTimeout = setTimeout(showNotification, 8000);
+    const initialTimeout = setTimeout(showNotification, 12000);
     return () => {
       clearTimeout(initialTimeout);
       if (timerRef.current) clearTimeout(timerRef.current);
