@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     question: "What is the shipping like?",
-    answer: "Shipping times take around 4–6 business days to all countries in the EU and UK, and 6–8 business days outside of the EU."
+    answer: "Shipping times take around 4–6 business days to all countries in the EU and UK, and 6–8 business days outside of the EU. Express delivery times is 2-4 business days worldwide."
   },
   {
     question: "How can I track my package?",
