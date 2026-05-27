@@ -11,7 +11,7 @@ import leMaleElixirLifestyle from '@/assets/products/le-male-elixir-lifestyle.pn
 import erosParfumLifestyle from '@/assets/products/eros-parfum-lifestyle.png';
 import imaginationLifestyle from '@/assets/products/imagination-lifestyle.png';
 import strongerWithYouIntenselyLifestyle from '@/assets/products/stronger-with-you-intensely-lifestyle.png';
-import bornInRomaIntenseLifestyle2 from '@/assets/products/born-in-roma-intense-lifestyle-2.png';
+import bornInRomaLifestyle from '@/assets/products/born-in-roma-lifestyle.png';
 import leMaleElixirLifestyle2 from '@/assets/products/le-male-elixir-lifestyle-2.png';
 import leMaleLeParfumLifestyle from '@/assets/products/le-male-le-parfum-lifestyle.png';
 
