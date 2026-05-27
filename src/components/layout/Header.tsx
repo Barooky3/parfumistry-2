@@ -246,10 +246,10 @@ export const Header = () => {
                 transition={{ delay: navLinkKeys.length * 0.05, duration: 0.3 }}
               >
                 <Link
-                  to="/#faq"
+                  to="/faq"
                   className={cn(
                     'text-sm font-medium tracking-[0.1em] py-3 transition-colors border-b border-border block',
-                    location.hash === '#faq'
+                    location.pathname === '/faq'
                       ? 'text-foreground'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
