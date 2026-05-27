@@ -54,11 +54,34 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
   const [editText, setEditText] = useState(review.text);
   const [editRating, setEditRating] = useState(review.rating);
   const [busy, setBusy] = useState(false);
+  const [translation, setTranslation] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
 
   const canEdit = isAdmin && review.source === 'db';
+  const showTranslateBtn = !!review.text && isLikelyNonEnglish(review.text);
 
-  const handleSave = async () => {
-    setBusy(true);
+  const handleTranslate = async () => {
+    if (translation) {
+      setShowTranslation((v) => !v);
+      return;
+    }
+    setTranslating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('translate-text', {
+        body: { text: review.text },
+      });
+      if (error) throw error;
+      const t = (data as { translation?: string })?.translation?.trim();
+      if (!t) throw new Error('Empty translation');
+      setTranslation(t);
+      setShowTranslation(true);
+    } catch (e: any) {
+      toast({ title: 'Translation failed', description: e?.message ?? 'Try again', variant: 'destructive' });
+    } finally {
+      setTranslating(false);
+    }
+  };
     const res = await adminUpdateReview(review.id, {
       customer_name: editName,
       rating: editRating,
