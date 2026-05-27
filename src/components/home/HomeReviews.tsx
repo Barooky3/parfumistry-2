@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Star, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Plus, ChevronLeft, ChevronRight, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useReviews } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const PAGE_SIZE = 6;
 
@@ -23,6 +25,7 @@ const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'l
 
 const HomeReviews = () => {
   const { visibleReviews, isAdmin, refresh } = useReviews();
+  const { user } = useAuth();
   const [submitOpen, setSubmitOpen] = useState(false);
   const [filter, setFilter] = useState<number | 'all'>('all');
   const [page, setPage] = useState(1);
@@ -73,15 +76,40 @@ const HomeReviews = () => {
               Customer Reviews
             </h2>
           </div>
-          <Button
-            onClick={() => setSubmitOpen(true)}
-            className="rounded-none whitespace-nowrap"
-            size="sm"
-          >
-            <Plus className="h-4 w-4 mr-1.5" />
-            {isAdmin ? 'Add review' : 'Write a review'}
-          </Button>
+          {user ? (
+            <Button
+              onClick={() => setSubmitOpen(true)}
+              className="rounded-none whitespace-nowrap"
+              size="sm"
+            >
+              <Plus className="h-4 w-4 mr-1.5" />
+              {isAdmin ? 'Add review' : 'Leave a review'}
+            </Button>
+          ) : (
+            <Button
+              asChild
+              className="rounded-none whitespace-nowrap"
+              size="sm"
+            >
+              <Link to="/login">
+                <LogIn className="h-4 w-4 mr-1.5" />
+                Log in to review
+              </Link>
+            </Button>
+          )}
         </div>
+        <p className="text-[11px] text-muted-foreground leading-relaxed max-w-xl mb-8 md:mb-12 -mt-6">
+          Once you receive your products, please consider leaving a review. If you leave a legitimate review with a verified order then you'll receive a free gift on your next order. If images of the products you received are also present in the review then you can receive extra samples. Simply hit us up on TikTok{' '}
+          <a
+            href="https://www.tiktok.com/@fragranceprofs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-accent transition-colors"
+          >
+            @fragranceprofs
+          </a>{' '}
+          and show proof of review.
+        </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Left: Summary */}
