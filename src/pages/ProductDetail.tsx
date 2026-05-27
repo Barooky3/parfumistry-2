@@ -104,11 +104,16 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           >
             {(() => {
               const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
+              const imageList = product.additionalImages && product.additionalImages.length > 0
+                ? [...product.additionalImages, product.image]
+                : [product.image];
+              const currentSrc = imageList[selectedImageIndex] || product.image;
+              const isProductShot = currentSrc === product.image;
               return (
                 <div 
                   className={cn(
                     "aspect-square bg-secondary flex items-end justify-center relative overflow-hidden",
-                    !hasOverride && product.imagePadding
+                    !hasOverride && isProductShot && product.imagePadding
                   )}
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
@@ -134,11 +139,11 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       />
                     </div>
                   ) : (
-                    <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center">
+                    <div style={isProductShot ? (innerStyle || undefined) : undefined} className="w-full h-full flex items-end justify-center">
                       <img 
-                        src={(product.additionalImages && product.additionalImages.length > 0 ? [product.image, ...product.additionalImages] : [product.image])[selectedImageIndex] || product.image} 
+                        src={currentSrc} 
                         alt={product.name} 
-                        className={cn("w-full h-full", (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                        className={cn("w-full h-full", isProductShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
                         loading="eager"
                       />
                     </div>
@@ -148,7 +153,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             })()}
             {product.additionalImages && product.additionalImages.length > 0 && !product.bundleImages && (
               <div className="flex gap-3 px-1">
-                {[product.image, ...product.additionalImages].map((src, idx) => (
+                {[...product.additionalImages, product.image].map((src, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIndex(idx)}
@@ -163,6 +168,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 ))}
               </div>
             )}
+
             <ProductAttributes productId={product.id} />
           </motion.div>
 
