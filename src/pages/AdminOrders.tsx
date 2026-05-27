@@ -1183,9 +1183,8 @@ export default function AdminOrders() {
                       </p>
                       {order.shipping_address && (() => {
                         const addr = order.shipping_address as any;
-                        const parts = [addr.line1, addr.city, addr.postalCode, addr.country].filter(Boolean);
-                        return parts.length > 0 ? (
-                          <p className="text-xs text-muted-foreground mt-0.5">📍 {parts.join(", ")}</p>
+                        return addr.country ? (
+                          <p className="text-xs text-muted-foreground mt-0.5">📍 {addr.country}</p>
                         ) : null;
                       })()}
                     </div>
