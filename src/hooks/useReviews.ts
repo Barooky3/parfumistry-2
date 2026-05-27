@@ -61,6 +61,20 @@ const dbToUnified = (r: DbReview, currentUserId?: string | null): UnifiedReview 
   images: Array.isArray(r.images) ? r.images : [],
 });
 
+const HIDDEN_SEEDS_KEY = 'parfumistry_hidden_seed_reviews';
+export const getHiddenSeedIds = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(HIDDEN_SEEDS_KEY) || '[]');
+  } catch {
+    return [];
+  }
+};
+export const hideSeedReview = (id: string) => {
+  const list = getHiddenSeedIds();
+  if (!list.includes(id)) localStorage.setItem(HIDDEN_SEEDS_KEY, JSON.stringify([...list, id]));
+};
+
 /**
  * Returns merged reviews (seed + db) visible to the current viewer.
  * - Anyone sees approved reviews
@@ -89,10 +103,13 @@ export const useReviews = () => {
 
   const allDbUnified = dbReviews.map((r) => dbToUnified(r, user?.id));
 
-  // Public-facing list = approved db reviews + user's own pending + seed
+  const hiddenSeeds = getHiddenSeedIds();
+  const visibleSeeds = seedAsUnified.filter((r) => !hiddenSeeds.includes(r.id));
+
+  // Public-facing list = approved db reviews + user's own pending + seed (minus admin-hidden)
   const visibleReviews: UnifiedReview[] = [
     ...allDbUnified.filter((r) => r.status === 'approved' || r.isOwn),
-    ...seedAsUnified,
+    ...visibleSeeds,
   ];
 
   return {

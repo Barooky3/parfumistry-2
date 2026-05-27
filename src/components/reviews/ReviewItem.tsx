@@ -3,7 +3,7 @@ import { Star, BadgeCheck, Clock, Pencil, Trash2, Check, X, Languages, Loader2 }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { UnifiedReview, adminUpdateReview, adminDeleteReview } from '@/hooks/useReviews';
+import { UnifiedReview, adminUpdateReview, adminDeleteReview, adminAddReview, hideSeedReview } from '@/hooks/useReviews';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -85,16 +85,33 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
 
   const handleSave = async () => {
     setBusy(true);
-    const res = await adminUpdateReview(review.id, {
-      customer_name: editName,
-      rating: editRating,
-      text: editText || null,
-    });
-    setBusy(false);
-    if (res.error) {
-      toast({ title: 'Update failed', description: res.error.message, variant: 'destructive' });
-      return;
+    if (review.source === 'seed') {
+      // Seed reviews aren't in DB — convert by inserting a new approved review and hiding the seed.
+      const res = await adminAddReview({
+        customer_name: editName,
+        rating: editRating,
+        text: editText,
+        images: review.images ?? [],
+      });
+      if (res.error) {
+        setBusy(false);
+        toast({ title: 'Update failed', description: res.error.message, variant: 'destructive' });
+        return;
+      }
+      hideSeedReview(review.id);
+    } else {
+      const res = await adminUpdateReview(review.id, {
+        customer_name: editName,
+        rating: editRating,
+        text: editText || null,
+      });
+      if (res.error) {
+        setBusy(false);
+        toast({ title: 'Update failed', description: res.error.message, variant: 'destructive' });
+        return;
+      }
     }
+    setBusy(false);
     toast({ title: 'Review updated' });
     setEditing(false);
     onChanged?.();
@@ -103,6 +120,13 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
   const handleDelete = async () => {
     if (!confirm('Delete this review permanently?')) return;
     setBusy(true);
+    if (review.source === 'seed') {
+      hideSeedReview(review.id);
+      setBusy(false);
+      toast({ title: 'Review removed' });
+      onChanged?.();
+      return;
+    }
     const res = await adminDeleteReview(review.id);
     setBusy(false);
     if (res.error) {
