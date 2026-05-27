@@ -11,10 +11,10 @@ import React from 'react';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com'];
 
 const BUNDLE_TAGS: Record<string, string> = {
-  'evening-sweetheart-bundle': 'Evening Sweetheart for Winter',
-  'young-playboy-bundle': 'Young Playboy for Winter and Summer',
-  'sleek-and-clean-bundle': 'Sleek and Clean for Summer',
-  'jpg-bundle': 'JPG for All Seasons',
+  'evening-sweetheart-bundle': 'Winter',
+  'young-playboy-bundle': 'Winter & Summer',
+  'sleek-and-clean-bundle': 'Summer',
+  'jpg-bundle': 'All Seasons',
 };
 
 const getBundleTag = (id: string): string | undefined => BUNDLE_TAGS[id];
@@ -35,17 +35,17 @@ const BundleCard = ({ bundle, index }: { bundle: any; index: number }) => {
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       <Link to={`/product/${bundle.id}`} className="block">
+        {getBundleTag(bundle.id) && (
+          <div className="bg-accent text-accent-foreground text-[10px] md:text-xs font-semibold tracking-wide uppercase px-3 py-2 text-center">
+            {getBundleTag(bundle.id)}
+          </div>
+        )}
         <div 
           className={cn(
             "aspect-[3/4] bg-secondary rounded-sm flex items-end justify-center relative overflow-hidden",
             !hasOverride && bundle.imagePadding
           )}
         >
-          {getBundleTag(bundle.id) && (
-            <div className="absolute top-3 left-3 z-30 bg-accent text-accent-foreground text-[10px] md:text-xs font-semibold tracking-wide uppercase px-3 py-1.5 shadow-md">
-              {getBundleTag(bundle.id)}
-            </div>
-          )}
           {isAdmin && <PaddingAdjuster productId={bundle.id} productName={bundle.name} />}
           {bundle.bundleImages && bundle.bundleImages.length > 0 ? (
             <div className="relative w-full h-full" style={innerStyle || undefined}>
