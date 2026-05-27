@@ -223,7 +223,6 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
       )}
       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
         <span className="text-foreground/70">{review.name}</span>
-        <span className="ml-auto">{review.date}</span>
       </div>
       {canEdit && (
         <div className="flex gap-2 mt-2">
