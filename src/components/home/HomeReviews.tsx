@@ -25,6 +25,7 @@ const RatingStars = ({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'l
 
 const HomeReviews = () => {
   const { visibleReviews, isAdmin, refresh } = useReviews();
+  const { user } = useAuth();
   const [submitOpen, setSubmitOpen] = useState(false);
   const [filter, setFilter] = useState<number | 'all'>('all');
   const [page, setPage] = useState(1);
