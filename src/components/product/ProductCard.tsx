@@ -1,13 +1,11 @@
-import { forwardRef, useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Flame, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product } from '@/types/product';
-import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
@@ -19,46 +17,18 @@ interface ProductCardProps {
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
   ({ product, className }, ref) => {
-    const { addItem, toggleCart } = useCart();
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
-    const navigate = useNavigate();
-    const [showButtons, setShowButtons] = useState(false);
-    const cardRef = useRef<HTMLDivElement>(null);
     const paddingOverride = useProductPadding(product.id);
-    
+
     const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
     const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
-    
+
     const hasDiscount = product.originalPrice && product.originalPrice > product.price;
     const discountPercent = hasDiscount
       ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
       : 0;
-
-    const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const firstVariant = product.variants?.[0];
-      if (firstVariant) {
-        addItem(product, firstVariant.ml, firstVariant.price);
-      } else {
-        addItem(product);
-      }
-      toggleCart();
-    };
-
-    const handleBuyNow = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const firstVariant = product.variants?.[0];
-      if (firstVariant) {
-        addItem(product, firstVariant.ml, firstVariant.price);
-      } else {
-        addItem(product);
-      }
-      navigate('/checkout');
-    };
 
     // Get top 3 scent notes to display (combine all types)
     const getScentNotesDisplay = () => {
@@ -72,53 +42,11 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     };
 
     const scentNotes = getScentNotesDisplay();
-
-    // Handle touch for mobile - show buttons on touch
-    const handleTouchStart = () => {
-      setShowButtons(true);
-    };
-
-    // Handle card tap for navigation
-    const handleCardClick = (e: React.MouseEvent) => {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      
-      if (isTouchDevice && !showButtons) {
-        // If buttons not showing yet, show them and prevent navigation
-        e.preventDefault();
-        setShowButtons(true);
-      }
-      // If buttons are showing, allow normal navigation
-    };
-
-    // Close buttons when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-        if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
-          setShowButtons(false);
-        }
-      };
-
-      if (showButtons) {
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside);
-      }
-
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        document.removeEventListener('touchstart', handleClickOutside);
-      };
-    }, [showButtons]);
-
     const isBundle = product.isBundle || product.category === 'bundle';
 
     return (
-      <motion.div 
-        ref={(node) => {
-          // Handle both refs
-          if (typeof ref === 'function') ref(node);
-          else if (ref) ref.current = node;
-          (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        }}
+      <motion.div
+        ref={ref}
         className={cn(
           'group relative',
           isBundle && 'ring-2 ring-accent rounded-md',
@@ -126,7 +54,6 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         )}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-        onTouchStart={handleTouchStart}
       >
         {/* Bundle Star Badge */}
         {isBundle && (
@@ -135,10 +62,9 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           </div>
         )}
         {/* Image Container */}
-        <Link 
-          to={`/product/${product.id}`} 
+        <Link
+          to={`/product/${product.id}`}
           className="block relative mb-2.5"
-          onClick={handleCardClick}
         >
          {(() => {
             const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
@@ -217,52 +143,6 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               -{discountPercent}%
             </span>
           )}
-
-          {/* Quick Action Overlay - Desktop: hover, Mobile: touch */}
-          <div className="absolute bottom-2 left-2 right-2 flex gap-1.5">
-            {/* Desktop - hover only */}
-            <div className="hidden md:flex gap-1.5 w-full pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-              <Button
-                onClick={handleAddToCart}
-                className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
-                disabled={!product.inStock}
-              >
-                Add
-              </Button>
-              <Button
-                onClick={handleBuyNow}
-                className="flex-1 h-9 text-[9px] font-medium tracking-[0.05em] uppercase rounded-sm bg-accent/95 text-accent-foreground hover:bg-accent active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
-                disabled={!product.inStock}
-              >
-                Buy
-              </Button>
-            </div>
-            
-            {/* Mobile - tap to show */}
-            <div 
-              className={cn(
-                "flex md:hidden gap-1.5 w-full transition-all duration-200",
-                showButtons 
-                  ? "opacity-100 translate-y-0 pointer-events-auto" 
-                  : "opacity-0 translate-y-2 pointer-events-none"
-              )}
-            >
-              <Button
-                onClick={handleAddToCart}
-                className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-primary/95 text-primary-foreground hover:bg-primary active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
-                disabled={!product.inStock}
-              >
-                Add
-              </Button>
-              <Button
-                onClick={handleBuyNow}
-                className="flex-1 h-8 text-[8px] font-medium tracking-[0.05em] uppercase rounded-sm bg-accent/95 text-accent-foreground hover:bg-accent active:scale-[0.97] transition-all shadow-lg backdrop-blur-sm"
-                disabled={!product.inStock}
-              >
-                Buy
-              </Button>
-            </div>
-          </div>
 
           {/* Out of Stock Overlay */}
           {!product.inStock && (
