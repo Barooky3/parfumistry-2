@@ -128,7 +128,7 @@ export const useReviews = () => {
   const allDbUnified = dbReviews.map((r) => dbToUnified(r, user?.id));
 
   const hiddenSeeds = getHiddenSeedIds();
-  const visibleSeeds = seedAsUnified.filter((r) => !hiddenSeeds.includes(r.id));
+  const visibleSeeds = buildSeedAsUnified().filter((r) => !hiddenSeeds.includes(r.id));
 
   // Public-facing list = approved db reviews + user's own pending + seed (minus admin-hidden)
   const visibleReviews: UnifiedReview[] = [
