@@ -1015,6 +1015,53 @@ export default function AdminOrders() {
               </p>
             </div>
           </div>
+
+          {/* Reset history */}
+          <div className="mt-4 border-t pt-3">
+            <button
+              onClick={() => setHistoryOpen((v) => !v)}
+              className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors"
+            >
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                Reset History — {resetHistory.length} {resetHistory.length === 1 ? "day" : "days"}
+              </p>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${historyOpen ? "rotate-180" : ""}`} />
+            </button>
+            {historyOpen && (
+              <div className="mt-2 space-y-1.5 max-h-72 overflow-y-auto">
+                {resetHistory.length === 0 ? (
+                  <p className="text-xs text-muted-foreground py-3 text-center">No resets yet.</p>
+                ) : (
+                  resetHistory.map((h) => (
+                    <div key={h.id} className="flex flex-wrap items-center justify-between gap-2 text-xs border rounded px-2 py-1.5 bg-background/40">
+                      <div className="text-muted-foreground">
+                        {format(new Date(h.periodStart), "dd MMM HH:mm")} → {format(new Date(h.periodEnd), "dd MMM HH:mm")}
+                        <span className="ml-2 opacity-70">· {h.count} orders</span>
+                      </div>
+                      <div className="flex gap-3">
+                        <span>Gross <strong>€{h.gross.toFixed(2)}</strong></span>
+                        <span className="text-destructive">Ads −€{h.adSpend.toFixed(2)}</span>
+                        <span className={h.net < 0 ? "text-destructive font-semibold" : "text-primary font-semibold"}>
+                          Net €{h.net.toFixed(2)}
+                        </span>
+                        <button
+                          onClick={() => {
+                            if (confirm("Delete this history entry?")) {
+                              setResetHistory((prev) => prev.filter((x) => x.id !== h.id));
+                            }
+                          }}
+                          className="text-muted-foreground hover:text-destructive"
+                          aria-label="Delete entry"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>
