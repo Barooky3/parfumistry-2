@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Star, Plus, ChevronLeft, ChevronRight, LogIn, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useReviews, applyReviewOrder, useReviewOrder, forceSyncLocalToRemote } from '@/hooks/useReviews';
+import { useReviews, applyReviewOrder, useReviewOrder, saveRemoteReviewOrder, getLocalReviewOrder, fetchRemoteReviewOrder } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
 import { useAuth } from '@/contexts/AuthContext';
@@ -81,20 +81,20 @@ const HomeReviews = () => {
 
   const [order, setOrder] = useReviewOrder();
 
-  // One-time per device: push this admin device's local state (order, edits, deletions)
-  // up to the shared store so it overrides every other device.
-  const SYNC_FLAG = 'parfumistry_reviews_force_synced_v2';
+  // One-time: if admin has a local order from before, push it to the server so it becomes universal.
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
     if (!isAdmin) return;
-    if (typeof window === 'undefined') return;
-    if (localStorage.getItem(SYNC_FLAG)) return;
+    const local = getLocalReviewOrder();
+    if (local.length === 0) return;
     seededRef.current = true;
-    forceSyncLocalToRemote().then(() => {
-      try { localStorage.setItem(SYNC_FLAG, '1'); } catch {}
+    fetchRemoteReviewOrder().then((remote) => {
+      if (remote.length === 0) {
+        saveRemoteReviewOrder(local).then(() => setOrder(local));
+      }
     });
-  }, [isAdmin]);
+  }, [isAdmin, setOrder]);
 
   const sorted = useMemo(() => {
     const base = [...visibleReviews].sort((a, b) => {
@@ -125,6 +125,7 @@ const HomeReviews = () => {
     // merge with any existing order so unseen ids aren't lost
     const merged = [...next, ...order.filter((id) => !next.includes(id))];
     setOrder(merged);
+    saveRemoteReviewOrder(merged);
   };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));

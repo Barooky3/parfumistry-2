@@ -226,24 +226,18 @@ export type Database = {
       }
       review_order: {
         Row: {
-          hidden_seeds: Json
           id: number
           order_ids: Json
-          seed_overrides: Json
           updated_at: string
         }
         Insert: {
-          hidden_seeds?: Json
           id?: number
           order_ids?: Json
-          seed_overrides?: Json
           updated_at?: string
         }
         Update: {
-          hidden_seeds?: Json
           id?: number
           order_ids?: Json
-          seed_overrides?: Json
           updated_at?: string
         }
         Relationships: []
