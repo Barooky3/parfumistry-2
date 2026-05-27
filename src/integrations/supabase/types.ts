@@ -230,6 +230,7 @@ export type Database = {
           customer_email: string | null
           customer_name: string
           id: string
+          images: string[]
           is_admin_added: boolean
           rating: number
           status: string
@@ -242,6 +243,7 @@ export type Database = {
           customer_email?: string | null
           customer_name: string
           id?: string
+          images?: string[]
           is_admin_added?: boolean
           rating: number
           status?: string
@@ -254,6 +256,7 @@ export type Database = {
           customer_email?: string | null
           customer_name?: string
           id?: string
+          images?: string[]
           is_admin_added?: boolean
           rating?: number
           status?: string
