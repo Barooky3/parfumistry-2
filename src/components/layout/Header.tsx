@@ -105,8 +105,21 @@ export const Header = () => {
             ))}
           </nav>
 
+          {/* Mobile FAQ pill — prominent, always visible */}
+          <Link
+            to="/faq"
+            className={cn(
+              'md:hidden flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase shadow-md ring-1 ring-accent/50 transition-all active:scale-95 shrink-0',
+              'bg-accent text-accent-foreground'
+            )}
+            aria-label="FAQ"
+          >
+            <HelpCircle className="h-3 w-3" strokeWidth={2.5} />
+            FAQ
+          </Link>
+
           {/* Right Actions */}
-          <div className="flex items-center gap-3 pl-6">
+          <div className="flex items-center gap-1.5 md:gap-3 md:pl-6">
             {/* Currency Dropdown - aromaeu style */}
             <div ref={currencyRef} className="relative hidden md:block mr-1">
               <button
