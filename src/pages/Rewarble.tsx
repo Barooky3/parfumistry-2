@@ -80,7 +80,7 @@ const Rewarble = () => {
           orderItems: ctx.cartItems,
           customerEmail: ctx.email,
           customerName: ctx.customerName,
-          shippingAddress: ctx.shippingAddress,
+          shippingAddress: { ...ctx.shippingAddress, shippingMethod: ctx.shippingMethod || "standard" },
           totalAmount: ctx.totalAmount,
           paymentMethod: 'rewarble',
           giftCardCode: combinedCode,
