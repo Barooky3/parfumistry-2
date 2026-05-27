@@ -165,22 +165,22 @@ export const ReviewItem = ({ review, isAdmin, onChanged }: ReviewItemProps) => {
         {review.text || 'Rating submitted - no written feedback'}
       </p>
       {showTranslateBtn && (
-        <div className="mt-1.5">
+        <div className="mt-2">
           <button
             type="button"
             onClick={handleTranslate}
             disabled={translating}
-            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-1.5 text-xs border border-border/80 hover:border-accent/70 hover:text-accent transition-colors px-2.5 py-1 disabled:opacity-60"
           >
             {translating ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : (
-              <Languages className="h-3 w-3" />
+              <Languages className="h-3.5 w-3.5 text-accent/80" />
             )}
             {translation && showTranslation ? 'Show original' : 'Translate to English'}
           </button>
           {translation && showTranslation && (
-            <p className="text-sm mt-1.5 text-foreground/80 italic border-l-2 border-accent/40 pl-2">
+            <p className="text-sm mt-2 text-foreground/80 italic border-l-2 border-accent/40 pl-2.5">
               {translation}
             </p>
           )}
