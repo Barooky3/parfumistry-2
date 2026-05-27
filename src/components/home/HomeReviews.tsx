@@ -268,7 +268,8 @@ const HomeReviews = () => {
           </div>
 
           <p className="text-xs text-muted-foreground mb-4">
-            Newest first · Showing {pageReviews.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–
+            {isAdmin ? 'Admin: drag the handle to reorder · ' : 'Newest first · '}
+            Showing {pageReviews.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–
             {(currentPage - 1) * PAGE_SIZE + pageReviews.length} of {filtered.length} reviews
           </p>
 
@@ -277,16 +278,17 @@ const HomeReviews = () => {
               No reviews match this filter.
             </p>
           ) : (
-            <div className="divide-y divide-border">
-              {pageReviews.map((review) => (
-                <ReviewItem
-                  key={review.id}
-                  review={review}
-                  isAdmin={isAdmin}
-                  onChanged={refresh}
-                />
-              ))}
-            </div>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={pageReviews.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+                <div className="divide-y divide-border">
+                  {pageReviews.map((review) => (
+                    <SortableReviewRow key={review.id} id={review.id} isAdmin={isAdmin}>
+                      <ReviewItem review={review} isAdmin={isAdmin} onChanged={refresh} />
+                    </SortableReviewRow>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           )}
 
           {totalPages > 1 && (
