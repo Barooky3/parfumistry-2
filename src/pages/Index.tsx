@@ -98,12 +98,10 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="h-12 px-10 text-[11px] font-medium tracking-[0.15em] uppercase bg-accent text-accent-foreground hover:bg-accent/90 rounded-none active:scale-[0.98] transition-all"
-                asChild
+                onClick={() => document.getElementById('bestsellers')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                <Link to="/shop">
-                  {t('hero.shopNow')}
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
+                {t('hero.shopNow')}
+                <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
               <Button 
                 variant="outline" 
@@ -147,7 +145,7 @@ const Index = () => {
 
 
       {/* Bestsellers Section */}
-      <section className="py-14 md:py-20 bg-background">
+      <section id="bestsellers" className="py-14 md:py-20 bg-background">
         <div className="container">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12">
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
@@ -175,9 +173,8 @@ const Index = () => {
           
           <div className="text-center mt-10">
             <Button 
-              variant="outline" 
               size="lg" 
-              className="h-11 px-8 text-[11px] font-medium tracking-[0.12em] uppercase rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background active:scale-[0.98] transition-all"
+              className="h-12 px-10 text-[11px] font-medium tracking-[0.12em] uppercase rounded-none bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98] transition-all"
               asChild
             >
               <Link to="/shop">
