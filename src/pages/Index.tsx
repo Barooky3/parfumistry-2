@@ -22,8 +22,8 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredBestsellers = searchQuery.trim()
-    ? allBestsellers.filter(p =>
+  const filteredProducts = searchQuery.trim()
+    ? products.filter(p =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.brand.toLowerCase().includes(searchQuery.toLowerCase())
       )
