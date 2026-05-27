@@ -165,7 +165,7 @@ const Index = () => {
             </form>
           </div>
           
-          <div className="grid grid-cols-4 lg:grid-cols-5 gap-2 md:gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-5">
             {bestsellers.slice(0, 10).map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
