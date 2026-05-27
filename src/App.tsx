@@ -33,6 +33,7 @@ const ProofUpload = lazy(() => import("./pages/ProofUpload"));
 const EmailPreview = lazy(() => import("./pages/EmailPreview"));
 const CustomBundle = lazy(() => import("./pages/CustomBundle"));
 const FAQ = lazy(() => import("./pages/FAQ"));
+const TrackOrder = lazy(() => import("./pages/TrackOrder"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
