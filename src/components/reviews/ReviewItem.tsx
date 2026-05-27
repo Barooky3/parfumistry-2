@@ -1,10 +1,21 @@
 import { useState } from 'react';
-import { Star, BadgeCheck, Clock, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Star, BadgeCheck, Clock, Pencil, Trash2, Check, X, Languages, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { UnifiedReview, adminUpdateReview, adminDeleteReview } from '@/hooks/useReviews';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+
+// Heuristic: treat text as non-English if it contains common non-English markers
+// (diacritics or frequent foreign stop-words). Good enough for review snippets.
+const NON_ENGLISH_WORDS = /\b(und|der|die|das|ist|nicht|mit|auch|sehr|schnell|alles|gut|für|über|gerne|wieder|danke|bestellung|versand|qualität|verpackung|empfehlung|bin|hab|ich|merci|livraison|rapide|produit|nickel|tous|excellent|sillage|équipe|discrète|prodotto|consegna|spedizione|ottimo|perfetto|tutto|gentile|comunque|muy|rapido|perfecto|gracias|envío|bardzo|dobra|jakość|szybka|przesyłka|polski)\b/i;
+const DIACRITICS = /[äöüßéèêàâçñíóúîôûœ]/i;
+
+const isLikelyNonEnglish = (text: string) => {
+  if (!text || text.trim().length < 3) return false;
+  return DIACRITICS.test(text) || NON_ENGLISH_WORDS.test(text);
+};
 
 const RatingStars = ({
   rating,
