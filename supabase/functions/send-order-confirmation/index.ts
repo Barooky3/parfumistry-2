@@ -220,17 +220,27 @@ function buildItemRow(item: OrderItem, origin: string, showImage: boolean): stri
   const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
   const lineTotal = (item.price * item.quantity).toFixed(2);
   const imageUrl = resolveProductImage(item.name, item.image);
+  const isSample = item.price === 0 || /sample/i.test(item.name);
+  const cleanName = item.name.replace(/\s*[—-]\s*Free\s*2ml\s*Sample\s*🎁?/i, '').trim();
+  const priceLabel = isSample
+    ? `Qty: ${item.quantity} · <span style="color:#c9a96e;font-weight:600;">FREE GIFT 🎁</span>`
+    : `Qty: ${item.quantity} · €${lineTotal}`;
+  const giftBadge = isSample
+    ? `<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 8px;border-radius:3px;margin-bottom:6px;">Complimentary 2ml Sample</div>`
+    : '';
+  const rowBg = isSample ? 'background-color:#fdf8ee;' : '';
 
   return `<tr>
-<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top;">
+<td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top; ${rowBg}">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 ${showImage ? `<td style="width: 80px; vertical-align: top;">
-<img src="${imageUrl}" alt="${item.name}" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />
+<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />
 </td>` : ""}
 <td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">
+${giftBadge}
 <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px;">${item.brand}</div>
-<div style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px;">${item.name}${mlLabel}</div>
-<div style="font-size: 13px; color: #666; margin-bottom: 8px;">Qty: ${item.quantity} · €${lineTotal}</div>
+<div style="font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px;">${cleanName}${mlLabel}</div>
+<div style="font-size: 13px; color: #666; margin-bottom: 8px;">${priceLabel}</div>
 </td></tr></table>
 </td></tr>`;
 }
@@ -360,13 +370,20 @@ function buildAdminInvoiceHtml(
   const itemRows = items.map((item, i) => {
     const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
     const lineTotal = (item.price * item.quantity).toFixed(2);
-    const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
-    const productLink = getProductLink(item.name, item.brand, item.affiliateUrl);
+    const isSample = item.price === 0 || /sample/i.test(item.name);
+    const cleanName = item.name.replace(/\s*[—-]\s*Free\s*2ml\s*Sample\s*🎁?/i, '').trim();
+    const bg = isSample ? "#fdf8ee" : (i % 2 === 0 ? "#ffffff" : "#fafaf8");
+    const productLink = getProductLink(cleanName, item.brand, item.affiliateUrl);
+    const sampleTag = isSample
+      ? `<span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 6px;border-radius:3px;margin-right:6px;">FREE SAMPLE 🎁</span>`
+      : '';
+    const priceCell = isSample ? `<span style="color:#c9a96e;font-weight:600;">FREE</span>` : `€${item.price.toFixed(2)}`;
+    const totalCell = isSample ? `<span style="color:#c9a96e;font-weight:600;">€0.00</span>` : `€${lineTotal}`;
     return `<tr style="background:${bg};">
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${item.brand} — ${item.name}${mlLabel} <a href="${productLink}" style="color:#c9a96e;font-weight:500;text-decoration:none;">(link)</a></td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${sampleTag}${item.brand} — ${cleanName}${mlLabel} <a href="${productLink}" style="color:#c9a96e;font-weight:500;text-decoration:none;">(link)</a></td>
       <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${item.quantity}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">€${item.price.toFixed(2)}</td>
-      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">€${lineTotal}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">${priceCell}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">${totalCell}</td>
     </tr>`;
   }).join("");
 
