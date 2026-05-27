@@ -76,15 +76,40 @@ const HomeReviews = () => {
               Customer Reviews
             </h2>
           </div>
-          <Button
-            onClick={() => setSubmitOpen(true)}
-            className="rounded-none whitespace-nowrap"
-            size="sm"
-          >
-            <Plus className="h-4 w-4 mr-1.5" />
-            {isAdmin ? 'Add review' : 'Write a review'}
-          </Button>
+          {user ? (
+            <Button
+              onClick={() => setSubmitOpen(true)}
+              className="rounded-none whitespace-nowrap"
+              size="sm"
+            >
+              <Plus className="h-4 w-4 mr-1.5" />
+              {isAdmin ? 'Add review' : 'Leave a review'}
+            </Button>
+          ) : (
+            <Button
+              asChild
+              className="rounded-none whitespace-nowrap"
+              size="sm"
+            >
+              <Link to="/login">
+                <LogIn className="h-4 w-4 mr-1.5" />
+                Log in to review
+              </Link>
+            </Button>
+          )}
         </div>
+        <p className="text-[11px] text-muted-foreground leading-relaxed max-w-xl mb-8 md:mb-12 -mt-6">
+          Once you receive your products, please consider leaving a review. If you leave a legitimate review with a verified order then you'll receive a free gift on your next order. If images of the products you received are also present in the review then you can receive extra samples. Simply hit us up on TikTok{' '}
+          <a
+            href="https://www.tiktok.com/@fragranceprofs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-accent transition-colors"
+          >
+            @fragranceprofs
+          </a>{' '}
+          and show proof of review.
+        </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Left: Summary */}
