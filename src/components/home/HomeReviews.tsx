@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Star, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Plus, ChevronLeft, ChevronRight, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useReviews } from '@/hooks/useReviews';
 import { ReviewItem } from '@/components/reviews/ReviewItem';
 import { ReviewSubmitDialog } from '@/components/reviews/ReviewSubmitDialog';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const PAGE_SIZE = 6;
 
