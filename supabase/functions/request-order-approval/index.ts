@@ -223,11 +223,16 @@ serve(async (req) => {
 
     const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
     const checkoutRef = idempotencyKey ? refPrefix + "-idem-" + idempotencyKey : refPrefix + "-" + Date.now();
+    // Privacy: do NOT store full address. Only persist country + shipping method.
+    const minimalShipping = {
+      country: shippingAddress?.country || null,
+      shippingMethod: (shippingAddress as any)?.shippingMethod || null,
+    };
     const { data: order, error: dbError } = await supabase.from("orders").insert({
       checkout_reference: checkoutRef,
       customer_email: customerEmail,
       customer_name: customerName || "Valued Customer",
-      shipping_address: shippingAddress || {},
+      shipping_address: minimalShipping,
       order_items: normalizedItems,
       total_amount: parseFloat(calculatedTotal),
       status: "pending_approval",
