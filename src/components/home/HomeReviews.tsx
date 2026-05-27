@@ -79,20 +79,41 @@ const HomeReviews = () => {
   const [filter, setFilter] = useState<number | 'all'>('all');
   const [page, setPage] = useState(1);
 
+  const [orderVersion, setOrderVersion] = useState(0);
+
   const sorted = useMemo(() => {
-    return [...visibleReviews].sort((a, b) => {
+    const base = [...visibleReviews].sort((a, b) => {
       if (a.isOwn && a.status === 'pending' && !(b.isOwn && b.status === 'pending')) return -1;
       if (b.isOwn && b.status === 'pending' && !(a.isOwn && a.status === 'pending')) return 1;
       if (a.source === 'db' && b.source === 'seed') return -1;
       if (b.source === 'db' && a.source === 'seed') return 1;
       return 0;
     });
-  }, [visibleReviews]);
+    return applyReviewOrder(base);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleReviews, orderVersion]);
 
   const filtered = useMemo(() => {
     if (filter === 'all') return sorted;
     return sorted.filter((r) => r.rating === filter);
   }, [sorted, filter]);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  const handleDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    const ids = sorted.map((r) => r.id);
+    const from = ids.indexOf(String(active.id));
+    const to = ids.indexOf(String(over.id));
+    if (from === -1 || to === -1) return;
+    const next = arrayMove(ids, from, to);
+    // merge with any existing order so unseen ids aren't lost
+    const existing = getReviewOrder();
+    const merged = [...next, ...existing.filter((id) => !next.includes(id))];
+    setReviewOrder(merged);
+    setOrderVersion((v) => v + 1);
+  };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
