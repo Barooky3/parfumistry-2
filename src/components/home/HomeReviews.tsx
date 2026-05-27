@@ -116,40 +116,51 @@ const HomeReviews = () => {
           </div>
 
           {/* Right: CTA box */}
-          <div className="bg-card/40 border border-border/60 rounded-2xl p-6 md:p-8 flex flex-col justify-center">
-            {user ? (
-              <Button
-                onClick={() => setSubmitOpen(true)}
-                className="rounded-full whitespace-nowrap self-start"
-                size="lg"
-              >
-                <Plus className="h-4 w-4 mr-1.5" />
-                {isAdmin ? 'Add review' : 'Leave a Review'}
-              </Button>
-            ) : (
-              <Button
-                asChild
-                className="rounded-full whitespace-nowrap self-start"
-                size="lg"
-              >
-                <Link to="/login">
-                  <LogIn className="h-4 w-4 mr-1.5" />
-                  Log in to Review
-                </Link>
-              </Button>
-            )}
-            <p className="text-[11px] text-muted-foreground leading-relaxed mt-5">
-              Once you receive your products, please consider leaving a review. If you leave a legitimate review with a verified order then you'll receive a free gift on your next order. If images of the products you received are also present in the review then you can receive extra samples. Simply hit us up on TikTok{' '}
-              <a
-                href="https://www.tiktok.com/@fragranceprofs"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-accent transition-colors"
-              >
-                @fragranceprofs
-              </a>{' '}
-              and show proof of review.
-            </p>
+          <div className="relative overflow-hidden bg-gradient-to-br from-card/80 via-card/50 to-card/30 border border-border/60 rounded-2xl p-7 md:p-9 flex flex-col justify-center backdrop-blur-sm shadow-xl">
+            <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-accent/10 blur-3xl pointer-events-none" />
+            <div className="relative">
+              <h3 className="font-display text-2xl md:text-3xl text-foreground mb-2">
+                Share your experience
+              </h3>
+              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed mb-6">
+                Tell us how your fragrances performed — your review helps fellow Parfumistry customers choose with confidence.
+              </p>
+              {user ? (
+                <Button
+                  onClick={() => setSubmitOpen(true)}
+                  className="rounded-full whitespace-nowrap"
+                  size="lg"
+                >
+                  <Plus className="h-4 w-4 mr-1.5" />
+                  {isAdmin ? 'Add review' : 'Leave a Review'}
+                </Button>
+              ) : (
+                <Button
+                  asChild
+                  className="rounded-full whitespace-nowrap"
+                  size="lg"
+                >
+                  <Link to="/login">
+                    <LogIn className="h-4 w-4 mr-1.5" />
+                    Log in to Review
+                  </Link>
+                </Button>
+              )}
+              <div className="mt-6 pt-5 border-t border-border/40">
+                <p className="text-[13px] md:text-sm text-muted-foreground/90 leading-relaxed">
+                  Once your order arrives, leave a verified review and we'll send a <span className="text-foreground/90 font-medium">free gift</span> with your next order. Include photos of your products and you'll earn <span className="text-foreground/90 font-medium">extra samples</span> too. Just message us on TikTok{' '}
+                  <a
+                    href="https://www.tiktok.com/@parfumistry"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent underline-offset-2 hover:underline transition-colors"
+                  >
+                    @parfumistry
+                  </a>{' '}
+                  with proof of your review.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
