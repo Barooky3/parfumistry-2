@@ -133,7 +133,7 @@ serve(async (req) => {
         // Update status to approved
         await adminClient
           .from("orders")
-          .update({ status: "approved", email_sent: true })
+          .update({ status: "approved", email_sent: true, updated_at: new Date().toISOString() })
           .eq("id", orderId);
 
         // Send confirmation to customer via send-order-confirmation function
@@ -379,7 +379,7 @@ serve(async (req) => {
             : "Unfortunately, your payment could not be verified. No money has been taken from your account.";
         }
 
-        await adminClient.from("orders").update({ status: "rejected", rejection_notes: notesForDb }).eq("id", orderId);
+        await adminClient.from("orders").update({ status: "rejected", rejection_notes: notesForDb, updated_at: new Date().toISOString() }).eq("id", orderId);
 
         // Send rejection email to customer
         const apiKey = Deno.env.get("RESEND_API_KEY");

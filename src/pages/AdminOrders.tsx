@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -126,12 +126,63 @@ export default function AdminOrders() {
   const [adSpendInput, setAdSpendInput] = useState("");
   type ResetHistoryOrder = { id: string; order_number: number | null; customer_name: string; customer_email: string; total_amount: number; method: string; approvedAt: string };
   type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number; orders?: ResetHistoryOrder[] };
+  type LiveCounterSnapshot = { gross: number; count: number; net: number; orders: ResetHistoryOrder[] };
   const [resetHistory, setResetHistory] = useState<ResetHistoryEntry[]>([]);
+  const [sharedLiveCounter, setSharedLiveCounter] = useState<LiveCounterSnapshot>({ gross: 0, count: 0, net: 0, orders: [] });
   const [historyOpen, setHistoryOpen] = useState(false);
   const [liveOrdersExpanded, setLiveOrdersExpanded] = useState(false);
   const [expandedHistoryIds, setExpandedHistoryIds] = useState<Record<string, boolean>>({});
   const liveCounterHydrated = useRef(false);
-  const skipNextLiveCounterWrite = useRef(false);
+
+  const applyLiveCounterRow = useCallback((row: any) => {
+    if (!row) return;
+    const gross = Number(row.gross) || 0;
+    const adSpendValue = Number(row.ad_spend) || 0;
+    setLiveResetAt(row.reset_at || LIVE_COUNTER_DEFAULT_ANCHOR);
+    setAdSpend(adSpendValue);
+    setResetHistory(Array.isArray(row.reset_history) ? row.reset_history : []);
+    setSharedLiveCounter({
+      gross,
+      count: Number(row.order_count) || 0,
+      net: Number(row.net ?? gross - adSpendValue) || 0,
+      orders: Array.isArray(row.contributing_orders) ? row.contributing_orders : [],
+    });
+  }, []);
+
+  const persistLiveCounterRow = useCallback(async ({
+    resetAt = liveResetAt,
+    adSpendValue = adSpend,
+    history = resetHistory,
+    snapshot = sharedLiveCounter,
+  }: {
+    resetAt?: string;
+    adSpendValue?: number;
+    history?: ResetHistoryEntry[];
+    snapshot?: LiveCounterSnapshot;
+  }) => {
+    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
+    setLiveResetAt(resetAt);
+    setAdSpend(adSpendValue);
+    setResetHistory(history);
+    setSharedLiveCounter(snapshot);
+    const { data, error } = await supabase.from("admin_live_counter").upsert({
+      id: 1,
+      reset_at: resetAt,
+      ad_spend: adSpendValue,
+      reset_history: history,
+      gross: snapshot.gross,
+      net: snapshot.net,
+      order_count: snapshot.count,
+      contributing_orders: snapshot.orders,
+      updated_at: new Date().toISOString(),
+    }).select("*").maybeSingle();
+    if (error) {
+      console.error("Failed to sync live counter:", error);
+      toast.error("Failed to sync live counter");
+    } else if (data) {
+      applyLiveCounterRow(data);
+    }
+  }, [adSpend, applyLiveCounterRow, liveResetAt, resetHistory, sharedLiveCounter, user]);
 
   const [hassanMarked, setHassanMarked] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
@@ -146,52 +197,23 @@ export default function AdminOrders() {
   useEffect(() => {
     if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
     let cancelled = false;
-    const applyRow = (row: any) => {
-      if (!row) return;
-      skipNextLiveCounterWrite.current = true;
-      setLiveResetAt(row.reset_at || LIVE_COUNTER_DEFAULT_ANCHOR);
-      setAdSpend(Number(row.ad_spend) || 0);
-      setResetHistory(Array.isArray(row.reset_history) ? row.reset_history : []);
-    };
     (async () => {
       const { data } = await supabase.from("admin_live_counter").select("*").eq("id", 1).maybeSingle();
       if (cancelled) return;
-      if (data) applyRow(data);
+      if (data) applyLiveCounterRow(data);
       liveCounterHydrated.current = true;
     })();
     const channel = supabase
       .channel("admin_live_counter_sync")
       .on("postgres_changes", { event: "*", schema: "public", table: "admin_live_counter" }, (payload) => {
-        applyRow((payload as any).new);
+        applyLiveCounterRow((payload as any).new);
       })
       .subscribe();
     return () => {
       cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [user]);
-
-  // Write local changes back to DB (skipping the write that came from realtime/hydration)
-  useEffect(() => {
-    if (!liveCounterHydrated.current) return;
-    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
-    if (skipNextLiveCounterWrite.current) {
-      skipNextLiveCounterWrite.current = false;
-      return;
-    }
-    supabase
-      .from("admin_live_counter")
-      .upsert({
-        id: 1,
-        reset_at: liveResetAt,
-        ad_spend: adSpend,
-        reset_history: resetHistory,
-        updated_at: new Date().toISOString(),
-      })
-      .then(({ error }) => {
-        if (error) console.error("Failed to sync live counter:", error);
-      });
-  }, [liveResetAt, adSpend, resetHistory, user]);
+  }, [user, applyLiveCounterRow]);
 
 
   // Rejection notes state
@@ -408,6 +430,33 @@ export default function AdminOrders() {
     [allOrders],
   );
 
+  const buildLiveCounterSnapshot = useCallback((ordersSource: Order[], resetAt: string, adSpendValue: number): LiveCounterSnapshot => {
+    const resetDate = new Date(resetAt);
+    let gross = 0;
+    let count = 0;
+    const orders: ResetHistoryOrder[] = [];
+    for (const o of ordersSource) {
+      if (o.status !== "approved") continue;
+      const ref = o.checkout_reference || "";
+      if (!ref.startsWith("rewarble")) continue;
+      const approvedAt = new Date(o.updated_at || o.created_at);
+      if (approvedAt < resetDate) continue;
+      gross += o.total_amount;
+      count++;
+      orders.push({
+        id: o.id,
+        order_number: o.order_number ?? null,
+        customer_name: o.customer_name,
+        customer_email: o.customer_email,
+        total_amount: o.total_amount,
+        method: getPaymentMethod(ref),
+        approvedAt: (o.updated_at || o.created_at) as string,
+      });
+    }
+    orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
+    return { gross, count, net: gross - adSpendValue, orders };
+  }, []);
+
   // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
     const byMethod: Record<string, number> = {};
@@ -426,33 +475,7 @@ export default function AdminOrders() {
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
 
-  // Live counter for Rewarble / iDEAL / PayPal (all use 'rewarble' ref prefix).
-  // Uses updated_at (approval time) so orders approved after a reset always count,
-  const liveCounter = useMemo(() => {
-    const resetDate = new Date(liveResetAt);
-    let gross = 0;
-    let count = 0;
-    const orders: ResetHistoryOrder[] = [];
-    for (const o of approvedOrders) {
-      const ref = o.checkout_reference || "";
-      if (!ref.startsWith("rewarble")) continue;
-      const approvedAt = new Date(o.updated_at || o.created_at);
-      if (approvedAt < resetDate) continue;
-      gross += o.total_amount;
-      count++;
-      orders.push({
-        id: o.id,
-        order_number: o.order_number ?? null,
-        customer_name: o.customer_name,
-        customer_email: o.customer_email,
-        total_amount: o.total_amount,
-        method: getPaymentMethod(ref),
-        approvedAt: (o.updated_at || o.created_at) as string,
-      });
-    }
-    orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
-    return { gross, count, net: gross - adSpend, orders };
-  }, [approvedOrders, liveResetAt, adSpend]);
+  const liveCounter = sharedLiveCounter;
 
   // Order statistics by country with time filter
   const countryStats = useMemo(() => {
@@ -665,9 +688,11 @@ export default function AdminOrders() {
         const json = await res.json();
         if (res.ok) {
           toast.success(json.message);
-          // Optimistic update instead of full refetch
           const newStatus = action === "approve" ? "approved" : "rejected";
-          setAllOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+          const changedAt = new Date().toISOString();
+          const nextOrders = allOrders.map(o => o.id === orderId ? { ...o, status: newStatus, updated_at: changedAt } : o);
+          setAllOrders(nextOrders);
+          await persistLiveCounterRow({ snapshot: buildLiveCounterSnapshot(nextOrders, liveResetAt, adSpend) });
         } else {
           toast.error(json.error || "Action failed");
         }
@@ -1057,7 +1082,7 @@ export default function AdminOrders() {
                 onClick={() => {
                   if (confirm("Reset live counter and ad spend? This starts a new day.")) {
                     const now = new Date().toISOString();
-                    setResetHistory((prev) => [
+                    const nextHistory = [
                       {
                         id: now,
                         resetAt: now,
@@ -1069,10 +1094,14 @@ export default function AdminOrders() {
                         count: liveCounter.count,
                         orders: liveCounter.orders,
                       },
-                      ...prev,
-                    ].slice(0, 200));
-                    setLiveResetAt(now);
-                    setAdSpend(0);
+                      ...resetHistory,
+                    ].slice(0, 200);
+                    persistLiveCounterRow({
+                      resetAt: now,
+                      adSpendValue: 0,
+                      history: nextHistory,
+                      snapshot: buildLiveCounterSnapshot(allOrders, now, 0),
+                    });
                   }
                 }}
               >
@@ -1179,7 +1208,8 @@ export default function AdminOrders() {
                           <button
                             onClick={() => {
                               if (confirm("Delete this history entry?")) {
-                                setResetHistory((prev) => prev.filter((x) => x.id !== h.id));
+                                const nextHistory = resetHistory.filter((x) => x.id !== h.id);
+                                persistLiveCounterRow({ history: nextHistory });
                               }
                             }}
                             className="text-muted-foreground hover:text-destructive"
@@ -1238,7 +1268,10 @@ export default function AdminOrders() {
               <Button
                 variant="ghost"
                 onClick={() => {
-                  setAdSpend(0);
+                  persistLiveCounterRow({
+                    adSpendValue: 0,
+                    snapshot: buildLiveCounterSnapshot(allOrders, liveResetAt, 0),
+                  });
                   setAdSpendDialogOpen(false);
                   toast.success("Ad spend cleared");
                 }}
@@ -1252,7 +1285,11 @@ export default function AdminOrders() {
                     toast.error("Enter a valid amount");
                     return;
                   }
-                  setAdSpend((prev) => prev + amt);
+                  const nextAdSpend = adSpend + amt;
+                  persistLiveCounterRow({
+                    adSpendValue: nextAdSpend,
+                    snapshot: buildLiveCounterSnapshot(allOrders, liveResetAt, nextAdSpend),
+                  });
                   setAdSpendDialogOpen(false);
                   toast.success(`Added €${amt.toFixed(2)} ad spend`);
                 }}
