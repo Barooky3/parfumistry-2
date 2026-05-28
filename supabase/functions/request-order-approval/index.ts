@@ -239,6 +239,7 @@ serve(async (req) => {
       gift_card_code: giftCardCode || null,
       discount_code: discountCode || null,
       discount_percent: discountPercent || 0,
+      first_visit_at: firstVisitAt ? new Date(firstVisitAt).toISOString() : null,
     }).select("id, order_number").single();
 
     if (dbError || !order) {
