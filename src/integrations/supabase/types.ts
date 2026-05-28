@@ -424,7 +424,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_live_counter_calculated_values: {
+        Args: { _reset_at: string }
+        Returns: {
+          contributing_orders: Json
+          gross: number
+          order_count: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
