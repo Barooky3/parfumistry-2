@@ -19,7 +19,7 @@ const DEFAULT_SELLER_LINK = "https://litbuy.shop/lit/I2wvc0a2";
 
 const SITE_URL = "https://parfumistry.net";
 
-// Actual perfume bottle images from profparfums.store
+// Perfume bottle images hosted on Lovable Cloud storage (same-origin as sender for deliverability)
 // IMPORTANT: More specific keys MUST come before less specific ones to avoid prefix matching bugs
 const PRODUCT_IMAGES: Record<string, string> = {
   // Specific variants first (before their base names)
