@@ -1266,7 +1266,10 @@ export default function AdminOrders() {
               <Button
                 variant="ghost"
                 onClick={() => {
-                  setAdSpend(0);
+                  persistLiveCounterRow({
+                    adSpendValue: 0,
+                    snapshot: buildLiveCounterSnapshot(allOrders, liveResetAt, 0),
+                  });
                   setAdSpendDialogOpen(false);
                   toast.success("Ad spend cleared");
                 }}
@@ -1280,7 +1283,11 @@ export default function AdminOrders() {
                     toast.error("Enter a valid amount");
                     return;
                   }
-                  setAdSpend((prev) => prev + amt);
+                  const nextAdSpend = adSpend + amt;
+                  persistLiveCounterRow({
+                    adSpendValue: nextAdSpend,
+                    snapshot: buildLiveCounterSnapshot(allOrders, liveResetAt, nextAdSpend),
+                  });
                   setAdSpendDialogOpen(false);
                   toast.success(`Added €${amt.toFixed(2)} ad spend`);
                 }}
