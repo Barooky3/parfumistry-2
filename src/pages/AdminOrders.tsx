@@ -1019,6 +1019,7 @@ export default function AdminOrders() {
                         adSpend: adSpend,
                         net: liveCounter.net,
                         count: liveCounter.count,
+                        orders: liveCounter.orders,
                       },
                       ...prev,
                     ].slice(0, 200));
