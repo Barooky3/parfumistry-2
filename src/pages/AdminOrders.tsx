@@ -122,12 +122,14 @@ export default function AdminOrders() {
   });
   const [adSpendDialogOpen, setAdSpendDialogOpen] = useState(false);
   const [adSpendInput, setAdSpendInput] = useState("");
-  type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number };
+  type ResetHistoryOrder = { id: string; order_number: number | null; customer_name: string; customer_email: string; total_amount: number; method: string; approvedAt: string };
+  type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number; orders?: ResetHistoryOrder[] };
   const [resetHistory, setResetHistory] = useState<ResetHistoryEntry[]>(() => {
     if (typeof window === "undefined") return [];
     try { return JSON.parse(localStorage.getItem("admin_live_reset_history") || "[]"); } catch { return []; }
   });
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [expandedHistoryIds, setExpandedHistoryIds] = useState<Record<string, boolean>>({});
   const [hassanMarked, setHassanMarked] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
     try { return new Set(JSON.parse(localStorage.getItem("admin_hassan_marked") || "[]")); } catch { return new Set(); }
@@ -381,11 +383,11 @@ export default function AdminOrders() {
 
   // Live counter for Rewarble / iDEAL / PayPal (all use 'rewarble' ref prefix).
   // Uses updated_at (approval time) so orders approved after a reset always count,
-  // even if they were created before the reset. Resets ONLY when admin presses Reset Day.
   const liveCounter = useMemo(() => {
     const resetDate = new Date(liveResetAt);
     let gross = 0;
     let count = 0;
+    const orders: ResetHistoryOrder[] = [];
     for (const o of approvedOrders) {
       const ref = o.checkout_reference || "";
       if (!ref.startsWith("rewarble")) continue;
@@ -393,8 +395,18 @@ export default function AdminOrders() {
       if (approvedAt < resetDate) continue;
       gross += o.total_amount;
       count++;
+      orders.push({
+        id: o.id,
+        order_number: o.order_number ?? null,
+        customer_name: o.customer_name,
+        customer_email: o.customer_email,
+        total_amount: o.total_amount,
+        method: getPaymentMethod(ref),
+        approvedAt: (o.updated_at || o.created_at) as string,
+      });
     }
-    return { gross, count, net: gross - adSpend };
+    orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
+    return { gross, count, net: gross - adSpend, orders };
   }, [approvedOrders, liveResetAt, adSpend]);
 
   // Order statistics by country with time filter
@@ -1008,6 +1020,7 @@ export default function AdminOrders() {
                         adSpend: adSpend,
                         net: liveCounter.net,
                         count: liveCounter.count,
+                        orders: liveCounter.orders,
                       },
                       ...prev,
                     ].slice(0, 200));
@@ -1058,32 +1071,65 @@ export default function AdminOrders() {
                 {resetHistory.length === 0 ? (
                   <p className="text-xs text-muted-foreground py-3 text-center">No resets yet.</p>
                 ) : (
-                  resetHistory.map((h) => (
-                    <div key={h.id} className="flex flex-wrap items-center justify-between gap-2 text-xs border rounded px-2 py-1.5 bg-background/40">
-                      <div className="text-muted-foreground">
-                        {format(new Date(h.periodStart), "dd MMM HH:mm")} → {format(new Date(h.periodEnd), "dd MMM HH:mm")}
-                        <span className="ml-2 opacity-70">· {h.count} orders</span>
-                      </div>
-                      <div className="flex gap-3">
-                        <span>Gross <strong>€{h.gross.toFixed(2)}</strong></span>
-                        <span className="text-destructive">Ads −€{h.adSpend.toFixed(2)}</span>
-                        <span className={h.net < 0 ? "text-destructive font-semibold" : "text-primary font-semibold"}>
-                          Net €{h.net.toFixed(2)}
-                        </span>
+                  resetHistory.map((h) => {
+                    const isOpen = !!expandedHistoryIds[h.id];
+                    const hasOrders = !!(h.orders && h.orders.length > 0);
+                    return (
+                    <div key={h.id} className="text-xs border rounded px-2 py-1.5 bg-background/40">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
                         <button
-                          onClick={() => {
-                            if (confirm("Delete this history entry?")) {
-                              setResetHistory((prev) => prev.filter((x) => x.id !== h.id));
-                            }
-                          }}
-                          className="text-muted-foreground hover:text-destructive"
-                          aria-label="Delete entry"
+                          type="button"
+                          onClick={() => hasOrders && setExpandedHistoryIds((p) => ({ ...p, [h.id]: !p[h.id] }))}
+                          className={`text-muted-foreground flex items-center gap-1 text-left ${hasOrders ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}
                         >
-                          <Trash2 className="h-3 w-3" />
+                          {hasOrders && (
+                            <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? "rotate-180" : "-rotate-90"}`} />
+                          )}
+                          <span>
+                            {format(new Date(h.periodStart), "dd MMM HH:mm")} → {format(new Date(h.periodEnd), "dd MMM HH:mm")}
+                            <span className="ml-2 opacity-70">· {h.count} orders</span>
+                          </span>
                         </button>
+                        <div className="flex gap-3">
+                          <span>Gross <strong>€{h.gross.toFixed(2)}</strong></span>
+                          <span className="text-destructive">Ads −€{h.adSpend.toFixed(2)}</span>
+                          <span className={h.net < 0 ? "text-destructive font-semibold" : "text-primary font-semibold"}>
+                            Net €{h.net.toFixed(2)}
+                          </span>
+                          <button
+                            onClick={() => {
+                              if (confirm("Delete this history entry?")) {
+                                setResetHistory((prev) => prev.filter((x) => x.id !== h.id));
+                              }
+                            }}
+                            className="text-muted-foreground hover:text-destructive"
+                            aria-label="Delete entry"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
                       </div>
+                      {isOpen && hasOrders && (
+                        <div className="mt-2 pl-4 border-l border-border/60 space-y-1">
+                          {h.orders!.map((o) => (
+                            <div key={o.id} className="flex items-center justify-between gap-2 py-0.5">
+                              <div className="text-muted-foreground truncate">
+                                <span className="font-mono opacity-70">#{o.order_number ?? "—"}</span>
+                                <span className="ml-2">{o.customer_name}</span>
+                                <span className="ml-1 opacity-60">· {o.customer_email}</span>
+                                <span className="ml-2 uppercase text-[10px] opacity-70">{o.method}</span>
+                              </div>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
+                                <strong>€{o.total_amount.toFixed(2)}</strong>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             )}
