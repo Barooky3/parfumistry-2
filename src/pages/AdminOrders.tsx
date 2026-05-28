@@ -407,7 +407,6 @@ export default function AdminOrders() {
     orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
     return { gross, count, net: gross - adSpend, orders };
   }, [approvedOrders, liveResetAt, adSpend]);
-  }, [approvedOrders, liveResetAt, adSpend]);
 
   // Order statistics by country with time filter
   const countryStats = useMemo(() => {
