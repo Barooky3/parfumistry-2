@@ -165,7 +165,7 @@ export default function AdminOrders() {
     setAdSpend(adSpendValue);
     setResetHistory(history);
     setSharedLiveCounter(snapshot);
-    const { error } = await supabase.from("admin_live_counter").upsert({
+    const { data, error } = await supabase.from("admin_live_counter").upsert({
       id: 1,
       reset_at: resetAt,
       ad_spend: adSpendValue,
@@ -175,12 +175,14 @@ export default function AdminOrders() {
       order_count: snapshot.count,
       contributing_orders: snapshot.orders,
       updated_at: new Date().toISOString(),
-    });
+    }).select("*").maybeSingle();
     if (error) {
       console.error("Failed to sync live counter:", error);
       toast.error("Failed to sync live counter");
+    } else if (data) {
+      applyLiveCounterRow(data);
     }
-  }, [adSpend, liveResetAt, resetHistory, sharedLiveCounter, user]);
+  }, [adSpend, applyLiveCounterRow, liveResetAt, resetHistory, sharedLiveCounter, user]);
 
   const [hassanMarked, setHassanMarked] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
