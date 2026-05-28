@@ -382,11 +382,11 @@ export default function AdminOrders() {
 
   // Live counter for Rewarble / iDEAL / PayPal (all use 'rewarble' ref prefix).
   // Uses updated_at (approval time) so orders approved after a reset always count,
-  // even if they were created before the reset. Resets ONLY when admin presses Reset Day.
   const liveCounter = useMemo(() => {
     const resetDate = new Date(liveResetAt);
     let gross = 0;
     let count = 0;
+    const orders: ResetHistoryOrder[] = [];
     for (const o of approvedOrders) {
       const ref = o.checkout_reference || "";
       if (!ref.startsWith("rewarble")) continue;
@@ -394,8 +394,19 @@ export default function AdminOrders() {
       if (approvedAt < resetDate) continue;
       gross += o.total_amount;
       count++;
+      orders.push({
+        id: o.id,
+        order_number: o.order_number ?? null,
+        customer_name: o.customer_name,
+        customer_email: o.customer_email,
+        total_amount: o.total_amount,
+        method: getPaymentMethod(ref),
+        approvedAt: (o.updated_at || o.created_at) as string,
+      });
     }
-    return { gross, count, net: gross - adSpend };
+    orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
+    return { gross, count, net: gross - adSpend, orders };
+  }, [approvedOrders, liveResetAt, adSpend]);
   }, [approvedOrders, liveResetAt, adSpend]);
 
   // Order statistics by country with time filter
