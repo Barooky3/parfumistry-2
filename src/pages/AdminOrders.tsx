@@ -131,6 +131,7 @@ export default function AdminOrders() {
     try { return JSON.parse(localStorage.getItem("admin_live_reset_history") || "[]"); } catch { return []; }
   });
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [liveOrdersExpanded, setLiveOrdersExpanded] = useState(false);
   const [expandedHistoryIds, setExpandedHistoryIds] = useState<Record<string, boolean>>({});
   const [hassanMarked, setHassanMarked] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
