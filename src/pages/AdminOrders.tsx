@@ -115,21 +115,14 @@ export default function AdminOrders() {
   const [customTo, setCustomTo] = useState<Date | undefined>();
 
   // Live counter (Rewarble/iDEAL/PayPal) — persisted in localStorage.
-  // Default to the start of the current Bulgarian day (1 AM BG time) so new
-  // admin browsers immediately see today's contributing orders instead of an
-  // empty counter anchored to "now".
-  const computeBulgarianDayStartISO = (): string => {
-    const now = new Date();
-    const bgOffset = 3; // hours
-    const bgTime = new Date(now.getTime() + bgOffset * 3600000);
-    const bgDay = new Date(Date.UTC(bgTime.getUTCFullYear(), bgTime.getUTCMonth(), bgTime.getUTCDate(), 1, 0, 0, 0));
-    if (bgTime.getUTCHours() < 1) bgDay.setUTCDate(bgDay.getUTCDate() - 1);
-    return new Date(bgDay.getTime() - bgOffset * 3600000).toISOString();
-  };
+  // Never auto-resets. Defaults to a far-past anchor so all approved orders
+  // count until the admin explicitly presses "Reset Day".
+  const LIVE_COUNTER_DEFAULT_ANCHOR = "2020-01-01T00:00:00.000Z";
   const [liveResetAt, setLiveResetAt] = useState<string>(() => {
-    if (typeof window === "undefined") return computeBulgarianDayStartISO();
-    return localStorage.getItem("admin_live_reset_at") || computeBulgarianDayStartISO();
+    if (typeof window === "undefined") return LIVE_COUNTER_DEFAULT_ANCHOR;
+    return localStorage.getItem("admin_live_reset_at") || LIVE_COUNTER_DEFAULT_ANCHOR;
   });
+
 
   const [adSpend, setAdSpend] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
