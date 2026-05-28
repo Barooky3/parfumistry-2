@@ -122,7 +122,8 @@ export default function AdminOrders() {
   });
   const [adSpendDialogOpen, setAdSpendDialogOpen] = useState(false);
   const [adSpendInput, setAdSpendInput] = useState("");
-  type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number };
+  type ResetHistoryOrder = { id: string; order_number: number | null; customer_name: string; customer_email: string; total_amount: number; method: string; approvedAt: string };
+  type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number; orders?: ResetHistoryOrder[] };
   const [resetHistory, setResetHistory] = useState<ResetHistoryEntry[]>(() => {
     if (typeof window === "undefined") return [];
     try { return JSON.parse(localStorage.getItem("admin_live_reset_history") || "[]"); } catch { return []; }
