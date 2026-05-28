@@ -17,21 +17,33 @@ export type Database = {
       admin_live_counter: {
         Row: {
           ad_spend: number
+          contributing_orders: Json
+          gross: number
           id: number
+          net: number
+          order_count: number
           reset_at: string
           reset_history: Json
           updated_at: string
         }
         Insert: {
           ad_spend?: number
+          contributing_orders?: Json
+          gross?: number
           id?: number
+          net?: number
+          order_count?: number
           reset_at?: string
           reset_history?: Json
           updated_at?: string
         }
         Update: {
           ad_spend?: number
+          contributing_orders?: Json
+          gross?: number
           id?: number
+          net?: number
+          order_count?: number
           reset_at?: string
           reset_history?: Json
           updated_at?: string
