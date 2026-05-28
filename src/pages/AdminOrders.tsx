@@ -1057,6 +1057,39 @@ export default function AdminOrders() {
             </div>
           </div>
 
+          {/* Current live orders expandable */}
+          {liveCounter.orders.length > 0 && (
+            <div className="mt-3 border-t pt-2">
+              <button
+                onClick={() => setLiveOrdersExpanded((v) => !v)}
+                className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors"
+              >
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                  Contributing Orders — {liveCounter.orders.length} {liveCounter.orders.length === 1 ? "order" : "orders"}
+                </p>
+                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${liveOrdersExpanded ? "rotate-180" : ""}`} />
+              </button>
+              {liveOrdersExpanded && (
+                <div className="mt-2 pl-4 border-l border-border/60 space-y-1 max-h-64 overflow-y-auto">
+                  {liveCounter.orders.map((o) => (
+                    <div key={o.id} className="flex items-center justify-between gap-2 py-0.5 text-xs">
+                      <div className="text-muted-foreground truncate">
+                        <span className="font-mono opacity-70">#{o.order_number ?? "—"}</span>
+                        <span className="ml-2">{o.customer_name}</span>
+                        <span className="ml-1 opacity-60">· {o.customer_email}</span>
+                        <span className="ml-2 uppercase text-[10px] opacity-70">{o.method}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
+                        <strong>€{o.total_amount.toFixed(2)}</strong>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Reset history */}
           <div className="mt-4 border-t pt-3">
             <button
