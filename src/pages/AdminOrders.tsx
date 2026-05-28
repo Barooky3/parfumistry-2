@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -126,12 +126,61 @@ export default function AdminOrders() {
   const [adSpendInput, setAdSpendInput] = useState("");
   type ResetHistoryOrder = { id: string; order_number: number | null; customer_name: string; customer_email: string; total_amount: number; method: string; approvedAt: string };
   type ResetHistoryEntry = { id: string; resetAt: string; periodStart: string; periodEnd: string; gross: number; adSpend: number; net: number; count: number; orders?: ResetHistoryOrder[] };
+  type LiveCounterSnapshot = { gross: number; count: number; net: number; orders: ResetHistoryOrder[] };
   const [resetHistory, setResetHistory] = useState<ResetHistoryEntry[]>([]);
+  const [sharedLiveCounter, setSharedLiveCounter] = useState<LiveCounterSnapshot>({ gross: 0, count: 0, net: 0, orders: [] });
   const [historyOpen, setHistoryOpen] = useState(false);
   const [liveOrdersExpanded, setLiveOrdersExpanded] = useState(false);
   const [expandedHistoryIds, setExpandedHistoryIds] = useState<Record<string, boolean>>({});
   const liveCounterHydrated = useRef(false);
-  const skipNextLiveCounterWrite = useRef(false);
+
+  const applyLiveCounterRow = useCallback((row: any) => {
+    if (!row) return;
+    const gross = Number(row.gross) || 0;
+    const adSpendValue = Number(row.ad_spend) || 0;
+    setLiveResetAt(row.reset_at || LIVE_COUNTER_DEFAULT_ANCHOR);
+    setAdSpend(adSpendValue);
+    setResetHistory(Array.isArray(row.reset_history) ? row.reset_history : []);
+    setSharedLiveCounter({
+      gross,
+      count: Number(row.order_count) || 0,
+      net: Number(row.net ?? gross - adSpendValue) || 0,
+      orders: Array.isArray(row.contributing_orders) ? row.contributing_orders : [],
+    });
+  }, []);
+
+  const persistLiveCounterRow = useCallback(async ({
+    resetAt = liveResetAt,
+    adSpendValue = adSpend,
+    history = resetHistory,
+    snapshot = sharedLiveCounter,
+  }: {
+    resetAt?: string;
+    adSpendValue?: number;
+    history?: ResetHistoryEntry[];
+    snapshot?: LiveCounterSnapshot;
+  }) => {
+    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
+    setLiveResetAt(resetAt);
+    setAdSpend(adSpendValue);
+    setResetHistory(history);
+    setSharedLiveCounter(snapshot);
+    const { error } = await supabase.from("admin_live_counter").upsert({
+      id: 1,
+      reset_at: resetAt,
+      ad_spend: adSpendValue,
+      reset_history: history,
+      gross: snapshot.gross,
+      net: snapshot.net,
+      order_count: snapshot.count,
+      contributing_orders: snapshot.orders,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) {
+      console.error("Failed to sync live counter:", error);
+      toast.error("Failed to sync live counter");
+    }
+  }, [adSpend, liveResetAt, resetHistory, sharedLiveCounter, user]);
 
   const [hassanMarked, setHassanMarked] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
@@ -146,52 +195,23 @@ export default function AdminOrders() {
   useEffect(() => {
     if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
     let cancelled = false;
-    const applyRow = (row: any) => {
-      if (!row) return;
-      skipNextLiveCounterWrite.current = true;
-      setLiveResetAt(row.reset_at || LIVE_COUNTER_DEFAULT_ANCHOR);
-      setAdSpend(Number(row.ad_spend) || 0);
-      setResetHistory(Array.isArray(row.reset_history) ? row.reset_history : []);
-    };
     (async () => {
       const { data } = await supabase.from("admin_live_counter").select("*").eq("id", 1).maybeSingle();
       if (cancelled) return;
-      if (data) applyRow(data);
+      if (data) applyLiveCounterRow(data);
       liveCounterHydrated.current = true;
     })();
     const channel = supabase
       .channel("admin_live_counter_sync")
       .on("postgres_changes", { event: "*", schema: "public", table: "admin_live_counter" }, (payload) => {
-        applyRow((payload as any).new);
+        applyLiveCounterRow((payload as any).new);
       })
       .subscribe();
     return () => {
       cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [user]);
-
-  // Write local changes back to DB (skipping the write that came from realtime/hydration)
-  useEffect(() => {
-    if (!liveCounterHydrated.current) return;
-    if (!user || !ADMIN_EMAILS.includes(user.email || "")) return;
-    if (skipNextLiveCounterWrite.current) {
-      skipNextLiveCounterWrite.current = false;
-      return;
-    }
-    supabase
-      .from("admin_live_counter")
-      .upsert({
-        id: 1,
-        reset_at: liveResetAt,
-        ad_spend: adSpend,
-        reset_history: resetHistory,
-        updated_at: new Date().toISOString(),
-      })
-      .then(({ error }) => {
-        if (error) console.error("Failed to sync live counter:", error);
-      });
-  }, [liveResetAt, adSpend, resetHistory, user]);
+  }, [user, applyLiveCounterRow]);
 
 
   // Rejection notes state
