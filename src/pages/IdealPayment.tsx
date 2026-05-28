@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getFirstVisitAt } from '@/utils/firstVisit';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Shield, CheckCircle, AlertTriangle, Loader2, ExternalLink, Plus, X, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -84,6 +85,7 @@ const IdealPayment = () => {
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
           idempotencyKey,
+          firstVisitAt: getFirstVisitAt(),
         },
       });
       clearCart();

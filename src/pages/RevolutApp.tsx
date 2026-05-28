@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getFirstVisitAt } from '@/utils/firstVisit';
 import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Shield, Copy, Check, CheckCircle, AlertTriangle, Loader2, Info, Smartphone } from 'lucide-react';
@@ -59,6 +60,7 @@ const RevolutApp = () => {
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
           idempotencyKey,
+          firstVisitAt: getFirstVisitAt(),
         },
       });
       clearCart();
