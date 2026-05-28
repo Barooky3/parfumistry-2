@@ -98,7 +98,7 @@ function resolveProductImage(name: string, originalImage: string): string {
     if (n.includes(key.replace(/-/g, " "))) return url;
   }
   // Fallback: if the original image is from the CDN or lovable.app, use it
-  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app") || originalImage.includes("parfumistry.com"))) return originalImage;
+  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app") || originalImage.includes("parfumistry.net"))) return originalImage;
   // Last resort: try to make local paths work via site URL
   if (originalImage && originalImage.startsWith("/")) return SITE_URL + originalImage;
   // If no image at all, return a placeholder
@@ -336,13 +336,13 @@ function buildEmailHtml(
     '<div style="padding: 0 32px 32px 32px;">',
     '<div style="background-color: #faf9f6; border: 1px solid #eee; padding: 20px 24px; border-radius: 8px; text-align: center;">',
     '<p style="font-size: 13px; color: #666; margin: 0; line-height: 1.6;">Questions about your order? Contact us at<br>',
-    '<a href="mailto:support@parfumistry.com" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@parfumistry.com</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
+    '<a href="mailto:support@parfumistry.net" style="color: #c9a96e; text-decoration: none; font-weight: 500;">support@parfumistry.net</a>' + (orderNumber ? '<br><span style="font-size: 12px; color: #999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : '') + '</p>',
     '</div></div>',
 
     '<div style="background-color: #1a1a1a; padding: 28px 32px; text-align: center;">',
     '<p style="color: #c9a96e; font-size: 14px; letter-spacing: 3px; margin: 0 0 8px 0; text-transform: uppercase;">Parfumistry</p>',
     '<p style="color: #666; font-size: 11px; margin: 0; line-height: 1.8;">&copy; ' + year + ' Parfumistry. All rights reserved.<br>',
-    '<a href="https://parfumistry.com" style="color: #888; text-decoration: none;">parfumistry.com</a></p>',
+    '<a href="https://parfumistry.net" style="color: #888; text-decoration: none;">parfumistry.net</a></p>',
     '</div>',
 
     '</div></body></html>',
@@ -476,7 +476,7 @@ function buildAdminInvoiceHtml(
   <div style="background:#1a1a1a;padding:24px 40px;text-align:center;">
     <p style="color:#c9a96e;font-size:13px;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">Parfumistry</p>
     <p style="color:#666;font-size:11px;margin:0;line-height:1.6;">© ${year} Parfumistry. All rights reserved.<br>
-    <a href="mailto:support@parfumistry.com" style="color:#888;text-decoration:none;">support@parfumistry.com</a></p>
+    <a href="mailto:support@parfumistry.net" style="color:#888;text-decoration:none;">support@parfumistry.net</a></p>
   </div>
 
 </div>
@@ -548,7 +548,7 @@ serve(async (req) => {
 
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
-    const origin = "https://parfumistry.com";
+    const origin = "https://parfumistry.net";
     const itemsHtml = buildItemsHtml(normalizedItems, origin);
 
     const shippingMethod = (shippingAddress as any)?.shippingMethod || null;

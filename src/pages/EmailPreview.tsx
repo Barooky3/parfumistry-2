@@ -52,7 +52,7 @@ const EmailPreview = () => {
     ${adminNotes || ""}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
-      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@parfumistry.com" style="color:#c9a96e;">support@parfumistry.com</a></p>
+      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@parfumistry.net" style="color:#c9a96e;">support@parfumistry.net</a></p>
     </div>
   </div>
 </div></body></html>`;
