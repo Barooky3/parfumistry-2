@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { getFirstVisitAt } from '@/utils/firstVisit';
 import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -253,6 +254,7 @@ const Checkout = () => {
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
           idempotencyKey: crypto.randomUUID(),
+          firstVisitAt: getFirstVisitAt(),
         },
       });
       clearCart();

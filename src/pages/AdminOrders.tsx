@@ -56,6 +56,8 @@ interface Order {
   discount_percent: number | null;
   proof_url: string | null;
   rejection_notes: string | null;
+  first_visit_at?: string | null;
+
 }
 
 function getPaymentMethod(ref: string): string {
@@ -1471,6 +1473,28 @@ export default function AdminOrders() {
                         return addr.country ? (
                           <p className="text-xs text-muted-foreground mt-0.5">📍 {addr.country}</p>
                         ) : null;
+                      })()}
+                      {order.first_visit_at && (() => {
+                        const firstVisit = new Date(order.first_visit_at);
+                        const placed = new Date(order.created_at);
+                        const diffMs = Math.max(0, placed.getTime() - firstVisit.getTime());
+                        const mins = Math.floor(diffMs / 60000);
+                        const hrs = Math.floor(mins / 60);
+                        const days = Math.floor(hrs / 24);
+                        const timeToOrder = days > 0
+                          ? `${days}d ${hrs % 24}h ${mins % 60}m`
+                          : hrs > 0
+                          ? `${hrs}h ${mins % 60}m`
+                          : `${mins}m`;
+                        const fmt = (d: Date) =>
+                          `${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })} ${d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
+                        return (
+                          <div className="mt-2 text-[11px] text-muted-foreground bg-muted/40 rounded px-2 py-1 inline-block">
+                            <div>🕒 First visit: <span className="font-mono">{fmt(firstVisit)}</span></div>
+                            <div>🛒 Order placed: <span className="font-mono">{fmt(placed)}</span></div>
+                            <div>⏱ Time to order: <span className="font-mono font-semibold">{timeToOrder}</span></div>
+                          </div>
+                        );
                       })()}
                     </div>
                     <div className="text-right">

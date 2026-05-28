@@ -173,7 +173,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, idempotencyKey } = body;
+    const { orderItems, customerEmail, customerName, shippingAddress, totalAmount, paymentMethod, giftCardCode, discountCode, idempotencyKey, firstVisitAt } = body;
     const discountPercent = VALID_DISCOUNT_CODES[discountCode?.toLowerCase().trim() || ''] ?? 0;
 
     if (!customerEmail) throw new Error("Customer email is required");
@@ -239,6 +239,7 @@ serve(async (req) => {
       gift_card_code: giftCardCode || null,
       discount_code: discountCode || null,
       discount_percent: discountPercent || 0,
+      first_visit_at: firstVisitAt ? new Date(firstVisitAt).toISOString() : null,
     }).select("id, order_number").single();
 
     if (dbError || !order) {

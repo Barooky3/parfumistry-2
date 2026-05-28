@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "./utils/firstVisit";
+
 
 // Polyfill requestIdleCallback for Safari/iOS which doesn't support it
 // Prevents white-screen crashes on Apple devices
