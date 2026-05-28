@@ -319,7 +319,7 @@ serve(async (req) => {
       // Atomic check-and-update to prevent duplicate invoices
       const { data: updated, error: updateErr } = await supabase
         .from("orders")
-        .update({ status: "approved", email_sent: true })
+        .update({ status: "approved", email_sent: true, updated_at: new Date().toISOString() })
         .eq("id", orderId)
         .eq("email_sent", false)
         .select("id")
@@ -401,7 +401,7 @@ serve(async (req) => {
         });
       }
 
-      await supabase.from("orders").update({ status: "rejected" }).eq("id", orderId);
+      await supabase.from("orders").update({ status: "rejected", updated_at: new Date().toISOString() }).eq("id", orderId);
 
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
