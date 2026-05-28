@@ -98,7 +98,7 @@ function resolveProductImage(name: string, originalImage: string): string {
     if (n.includes(key.replace(/-/g, " "))) return url;
   }
   // Fallback: if the original image is from the CDN or lovable.app, use it
-  if (originalImage && (originalImage.includes("profparfums.store") || originalImage.includes("lovable.app") || originalImage.includes("parfumistry.net"))) return originalImage;
+  if (originalImage && (originalImage.includes("supabase.co/storage") || originalImage.includes("lovable.app") || originalImage.includes("parfumistry.net"))) return originalImage;
   // Last resort: try to make local paths work via site URL
   if (originalImage && originalImage.startsWith("/")) return SITE_URL + originalImage;
   // If no image at all, return a placeholder
