@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_live_counter: {
+        Row: {
+          ad_spend: number
+          id: number
+          reset_at: string
+          reset_history: Json
+          updated_at: string
+        }
+        Insert: {
+          ad_spend?: number
+          id?: number
+          reset_at?: string
+          reset_history?: Json
+          updated_at?: string
+        }
+        Update: {
+          ad_spend?: number
+          id?: number
+          reset_at?: string
+          reset_history?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       banned_users: {
         Row: {
           banned_by: string
