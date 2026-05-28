@@ -48,6 +48,7 @@ interface Order {
   shipping_address: any;
   checkout_reference: string;
   created_at: string;
+  updated_at?: string;
   order_number: number | null;
   approval_token: string | null;
   gift_card_code: string | null;
