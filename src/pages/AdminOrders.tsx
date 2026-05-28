@@ -114,11 +114,23 @@ export default function AdminOrders() {
   const [customFrom, setCustomFrom] = useState<Date | undefined>();
   const [customTo, setCustomTo] = useState<Date | undefined>();
 
-  // Live counter (Rewarble/iDEAL/PayPal) — persisted in localStorage
+  // Live counter (Rewarble/iDEAL/PayPal) — persisted in localStorage.
+  // Default to the start of the current Bulgarian day (1 AM BG time) so new
+  // admin browsers immediately see today's contributing orders instead of an
+  // empty counter anchored to "now".
+  const computeBulgarianDayStartISO = (): string => {
+    const now = new Date();
+    const bgOffset = 3; // hours
+    const bgTime = new Date(now.getTime() + bgOffset * 3600000);
+    const bgDay = new Date(Date.UTC(bgTime.getUTCFullYear(), bgTime.getUTCMonth(), bgTime.getUTCDate(), 1, 0, 0, 0));
+    if (bgTime.getUTCHours() < 1) bgDay.setUTCDate(bgDay.getUTCDate() - 1);
+    return new Date(bgDay.getTime() - bgOffset * 3600000).toISOString();
+  };
   const [liveResetAt, setLiveResetAt] = useState<string>(() => {
-    if (typeof window === "undefined") return new Date().toISOString();
-    return localStorage.getItem("admin_live_reset_at") || new Date().toISOString();
+    if (typeof window === "undefined") return computeBulgarianDayStartISO();
+    return localStorage.getItem("admin_live_reset_at") || computeBulgarianDayStartISO();
   });
+
   const [adSpend, setAdSpend] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
     return parseFloat(localStorage.getItem("admin_ad_spend") || "0") || 0;
