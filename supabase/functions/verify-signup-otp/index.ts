@@ -37,8 +37,6 @@ serve(async (req) => {
 
     if (fetchError || !otpRecord) {
       return new Response(
-    if (fetchError || !otpRecord) {
-      return new Response(
         JSON.stringify({ error: "Invalid or expired code" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
       );
