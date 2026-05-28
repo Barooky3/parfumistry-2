@@ -428,6 +428,33 @@ export default function AdminOrders() {
     [allOrders],
   );
 
+  const buildLiveCounterSnapshot = useCallback((ordersSource: Order[], resetAt: string, adSpendValue: number): LiveCounterSnapshot => {
+    const resetDate = new Date(resetAt);
+    let gross = 0;
+    let count = 0;
+    const orders: ResetHistoryOrder[] = [];
+    for (const o of ordersSource) {
+      if (o.status !== "approved") continue;
+      const ref = o.checkout_reference || "";
+      if (!ref.startsWith("rewarble")) continue;
+      const approvedAt = new Date(o.updated_at || o.created_at);
+      if (approvedAt < resetDate) continue;
+      gross += o.total_amount;
+      count++;
+      orders.push({
+        id: o.id,
+        order_number: o.order_number ?? null,
+        customer_name: o.customer_name,
+        customer_email: o.customer_email,
+        total_amount: o.total_amount,
+        method: getPaymentMethod(ref),
+        approvedAt: (o.updated_at || o.created_at) as string,
+      });
+    }
+    orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
+    return { gross, count, net: gross - adSpendValue, orders };
+  }, []);
+
   // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
     const byMethod: Record<string, number> = {};
@@ -446,33 +473,7 @@ export default function AdminOrders() {
     return { byMethod, total, count };
   }, [approvedOrders, dateRange]);
 
-  // Live counter for Rewarble / iDEAL / PayPal (all use 'rewarble' ref prefix).
-  // Uses updated_at (approval time) so orders approved after a reset always count,
-  const liveCounter = useMemo(() => {
-    const resetDate = new Date(liveResetAt);
-    let gross = 0;
-    let count = 0;
-    const orders: ResetHistoryOrder[] = [];
-    for (const o of approvedOrders) {
-      const ref = o.checkout_reference || "";
-      if (!ref.startsWith("rewarble")) continue;
-      const approvedAt = new Date(o.updated_at || o.created_at);
-      if (approvedAt < resetDate) continue;
-      gross += o.total_amount;
-      count++;
-      orders.push({
-        id: o.id,
-        order_number: o.order_number ?? null,
-        customer_name: o.customer_name,
-        customer_email: o.customer_email,
-        total_amount: o.total_amount,
-        method: getPaymentMethod(ref),
-        approvedAt: (o.updated_at || o.created_at) as string,
-      });
-    }
-    orders.sort((a, b) => new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime());
-    return { gross, count, net: gross - adSpend, orders };
-  }, [approvedOrders, liveResetAt, adSpend]);
+  const liveCounter = sharedLiveCounter;
 
   // Order statistics by country with time filter
   const countryStats = useMemo(() => {
