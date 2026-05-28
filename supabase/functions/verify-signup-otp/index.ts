@@ -69,22 +69,24 @@ serve(async (req) => {
             user_metadata: { full_name: name },
           });
           if (updateError) {
+            console.error("updateUserById error:", updateError);
             return new Response(
-              JSON.stringify({ error: "Unable to process registration" }),
-              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+              JSON.stringify({ error: "Unable to process registration", debug: String(updateError?.message || updateError) }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
             );
           }
           userId = existingUser.id;
         } else {
           return new Response(
-              JSON.stringify({ error: "Unable to process registration" }),
-              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+              JSON.stringify({ error: "Unable to process registration (user not found)" }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
             );
         }
       } else {
+        console.error("createUser error:", createError);
         return new Response(
-          JSON.stringify({ error: "Unable to process registration" }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+          JSON.stringify({ error: "Unable to process registration", debug: String(createError?.message || createError) }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
         );
       }
     } else {
@@ -98,8 +100,8 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error verifying OTP:", error);
     return new Response(
-      JSON.stringify({ error: "Unable to verify code" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
+      JSON.stringify({ error: "Unable to verify code", debug: String((error as any)?.message || error) }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );
   }
 });
