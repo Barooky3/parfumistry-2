@@ -37,12 +37,12 @@ serve(async (req) => {
 
     if (fetchError || !otpRecord) {
       return new Response(
+    if (fetchError || !otpRecord) {
+      return new Response(
         JSON.stringify({ error: "Invalid or expired code" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
       );
     }
-
-    // Mark OTP as used
     await supabase
       .from("email_otps")
       .update({ used: true })
