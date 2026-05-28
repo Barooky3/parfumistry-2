@@ -146,6 +146,57 @@ export default function AdminOrders() {
     localStorage.setItem("admin_live_reset_history", JSON.stringify(resetHistory));
   }, [resetHistory]);
 
+  // Auto-rollover the Live Counter at 1:00 AM Bulgarian time each day.
+  // If liveResetAt is older than today's BG day-start, archive the previous
+  // period and reset to the new day-start so today's orders are counted correctly.
+  useEffect(() => {
+    const rollover = () => {
+      const BG_OFFSET_MS = 3 * 3600_000; // UTC+3 (matches Revenue Tally logic)
+      const nowMs = Date.now();
+      const bgNow = new Date(nowMs + BG_OFFSET_MS);
+      const bgDayStartUtcMs = Date.UTC(
+        bgNow.getUTCFullYear(), bgNow.getUTCMonth(), bgNow.getUTCDate(), 1, 0, 0, 0
+      );
+      let bgDayStartMs = bgDayStartUtcMs - BG_OFFSET_MS;
+      if (bgNow.getUTCHours() < 1) bgDayStartMs -= 24 * 3600_000;
+      const resetMs = new Date(liveResetAt).getTime();
+      if (resetMs < bgDayStartMs) {
+        let gross = 0;
+        let count = 0;
+        for (const o of allOrders) {
+          if (o.status !== "approved") continue;
+          const ref = o.checkout_reference || "";
+          if (!ref.startsWith("rewarble")) continue;
+          const t = new Date(o.created_at).getTime();
+          if (t < resetMs || t >= bgDayStartMs) continue;
+          gross += Number(o.total_amount) || 0;
+          count++;
+        }
+        const newResetIso = new Date(bgDayStartMs).toISOString();
+        if (count > 0 || gross > 0 || adSpend > 0) {
+          setResetHistory((prev) => [
+            {
+              id: newResetIso,
+              resetAt: newResetIso,
+              periodStart: liveResetAt,
+              periodEnd: newResetIso,
+              gross,
+              adSpend,
+              net: gross - adSpend,
+              count,
+            },
+            ...prev,
+          ].slice(0, 200));
+        }
+        setAdSpend(0);
+        setLiveResetAt(newResetIso);
+      }
+    };
+    rollover();
+    const t = setInterval(rollover, 60_000);
+    return () => clearInterval(t);
+  }, [allOrders, liveResetAt, adSpend]);
+
   // Rejection notes state
   const [rejectingOrder, setRejectingOrder] = useState<Order | null>(null);
   const [rejectionNotes, setRejectionNotes] = useState("");
