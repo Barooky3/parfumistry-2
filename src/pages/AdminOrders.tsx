@@ -1502,12 +1502,6 @@ export default function AdminOrders() {
                       <p className="text-xs text-muted-foreground mt-1">
                         {date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} at {date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                       </p>
-                      {order.shipping_address && (() => {
-                        const addr = order.shipping_address as any;
-                        return addr.country ? (
-                          <p className="text-xs text-muted-foreground mt-0.5">📍 {addr.country}</p>
-                        ) : null;
-                      })()}
                       {order.first_visit_at && (() => {
                         const firstVisit = new Date(order.first_visit_at);
                         const placed = new Date(order.created_at);
@@ -1529,6 +1523,12 @@ export default function AdminOrders() {
                             <div>⏱ Time to order: <span className="font-mono font-semibold">{timeToOrder}</span></div>
                           </div>
                         );
+                      })()}
+                      {order.shipping_address && (() => {
+                        const addr = order.shipping_address as any;
+                        return addr.country ? (
+                          <p className="text-xs text-muted-foreground mt-2">📍 {addr.country}</p>
+                        ) : null;
                       })()}
                     </div>
                     <div className="text-right">
