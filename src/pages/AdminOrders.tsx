@@ -686,9 +686,11 @@ export default function AdminOrders() {
         const json = await res.json();
         if (res.ok) {
           toast.success(json.message);
-          // Optimistic update instead of full refetch
           const newStatus = action === "approve" ? "approved" : "rejected";
-          setAllOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+          const changedAt = new Date().toISOString();
+          const nextOrders = allOrders.map(o => o.id === orderId ? { ...o, status: newStatus, updated_at: changedAt } : o);
+          setAllOrders(nextOrders);
+          await persistLiveCounterRow({ snapshot: buildLiveCounterSnapshot(nextOrders, liveResetAt, adSpend) });
         } else {
           toast.error(json.error || "Action failed");
         }
@@ -1078,7 +1080,7 @@ export default function AdminOrders() {
                 onClick={() => {
                   if (confirm("Reset live counter and ad spend? This starts a new day.")) {
                     const now = new Date().toISOString();
-                    setResetHistory((prev) => [
+                    const nextHistory = [
                       {
                         id: now,
                         resetAt: now,
@@ -1090,10 +1092,14 @@ export default function AdminOrders() {
                         count: liveCounter.count,
                         orders: liveCounter.orders,
                       },
-                      ...prev,
-                    ].slice(0, 200));
-                    setLiveResetAt(now);
-                    setAdSpend(0);
+                      ...resetHistory,
+                    ].slice(0, 200);
+                    persistLiveCounterRow({
+                      resetAt: now,
+                      adSpendValue: 0,
+                      history: nextHistory,
+                      snapshot: buildLiveCounterSnapshot(allOrders, now, 0),
+                    });
                   }
                 }}
               >
@@ -1200,7 +1206,8 @@ export default function AdminOrders() {
                           <button
                             onClick={() => {
                               if (confirm("Delete this history entry?")) {
-                                setResetHistory((prev) => prev.filter((x) => x.id !== h.id));
+                                const nextHistory = resetHistory.filter((x) => x.id !== h.id);
+                                persistLiveCounterRow({ history: nextHistory });
                               }
                             }}
                             className="text-muted-foreground hover:text-destructive"
