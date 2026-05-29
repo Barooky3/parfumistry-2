@@ -954,6 +954,8 @@ export const products: Product[] = [
     image: 'https://profparfums.store/cdn/shop/files/73584D90-E000-4F86-8CF6-647F94B4F567_converted_1.png?v=1768068550&width=1200',
     additionalImages: [strongerWithYouIntenselyLifestyle],
     affiliateUrl: '/product/stronger-with-you-intensely',
+    inStock: true,
+    featured: true,
     variants: [
       { ml: 50, price: 23.99, inStock: true },
       { ml: 100, price: 32.99, inStock: true },
@@ -961,8 +963,6 @@ export const products: Product[] = [
       { ml: 100, price: 27.59, inStock: true, label: '100ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
-      { ml: 150, price: 39.99, inStock: true },
-    ],
   },
   {
     id: 'le-beau-le-parfum',
