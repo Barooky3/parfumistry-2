@@ -241,7 +241,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     const converted = priceInEur * info.rate;
     const zeroDecimalCurrencies = ['JPY', 'KRW', 'VND', 'IDR', 'CLP', 'COP', 'HUF', 'ISK'];
     const isZeroDecimal = zeroDecimalCurrencies.includes(info.code);
-    const finalPrice = isZeroDecimal ? converted : Math.floor(converted) + 0.99;
+    const finalPrice = priceInEur === 0 ? 0 : (isZeroDecimal ? converted : Math.floor(converted) + 0.99);
     return new Intl.NumberFormat(info.locale, {
       style: 'currency',
       currency: info.code,
