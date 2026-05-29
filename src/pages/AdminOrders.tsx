@@ -1836,7 +1836,20 @@ export default function AdminOrders() {
                 }`}
               >
                 <span className="font-medium text-sm">🔢 Order Number Provided Instead</span>
-                <p className="text-xs text-muted-foreground mt-1">Customer sent the Rewarble order number instead of the actual gift card code.</p>
+                <p className="text-xs text-muted-foreground mt-1">Customer sent the Rewarble order number instead of the actual gift card code. Email includes step-by-step instructions (open email → Get Order → Display Key).</p>
+              </button>
+              {/* Option 4: Custom Reason */}
+              <button
+                type="button"
+                onClick={() => { setRejectionReason("custom"); setRejectionNotes(""); }}
+                className={`text-left p-3 rounded-lg border-2 transition-colors ${
+                  rejectionReason === "custom"
+                    ? "border-red-500 bg-red-50"
+                    : "border-input bg-background hover:bg-accent"
+                }`}
+              >
+                <span className="font-medium text-sm">✏️ Custom Reason</span>
+                <p className="text-xs text-muted-foreground mt-1">Write any rejection message you want — it will be sent as the main body of the email.</p>
               </button>
             </div>
 
@@ -1917,12 +1930,15 @@ export default function AdminOrders() {
             {/* Custom notes for non-mismatch reasons */}
             {rejectionReason && rejectionReason !== "value_mismatch" && (
               <div className="mt-3">
-                <label className="text-sm font-medium mb-1 block">Additional Notes (optional)</label>
+                <label className="text-sm font-medium mb-1 block">
+                  {rejectionReason === "custom" ? "Custom Rejection Message" : "Additional Notes (optional)"}
+                </label>
                 <Textarea
-                  placeholder="Any extra details..."
+                  placeholder={rejectionReason === "custom" ? "Write the full message the customer will see in the email body..." : "Any extra details..."}
                   value={rejectionNotes}
                   onChange={(e) => setRejectionNotes(e.target.value)}
-                  rows={2}
+                  rows={rejectionReason === "custom" ? 5 : 2}
+                  autoFocus={rejectionReason === "custom"}
                 />
               </div>
             )}
@@ -1931,7 +1947,7 @@ export default function AdminOrders() {
             <Button variant="outline" onClick={() => setRejectingOrder(null)}>Cancel</Button>
             <Button
               variant="destructive"
-              disabled={rejectLoading || !rejectionReason}
+              disabled={rejectLoading || !rejectionReason || (rejectionReason === "custom" && !rejectionNotes.trim())}
               onClick={async () => {
                 if (!rejectingOrder || !rejectionReason) return;
                 setRejectLoading(true);
