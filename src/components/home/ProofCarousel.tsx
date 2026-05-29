@@ -105,7 +105,7 @@ const ProofCarousel = () => {
   const onTouchStart = (e: React.TouchEvent) => handlePointerDown(e.touches[0].pageX);
   const onTouchMove = (e: React.TouchEvent) => handlePointerMove(e.touches[0].pageX);
 
-  const rating = 4.6;
+  const rating = 4.3;
   const fullStars = Math.floor(rating);
   const partialFill = (rating - fullStars) * 100;
 
