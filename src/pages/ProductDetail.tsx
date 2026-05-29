@@ -210,8 +210,14 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                     </button>
                   ))}
                 </div>
+                {selectedVariant?.note && (
+                  <p className="text-[11px] text-muted-foreground italic mt-2 leading-snug">
+                    {selectedVariant.note}
+                  </p>
+                )}
               </div>
             )}
+
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-4">
