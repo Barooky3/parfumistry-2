@@ -1930,12 +1930,15 @@ export default function AdminOrders() {
             {/* Custom notes for non-mismatch reasons */}
             {rejectionReason && rejectionReason !== "value_mismatch" && (
               <div className="mt-3">
-                <label className="text-sm font-medium mb-1 block">Additional Notes (optional)</label>
+                <label className="text-sm font-medium mb-1 block">
+                  {rejectionReason === "custom" ? "Custom Rejection Message" : "Additional Notes (optional)"}
+                </label>
                 <Textarea
-                  placeholder="Any extra details..."
+                  placeholder={rejectionReason === "custom" ? "Write the full message the customer will see in the email body..." : "Any extra details..."}
                   value={rejectionNotes}
                   onChange={(e) => setRejectionNotes(e.target.value)}
-                  rows={2}
+                  rows={rejectionReason === "custom" ? 5 : 2}
+                  autoFocus={rejectionReason === "custom"}
                 />
               </div>
             )}
