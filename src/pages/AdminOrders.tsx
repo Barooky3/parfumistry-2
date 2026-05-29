@@ -1947,7 +1947,7 @@ export default function AdminOrders() {
             <Button variant="outline" onClick={() => setRejectingOrder(null)}>Cancel</Button>
             <Button
               variant="destructive"
-              disabled={rejectLoading || !rejectionReason}
+              disabled={rejectLoading || !rejectionReason || (rejectionReason === "custom" && !rejectionNotes.trim())}
               onClick={async () => {
                 if (!rejectingOrder || !rejectionReason) return;
                 setRejectLoading(true);
