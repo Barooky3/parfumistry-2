@@ -1836,7 +1836,20 @@ export default function AdminOrders() {
                 }`}
               >
                 <span className="font-medium text-sm">🔢 Order Number Provided Instead</span>
-                <p className="text-xs text-muted-foreground mt-1">Customer sent the Rewarble order number instead of the actual gift card code.</p>
+                <p className="text-xs text-muted-foreground mt-1">Customer sent the Rewarble order number instead of the actual gift card code. Email includes step-by-step instructions (open email → Get Order → Display Key).</p>
+              </button>
+              {/* Option 4: Custom Reason */}
+              <button
+                type="button"
+                onClick={() => { setRejectionReason("custom"); setRejectionNotes(""); }}
+                className={`text-left p-3 rounded-lg border-2 transition-colors ${
+                  rejectionReason === "custom"
+                    ? "border-red-500 bg-red-50"
+                    : "border-input bg-background hover:bg-accent"
+                }`}
+              >
+                <span className="font-medium text-sm">✏️ Custom Reason</span>
+                <p className="text-xs text-muted-foreground mt-1">Write any rejection message you want — it will be sent as the main body of the email.</p>
               </button>
             </div>
 
