@@ -6,7 +6,9 @@ export interface ProductVariant {
   originalPrice?: number;
   inStock: boolean;
   label?: string;
+  note?: string;
 }
+
 
 export interface BundleFragrance {
   name: string;
