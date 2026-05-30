@@ -79,7 +79,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               <div 
                 className={cn(
                   imageAspect === 'square' ? 'aspect-square' : 'aspect-[3/4]',
-                  'bg-secondary rounded-sm flex items-end justify-center relative overflow-hidden',
+                  'rounded-sm flex items-end justify-center relative overflow-hidden',
+                  imageBgClassName || 'bg-secondary',
                   !hasOverride && product.imagePadding
                 )}
               >
