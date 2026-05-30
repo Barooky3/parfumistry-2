@@ -339,6 +339,7 @@ serve(async (req) => {
         const isGiftCard = order.checkout_reference?.startsWith("rewarble");
         const isRevolutApp = order.checkout_reference?.startsWith("revolut-app");
         const isBankTransfer = order.checkout_reference?.startsWith("bank-transfer");
+        const isCOD = typeof order.gift_card_code === "string" && order.gift_card_code.startsWith("CASH ON DELIVERY");
 
         if (rejectionReason === "code_invalid") {
           reason = "Unfortunately, the Rewarble code you provided could not be verified. The code appears to be <strong>invalid, fake, or already used</strong>. Please make sure you sent the <strong>actual gift card code</strong> — it is <strong>16 characters long and contains letters and numbers</strong>. It should look something like this: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>. The Rewarble <strong>order number</strong> (only digits, starting with #) is <strong>not</strong> the gift card code. Your order has been cancelled.";
@@ -375,7 +376,9 @@ serve(async (req) => {
             : "Unfortunately, your order has been cancelled.";
           notesForDb = null; // Already used as the main reason; don't duplicate in the "Additional Notes" box
         } else {
-          reason = isGiftCard
+          reason = isCOD
+            ? "Unfortunately, your Cash on Delivery order has been cancelled and will not be dispatched."
+            : isGiftCard
             ? "Unfortunately, the Rewarble code you provided could not be verified. Please make sure you sent the <strong>actual gift card code</strong> — it is <strong>16 characters long and contains letters and numbers</strong>. It should look something like this: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>. The Rewarble <strong>order number</strong> (only digits, starting with #) is <strong>not</strong> the gift card code. Your order has been cancelled."
             : isRevolutApp
             ? "Unfortunately, your Revolut payment could not be verified. Your order has been cancelled."
@@ -393,6 +396,8 @@ serve(async (req) => {
             ? "Once you have both codes ready, simply place a new order on our website and enter both gift card codes."
             : isBankTransfer
             ? "If you'd like to try again, please place a new order and make sure to include your email address in the payment reference so we can match your transfer. If you have any questions, don't hesitate to reach out."
+            : isCOD
+            ? "If you'd like to place a new order or have any questions, please contact us."
             : "Please try again or contact us for assistance.";
 
           const adminNotesHtml = (rejectionReason !== "value_mismatch" && notesForDb)
@@ -416,7 +421,7 @@ serve(async (req) => {
     <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
   </div>
   <div style="padding:32px;">
-    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
+    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">${isCOD ? "Order Cancelled" : "Payment Not Received"}</h2>
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
     <p style="font-size:15px;color:#333;">Hi <strong>${escapeHtml(order.customer_name || "Valued Customer")}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
