@@ -3,7 +3,7 @@ import { getFirstVisitAt } from '@/utils/firstVisit';
 import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Loader2, Shield, Lock } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Loader2, Shield, Lock, Mail, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -301,17 +301,32 @@ const Checkout = () => {
             <p className="text-center text-sm font-mono font-semibold text-accent mb-4">Order #{completedOrderNumber}</p>
           )}
           <p className="text-muted-foreground text-center mb-2">
-            {completedPaymentMethod === 'cod' ? 'Your Cash on Delivery order has been received. Our team will review it shortly and confirm your delivery time.'
-              : completedPaymentMethod === 'revolut' ? t('checkout.thankYouRevolut')
-              : completedPaymentMethod === 'rewarble' ? t('checkout.thankYouGiftCard')
-              : t('checkout.thankYouPaypal')}
+            Your order has been received. You will receive the order confirmation email as soon as the code is verified.
           </p>
-          {(completedPaymentMethod === 'revolut' || completedPaymentMethod === 'rewarble' || completedPaymentMethod === 'cod') && (
-            <p className="text-sm text-muted-foreground text-center mb-10">{t('checkout.thankYouPatience')}</p>
-          )}
-          {completedPaymentMethod === 'paypal' && (
-            <p className="text-sm text-muted-foreground text-center mb-10">{t('checkout.thankYouSpam')}</p>
-          )}
+          <p className="text-sm text-muted-foreground text-center mb-8">
+            This usually takes a short while. Thank you for your patience.
+          </p>
+
+          <div className="border border-accent/30 bg-accent/5 rounded-xl p-5 mb-8">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center shrink-0">
+                <Mail className="h-5 w-5 text-accent" strokeWidth={1.75} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold tracking-wider uppercase text-foreground mb-2">
+                  Check your email after approval
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                  Once your order has been <strong className="text-foreground">approved</strong>, your confirmation and order details will be sent to <strong className="text-foreground">your inbox</strong>. Approval can be <strong className="text-foreground">instant</strong> or take up to a <strong className="text-foreground">few hours</strong>.
+                </p>
+                <p className="text-xs text-muted-foreground flex items-start gap-1.5">
+                  <AlertCircle className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
+                  <span>Don't see it? Please check your <strong className="text-foreground">spam</strong> or <strong className="text-foreground">promotions</strong> folder.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
           <Button asChild className="w-full rounded-md h-12 text-xs tracking-[0.15em] uppercase font-semibold">
             <Link to="/shop">{t('checkout.continueShopping')}</Link>
           </Button>
@@ -319,6 +334,7 @@ const Checkout = () => {
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-background">
