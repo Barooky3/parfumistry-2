@@ -159,7 +159,7 @@ const Index = () => {
 
       {/* New Arrivals Section */}
       {newestArrival && (
-        <section className="pt-4 md:pt-6 pb-4 md:pb-6 bg-background">
+        <section className="pt-6 md:pt-10 pb-6 md:pb-10 bg-background">
           <div className="container">
             <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
               Just In
@@ -167,19 +167,18 @@ const Index = () => {
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-6 md:mb-8">
               New Arrivals
             </h2>
-            <div className="grid grid-cols-3 lg:grid-cols-5 gap-2 md:gap-5">
-              <div className="col-start-2 lg:col-start-3 relative">
-                <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[9px] font-medium tracking-[0.15em] uppercase px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <Sparkles className="h-2.5 w-2.5" />
+            <div className="max-w-[220px] mx-auto">
+              <div className="relative bg-secondary/30 border border-border/25 rounded-xl p-4 md:p-5">
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                  <Sparkles className="h-2 w-2" />
                   New
                 </div>
                 <ProductCard
                   product={newestArrival}
-                  imageBgClassName="bg-[#fbebf0]"
+                  imageBgClassName="bg-[#E5DCD5]"
                   hideCategoryBadge
-                  imageWrapperClassName="border-2 border-border/30 rounded-sm"
+                  imageWrapperClassName="border-[3px] border-border/50 rounded-sm"
                 />
-
               </div>
             </div>
           </div>
