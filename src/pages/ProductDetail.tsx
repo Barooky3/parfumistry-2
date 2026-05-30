@@ -14,7 +14,9 @@ import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { BundleContents } from '@/components/product/BundleContents';
 import { ProductAttributes } from '@/components/product/ProductAttributes';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
+import { useDisplayName } from '@/hooks/useProductName';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
+import { NameEditor } from '@/components/admin/NameEditor';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();

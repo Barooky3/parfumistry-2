@@ -8,7 +8,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
+import { useDisplayName } from '@/hooks/useProductName';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
+import { NameEditor } from '@/components/admin/NameEditor';
 
 interface ProductCardProps {
   product: Product;
@@ -23,6 +25,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     const { t } = useLanguage();
     const { user } = useAuth();
     const paddingOverride = useProductPadding(product.id);
+    const displayName = useDisplayName(product.id, product.name);
 
     const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
     const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
@@ -78,7 +81,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                   !hasOverride && product.imagePadding
                 )}
               >
-                {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} />}
+                {isAdmin && <PaddingAdjuster productId={product.id} productName={displayName} />}
+                {isAdmin && <NameEditor productId={product.id} originalName={product.name} />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
                   <div className="relative w-full h-full" style={innerStyle || undefined}>
                     <motion.img
@@ -159,7 +163,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         <div className="space-y-1.5">
           <Link to={`/product/${product.id}`}>
             <h3 className="text-xs font-medium text-foreground group-hover:text-accent transition-colors leading-tight line-clamp-2">
-              {product.name}
+              {displayName}
+              <span className="text-muted-foreground font-normal"> · <span className="text-[10px]">{product.brand}</span></span>
             </h3>
           </Link>
 
