@@ -17,6 +17,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ChevronsUpDown, Check, Gift, X } from 'lucide-react';
 import { getFragrances } from '@/data/products';
+import { useBannedStatus } from '@/hooks/useBannedStatus';
+
 
 const COUNTRIES = [
   'Netherlands', 'Belgium', 'Germany', 'France', 'United Kingdom', 'Spain', 'Italy',
