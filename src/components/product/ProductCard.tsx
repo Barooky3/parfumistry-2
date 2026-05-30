@@ -34,7 +34,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     const paddingOverride = useProductPadding(product.id);
     const displayName = useDisplayName(product.id, product.name);
 
-    const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
+    const ADMIN_EMAILS = ["ewhz3384@gmail.com", "elkhabirmalik@gmail.com"];
     const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
 
     const hasDiscount = product.originalPrice && product.originalPrice > product.price;
