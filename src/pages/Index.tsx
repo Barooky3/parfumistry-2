@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { lazy, Suspense } from 'react';
 import { Input } from '@/components/ui/input';
