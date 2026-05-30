@@ -19,10 +19,13 @@ interface ProductCardProps {
   imageAspect?: 'portrait' | 'square';
   /** Override the image container background (e.g. for New Arrivals pink). */
   imageBgClassName?: string;
+  /** Hide the FOR HIM / FOR HER / BUNDLE corner badge (used when caller renders its own overlay badge). */
+  hideCategoryBadge?: boolean;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait', imageBgClassName }, ref) => {
+  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge }, ref) => {
+
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
@@ -130,9 +133,12 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           })()}
           
           {/* Category Badge */}
-          <span className="absolute top-2 left-2 text-[9px] font-medium tracking-[0.08em] px-2 py-1 bg-background/90 text-foreground uppercase">
-            {product.category === 'men' ? t('product.forHim') : product.category === 'women' ? t('product.forHer') : product.category === 'bundle' ? t('product.bundle') : t('product.unisex')}
-          </span>
+          {!hideCategoryBadge && (
+            <span className="absolute top-2 left-2 text-[9px] font-medium tracking-[0.08em] px-2 py-1 bg-background/90 text-foreground uppercase">
+              {product.category === 'men' ? t('product.forHim') : product.category === 'women' ? t('product.forHer') : product.category === 'bundle' ? t('product.bundle') : t('product.unisex')}
+            </span>
+          )}
+
           
           {/* Hot Deal Fire Badge */}
           {product.hotDeal && (
