@@ -206,6 +206,27 @@ export type Database = {
         }
         Relationships: []
       }
+      product_name_overrides: {
+        Row: {
+          id: string
+          name: string
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_padding_overrides: {
         Row: {
           id: string
