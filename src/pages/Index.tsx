@@ -158,9 +158,12 @@ const Index = () => {
 
       {/* New Arrivals Section */}
       {newestArrival && (
-        <section className="pt-14 md:pt-20 pb-4 md:pb-6 bg-background">
+        <section className="pt-4 md:pt-6 pb-4 md:pb-6 bg-background">
           <div className="container">
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-8 md:mb-10">
+            <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
+              Just In
+            </p>
+            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-6 md:mb-8">
               New Arrivals
             </h2>
             <div className="grid grid-cols-3 lg:grid-cols-5 gap-2 md:gap-5">
@@ -169,7 +172,10 @@ const Index = () => {
                   <Sparkles className="h-3 w-3" />
                   New
                 </div>
-                <ProductCard product={newestArrival} />
+                <ProductCard
+                  product={newestArrival}
+                  imageBgClassName="bg-gradient-to-b from-[#fde7ec] via-[#fbd5dd] to-[#f5b9c5]"
+                />
               </div>
             </div>
           </div>
@@ -178,7 +184,8 @@ const Index = () => {
 
 
       {/* Bestsellers Section */}
-      <section id="bestsellers" className="py-14 md:py-20 bg-background">
+      <section id="bestsellers" className="pt-4 md:pt-6 pb-14 md:pb-20 bg-background">
+
 
         <div className="container">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12">
