@@ -201,14 +201,4 @@ const NextFragrancePoll = () => {
   );
 };
 
-        {isAdmin && showResults && (
-          <p className="text-center text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-4">
-            Admin · {total} total vote{total === 1 ? '' : 's'}
-          </p>
-        )}
-      </div>
-    </section>
-  );
-};
-
 export default NextFragrancePoll;
