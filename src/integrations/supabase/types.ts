@@ -173,6 +173,30 @@ export type Database = {
         }
         Relationships: []
       }
+      poll_votes: {
+        Row: {
+          choice: string
+          created_at: string
+          id: string
+          poll_id: string
+          voter_fingerprint: string
+        }
+        Insert: {
+          choice: string
+          created_at?: string
+          id?: string
+          poll_id: string
+          voter_fingerprint: string
+        }
+        Update: {
+          choice?: string
+          created_at?: string
+          id?: string
+          poll_id?: string
+          voter_fingerprint?: string
+        }
+        Relationships: []
+      }
       product_attributes: {
         Row: {
           created_at: string
