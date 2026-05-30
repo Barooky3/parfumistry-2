@@ -1056,6 +1056,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8734A',
     image: 'https://profparfums.store/cdn/shop/files/valentino.png?v=1768493347&width=1200',
+    additionalImages: [bornInRomaCoralFantasyLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
