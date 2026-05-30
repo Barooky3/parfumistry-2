@@ -746,8 +746,10 @@ const Checkout = () => {
             </div>
           </div>
         </div>
+        </fieldset>
       </div>
     </div>
+
   );
 };
 
