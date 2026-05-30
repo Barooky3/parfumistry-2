@@ -96,12 +96,12 @@ const Index = () => {
                 width={800}
                 height={533}
                 fetchPriority="high"
-                className="h-auto w-[480px] md:w-[620px] lg:w-[800px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
+                className="h-auto w-[540px] md:w-[700px] lg:w-[920px] mx-auto relative z-10 brightness-0 invert drop-shadow-2xl object-contain blur-[0.4px]"
               />
             </div>
             
             {/* Tagline */}
-            <p className="font-display text-base md:text-lg lg:text-xl text-white/70 tracking-[0.2em] uppercase -mt-10 md:-mt-14 lg:-mt-20 mb-6 hero-tagline-animate">
+            <p className="font-display text-[11px] md:text-xs lg:text-sm text-white/70 tracking-[0.2em] uppercase -mt-8 md:-mt-12 lg:-mt-16 mb-6 hero-tagline-animate">
               The Fragrance Library
             </p>
             
