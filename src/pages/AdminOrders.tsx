@@ -1557,6 +1557,15 @@ export default function AdminOrders() {
                           {pm}
                         </Badge>
                         {(() => {
+                          const country = (order.shipping_address as any)?.country;
+                          return country ? (
+                            <Badge className="bg-blue-600 text-white hover:bg-blue-700 text-sm font-semibold px-3 py-1 gap-1.5 border-0">
+                              <span className="text-base leading-none">📍</span>
+                              {country}
+                            </Badge>
+                          ) : null;
+                        })()}
+                        {(() => {
                           const count = emailOrderCounts[order.customer_email.toLowerCase()] || 0;
                           return count > 1 ? (
                             <Badge 
@@ -1607,9 +1616,21 @@ export default function AdminOrders() {
                       })()}
                       {order.shipping_address && (() => {
                         const addr = order.shipping_address as any;
-                        return addr.country ? (
-                          <p className="text-xs text-muted-foreground mt-2">📍 {addr.country}</p>
-                        ) : null;
+                        const hasAny = addr.line1 || addr.city || addr.postalCode || addr.country;
+                        if (!hasAny) return null;
+                        return (
+                          <div className="mt-3 bg-muted/40 border rounded-md px-3 py-2 text-sm">
+                            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Shipping Address</p>
+                            <p className="font-medium text-foreground">{order.customer_name}</p>
+                            {addr.line1 && <p className="text-foreground/90">{addr.line1}</p>}
+                            {(addr.postalCode || addr.city) && (
+                              <p className="text-foreground/90">
+                                {addr.postalCode}{addr.postalCode && addr.city ? ' ' : ''}{addr.city}
+                              </p>
+                            )}
+                            {addr.country && <p className="text-foreground font-semibold">{addr.country}</p>}
+                          </div>
+                        );
                       })()}
                     </div>
                     <div className="text-right">
