@@ -3,7 +3,7 @@ import { getFirstVisitAt } from '@/utils/firstVisit';
 import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { DeliveryInfo } from '@/components/product/DeliveryInfo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, ShoppingBag, Tag, Loader2, Shield, Lock } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Tag, Loader2, Shield, Lock, Mail, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
