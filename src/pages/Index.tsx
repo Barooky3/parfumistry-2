@@ -175,7 +175,9 @@ const Index = () => {
                 <ProductCard
                   product={newestArrival}
                   imageBgClassName="bg-gradient-to-b from-[#fde7ec] via-[#fbd5dd] to-[#f5b9c5]"
+                  hideCategoryBadge
                 />
+
               </div>
             </div>
           </div>
