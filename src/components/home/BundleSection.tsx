@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
-const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
+const ADMIN_EMAILS = ['ewhz3384@gmail.com'];
 
 const BUNDLE_TAGS: Record<string, string> = {
   'evening-sweetheart-bundle': 'Winter',

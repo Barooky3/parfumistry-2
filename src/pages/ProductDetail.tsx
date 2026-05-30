@@ -28,7 +28,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const [quantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  const ADMIN_EMAILS = ["ewhz3384@gmail.com", "elkhabirmalik@gmail.com"];
+  const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
 
   const product = id ? getProductById(id) : undefined;
