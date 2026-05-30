@@ -35,7 +35,7 @@ const Shop = () => {
   
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<SortOption>('featured');
+  const [sortBy, setSortBy] = useState<SortOption>(category === 'all' || !category ? 'newest' : 'featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
