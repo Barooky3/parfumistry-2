@@ -421,7 +421,7 @@ serve(async (req) => {
     <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
   </div>
   <div style="padding:32px;">
-    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
+    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">${isCOD ? "Order Cancelled" : "Payment Not Received"}</h2>
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
     <p style="font-size:15px;color:#333;">Hi <strong>${escapeHtml(order.customer_name || "Valued Customer")}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
