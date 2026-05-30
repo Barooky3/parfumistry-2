@@ -18,6 +18,7 @@ import theMostWantedParfumLifestyle from '@/assets/products/the-most-wanted-parf
 import leBeauLeParfumLifestyle from '@/assets/products/le-beau-le-parfum-lifestyle.png';
 import yslYEdpLifestyle from '@/assets/products/ysl-y-edp-lifestyle.png';
 import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
+import bornInRomaCoralFantasyLifestyle from '@/assets/products/born-in-roma-coral-fantasy-lifestyle.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
