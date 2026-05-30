@@ -21,10 +21,12 @@ interface ProductCardProps {
   imageBgClassName?: string;
   /** Hide the FOR HIM / FOR HER / BUNDLE corner badge (used when caller renders its own overlay badge). */
   hideCategoryBadge?: boolean;
+  /** Apply classes to the image wrapper only (not the text content below). */
+  imageWrapperClassName?: string;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge }, ref) => {
+  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName }, ref) => {
 
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
@@ -74,7 +76,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         {/* Image Container */}
         <Link
           to={`/product/${product.id}`}
-          className="block relative mb-2.5"
+          className={cn('block relative mb-2.5', imageWrapperClassName)}
         >
          {(() => {
             const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);

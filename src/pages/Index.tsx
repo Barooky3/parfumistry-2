@@ -174,9 +174,9 @@ const Index = () => {
                 </div>
                 <ProductCard
                   product={newestArrival}
-                  imageBgClassName="bg-[#fdf5f7]"
+                  imageBgClassName="bg-[#fbebf0]"
                   hideCategoryBadge
-                  className="border border-border/30 rounded-sm"
+                  imageWrapperClassName="border-2 border-border/30 rounded-sm"
                 />
 
               </div>
