@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -11,39 +9,34 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { ShieldAlert } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useBannedStatus } from '@/hooks/useBannedStatus';
+
+const SESSION_KEY = 'bannedNoticeAcknowledged';
 
 export const BannedUserPopup = () => {
-  const { user, signOut } = useAuth();
-  const [banned, setBanned] = useState(false);
-  const [bannedEmail, setBannedEmail] = useState('');
+  const { user } = useAuth();
+  const { isBanned } = useBannedStatus();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!user?.email) return;
+    if (!isBanned || !user?.email) return;
+    const ackedFor = sessionStorage.getItem(SESSION_KEY);
+    if (ackedFor === user.email.toLowerCase()) return;
+    setOpen(true);
+  }, [isBanned, user?.email]);
 
-    const checkBan = async () => {
-      const { data } = await supabase
-        .from('banned_users')
-        .select('email')
-        .maybeSingle();
-
-      if (data) {
-        setBanned(true);
-        setBannedEmail(user.email!);
-      }
-    };
-
-    checkBan();
-  }, [user?.email]);
-
-  const handleAcknowledge = async () => {
-    await signOut();
-    setBanned(false);
+  const handleAcknowledge = () => {
+    if (user?.email) {
+      sessionStorage.setItem(SESSION_KEY, user.email.toLowerCase());
+    }
+    setOpen(false);
   };
 
-  if (!banned) return null;
+  if (!isBanned) return null;
 
   return (
-    <AlertDialog open={banned}>
+    <AlertDialog open={open}>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <div className="flex items-center gap-3 mb-2">
@@ -53,14 +46,13 @@ export const BannedUserPopup = () => {
             <AlertDialogTitle className="text-lg">Account Banned</AlertDialogTitle>
           </div>
           <AlertDialogDescription className="text-sm leading-relaxed">
-            Your account <strong className="text-foreground">{bannedEmail}</strong> has been banned. 
-            You will be signed out. You may place orders using a different account or as a guest.
+            Your account <strong className="text-foreground">{user?.email}</strong> has been
+            banned for abuse. You can continue to browse the site, but you will not be able to
+            place any new orders while signed in to this account.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={handleAcknowledge}>
-            I Understand
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleAcknowledge}>I Understand</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
