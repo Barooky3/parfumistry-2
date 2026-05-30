@@ -77,7 +77,6 @@ const NextFragrancePoll = () => {
     if (!error) {
       localStorage.setItem(`poll_voted_${POLL_ID}`, key);
       setVoted(key);
-      // optimistic
       setCounts((c) => ({ ...c, [key]: (c[key] || 0) + 1 }));
     }
     setLoading(false);
@@ -87,24 +86,45 @@ const NextFragrancePoll = () => {
 
   return (
     <section className="pt-8 md:pt-12 pb-2 md:pb-4 bg-background">
-      <div className="container max-w-3xl">
+      <div className="container max-w-2xl">
+        {/* Last winner pill — compact, integrated header */}
+        <div className="flex justify-center mb-4">
+          <div className="inline-flex items-center gap-2 bg-secondary/60 border border-border/50 rounded-full pl-2 pr-3 py-1">
+            <div className="w-6 h-7 bg-[#EDE8E1] rounded-sm overflow-hidden flex items-center justify-center shrink-0">
+              <img
+                src={LAST_WINNER.image}
+                alt={LAST_WINNER.name}
+                loading="lazy"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <Trophy className="h-3 w-3 text-accent" />
+            <span className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground">
+              Last winner:
+            </span>
+            <span className="text-[11px] font-medium text-foreground">
+              {LAST_WINNER.name}
+            </span>
+          </div>
+        </div>
+
         <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
           You Decide
         </p>
         <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground text-center mb-1">
           Which should we add next?
         </h2>
-        <p className="text-[11px] md:text-xs text-muted-foreground text-center mb-5 md:mb-7">
+        <p className="text-[11px] md:text-xs text-muted-foreground text-center mb-5">
           {voted ? 'Thanks for voting — here are the live results' : 'Tap your pick to reveal the results'}
         </p>
 
-        <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-3 md:gap-5">
+        <div className="relative flex items-center justify-center gap-3 md:gap-4">
           {OPTIONS.map((opt, idx) => {
             const count = counts[opt.key] || 0;
             const percent = pct(count);
             const isPick = voted === opt.key;
             return (
-              <div key={opt.key} style={{ gridColumn: idx === 0 ? 1 : 3 }}>
+              <div key={opt.key} className="flex-1 max-w-[180px] md:max-w-[200px]">
                 <button
                   type="button"
                   onClick={() => vote(opt.key)}
@@ -119,7 +139,7 @@ const NextFragrancePoll = () => {
                     src={opt.image}
                     alt={opt.label}
                     loading="lazy"
-                    className="w-full h-full object-contain p-2 md:p-4 transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-contain p-2 md:p-3 transition-transform duration-500 group-hover:scale-105"
                   />
                   {isPick && (
                     <div className="absolute top-1.5 right-1.5 bg-accent text-accent-foreground rounded-full p-1 shadow">
@@ -152,9 +172,11 @@ const NextFragrancePoll = () => {
             );
           })}
 
-          {/* VS divider */}
-          <div className="flex flex-col items-center justify-center" style={{ gridColumn: 2 }}>
-            <div className="font-display text-2xl md:text-3xl text-accent italic">vs</div>
+          {/* OR divider — absolutely centered between the two photos */}
+          <div className="absolute left-1/2 top-[calc(50%-12px)] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
+            <div className="font-display text-base md:text-lg italic text-accent-foreground bg-accent rounded-full h-9 w-9 md:h-10 md:w-10 flex items-center justify-center shadow-md uppercase tracking-wide">
+              or
+            </div>
           </div>
         </div>
 
@@ -163,29 +185,6 @@ const NextFragrancePoll = () => {
             Admin · {total} total vote{total === 1 ? '' : 's'}
           </p>
         )}
-
-        {/* Last winner sub-section */}
-        <div className="mt-6 md:mt-8 border-t border-border/40 pt-4 md:pt-5">
-          <div className="flex items-center justify-center gap-3">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
-              <Trophy className="h-3 w-3 text-accent" />
-              Last Winner
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-10 md:w-10 md:h-12 bg-[#EDE8E1] rounded-sm overflow-hidden flex items-center justify-center">
-                <img
-                  src={LAST_WINNER.image}
-                  alt={LAST_WINNER.name}
-                  loading="lazy"
-                  className="w-full h-full object-contain p-0.5"
-                />
-              </div>
-              <span className="text-xs md:text-sm font-medium text-foreground">
-                {LAST_WINNER.name}
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
