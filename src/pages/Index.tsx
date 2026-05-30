@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { lazy, Suspense } from 'react';
 import { Input } from '@/components/ui/input';
@@ -156,21 +156,26 @@ const Index = () => {
       <HomeTrackOrder />
 
 
-      {/* Newest Arrival Section */}
+      {/* New Arrivals Section */}
       {newestArrival && (
         <section className="pt-14 md:pt-20 pb-4 md:pb-6 bg-background">
           <div className="container">
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-8 md:mb-10">
-              Newest Arrival
+              New Arrivals
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-5">
-              <div className="col-start-1 lg:col-start-3">
+            <div className="grid grid-cols-3 lg:grid-cols-5 gap-2 md:gap-5">
+              <div className="col-start-2 lg:col-start-3 relative">
+                <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[10px] md:text-xs font-semibold tracking-wider uppercase px-2.5 py-1 rounded-sm shadow-md flex items-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  New
+                </div>
                 <ProductCard product={newestArrival} />
               </div>
             </div>
           </div>
         </section>
       )}
+
 
       {/* Bestsellers Section */}
       <section id="bestsellers" className="py-14 md:py-20 bg-background">
