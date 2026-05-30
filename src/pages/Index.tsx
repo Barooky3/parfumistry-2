@@ -168,14 +168,15 @@ const Index = () => {
             </h2>
             <div className="grid grid-cols-3 lg:grid-cols-5 gap-2 md:gap-5">
               <div className="col-start-2 lg:col-start-3 relative">
-                <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[10px] md:text-xs font-semibold tracking-wider uppercase px-2.5 py-1 rounded-sm shadow-md flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" />
+                <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[9px] font-medium tracking-[0.15em] uppercase px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Sparkles className="h-2.5 w-2.5" />
                   New
                 </div>
                 <ProductCard
                   product={newestArrival}
-                  imageBgClassName="bg-gradient-to-b from-[#fde7ec] via-[#fbd5dd] to-[#f5b9c5]"
+                  imageBgClassName="bg-[#fdf5f7]"
                   hideCategoryBadge
+                  className="border border-border/30 rounded-sm"
                 />
 
               </div>
