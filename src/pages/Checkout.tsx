@@ -343,10 +343,25 @@ const Checkout = () => {
         <div className="flex items-center justify-center gap-2 mb-8">
           <Lock className="h-4 w-4 text-accent" />
           <h1 className="font-display text-2xl text-foreground">{t('checkout.title')}</h1>
-        </div>
 
+
+        {isBanned && (
+          <div className="mb-6 rounded-md border border-destructive/40 bg-destructive/10 p-4 flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-destructive">Checkout disabled — account banned</p>
+              <p className="text-foreground/80 mt-1">
+                Your account has been banned for abuse. You cannot place an order while signed in
+                to this account. All fields below are disabled.
+              </p>
+            </div>
+          </div>
+        )}
+
+        <fieldset disabled={isBanned} className="contents [&:disabled_*]:cursor-not-allowed">
         {/* Form fields */}
-        <div className="space-y-4 mb-6">
+        <div className={cn("space-y-4 mb-6", isBanned && "opacity-60 pointer-events-none select-none")}>
+
           <h2 className="text-sm font-semibold tracking-wider uppercase text-muted-foreground">Your details</h2>
           
           <div className="grid grid-cols-2 gap-3">
