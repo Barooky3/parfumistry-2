@@ -1843,7 +1843,39 @@ export const products: Product[] = [
       { ml: 120, price: 36.99, inStock: true },
     ],
   },
+  {
+    id: 'bad-boy-cobalt',
+    name: 'Bad Boy Cobalt Parfum',
+    brand: 'Carolina Herrera',
+    price: 25.99,
+    category: 'men',
+    description: 'Bad Boy Cobalt Parfum is the most electrifying chapter of the Bad Boy saga — a deep, magnetic blue fragrance that fuses aromatic freshness with seductive warmth. Lavender and pink pepper crackle at the top, leading into a velvety heart of plum and geranium, before settling on a smooth woody base of cedar, vetiver, truffle and oak. Bold, modern, and unmistakably charismatic — a true after-dark signature.',
+    scentNotes: {
+      top: ['Lavender', 'Pink Pepper'],
+      heart: ['Plum', 'Geranium'],
+      base: ['Cedar', 'Vetiver', 'Truffle', 'Oak'],
+    },
+    scentNoteImages: {
+      'Lavender': '/scent-notes/lavender.png',
+      'Pink Pepper': '/scent-notes/pink-pepper.png',
+      'Plum': '/scent-notes/plum.png',
+      'Geranium': '/scent-notes/geranium.png',
+      'Cedar': '/scent-notes/cedar.png',
+      'Vetiver': '/scent-notes/vetiver.png',
+      'Truffle': '/scent-notes/black-truffle.png',
+      'Oak': '/scent-notes/oakmoss.png',
+    },
+    accentColor: '#1E3A8A',
+    image: '/images/bad-boy-cobalt.png',
+    affiliateUrl: '/product/bad-boy-cobalt',
+    inStock: true,
+    variants: [
+      { ml: 50, price: 25.99, inStock: true },
+      { ml: 100, price: 31.99, inStock: true },
+    ],
+  },
 ];
+
 
 export const getProductById = (id: string): Product | undefined => {
   return products.find(product => product.id === id);
