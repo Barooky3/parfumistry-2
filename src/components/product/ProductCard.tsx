@@ -17,10 +17,12 @@ interface ProductCardProps {
   className?: string;
   /** Image aspect ratio. Defaults to portrait (3/4). Pass "square" for 1:1. */
   imageAspect?: 'portrait' | 'square';
+  /** Override the image container background (e.g. for New Arrivals pink). */
+  imageBgClassName?: string;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait' }, ref) => {
+  ({ product, className, imageAspect = 'portrait', imageBgClassName }, ref) => {
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
