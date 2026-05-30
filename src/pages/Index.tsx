@@ -7,7 +7,7 @@ import ProofCarousel from '@/components/home/ProofCarousel';
 import HomeTrackOrder from '@/components/home/HomeTrackOrder';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product';
-import { getBestsellers, products } from '@/data/products';
+import { getBestsellers, products, getProductById } from '@/data/products';
 import { BundleSection, FAQSection } from '@/components/home';
 import { useLanguage } from '@/contexts/LanguageContext';
 const heroImage = '/images/hero-perfumes.webp';
@@ -21,6 +21,7 @@ const Index = () => {
   const allBestsellers = getBestsellers();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const newestArrival = getProductById('bad-boy-cobalt');
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = searchQuery.trim()
@@ -155,8 +156,25 @@ const Index = () => {
       <HomeTrackOrder />
 
 
+      {/* Newest Arrival Section */}
+      {newestArrival && (
+        <section className="pt-14 md:pt-20 pb-4 md:pb-6 bg-background">
+          <div className="container">
+            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-8 md:mb-10">
+              Newest Arrival
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-5">
+              <div className="col-start-1 lg:col-start-3">
+                <ProductCard product={newestArrival} />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Bestsellers Section */}
       <section id="bestsellers" className="py-14 md:py-20 bg-background">
+
         <div className="container">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12">
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground">
