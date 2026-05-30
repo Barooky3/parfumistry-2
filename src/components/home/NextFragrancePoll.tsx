@@ -8,7 +8,7 @@ import ultraMaleImg from '@/assets/products/poll-ultra-male.png';
 import leBeauParadiseImg from '@/assets/products/poll-le-beau-paradise-garden.png';
 
 const POLL_ID = 'next-arrival-2026-01';
-const ADMIN_EMAILS = ['ewhz3384@gmail.com'];
+const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
