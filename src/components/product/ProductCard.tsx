@@ -164,7 +164,6 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           <Link to={`/product/${product.id}`}>
             <h3 className="text-xs font-medium text-foreground group-hover:text-accent transition-colors leading-tight line-clamp-2">
               {displayName}
-              <span className="text-muted-foreground font-normal"> · <span className="text-[10px]">{product.brand}</span></span>
             </h3>
           </Link>
 
