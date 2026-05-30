@@ -33,6 +33,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
   const product = id ? getProductById(id) : undefined;
   const paddingOverride = useProductPadding(id || '');
+  const displayName = useDisplayName(id || '', product?.name || '');
   const relatedProducts = (() => {
     const all = getFeaturedProducts().filter(p => p.id !== id);
     const shuffled = [...all].sort(() => Math.random() - 0.5);
@@ -93,7 +94,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           <ChevronRight className="h-4 w-4" />
           <Link to="/shop" className="hover:text-foreground transition-colors">Shop</Link>
           <ChevronRight className="h-4 w-4" />
-          <span className="text-foreground truncate">{product.name}</span>
+          <span className="text-foreground truncate">{displayName}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 mb-12 md:mb-24 items-start">
@@ -118,7 +119,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                     !hasOverride && isProductShot && product.imagePadding
                   )}
                 >
-                  {isAdmin && <PaddingAdjuster productId={product.id} productName={product.name} variant="detail" />}
+                  {isAdmin && <PaddingAdjuster productId={product.id} productName={displayName} variant="detail" />}
+                  {isAdmin && <NameEditor productId={product.id} originalName={product.name} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
                     <div className="relative w-full h-full" style={innerStyle || undefined}>
                       <img
@@ -187,7 +189,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             </p>
             
             <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground mb-4">
-              {product.name}
+              {displayName}
             </h1>
 
             {/* ML Selector */}
