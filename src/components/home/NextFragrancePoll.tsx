@@ -98,38 +98,7 @@ const NextFragrancePoll = () => {
           {voted ? 'Thanks for voting — here are the live results' : 'Tap your pick to reveal the results'}
         </p>
 
-        {/* Last Winner — prominent, integrated champion card */}
-        <div className="relative mb-6 md:mb-8 mx-auto max-w-[320px]">
-          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full shadow-sm">
-            <Trophy className="h-2.5 w-2.5" fill="currentColor" />
-            Last Winner
-          </div>
-          <div className="bg-secondary/40 border-2 border-accent/30 rounded-xl p-4 pt-5 flex items-center gap-3">
-            <div className="w-14 h-14 md:w-16 md:h-16 bg-[#EDE8E1] rounded-lg border border-border/30 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
-              <img
-                src={LAST_WINNER.image}
-                alt={LAST_WINNER.name}
-                loading="lazy"
-                className="w-full h-full object-contain p-1"
-              />
-            </div>
-            <div>
-              <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
-                Previously Voted In
-              </p>
-              <p className="text-sm md:text-base font-semibold text-foreground leading-tight">
-                {LAST_WINNER.name}
-              </p>
-            </div>
-            <div className="ml-auto self-start">
-              <div className="bg-accent/10 rounded-full p-1.5">
-                <Trophy className="h-4 w-4 md:h-5 md:w-5 text-accent" fill="currentColor" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative flex items-center justify-center gap-3 md:gap-4">
+        <div className="relative flex items-center justify-center gap-3 md:gap-4 mb-6 md:mb-8">
           {OPTIONS.map((opt, idx) => {
             const count = counts[opt.key] || 0;
             const percent = pct(count);
@@ -187,6 +156,37 @@ const NextFragrancePoll = () => {
           <div className="absolute left-1/2 top-[calc(50%-12px)] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
             <div className="font-display text-base md:text-lg italic text-accent-foreground bg-accent rounded-full h-9 w-9 md:h-10 md:w-10 flex items-center justify-center shadow-md uppercase tracking-wide">
               or
+            </div>
+          </div>
+        </div>
+
+        {/* Last Winner — prominent, integrated champion card */}
+        <div className="relative mx-auto max-w-[320px]">
+          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full shadow-sm">
+            <Trophy className="h-2.5 w-2.5" fill="currentColor" />
+            Last Winner
+          </div>
+          <div className="bg-secondary/40 border-2 border-accent/30 rounded-xl p-4 pt-5 flex items-center gap-3">
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-[#EDE8E1] rounded-lg border border-border/30 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+              <img
+                src={LAST_WINNER.image}
+                alt={LAST_WINNER.name}
+                loading="lazy"
+                className="w-full h-full object-contain p-1"
+              />
+            </div>
+            <div>
+              <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
+                Previously Voted In
+              </p>
+              <p className="text-sm md:text-base font-semibold text-foreground leading-tight">
+                {LAST_WINNER.name}
+              </p>
+            </div>
+            <div className="ml-auto self-start">
+              <div className="bg-accent/10 rounded-full p-1.5">
+                <Trophy className="h-4 w-4 md:h-5 md:w-5 text-accent" fill="currentColor" />
+              </div>
             </div>
           </div>
         </div>
