@@ -16,6 +16,7 @@ const logo = '/images/logo.png';
 // Lazy-load BrandNavigation since it uses framer-motion eagerly
 const BrandNavigation = lazy(() => import('@/components/home/BrandNavigation').then(m => ({ default: m.BrandNavigation })));
 const HomeReviews = lazy(() => import('@/components/home/HomeReviews'));
+const NextFragrancePoll = lazy(() => import('@/components/home/NextFragrancePoll'));
 
 const Index = () => {
   const allBestsellers = getBestsellers();
@@ -186,8 +187,14 @@ const Index = () => {
       )}
 
 
+      {/* Next Fragrance Poll */}
+      <Suspense fallback={null}>
+        <NextFragrancePoll />
+      </Suspense>
+
       {/* Bestsellers Section */}
       <section id="bestsellers" className="pt-4 md:pt-6 pb-14 md:pb-20 bg-background">
+
 
 
         <div className="container">
