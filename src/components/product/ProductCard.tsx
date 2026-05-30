@@ -19,10 +19,13 @@ interface ProductCardProps {
   imageAspect?: 'portrait' | 'square';
   /** Override the image container background (e.g. for New Arrivals pink). */
   imageBgClassName?: string;
+  /** Hide the FOR HIM / FOR HER / BUNDLE corner badge (used when caller renders its own overlay badge). */
+  hideCategoryBadge?: boolean;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait', imageBgClassName }, ref) => {
+  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge }, ref) => {
+
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
