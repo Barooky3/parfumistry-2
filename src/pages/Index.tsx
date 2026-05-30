@@ -187,8 +187,14 @@ const Index = () => {
       )}
 
 
+      {/* Next Fragrance Poll */}
+      <Suspense fallback={null}>
+        <NextFragrancePoll />
+      </Suspense>
+
       {/* Bestsellers Section */}
       <section id="bestsellers" className="pt-4 md:pt-6 pb-14 md:pb-20 bg-background">
+
 
 
         <div className="container">
