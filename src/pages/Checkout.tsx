@@ -343,6 +343,9 @@ const Checkout = () => {
         <div className="flex items-center justify-center gap-2 mb-8">
           <Lock className="h-4 w-4 text-accent" />
           <h1 className="font-display text-2xl text-foreground">{t('checkout.title')}</h1>
+        </div>
+
+
 
 
         {isBanned && (
