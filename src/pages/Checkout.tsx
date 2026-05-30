@@ -101,6 +101,8 @@ const Checkout = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { isBanned } = useBannedStatus();
+
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [completedPaymentMethod, setCompletedPaymentMethod] = useState('');
