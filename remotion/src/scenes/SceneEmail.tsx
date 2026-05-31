@@ -1,46 +1,48 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { BrowserChrome, Cursor, StepBadge } from "../components/Browser";
 
-// Recreates the actual G2A order email visible in Gmail.
+// G2A order email opened in Gmail for the PayPal Rewarble 30 USD purchase.
 export const SceneEmail: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const enter = spring({ frame, fps, config: { damping: 18 } });
 
-  const openEmail = frame >= 25;
-  // Cursor: drift to "Get order" button by ~frame 90
-  const cx = interpolate(frame, [10, 30, 90, 130], [900, 760, 820, 820], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [10, 30, 90, 130], [400, 360, 540, 540], { extrapolateRight: "clamp" });
-  const clickGet = frame >= 95 && frame <= 110;
-  const buttonPress = frame >= 95;
+  // First: hover inbox row and click it (~f20-30), then drift down to the "Get order" button (~y=560) and click ~f100.
+  const inboxPhase = frame < 32;
+  const cx = interpolate(frame, [0, 18, 32, 90, 130], [1000, 700, 700, 700, 700], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [0, 18, 32, 90, 130], [400, 220, 220, 560, 560], { extrapolateRight: "clamp" });
+  const clickInbox = frame >= 22 && frame <= 32;
+  const openEmail = frame >= 32;
+  const clickGet = frame >= 95 && frame <= 112;
 
   return (
     <AbsoluteFill style={{ opacity: enter }}>
-      <StepBadge n={3} label="Open the G2A email & press Get order" />
+      <StepBadge n={4} label="Open the G2A email & press Get order" />
       <BrowserChrome url="mail.google.com">
         <div style={{ display: "flex", height: "100%", background: "#fff" }}>
           {/* Gmail sidebar */}
-          <div style={{ width: 240, background: "#f6f8fc", padding: 18, borderRight: "1px solid #e3e6eb" }}>
-            <div style={{ padding: "10px 18px", background: "#d3e3fd", borderRadius: 999, fontWeight: 700, color: "#001d35", fontSize: 14 }}>📥 Inbox</div>
-            <div style={{ marginTop: 10, color: "#444", fontSize: 13, padding: "10px 18px" }}>⭐ Starred</div>
-            <div style={{ color: "#444", fontSize: 13, padding: "10px 18px" }}>📤 Sent</div>
-            <div style={{ color: "#444", fontSize: 13, padding: "10px 18px" }}>📋 Drafts</div>
+          <div style={{ width: 200, background: "#f6f8fc", padding: 16, borderRight: "1px solid #e3e6eb" }}>
+            <div style={{ padding: "10px 18px", background: "#d3e3fd", borderRadius: 999, fontWeight: 700, color: "#001d35", fontSize: 13 }}>📥 Inbox</div>
+            <div style={{ marginTop: 10, color: "#444", fontSize: 12, padding: "8px 18px" }}>⭐ Starred</div>
+            <div style={{ color: "#444", fontSize: 12, padding: "8px 18px" }}>📤 Sent</div>
+            <div style={{ color: "#444", fontSize: 12, padding: "8px 18px" }}>📋 Drafts</div>
           </div>
 
-          <div style={{ flex: 1, padding: "20px 32px", overflow: "hidden" }}>
+          <div style={{ flex: 1, padding: "16px 28px", overflow: "hidden" }}>
             {!openEmail ? (
               <div style={{ borderTop: "1px solid #e3e6eb" }}>
                 {[
-                  { from: "G2A.COM", subj: "You bought Revolut Gift Card 10 EUR - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)", time: "10:00 PM", bold: true },
-                  { from: "Newsletter", subj: "Weekly digest", time: "1h" },
-                  { from: "GitHub", subj: "Security alert", time: "3h" },
+                  { from: "G2A.COM", subj: "You bought PayPal Gift Card 30 USD - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)", time: "10:00 PM", bold: true, hl: true },
+                  { from: "Newsletter", subj: "Weekly digest — top picks", time: "1h" },
+                  { from: "GitHub", subj: "Security alert: new sign-in", time: "3h" },
+                  { from: "Spotify", subj: "Your daily mix is ready", time: "5h" },
                 ].map((m, i) => (
                   <div key={i} style={{
-                    padding: "14px 18px", borderBottom: "1px solid #e3e6eb", display: "flex", gap: 16,
-                    background: m.bold ? "#fff" : "#fff",
-                    fontWeight: m.bold ? 700 : 400, fontSize: 14, color: "#202124",
+                    padding: "12px 16px", borderBottom: "1px solid #e3e6eb", display: "flex", gap: 16,
+                    background: m.hl && clickInbox ? "#eaf2fe" : "#fff",
+                    fontWeight: m.bold ? 700 : 400, fontSize: 13, color: "#202124",
                   }}>
-                    <div style={{ width: 180 }}>{m.from}</div>
+                    <div style={{ width: 160 }}>{m.from}</div>
                     <div style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.subj}</div>
                     <div style={{ color: "#5f6368" }}>{m.time}</div>
                   </div>
@@ -48,81 +50,80 @@ export const SceneEmail: React.FC = () => {
               </div>
             ) : (
               <div>
-                {/* Gmail toolbar */}
-                <div style={{ fontSize: 22, color: "#202124", fontWeight: 400 }}>
-                  You bought Revolut Gift Card 10 EUR - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)
+                <div style={{ fontSize: 20, color: "#202124", fontWeight: 400 }}>
+                  You bought PayPal Gift Card 30 USD - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)
                 </div>
-                <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 18, background: "#ef6c00", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>G</div>
-                  <div style={{ fontSize: 14, color: "#202124" }}>
+                <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 16, background: "#ef6c00", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>G</div>
+                  <div style={{ fontSize: 13, color: "#202124" }}>
                     <b>G2A.COM</b> <span style={{ color: "#5f6368" }}>&lt;no-reply@g2a.com&gt;</span>
-                    <div style={{ color: "#5f6368", fontSize: 12 }}>to me</div>
+                    <div style={{ color: "#5f6368", fontSize: 11 }}>to me</div>
                   </div>
-                  <div style={{ marginLeft: "auto", color: "#5f6368", fontSize: 12 }}>Tue, May 19, 10:00 PM</div>
+                  <div style={{ marginLeft: "auto", color: "#5f6368", fontSize: 11 }}>Tue, May 19, 10:00 PM</div>
                 </div>
 
                 {/* Email body */}
-                <div style={{ marginTop: 22, border: "1px solid #e3e6eb", borderRadius: 4, padding: 28, background: "#fff" }}>
-                  {/* G2A masthead with orange underline */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 10, borderBottom: "4px solid #F15A22" }}>
-                    <div style={{ display: "flex", alignItems: "baseline", fontWeight: 900, fontSize: 28, letterSpacing: -1 }}>
+                <div style={{ marginTop: 16, border: "1px solid #e3e6eb", borderRadius: 4, padding: 24, background: "#fff" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 14, paddingBottom: 10, borderBottom: "4px solid #F15A22" }}>
+                    <div style={{ display: "flex", alignItems: "baseline", fontWeight: 900, fontSize: 26, letterSpacing: -1 }}>
                       <span style={{ color: "#F15A22" }}>G</span>
                       <span style={{ color: "#1E9CD7" }}>2A</span>
-                      <span style={{ color: "#1E9CD7", fontSize: 10, marginLeft: 2 }}>.COM</span>
+                      <span style={{ color: "#1E9CD7", fontSize: 9, marginLeft: 2 }}>.COM</span>
                     </div>
-                    <div style={{ fontSize: 13, color: "#111", fontWeight: 700 }}>World’s Largest Marketplace for Digital Entertainment</div>
+                    <div style={{ fontSize: 12, color: "#111", fontWeight: 700 }}>World’s Largest Marketplace for Digital Entertainment</div>
                   </div>
 
-                  <div style={{ marginTop: 24, fontSize: 30, fontWeight: 700, color: "#111" }}>Hello!</div>
-                  <div style={{ marginTop: 8, fontSize: 15, color: "#333" }}>Here is your order from Ultimate_choices.</div>
+                  <div style={{ marginTop: 18, fontSize: 26, fontWeight: 700, color: "#111" }}>Hello!</div>
+                  <div style={{ marginTop: 6, fontSize: 13, color: "#333" }}>Here is your order from Ultimate_choices.</div>
 
-                  {/* Product line */}
-                  <div style={{ marginTop: 20, border: "1px solid #e5e7eb", borderRadius: 6, padding: 18, display: "flex", alignItems: "center", gap: 18 }}>
-                    {/* Rewarble Revolut card */}
+                  <div style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 6, padding: 16, display: "flex", alignItems: "center", gap: 16 }}>
+                    {/* PayPal Rewarble card art */}
                     <div style={{
-                      width: 120, height: 120, borderRadius: 4,
-                      background: "#0e0e0e",
+                      width: 110, height: 110, borderRadius: 4,
+                      background: "linear-gradient(180deg,#003087,#0070ba)",
                       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                       color: "#fff",
                     }}>
-                      <div style={{ width: 36, height: 40, background: "#fff", clipPath: "polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#0e0e0e", fontWeight: 900, fontSize: 22 }}>R</div>
-                      <div style={{ fontSize: 9, marginTop: 6, opacity: 0.7 }}>Rewarble</div>
-                      <div style={{ marginTop: 12, background: "#fff", color: "#0e0e0e", fontWeight: 800, padding: "2px 10px", fontSize: 14 }}>Revolut</div>
+                      <div style={{ fontSize: 22, fontWeight: 900 }}>Pay<span style={{ color: "#00bcd4" }}>Pal</span></div>
+                      <div style={{ marginTop: 8, background: "#fff", color: "#003087", fontWeight: 800, padding: "2px 10px", fontSize: 12 }}>Rewarble</div>
+                      <div style={{ marginTop: 6, fontSize: 12 }}>30 USD</div>
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>Revolut Gift Card 10 EUR - by Rewarble - GLOBAL</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#111" }}>PayPal Gift Card 30 USD - by Rewarble - GLOBAL</div>
                       <div style={{
-                        marginTop: 12, display: "inline-block",
-                        padding: "10px 28px", border: clickGet ? "2px solid #1E9CD7" : "1px solid #1E9CD7",
-                        borderRadius: 4, color: "#1E9CD7", fontWeight: 600, fontSize: 14,
-                        background: buttonPress && clickGet ? "#eaf6fd" : "#fff",
+                        marginTop: 10, display: "inline-block",
+                        padding: "9px 26px",
+                        border: clickGet ? "2px solid #1E9CD7" : "1px solid #1E9CD7",
+                        borderRadius: 4, color: "#1E9CD7", fontWeight: 600, fontSize: 13,
+                        background: clickGet ? "#eaf6fd" : "#fff",
+                        transform: clickGet ? "scale(0.97)" : "scale(1)",
                       }}>Get order</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 14, color: "#111" }}>1 x <b>13.33 USD</b></div>
-                      <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>VAT inc. if applicable</div>
+                      <div style={{ fontSize: 13, color: "#111" }}>1 x <b>32.41 USD</b></div>
+                      <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>VAT inc. if applicable</div>
                     </div>
                   </div>
 
-                  <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", padding: "12px 18px", borderTop: "1px solid #e5e7eb", fontSize: 14, color: "#111" }}>
-                    <span>Total price</span>
-                    <b>13.33 USD</b>
+                  <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", padding: "10px 16px", borderTop: "1px solid #e5e7eb", fontSize: 13, color: "#111" }}>
+                    <span>Total price</span><b>32.41 USD</b>
                   </div>
 
-                  <div style={{ marginTop: 24, fontSize: 13, color: "#6b7280" }}>Order number</div>
-                  <div style={{ fontSize: 15, color: "#111", fontWeight: 600 }}>92000153603583</div>
+                  <div style={{ marginTop: 18, fontSize: 12, color: "#6b7280" }}>Order number</div>
+                  <div style={{ fontSize: 14, color: "#111", fontWeight: 600 }}>92000153603583</div>
                 </div>
               </div>
             )}
           </div>
         </div>
         <Cursor x={cx} y={cy} />
-        {clickGet && (
+        {(clickInbox || clickGet) && (
           <div style={{
-            position: "absolute", left: cx - 18, top: cy - 18,
-            width: 36, height: 36, borderRadius: 18,
-            border: "3px solid #1E9CD7", opacity: 1 - (frame - 95) / 15,
-            transform: `scale(${1 + (frame - 95) / 12})`,
+            position: "absolute", left: cx - 14, top: cy - 14,
+            width: 32, height: 32, borderRadius: 16,
+            border: "3px solid #1E9CD7", opacity: clickGet ? 1 - (frame - 95) / 17 : 1 - (frame - 22) / 10,
+            transform: `scale(${1 + (clickGet ? (frame - 95) / 12 : (frame - 22) / 8)})`,
+            pointerEvents: "none",
           }} />
         )}
       </BrowserChrome>
