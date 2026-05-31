@@ -167,7 +167,7 @@ const NextFragrancePoll = () => {
             Last Winner
           </div>
           <div className="bg-secondary/40 border-2 border-accent/30 rounded-xl p-4 pt-5 flex items-center gap-3">
-            <div className="w-14 h-14 md:w-16 md:h-16 bg-[#EDE8E1] rounded-lg border border-border/30 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-14 h-14 bg-[#EDE8E1] rounded-lg border border-border/30 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
               <img
                 src={LAST_WINNER.image}
                 alt={LAST_WINNER.name}
@@ -179,13 +179,13 @@ const NextFragrancePoll = () => {
               <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
                 Previously Voted In
               </p>
-              <p className="text-sm md:text-base font-semibold text-foreground leading-tight">
+              <p className="text-sm font-semibold text-foreground leading-tight">
                 {LAST_WINNER.name}
               </p>
             </div>
             <div className="ml-auto self-start">
               <div className="bg-accent/10 rounded-full p-1.5">
-                <Trophy className="h-4 w-4 md:h-5 md:w-5 text-accent" fill="currentColor" />
+                <Trophy className="h-4 w-4 text-accent" fill="currentColor" />
               </div>
             </div>
           </div>
