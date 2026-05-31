@@ -71,7 +71,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
-            <span className="text-[1.35rem] md:text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
+            <span className="text-base sm:text-[1.35rem] md:text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
               Pafory
             </span>
           </Link>
@@ -106,17 +106,18 @@ export const Header = () => {
           </nav>
 
           {/* Mobile FAQ — prominent centered pill */}
-          <div className="md:hidden flex-1 flex items-center justify-center px-2 min-w-0">
+          <div className="md:hidden flex-1 flex items-center justify-center px-1 sm:px-2 min-w-0">
             <Link
               to="/faq"
               className={cn(
-                'flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-[0.14em] uppercase shadow-lg ring-2 ring-accent/50 ring-offset-1 ring-offset-background transition-all active:scale-95 shrink-0',
+                'flex items-center gap-1 sm:gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-[0.14em] uppercase shadow-lg ring-2 ring-accent/50 ring-offset-1 ring-offset-background transition-all active:scale-95 shrink-0',
                 'bg-accent text-accent-foreground'
               )}
               aria-label="FAQ"
             >
-              <HelpCircle className="h-3.5 w-3.5" strokeWidth={2.5} />
-              FAQ
+              <HelpCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={2.5} />
+              <span className="min-[380px]:hidden">?</span>
+              <span className="hidden min-[380px]:inline">FAQ</span>
             </Link>
           </div>
 
@@ -124,12 +125,12 @@ export const Header = () => {
 
 
           {/* Right Actions */}
-          <div className="flex items-center gap-1.5 md:gap-3 md:pl-6 shrink-0">
-            {/* Currency Dropdown - aromaeu style */}
+          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-3 md:pl-6 shrink-0">
+            {/* Currency Dropdown - compact on mobile */}
             <div ref={currencyRef} className="relative md:mr-1">
               <button
                 onClick={() => setCurrencyOpen(!currencyOpen)}
-                className="flex items-center gap-1 px-2 py-1 md:px-3 md:py-1.5 border border-border rounded-sm text-[10px] md:text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
+                className="flex items-center gap-0.5 sm:gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 md:py-1.5 border border-border rounded-sm text-[10px] md:text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
               >
                 {currency}
                 <ChevronDown className={cn('h-3 w-3 md:h-3.5 md:w-3.5 text-muted-foreground transition-transform', currencyOpen && 'rotate-180')} />
@@ -173,22 +174,22 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 md:h-10 md:w-10 text-accent hover:text-accent hover:bg-transparent"
+                className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-accent hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/account" aria-label="My Account">
-                  <User className="h-5 w-5" strokeWidth={1.5} />
+                  <User className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.5} />
                 </Link>
               </Button>
             ) : (
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
+                className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
                 asChild
               >
                 <Link to="/login" aria-label="Account">
-                  <User className="h-5 w-5" strokeWidth={1.5} />
+                  <User className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.5} />
                 </Link>
               </Button>
             )}
@@ -197,13 +198,13 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="relative h-9 w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
+              className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-foreground hover:text-accent hover:bg-transparent"
               onClick={toggleCart}
               aria-label="Open cart"
             >
-              <ShoppingBag className="h-5 w-5" strokeWidth={1.5} />
+              <ShoppingBag className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.5} />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] flex items-center justify-center font-semibold">
+                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-accent text-accent-foreground text-[9px] sm:text-[10px] flex items-center justify-center font-semibold">
                   {totalItems}
                 </span>
               )}
@@ -213,14 +214,14 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden h-9 w-9 text-foreground hover:text-accent hover:bg-transparent"
+              className="md:hidden h-8 w-8 sm:h-9 sm:w-9 text-foreground hover:text-accent hover:bg-transparent"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
-                <X className="h-5 w-5" strokeWidth={1.5} />
+                <X className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.5} />
               ) : (
-                <Menu className="h-5 w-5" strokeWidth={1.5} />
+                <Menu className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.5} />
               )}
             </Button>
           </div>
