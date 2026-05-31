@@ -73,15 +73,15 @@ export const SceneBuy: React.FC = () => {
                   <div style={{ fontSize: 9, opacity: 0.9 }}>Rewarble</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>PayPal Gift Card 30 USD</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>PayPal Gift Card 30 EUR</div>
                   <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>by Rewarble · GLOBAL</div>
                 </div>
               </div>
               <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #eef0f3", display: "flex", justifyContent: "space-between", fontSize: 13, color: "#374151" }}>
-                <span>Subtotal</span><span>32.41 USD</span>
+                <span>Subtotal</span><span>30.00 EUR</span>
               </div>
               <div style={{ marginTop: 6, display: "flex", justifyContent: "space-between", fontSize: 18, fontWeight: 800, color: "#111" }}>
-                <span>Total</span><span>32.41 USD</span>
+                <span>Total</span><span>30.00 EUR</span>
               </div>
               <div style={{
                 marginTop: 18, height: 48, borderRadius: 10,
@@ -90,7 +90,7 @@ export const SceneBuy: React.FC = () => {
                 fontSize: 15, fontWeight: 800,
                 transform: clickingPay ? "scale(0.97)" : "scale(1)",
               }}>
-                {paying ? "Processing payment…" : "Pay 32.41 USD"}
+                {paying ? "Processing payment…" : "Pay 30.00 EUR"}
               </div>
             </div>
           </div>

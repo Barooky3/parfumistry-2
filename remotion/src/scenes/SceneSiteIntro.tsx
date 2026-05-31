@@ -2,7 +2,7 @@ import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } fr
 import { BrowserChrome, Cursor, StepBadge } from "../components/Browser";
 
 // Intro: show the parfumistry.net/rewarble page with order amount + instructions.
-// We scroll the instruction panel and then the cursor clicks the "Find 30 USD PayPal Rewarble on G2A" button.
+// We scroll the instruction panel and then the cursor clicks the "Find 30 EUR PayPal Rewarble on G2A" button.
 export const SceneSiteIntro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -66,7 +66,7 @@ export const SceneSiteIntro: React.FC = () => {
               </div>
               <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 16 }}>
                 {[
-                  { n: 1, t: "Purchase a PayPal Rewarble gift card on G2A", d: "Your cart total is €30.00, so the closest PayPal Rewarble card that covers it is 30 USD. Tap the button — it opens G2A with a search for that exact card. Check out using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard & more).", btn: true },
+                  { n: 1, t: "Purchase a PayPal Rewarble gift card on G2A", d: "Your cart total is €30.00, so the closest PayPal Rewarble card that covers it is 30 EUR. Tap the button — it opens G2A with a search for that exact card. Check out using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard & more).", btn: true },
                   { n: 2, t: "Get your Rewarble code by email", d: "Right after purchase, G2A sends the PayPal Rewarble code to your email — usually within a minute. Open the email, copy the 16-character code." },
                   { n: 3, t: "Confirm your payment", d: "Press the green Confirm Payment button at the bottom. Your code is validated and your order is placed." },
                 ].map(s => (
@@ -93,7 +93,7 @@ export const SceneSiteIntro: React.FC = () => {
                             color: "#fff", fontSize: 12, fontWeight: 600,
                             transform: clicking ? "scale(0.98)" : "scale(1)",
                           }}>
-                            ↗ Find 30 USD PayPal Rewarble on G2A
+                            ↗ Find 30 EUR PayPal Rewarble on G2A
                           </div>
                         </>
                       )}

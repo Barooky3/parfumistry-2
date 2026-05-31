@@ -22,7 +22,7 @@ const G2AHeader: React.FC<{ search: string; caret: boolean }> = ({ search, caret
         <div style={{ marginLeft: 4, width: 40, height: 36, borderRadius: 999, background: "#1E9CD7", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 16 }}>🔍</div>
       </div>
       <div style={{ marginLeft: 24, display: "flex", alignItems: "center", gap: 18, color: "#111", fontSize: 13, fontWeight: 600 }}>
-        <div style={{ padding: "6px 12px", background: "#111", color: "#fff", borderRadius: 8 }}>EN / USD</div>
+        <div style={{ padding: "6px 12px", background: "#111", color: "#fff", borderRadius: 8 }}>EN / EUR</div>
         <div>Sign in</div>
         <div>♡</div>
         <div>🛒</div>
@@ -68,9 +68,9 @@ export const SceneBrowse: React.FC = () => {
               <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>128 items</div>
               <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 14 }}>
                 {[
-                  { amt: "30 USD", price: "32.41" },
-                  { amt: "25 USD", price: "27.18" },
-                  { amt: "20 USD", price: "21.90" },
+                  { amt: "30 EUR", price: "30.00" },
+                  { amt: "25 EUR", price: "26.50" },
+                  { amt: "20 EUR", price: "21.20" },
                 ].map((p, i) => (
                   <div key={i} style={{
                     background: "#fff", borderRadius: 12, padding: 16, display: "flex", alignItems: "center", gap: 22,
@@ -95,7 +95,7 @@ export const SceneBrowse: React.FC = () => {
                         Region <b style={{ marginLeft: 26, color: "#16a34a" }}>GLOBAL</b>
                       </div>
                     </div>
-                    <div style={{ fontSize: 26, fontWeight: 800, color: "#111" }}>{p.price} <span style={{ fontSize: 16, color: "#6b7280" }}>USD</span></div>
+                    <div style={{ fontSize: 26, fontWeight: 800, color: "#111" }}>{p.price} <span style={{ fontSize: 16, color: "#6b7280" }}>EUR</span></div>
                   </div>
                 ))}
               </div>
