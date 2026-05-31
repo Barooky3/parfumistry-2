@@ -106,22 +106,22 @@ export const Header = () => {
           </nav>
 
           {/* Mobile Navigation Pills — centered group */}
-          <div className="md:hidden flex-1 flex items-center justify-center gap-2 px-2">
+          <div className="md:hidden flex-1 flex items-center justify-center gap-1 px-1 min-w-0">
             <Link
               to="/faq"
               className={cn(
-                'flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase shadow-md ring-1 ring-accent/50 transition-all active:scale-95 shrink-0',
+                'flex items-center gap-0.5 px-2 py-1 rounded-full text-[9px] font-bold tracking-[0.08em] uppercase shadow-md ring-1 ring-accent/50 transition-all active:scale-95 shrink-0',
                 'bg-accent text-accent-foreground'
               )}
               aria-label="FAQ"
             >
-              <HelpCircle className="h-3 w-3" strokeWidth={2.5} />
+              <HelpCircle className="h-2.5 w-2.5" strokeWidth={2.5} />
               FAQ
             </Link>
             <Link
               to="/shop/men"
               className={cn(
-                'flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase shadow-sm ring-1 ring-border transition-all active:scale-95 shrink-0',
+                'flex items-center px-2 py-1 rounded-full text-[9px] font-bold tracking-[0.08em] uppercase shadow-sm ring-1 ring-border transition-all active:scale-95 shrink-0',
                 location.pathname === '/shop/men'
                   ? 'bg-accent text-accent-foreground ring-accent/50'
                   : 'bg-secondary text-foreground hover:bg-accent hover:text-accent-foreground'
@@ -132,7 +132,7 @@ export const Header = () => {
             <Link
               to="/shop/women"
               className={cn(
-                'flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase shadow-sm ring-1 ring-border transition-all active:scale-95 shrink-0',
+                'flex items-center px-2 py-1 rounded-full text-[9px] font-bold tracking-[0.08em] uppercase shadow-sm ring-1 ring-border transition-all active:scale-95 shrink-0',
                 location.pathname === '/shop/women'
                   ? 'bg-accent text-accent-foreground ring-accent/50'
                   : 'bg-secondary text-foreground hover:bg-accent hover:text-accent-foreground'
@@ -141,6 +141,7 @@ export const Header = () => {
               {t('nav.women')}
             </Link>
           </div>
+
 
           {/* Right Actions */}
           <div className="flex items-center gap-1.5 md:gap-3 md:pl-6 shrink-0">
