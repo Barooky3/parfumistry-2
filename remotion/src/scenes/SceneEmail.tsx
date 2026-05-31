@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { BrowserChrome, Cursor, StepBadge } from "../components/Browser";
 
-// G2A order email opened in Gmail for the PayPal Rewarble 30 USD purchase.
+// G2A order email opened in Gmail for the PayPal Rewarble 30 EUR purchase.
 export const SceneEmail: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -33,7 +33,7 @@ export const SceneEmail: React.FC = () => {
             {!openEmail ? (
               <div style={{ borderTop: "1px solid #e3e6eb" }}>
                 {[
-                  { from: "G2A.COM", subj: "You bought PayPal Gift Card 30 USD - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)", time: "10:00 PM", bold: true, hl: true },
+                  { from: "G2A.COM", subj: "You bought PayPal Gift Card 30 EUR - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)", time: "10:00 PM", bold: true, hl: true },
                   { from: "Newsletter", subj: "Weekly digest — top picks", time: "1h" },
                   { from: "GitHub", subj: "Security alert: new sign-in", time: "3h" },
                   { from: "Spotify", subj: "Your daily mix is ready", time: "5h" },
@@ -52,7 +52,7 @@ export const SceneEmail: React.FC = () => {
             ) : (
               <div>
                 <div style={{ fontSize: 20, color: "#202124", fontWeight: 400 }}>
-                  You bought PayPal Gift Card 30 USD - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)
+                  You bought PayPal Gift Card 30 EUR - by Rewarble - GLOBAL from Ultimate_choices (92000153603583)
                 </div>
                 <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 12 }}>
                   <div style={{ width: 32, height: 32, borderRadius: 16, background: "#ef6c00", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>G</div>
@@ -87,10 +87,10 @@ export const SceneEmail: React.FC = () => {
                     }}>
                       <div style={{ fontSize: 22, fontWeight: 900 }}>Pay<span style={{ color: "#00bcd4" }}>Pal</span></div>
                       <div style={{ marginTop: 8, background: "#fff", color: "#003087", fontWeight: 800, padding: "2px 10px", fontSize: 12 }}>Rewarble</div>
-                      <div style={{ marginTop: 6, fontSize: 12 }}>30 USD</div>
+                      <div style={{ marginTop: 6, fontSize: 12 }}>30 EUR</div>
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: "#111" }}>PayPal Gift Card 30 USD - by Rewarble - GLOBAL</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#111" }}>PayPal Gift Card 30 EUR - by Rewarble - GLOBAL</div>
                       <div style={{
                         marginTop: 10, display: "inline-block",
                         padding: "9px 26px",
@@ -101,13 +101,13 @@ export const SceneEmail: React.FC = () => {
                       }}>Get order</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 13, color: "#111" }}>1 x <b>32.41 USD</b></div>
+                      <div style={{ fontSize: 13, color: "#111" }}>1 x <b>30.00 EUR</b></div>
                       <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>VAT inc. if applicable</div>
                     </div>
                   </div>
 
                   <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", padding: "10px 16px", borderTop: "1px solid #e5e7eb", fontSize: 13, color: "#111" }}>
-                    <span>Total price</span><b>32.41 USD</b>
+                    <span>Total price</span><b>30.00 EUR</b>
                   </div>
 
                   <div style={{ marginTop: 18, fontSize: 12, color: "#6b7280" }}>Order number</div>

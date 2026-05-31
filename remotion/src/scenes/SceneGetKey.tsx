@@ -45,10 +45,10 @@ export const SceneGetKey: React.FC = () => {
                 }}>
                   <div style={{ fontSize: 22, fontWeight: 900 }}>Pay<span style={{ color: "#00bcd4" }}>Pal</span></div>
                   <div style={{ marginTop: 6, background: "#fff", color: "#003087", fontWeight: 800, padding: "2px 8px", fontSize: 11 }}>Rewarble</div>
-                  <div style={{ marginTop: 6, fontSize: 11 }}>30 USD</div>
+                  <div style={{ marginTop: 6, fontSize: 11 }}>30 EUR</div>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 20, fontWeight: 800 }}>PayPal Gift Card 30 USD - by Rewarble - GLOBAL</div>
+                  <div style={{ fontSize: 20, fontWeight: 800 }}>PayPal Gift Card 30 EUR - by Rewarble - GLOBAL</div>
                   <div style={{ marginTop: 10, fontSize: 12, lineHeight: 1.9, color: "#cbd5e1" }}>
                     Platform: <b style={{ color: "#fff" }}>by Rewarble</b><br/>
                     Type: <b style={{ color: "#fff" }}>Key</b><br/>
