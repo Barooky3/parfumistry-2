@@ -85,26 +85,26 @@ const NextFragrancePoll = () => {
   const pct = (n: number) => (total === 0 ? 0 : Math.round((n / total) * 100));
 
   return (
-    <section className="pt-8 pb-2 bg-background">
+    <section className="pt-8 md:pt-12 pb-2 md:pb-4 bg-background">
       <div className="container max-w-2xl">
 
-        <p className="text-[10px] tracking-[0.3em] uppercase text-accent text-center mb-2">
+        <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
           You Decide
         </p>
-        <h2 className="font-display text-xl text-foreground text-center mb-1">
+        <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground text-center mb-1">
           Which should we add next?
         </h2>
-        <p className="text-[11px] text-muted-foreground text-center mb-5">
+        <p className="text-[11px] md:text-xs text-muted-foreground text-center mb-5">
           {voted ? 'Thanks for voting — here are the live results' : 'Tap your pick to reveal the results'}
         </p>
 
-        <div className="relative flex items-center justify-center gap-3 mb-6">
+        <div className="relative flex items-center justify-center gap-3 md:gap-4 mb-6 md:mb-8">
           {OPTIONS.map((opt, idx) => {
             const count = counts[opt.key] || 0;
             const percent = pct(count);
             const isPick = voted === opt.key;
             return (
-              <div key={opt.key} className="flex-1 max-w-[180px]">
+              <div key={opt.key} className="flex-1 max-w-[180px] md:max-w-[200px]">
                 <button
                   type="button"
                   onClick={() => vote(opt.key)}
@@ -119,7 +119,7 @@ const NextFragrancePoll = () => {
                     src={opt.image}
                     alt={opt.label}
                     loading="lazy"
-                    className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-contain p-2 md:p-3 transition-transform duration-500 group-hover:scale-105"
                   />
                   {isPick && (
                     <div className="absolute top-1.5 right-1.5 bg-accent text-accent-foreground rounded-full p-1 shadow">
@@ -133,7 +133,7 @@ const NextFragrancePoll = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="absolute inset-x-0 bottom-0 bg-background/85 backdrop-blur-sm px-2 py-1.5 text-center"
                       >
-                        <div className="text-sm font-semibold text-foreground">
+                        <div className="text-sm md:text-base font-semibold text-foreground">
                           {percent}%
                         </div>
                         {(isAdmin || total > 200) && (
@@ -145,7 +145,7 @@ const NextFragrancePoll = () => {
                     )}
                   </AnimatePresence>
                 </button>
-                <p className="text-[10px] text-center mt-2 text-foreground font-medium leading-tight line-clamp-2">
+                <p className="text-[10px] md:text-xs text-center mt-2 text-foreground font-medium leading-tight line-clamp-2">
                   {opt.label}
                 </p>
               </div>
@@ -154,7 +154,7 @@ const NextFragrancePoll = () => {
 
           {/* OR divider — absolutely centered between the two photos */}
           <div className="absolute left-1/2 top-[calc(50%-12px)] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
-            <div className="font-display text-base italic text-accent-foreground bg-accent rounded-full h-9 w-9 flex items-center justify-center shadow-md uppercase tracking-wide">
+            <div className="font-display text-base md:text-lg italic text-accent-foreground bg-accent rounded-full h-9 w-9 md:h-10 md:w-10 flex items-center justify-center shadow-md uppercase tracking-wide">
               or
             </div>
           </div>
@@ -167,7 +167,7 @@ const NextFragrancePoll = () => {
             Last Winner
           </div>
           <div className="bg-secondary/40 border-2 border-accent/30 rounded-xl p-4 pt-5 flex items-center gap-3">
-            <div className="w-14 h-14 bg-[#EDE8E1] rounded-lg border border-border/30 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-[#EDE8E1] rounded-lg border border-border/30 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
               <img
                 src={LAST_WINNER.image}
                 alt={LAST_WINNER.name}
@@ -179,13 +179,13 @@ const NextFragrancePoll = () => {
               <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
                 Previously Voted In
               </p>
-              <p className="text-sm font-semibold text-foreground leading-tight">
+              <p className="text-sm md:text-base font-semibold text-foreground leading-tight">
                 {LAST_WINNER.name}
               </p>
             </div>
             <div className="ml-auto self-start">
               <div className="bg-accent/10 rounded-full p-1.5">
-                <Trophy className="h-4 w-4 text-accent" fill="currentColor" />
+                <Trophy className="h-4 w-4 md:h-5 md:w-5 text-accent" fill="currentColor" />
               </div>
             </div>
           </div>
