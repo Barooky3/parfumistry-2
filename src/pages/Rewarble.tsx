@@ -222,8 +222,9 @@ const Rewarble = () => {
           <div className="px-5 py-3.5 border-b border-border bg-muted/30">
             <h2 className="text-sm font-semibold text-foreground tracking-wide">Watch how it works</h2>
           </div>
-          <div className="p-0">
+          <div className="p-0 relative">
             <video
+              ref={videoRef}
               controls
               playsInline
               preload="metadata"
@@ -231,6 +232,14 @@ const Rewarble = () => {
             >
               <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
             </video>
+            <button
+              type="button"
+              onClick={handleFullscreen}
+              aria-label="Fullscreen"
+              className="absolute top-2 right-2 z-10 rounded-md bg-black/60 hover:bg-black/80 text-white p-2 backdrop-blur-sm transition-colors"
+            >
+              <Maximize2 className="h-4 w-4" />
+            </button>
           </div>
           <div className="px-5 py-3 border-t border-border">
             <p className="text-xs text-muted-foreground leading-relaxed">
