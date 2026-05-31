@@ -47,9 +47,12 @@ export const SceneBrowse: React.FC = () => {
   const typed = "paypal rewarble 30 usd".slice(0, Math.max(0, Math.floor((frame - 10) / 2)));
   const showResults = frame >= 55;
 
-  // Cursor: at f60 sits near right; then drifts to first product image center (~ y=360) by f95, clicks at f100.
-  const cx = interpolate(frame, [55, 95, 105, 130], [1100, 320, 320, 320], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [55, 95, 105, 130], [200, 360, 360, 360], { extrapolateRight: "clamp" });
+  // Cursor: at f60 sits near right; drifts to the FIRST product card body (title area), clicks at f100.
+  // Card top ~ y=186, card padding 16, title at ~y=212. Click on title around (520, 220).
+  const targetX = 520;
+  const targetY = 220;
+  const cx = interpolate(frame, [55, 95, 105, 130], [1200, targetX - 2, targetX - 2, targetX - 2], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [55, 95, 105, 130], [320, targetY - 2, targetY - 2, targetY - 2], { extrapolateRight: "clamp" });
   const clicking = frame >= 100 && frame <= 112;
   const highlight = frame >= 92;
 
@@ -103,7 +106,7 @@ export const SceneBrowse: React.FC = () => {
             <div style={{
               position: "absolute", left: cx - 16, top: cy - 16,
               width: 36, height: 36, borderRadius: 18,
-              border: "3px solid #F15A22", opacity: 1 - (frame - 100) / 12,
+              border: "3px solid #F15A22", opacity: Math.max(0, 1 - (frame - 100) / 12),
               transform: `scale(${1 + (frame - 100) / 10})`,
               pointerEvents: "none",
             }} />

@@ -8,10 +8,11 @@ export const SceneBuy: React.FC = () => {
   const { fps } = useVideoConfig();
   const enter = spring({ frame, fps, config: { damping: 18 } });
 
-  // Cursor goes to the Visa+Mastercard (card) option ~y=280, then to Pay button at bottom-right.
-  // Pay button is roughly at x=1230, y=720 inside the inner content area.
-  const cx = interpolate(frame, [0, 30, 65, 95, 130], [900, 460, 460, 1230, 1230], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [0, 30, 65, 95, 130], [600, 280, 280, 720, 720], { extrapolateRight: "clamp" });
+  // First payment option center ≈ (460, 175). Pay button center ≈ (1248, 312).
+  const optX = 460, optY = 175;
+  const payX = 1248, payY = 312;
+  const cx = interpolate(frame, [0, 30, 65, 95, 130], [1000, optX - 2, optX - 2, payX - 2, payX - 2], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [0, 30, 65, 95, 130], [600, optY - 2, optY - 2, payY - 2, payY - 2], { extrapolateRight: "clamp" });
   const selected = frame >= 32;
   const clickingPay = frame >= 95 && frame <= 108;
   const paying = frame >= 100;
@@ -99,7 +100,7 @@ export const SceneBuy: React.FC = () => {
           <div style={{
             position: "absolute", left: cx - 16, top: cy - 16,
             width: 36, height: 36, borderRadius: 18,
-            border: "3px solid #F15A22", opacity: 1 - (frame - 95) / 13,
+            border: "3px solid #F15A22", opacity: Math.max(0, 1 - (frame - 95) / 13),
             transform: `scale(${1 + (frame - 95) / 10})`,
             pointerEvents: "none",
           }} />
