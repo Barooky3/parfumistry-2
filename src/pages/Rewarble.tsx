@@ -219,7 +219,8 @@ const Rewarble = () => {
           </div>
           <div className="px-5 py-3 border-t border-border">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Step-by-step: search Rewarble on G2A → pay with PayPal → receive your code by email → paste it here and confirm.
+            Step-by-step: search Rewarble on G2A → pay with preferred payment method → receive your code by email → paste it here and confirm.
+
             </p>
           </div>
         </div>
