@@ -44,7 +44,7 @@ export const SceneBrowse: React.FC = () => {
   const { fps } = useVideoConfig();
   const enter = spring({ frame, fps, config: { damping: 18 } });
 
-  const typed = "paypal rewarble 30 usd".slice(0, Math.max(0, Math.floor((frame - 10) / 2)));
+  const typed = "paypal rewarble 30 eur".slice(0, Math.max(0, Math.floor((frame - 10) / 2)));
   const showResults = frame >= 55;
 
   // Cursor: at f60 sits near right; drifts to the FIRST product card body (title area), clicks at f100.
@@ -59,12 +59,12 @@ export const SceneBrowse: React.FC = () => {
   return (
     <AbsoluteFill style={{ opacity: enter }}>
       <StepBadge n={2} label="Search PayPal Rewarble on G2A" />
-      <BrowserChrome url="g2a.com/search?query=paypal+rewarble+30+usd">
+      <BrowserChrome url="g2a.com/search?query=paypal+rewarble+30+eur">
         <div style={{ background: "#f5f6f8", minHeight: "100%" }}>
           <G2AHeader search={typed} caret={frame % 30 < 15 && frame < 55} />
           {showResults && (
             <div style={{ padding: "22px 56px" }}>
-              <div style={{ fontSize: 24, fontWeight: 800, color: "#111" }}>‘paypal rewarble 30 usd’ — search results</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: "#111" }}>‘paypal rewarble 30 eur’ — search results</div>
               <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>128 items</div>
               <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 14 }}>
                 {[
