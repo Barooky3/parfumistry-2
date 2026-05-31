@@ -1123,7 +1123,7 @@ export default function AdminOrders() {
               <p className="text-xs text-muted-foreground">Net Total</p>
               <p
                 className={`text-lg font-bold ${
-                  liveCounter.net < 0 ? "text-destructive" : "text-primary"
+                  liveCounter.net < 0 ? "text-destructive" : "text-green-500"
                 }`}
               >
                 €{liveCounter.net.toFixed(2)}
@@ -1202,7 +1202,7 @@ export default function AdminOrders() {
                         <div className="flex gap-3">
                           <span>Gross <strong>€{h.gross.toFixed(2)}</strong></span>
                           <span className="text-destructive">Ads −€{h.adSpend.toFixed(2)}</span>
-                          <span className={h.net < 0 ? "text-destructive font-semibold" : "text-primary font-semibold"}>
+                          <span className={h.net < 0 ? "text-destructive font-semibold" : "text-green-500 font-semibold"}>
                             Net €{h.net.toFixed(2)}
                           </span>
                           <button
