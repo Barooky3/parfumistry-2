@@ -22,7 +22,7 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/mnt/documents/rewarble-tutorial.mp4",
+  outputLocation: "/dev-server/public/videos/rewarble-tutorial.mp4",
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,
