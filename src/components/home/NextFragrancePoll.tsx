@@ -136,7 +136,7 @@ const NextFragrancePoll = () => {
                         <div className="text-sm md:text-base font-semibold text-foreground">
                           {percent}%
                         </div>
-                        {isAdmin && (
+                        {total > 200 && (
                           <div className="text-[9px] tracking-wider uppercase text-muted-foreground">
                             {count} vote{count === 1 ? '' : 's'}
                           </div>
