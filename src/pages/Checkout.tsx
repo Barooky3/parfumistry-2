@@ -27,7 +27,7 @@ const COUNTRIES = [
   'Croatia', 'Slovakia', 'Slovenia', 'Serbia', 'Estonia', 'Latvia', 'Lithuania', 'Iceland',
   'Turkey', 'Russia', 'Ukraine', 'Bosnia and Herzegovina', 'Montenegro', 'North Macedonia',
   'Albania', 'Moldova', 'Cyprus', 'Malta', 'Monaco', 'Liechtenstein', 'Andorra', 'Kosovo',
-  'Belarus', 'Georgia', 'Armenia', 'Azerbaijan', 'San Marino',
+  'Belarus', 'Georgia', 'Armenia', 'Azerbaijan', 'San Marino', 'Kazakhstan',
   'United States', 'Canada', 'Mexico',
   'Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'Ecuador', 'Uruguay', 'Paraguay', 'Bolivia', 'Venezuela',
   'Dominican Republic', 'Jamaica', 'Trinidad and Tobago', 'Barbados', 'Curaçao', 'Suriname',
