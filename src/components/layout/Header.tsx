@@ -183,8 +183,10 @@ export const Header = () => {
               </AnimatePresence>
             </div>
 
-            {/* Language Dropdown */}
-            <LanguageSelector />
+            {/* Language Dropdown — desktop only (mobile uses in-menu selector) */}
+            <div className="hidden md:block">
+              <LanguageSelector />
+            </div>
 
             {/* Account */}
             {user ? (
