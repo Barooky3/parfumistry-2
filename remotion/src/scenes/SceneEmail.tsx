@@ -7,10 +7,11 @@ export const SceneEmail: React.FC = () => {
   const { fps } = useVideoConfig();
   const enter = spring({ frame, fps, config: { damping: 18 } });
 
-  // First: hover inbox row and click it (~f20-30), then drift down to the "Get order" button (~y=560) and click ~f100.
-  const inboxPhase = frame < 32;
-  const cx = interpolate(frame, [0, 18, 32, 90, 130], [1000, 700, 700, 700, 700], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [0, 18, 32, 90, 130], [400, 220, 220, 560, 560], { extrapolateRight: "clamp" });
+  // Inbox first row center ≈ (700, 38). "Get order" button center ≈ (455, 309).
+  const inboxX = 700, inboxY = 38;
+  const getX = 455, getY = 309;
+  const cx = interpolate(frame, [0, 18, 32, 90, 130], [1000, inboxX - 2, inboxX - 2, getX - 2, getX - 2], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [0, 18, 32, 90, 130], [400, inboxY - 2, inboxY - 2, getY - 2, getY - 2], { extrapolateRight: "clamp" });
   const clickInbox = frame >= 22 && frame <= 32;
   const openEmail = frame >= 32;
   const clickGet = frame >= 95 && frame <= 112;
@@ -121,7 +122,7 @@ export const SceneEmail: React.FC = () => {
           <div style={{
             position: "absolute", left: cx - 14, top: cy - 14,
             width: 32, height: 32, borderRadius: 16,
-            border: "3px solid #1E9CD7", opacity: clickGet ? 1 - (frame - 95) / 17 : 1 - (frame - 22) / 10,
+            border: "3px solid #1E9CD7", opacity: Math.max(0, clickGet ? 1 - (frame - 95) / 17 : 1 - (frame - 22) / 10),
             transform: `scale(${1 + (clickGet ? (frame - 95) / 12 : (frame - 22) / 8)})`,
             pointerEvents: "none",
           }} />

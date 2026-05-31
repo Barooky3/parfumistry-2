@@ -2,7 +2,7 @@ import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } fr
 import { BrowserChrome, Cursor, StepBadge } from "../components/Browser";
 
 // Intro: show the parfumistry.net/rewarble page with order amount + instructions.
-// We scroll the instruction panel and then the cursor clicks the "Find PayPal Rewarble on G2A" button.
+// We scroll the instruction panel and then the cursor clicks the "Find 30 USD PayPal Rewarble on G2A" button.
 export const SceneSiteIntro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -11,9 +11,12 @@ export const SceneSiteIntro: React.FC = () => {
   // Scroll the instructions container after a beat, then settle.
   const scrollY = interpolate(frame, [25, 90], [0, 160], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  // Cursor: drift in, then move to the "Find PayPal Rewarble on G2A" button by f~105 and click at 115.
-  const cx = interpolate(frame, [0, 60, 105, 130], [1000, 900, 760, 760], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [0, 60, 105, 130], [820, 700, 600, 600], { extrapolateRight: "clamp" });
+  // Button absolute target inside inner content (1600 wide). After scroll=160 the button center sits at ~ (707, 342).
+  // SVG cursor tip is near (2,2) so we offset the SVG by -2,-2 from the click target.
+  const targetX = 707;
+  const targetY = 342;
+  const cx = interpolate(frame, [0, 60, 105, 130], [1100, 900, targetX - 2, targetX - 2], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [0, 60, 105, 130], [780, 500, targetY - 2, targetY - 2], { extrapolateRight: "clamp" });
   const clicking = frame >= 110 && frame <= 122;
   const buttonPressed = frame >= 110;
 
@@ -26,7 +29,7 @@ export const SceneSiteIntro: React.FC = () => {
           padding: "40px 0", display: "flex", justifyContent: "center",
           overflow: "hidden",
         }}>
-          <div style={{ width: 560, transform: `translateY(${-scrollY}px)`, transition: "none" }}>
+          <div style={{ width: 560, transform: `translateY(${-scrollY}px)` }}>
             {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 28 }}>
               <div style={{
@@ -44,7 +47,7 @@ export const SceneSiteIntro: React.FC = () => {
               background: "rgba(124,58,237,0.08)", padding: 18, textAlign: "center", marginBottom: 18,
             }}>
               <div style={{ fontSize: 12, color: "#a3a3a3", marginBottom: 4 }}>Order amount</div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: "#fff" }}>€27.98</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: "#fff" }}>€30.00</div>
             </div>
 
             {/* Warn */}
@@ -63,7 +66,7 @@ export const SceneSiteIntro: React.FC = () => {
               </div>
               <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 16 }}>
                 {[
-                  { n: 1, t: "Purchase a PayPal Rewarble gift card on G2A", d: "Your cart total is €27.98, so the closest PayPal Rewarble card that covers it is 30 USD. Tap the button — it opens G2A with a search for that exact card. Check out using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard & more).", btn: true },
+                  { n: 1, t: "Purchase a PayPal Rewarble gift card on G2A", d: "Your cart total is €30.00, so the closest PayPal Rewarble card that covers it is 30 USD. Tap the button — it opens G2A with a search for that exact card. Check out using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard & more).", btn: true },
                   { n: 2, t: "Get your Rewarble code by email", d: "Right after purchase, G2A sends the PayPal Rewarble code to your email — usually within a minute. Open the email, copy the 16-character code." },
                   { n: 3, t: "Confirm your payment", d: "Press the green Confirm Payment button at the bottom. Your code is validated and your order is placed." },
                 ].map(s => (
@@ -106,7 +109,7 @@ export const SceneSiteIntro: React.FC = () => {
           <div style={{
             position: "absolute", left: cx - 14, top: cy - 14,
             width: 32, height: 32, borderRadius: 16,
-            border: "3px solid #7C3AED", opacity: 1 - (frame - 110) / 12,
+            border: "3px solid #7C3AED", opacity: Math.max(0, 1 - (frame - 110) / 12),
             transform: `scale(${1 + (frame - 110) / 10})`,
             pointerEvents: "none",
           }} />

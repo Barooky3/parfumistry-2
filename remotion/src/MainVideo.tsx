@@ -28,7 +28,7 @@ export const MainVideo: React.FC = () => {
         <Series.Sequence durationInFrames={120}>
           <SceneGetKey />
         </Series.Sequence>
-        <Series.Sequence durationInFrames={150}>
+        <Series.Sequence durationInFrames={210}>
           <ScenePaste />
         </Series.Sequence>
       </Series>

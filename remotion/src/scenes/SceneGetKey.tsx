@@ -8,9 +8,10 @@ export const SceneGetKey: React.FC = () => {
   const enter = spring({ frame, fps, config: { damping: 18 } });
 
   const code = "9YVMBH7H4CXHCX7J";
-  // Cursor moves to the Copy button at approx x=1180 y=640 in inner content
-  const cx = interpolate(frame, [0, 50, 75, 130], [800, 1180, 1180, 1180], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [0, 50, 75, 130], [400, 640, 640, 640], { extrapolateRight: "clamp" });
+  // Copy button center ≈ (1400, 388).
+  const tX = 1400, tY = 388;
+  const cx = interpolate(frame, [0, 50, 75, 130], [800, tX - 2, tX - 2, tX - 2], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [0, 50, 75, 130], [500, tY - 2, tY - 2, tY - 2], { extrapolateRight: "clamp" });
   const clicking = frame >= 70 && frame <= 90;
   const copied = frame >= 80;
 
@@ -96,7 +97,7 @@ export const SceneGetKey: React.FC = () => {
           <div style={{
             position: "absolute", left: cx - 16, top: cy - 16,
             width: 36, height: 36, borderRadius: 18,
-            border: "3px solid #1E9CD7", opacity: 1 - (frame - 70) / 20,
+            border: "3px solid #1E9CD7", opacity: Math.max(0, 1 - (frame - 70) / 20),
             transform: `scale(${1 + (frame - 70) / 14})`,
             pointerEvents: "none",
           }} />
