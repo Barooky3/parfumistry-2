@@ -110,7 +110,7 @@ export const ProductAttributes = ({ productId }: Props) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-7">
+      <div className="grid grid-cols-2 gap-x-6 md:gap-x-10 gap-y-7">
         {FIELDS.map((f) => {
           const value = editing ? draft[f.key] : attrs[f.key];
           return (
