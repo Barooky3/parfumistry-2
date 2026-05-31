@@ -27,6 +27,21 @@ const Rewarble = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { clearCart } = useCart();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleFullscreen = () => {
+    const v = videoRef.current as any;
+    if (!v) return;
+    try {
+      if (v.webkitEnterFullscreen) { v.webkitEnterFullscreen(); return; }
+      if (v.requestFullscreen) { v.requestFullscreen(); return; }
+      if (v.webkitRequestFullscreen) { v.webkitRequestFullscreen(); return; }
+      if (v.msRequestFullscreen) { v.msRequestFullscreen(); return; }
+    } catch (e) {
+      // Fallback: open the video file in a new tab
+      window.open('/videos/rewarble-tutorial.mp4', '_blank');
+    }
+  };
 
   const updateCode = (index: number, value: string) => {
     setCodes(prev => {
