@@ -71,7 +71,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
-            <span className="text-[1.35rem] md:text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
+            <span className="text-base sm:text-[1.35rem] md:text-xl font-semibold tracking-[0.15em] text-foreground uppercase">
               Pafory
             </span>
           </Link>
