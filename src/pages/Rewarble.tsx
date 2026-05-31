@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { getFirstVisitAt } from '@/utils/firstVisit';
 import PaymentMethodExplainer from '@/components/PaymentMethodExplainer';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Gift, Shield, CheckCircle, AlertTriangle, Loader2, ExternalLink, Plus, X, Lock } from 'lucide-react';
+import { ArrowLeft, Gift, Shield, CheckCircle, AlertTriangle, Loader2, ExternalLink, Plus, X, Lock, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,6 +27,21 @@ const Rewarble = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { clearCart } = useCart();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleFullscreen = () => {
+    const v = videoRef.current as any;
+    if (!v) return;
+    try {
+      if (v.webkitEnterFullscreen) { v.webkitEnterFullscreen(); return; }
+      if (v.requestFullscreen) { v.requestFullscreen(); return; }
+      if (v.webkitRequestFullscreen) { v.webkitRequestFullscreen(); return; }
+      if (v.msRequestFullscreen) { v.msRequestFullscreen(); return; }
+    } catch (e) {
+      // Fallback: open the video file in a new tab
+      window.open('/videos/rewarble-tutorial.mp4', '_blank');
+    }
+  };
 
   const updateCode = (index: number, value: string) => {
     setCodes(prev => {
@@ -207,8 +222,9 @@ const Rewarble = () => {
           <div className="px-5 py-3.5 border-b border-border bg-muted/30">
             <h2 className="text-sm font-semibold text-foreground tracking-wide">Watch how it works</h2>
           </div>
-          <div className="p-0">
+          <div className="p-0 relative">
             <video
+              ref={videoRef}
               controls
               playsInline
               preload="metadata"
@@ -216,6 +232,14 @@ const Rewarble = () => {
             >
               <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
             </video>
+            <button
+              type="button"
+              onClick={handleFullscreen}
+              aria-label="Fullscreen"
+              className="absolute top-2 right-2 z-10 rounded-md bg-black/60 hover:bg-black/80 text-white p-2 backdrop-blur-sm transition-colors"
+            >
+              <Maximize2 className="h-4 w-4" />
+            </button>
           </div>
           <div className="px-5 py-3 border-t border-border">
             <p className="text-xs text-muted-foreground leading-relaxed">
