@@ -65,7 +65,7 @@ const COUNTRY_CODE_MAP: Record<string, string> = {
   'Turkey': 'TR', 'Russia': 'RU', 'Ukraine': 'UA', 'Bosnia and Herzegovina': 'BA',
   'Montenegro': 'ME', 'North Macedonia': 'MK', 'Albania': 'AL', 'Moldova': 'MD',
   'Cyprus': 'CY', 'Malta': 'MT', 'Monaco': 'MC', 'Liechtenstein': 'LI', 'Andorra': 'AD',
-  'Kosovo': 'XK', 'Belarus': 'BY', 'Georgia': 'GE', 'Armenia': 'AM', 'Azerbaijan': 'AZ', 'San Marino': 'SM',
+  'Kosovo': 'XK', 'Belarus': 'BY', 'Georgia': 'GE', 'Armenia': 'AM', 'Azerbaijan': 'AZ', 'San Marino': 'SM', 'Kazakhstan': 'KZ',
   'United States': 'US', 'Canada': 'CA', 'Mexico': 'MX',
   'Brazil': 'BR', 'Argentina': 'AR', 'Chile': 'CL', 'Colombia': 'CO', 'Peru': 'PE',
   'Ecuador': 'EC', 'Uruguay': 'UY', 'Paraguay': 'PY', 'Bolivia': 'BO', 'Venezuela': 'VE',
