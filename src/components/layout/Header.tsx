@@ -116,8 +116,8 @@ export const Header = () => {
               aria-label="FAQ"
             >
               <HelpCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={2.5} />
-              <span className="sm:hidden">?</span>
-              <span className="hidden sm:inline">FAQ</span>
+              <span className="min-[380px]:hidden">?</span>
+              <span className="hidden min-[380px]:inline">FAQ</span>
             </Link>
           </div>
 
