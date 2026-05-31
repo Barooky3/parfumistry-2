@@ -145,13 +145,13 @@ export const Header = () => {
           {/* Right Actions */}
           <div className="flex items-center gap-1.5 md:gap-3 md:pl-6 shrink-0">
             {/* Currency Dropdown - aromaeu style */}
-            <div ref={currencyRef} className="relative hidden md:block mr-1">
+            <div ref={currencyRef} className="relative md:mr-1">
               <button
                 onClick={() => setCurrencyOpen(!currencyOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-sm text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
+                className="flex items-center gap-1 px-2 py-1 md:px-3 md:py-1.5 border border-border rounded-sm text-[10px] md:text-xs font-medium text-foreground hover:border-foreground/50 transition-colors"
               >
                 {currency}
-                <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition-transform', currencyOpen && 'rotate-180')} />
+                <ChevronDown className={cn('h-3 w-3 md:h-3.5 md:w-3.5 text-muted-foreground transition-transform', currencyOpen && 'rotate-180')} />
               </button>
               <AnimatePresence>
                 {currencyOpen && (
