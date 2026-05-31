@@ -202,6 +202,29 @@ const Rewarble = () => {
           </div>
         </div>
 
+        {/* Video Tutorial */}
+        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
+          <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+            <h2 className="text-sm font-semibold text-foreground tracking-wide">Watch how it works</h2>
+          </div>
+          <div className="p-0">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full aspect-video bg-black"
+            >
+              <source src="/__l5e/assets-v1/1fbab8ad-2f3b-4a95-a247-fc9688cb04ca/rewarble-tutorial.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div className="px-5 py-3 border-t border-border">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              A quick walkthrough showing exactly how to buy a PayPal Rewarble gift card on G2A and get your code.
+            </p>
+          </div>
+        </div>
+
+
         {/* Payment logos */}
         <div className="flex items-center justify-center gap-3 mb-6">
           <svg width="44" height="30" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
