@@ -6,65 +6,71 @@ export const SceneBuy: React.FC = () => {
   const { fps } = useVideoConfig();
   const enter = spring({ frame, fps, config: { damping: 18 } });
 
-  const cx = interpolate(frame, [30, 70, 90, 130], [900, 1380, 1380, 1380], { extrapolateRight: "clamp" });
-  const cy = interpolate(frame, [30, 70, 90, 130], [500, 500, 720, 720], { extrapolateRight: "clamp" });
-  const showCheckout = frame >= 75;
-  const pay = frame >= 125;
+  const cx = interpolate(frame, [10, 50, 80, 110], [900, 1320, 1320, 1320], { extrapolateRight: "clamp" });
+  const cy = interpolate(frame, [10, 50, 80, 110], [500, 540, 740, 740], { extrapolateRight: "clamp" });
+  const pay = frame >= 70;
+  const paying = frame >= 100;
 
   return (
     <AbsoluteFill style={{ opacity: enter }}>
-      <StepBadge n={2} label="Pay with PayPal on G2A" />
+      <StepBadge n={2} label="Pay on G2A" />
       <BrowserChrome url="g2a.com/checkout">
-        {!showCheckout ? (
-          <div style={{ padding: 48, display: "flex", gap: 40 }}>
-            <div style={{
-              width: 360, height: 360, background: "linear-gradient(135deg,#003087,#0070ba)",
-              borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontSize: 56, fontWeight: 800,
-            }}>PayPal</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 36, fontWeight: 700, color: "#111" }}>Rewarble PayPal €25</div>
-              <div style={{ fontSize: 48, fontWeight: 800, color: "#ff4500", marginTop: 12 }}>€26.49</div>
-              <div style={{ marginTop: 20, color: "#555", fontSize: 18, lineHeight: 1.6 }}>
-                Instant email delivery • Global voucher<br/>Top up your Rewarble balance and pay anywhere.
+        <div style={{ background: "#f5f6f8", minHeight: "100%", padding: 56 }}>
+          <div style={{ fontSize: 30, fontWeight: 800, color: "#111" }}>Checkout</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 28, marginTop: 24 }}>
+            <div style={{ background: "#fff", borderRadius: 12, padding: 28 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 16 }}>Payment method</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {[
+                  { label: "Credit / Debit card", icon: "💳" },
+                  { label: "PayPal", icon: "P", brand: true },
+                  { label: "Apple Pay", icon: "" },
+                  { label: "Crypto", icon: "₿" },
+                ].map((o, i) => {
+                  const selected = o.label === "PayPal" && pay;
+                  return (
+                    <div key={i} style={{
+                      padding: "18px 22px", borderRadius: 10,
+                      border: selected ? "2px solid #1E9CD7" : "2px solid #e5e7eb",
+                      background: selected ? "#eaf6fd" : "#fff",
+                      display: "flex", alignItems: "center", gap: 16,
+                      fontSize: 17, fontWeight: 600, color: "#111",
+                    }}>
+                      <div style={{ width: 24, height: 24, borderRadius: 12, border: "2px solid #d1d5db", background: selected ? "#1E9CD7" : "#fff" }} />
+                      <span style={{ flex: 1 }}>{o.label}</span>
+                      {o.brand && <span style={{ color: "#003087", fontWeight: 900, fontSize: 22 }}>Pay<span style={{ color: "#0070ba" }}>Pal</span></span>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div style={{ background: "#fff", borderRadius: 12, padding: 28, height: "fit-content" }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#111" }}>Order summary</div>
+              <div style={{ marginTop: 16, display: "flex", gap: 14 }}>
+                <div style={{ width: 72, height: 72, borderRadius: 8, background: "linear-gradient(180deg,#1E9CD7,#0f7ab0)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 28, fontWeight: 900 }}>P</div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#111" }}>PayPal Gift Card 15 USD</div>
+                  <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>by Rewarble · GLOBAL</div>
+                </div>
+              </div>
+              <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #eef0f3", display: "flex", justifyContent: "space-between", fontSize: 14, color: "#374151" }}>
+                <span>Subtotal</span><span>16.91 USD</span>
+              </div>
+              <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", fontSize: 20, fontWeight: 800, color: "#111" }}>
+                <span>Total</span><span>16.91 USD</span>
               </div>
               <div style={{
-                marginTop: 40, padding: "20px 32px", background: "#ff4500", color: "#fff",
-                borderRadius: 8, fontSize: 22, fontWeight: 700, display: "inline-block",
-                transform: frame >= 60 ? "scale(1.04)" : "scale(1)",
-                boxShadow: frame >= 60 ? "0 8px 20px rgba(255,69,0,0.5)" : "none",
-              }}>Buy now</div>
+                marginTop: 22, height: 56, borderRadius: 10,
+                background: paying ? "#003087" : "#1E9CD7",
+                color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 17, fontWeight: 800,
+                transform: paying ? "scale(0.98)" : "scale(1)",
+              }}>
+                {paying ? "Processing…" : "Pay 16.91 USD"}
+              </div>
             </div>
           </div>
-        ) : (
-          <div style={{ padding: 48 }}>
-            <div style={{ fontSize: 28, fontWeight: 700, color: "#111" }}>Choose payment method</div>
-            <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 16 }}>
-              {[
-                { label: "Credit / Debit card", bg: "#f5f6f8" },
-                { label: "PayPal", bg: pay ? "#e6f2fb" : "#f5f6f8", border: pay ? "3px solid #0070ba" : "3px solid transparent" },
-                { label: "Crypto", bg: "#f5f6f8" },
-              ].map((o, i) => (
-                <div key={i} style={{
-                  padding: "20px 24px", background: o.bg, border: o.border || "3px solid transparent",
-                  borderRadius: 12, fontSize: 20, fontWeight: 600, color: "#111",
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                }}>
-                  <span>{o.label}</span>
-                  {o.label === "PayPal" && (
-                    <span style={{ color: "#0070ba", fontWeight: 800, fontSize: 22 }}>PayPal</span>
-                  )}
-                </div>
-              ))}
-            </div>
-            {pay && (
-              <div style={{
-                marginTop: 40, padding: "20px 40px", background: "#0070ba", color: "#fff",
-                borderRadius: 10, fontSize: 22, fontWeight: 700, display: "inline-block",
-              }}>Pay €26.49 with PayPal</div>
-            )}
-          </div>
-        )}
+        </div>
         <Cursor x={cx} y={cy} />
       </BrowserChrome>
     </AbsoluteFill>
