@@ -214,12 +214,12 @@ const Rewarble = () => {
               preload="metadata"
               className="w-full aspect-video bg-black"
             >
-              <source src="/__l5e/assets-v1/1fbab8ad-2f3b-4a95-a247-fc9688cb04ca/rewarble-tutorial.mp4" type="video/mp4" />
+              <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
             </video>
           </div>
           <div className="px-5 py-3 border-t border-border">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              A quick walkthrough showing exactly how to buy a PayPal Rewarble gift card on G2A and get your code.
+              Step-by-step: search Rewarble on G2A → pay with PayPal → receive your code by email → paste it here and confirm.
             </p>
           </div>
         </div>
