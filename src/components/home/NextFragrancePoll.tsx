@@ -85,16 +85,16 @@ const NextFragrancePoll = () => {
   const pct = (n: number) => (total === 0 ? 0 : Math.round((n / total) * 100));
 
   return (
-    <section className="pt-8 md:pt-12 pb-2 md:pb-4 bg-background">
+    <section className="pt-8 pb-2 bg-background">
       <div className="container max-w-2xl">
 
-        <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-accent text-center mb-2">
           You Decide
         </p>
-        <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground text-center mb-1">
+        <h2 className="font-display text-xl text-foreground text-center mb-1">
           Which should we add next?
         </h2>
-        <p className="text-[11px] md:text-xs text-muted-foreground text-center mb-5">
+        <p className="text-[11px] text-muted-foreground text-center mb-5">
           {voted ? 'Thanks for voting — here are the live results' : 'Tap your pick to reveal the results'}
         </p>
 
