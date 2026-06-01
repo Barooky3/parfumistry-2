@@ -96,7 +96,12 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   } else {
     reason = "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
   }
-  const giftCardTip = "";
+  const tutorialBanner = isGiftCard ? `
+    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;">
+      <div style="font-size:28px;margin-bottom:8px;">⚠️ 🎬</div>
+      <p style="font-size:16px;font-weight:700;color:#92400e;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Important: Watch the Tutorial Video</p>
+      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video is <strong>attached to this email</strong> showing exactly how to find the correct 16-character gift card code. <strong>Please watch it before reordering</strong> to avoid the same issue.</p>
+    </div>` : "";
   let nextStep: string;
   if (isGiftCard) {
     nextStep = "If you believe this is an error, please contact us and we'll be happy to assist you.";
@@ -117,8 +122,8 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${orderNumText}
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
+    ${tutorialBanner}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
-    ${giftCardTip}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
@@ -224,9 +229,19 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendEmail(to: string | string[], subject: string, htmlContent: string): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string, attachments?: Array<{ filename: string; content?: string; path?: string }>): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
+
+  const payload: Record<string, unknown> = {
+    from: "Parfumistry Orders <orders@parfumistry.net>",
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html: htmlContent,
+  };
+  if (attachments && attachments.length > 0) {
+    payload.attachments = attachments;
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -234,12 +249,7 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
       "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from: "Parfumistry Orders <orders@parfumistry.net>",
-      to: Array.isArray(to) ? to : [to],
-      subject,
-      html: htmlContent,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -247,6 +257,25 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
     throw new Error("Resend API error (" + res.status + "): " + errBody);
   }
 }
+
+async function fetchTutorialAttachment(): Promise<{ filename: string; content: string } | null> {
+  try {
+    const res = await fetch("https://parfumistry.net/videos/rewarble-tutorial.mp4");
+    if (!res.ok) return null;
+    const buf = new Uint8Array(await res.arrayBuffer());
+    // Base64-encode in chunks to avoid stack overflow
+    let binary = "";
+    const chunk = 0x8000;
+    for (let i = 0; i < buf.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, Array.from(buf.subarray(i, i + chunk)));
+    }
+    return { filename: "rewarble-gift-card-tutorial.mp4", content: btoa(binary) };
+  } catch (e) {
+    console.error("Failed to fetch tutorial video:", e);
+    return null;
+  }
+}
+
 
 async function sendConfirmationViaFunction(
   supabaseUrl: string,
@@ -425,7 +454,12 @@ serve(async (req) => {
       
       let rejEmailWarning = "";
       try {
-        await sendEmail(order.customer_email, rejSubject, rejectionHtml);
+        const attachments: Array<{ filename: string; content: string }> = [];
+        if (isGiftCard) {
+          const tutorial = await fetchTutorialAttachment();
+          if (tutorial) attachments.push(tutorial);
+        }
+        await sendEmail(order.customer_email, rejSubject, rejectionHtml, attachments.length ? attachments : undefined);
       } catch (emailErr: any) {
         console.error("Failed to send rejection email:", emailErr);
         rejEmailWarning = ` ⚠️ Note: The rejection email to ${order.customer_email} may not have been delivered (email might be invalid).`;
