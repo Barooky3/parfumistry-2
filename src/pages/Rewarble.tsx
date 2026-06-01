@@ -84,10 +84,10 @@ const Rewarble = () => {
     setIsProcessing(true);
     setShowConfirmDialog(false);
     try {
-      const orderContext = sessionStorage.getItem('checkoutOrderContext');
+      const orderContext = sessionStorage.getItem('checkoutOrderContext') || localStorage.getItem('checkoutOrderContext');
       if (!orderContext) {
-        toast({ title: 'Session expired', description: 'Please go back to checkout and try again.', variant: 'destructive' });
         setIsProcessing(false);
+        navigate('/checkout');
         return;
       }
       const ctx = JSON.parse(orderContext);
@@ -108,6 +108,7 @@ const Rewarble = () => {
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
+      try { localStorage.removeItem('checkoutOrderContext'); } catch {}
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('rewarbleCodes');
       sessionStorage.removeItem('rewarbleIdempotencyKey');
