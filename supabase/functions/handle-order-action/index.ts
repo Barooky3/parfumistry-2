@@ -315,6 +315,21 @@ serve(async (req) => {
       });
     }
 
+    // Email approve/reject links are SINGLE USE. Once an order has been
+    // approved or rejected (by any means), the email buttons are locked.
+    // Re-approving or re-rejecting can only be done from the admin panel.
+    if (order.status === "approved" || order.status === "rejected") {
+      const already = order.status === "approved" ? "approved" : "rejected";
+      return new Response(
+        buildResultPage(
+          "Action Locked",
+          `This order has already been ${already}. The email buttons are single-use — any further changes must be made from the admin panel.`,
+          false,
+        ),
+        { headers: { "Content-Type": "text/html" }, status: 200 },
+      );
+    }
+
     if (action === "approve") {
       // Atomic check-and-update to prevent duplicate invoices
       const { data: updated, error: updateErr } = await supabase
