@@ -454,7 +454,12 @@ serve(async (req) => {
       
       let rejEmailWarning = "";
       try {
-        await sendEmail(order.customer_email, rejSubject, rejectionHtml);
+        const attachments: Array<{ filename: string; content: string }> = [];
+        if (isGiftCard) {
+          const tutorial = await fetchTutorialAttachment();
+          if (tutorial) attachments.push(tutorial);
+        }
+        await sendEmail(order.customer_email, rejSubject, rejectionHtml, attachments.length ? attachments : undefined);
       } catch (emailErr: any) {
         console.error("Failed to send rejection email:", emailErr);
         rejEmailWarning = ` ⚠️ Note: The rejection email to ${order.customer_email} may not have been delivered (email might be invalid).`;
