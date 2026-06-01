@@ -143,13 +143,29 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       />
                     </div>
                   ) : (
-                    <div style={isProductShot ? (innerStyle || undefined) : undefined} className="w-full h-full flex items-end justify-center">
-                      <img 
-                        src={currentSrc} 
-                        alt={product.name} 
-                        className={cn("w-full h-full", isProductShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
-                        loading="eager"
-                      />
+                    <div className="w-full h-full relative">
+                      {imageList.map((src, i) => {
+                        const isShot = src === product.image;
+                        const wrapStyle = isShot ? (innerStyle || undefined) : undefined;
+                        return (
+                          <div
+                            key={src + i}
+                            style={wrapStyle}
+                            className={cn(
+                              "absolute inset-0 w-full h-full flex items-end justify-center transition-opacity duration-200",
+                              i === selectedImageIndex ? "opacity-100" : "opacity-0 pointer-events-none"
+                            )}
+                          >
+                            <img
+                              src={src}
+                              alt={product.name}
+                              className={cn("w-full h-full", isShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                              loading={i === 0 ? "eager" : "lazy"}
+                              decoding="async"
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -199,7 +215,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((variant, index) => (
                     <button
-                      key={variant.ml}
+                      key={`${variant.ml}-${variant.label || 'std'}-${index}`}
                       onClick={() => setSelectedVariantIndex(index)}
                       disabled={!variant.inStock}
                       className={`px-4 py-2 border text-sm font-medium transition-all ${
