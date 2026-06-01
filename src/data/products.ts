@@ -1869,6 +1869,7 @@ export const products: Product[] = [
     },
     accentColor: '#1E3A8A',
     image: '/images/bad-boy-cobalt.png',
+    additionalImages: ['/images/bad-boy-cobalt-gallery.png'],
     affiliateUrl: '/product/bad-boy-cobalt',
     inStock: true,
     variants: [
