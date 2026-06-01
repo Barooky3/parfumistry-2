@@ -199,7 +199,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((variant, index) => (
                     <button
-                      key={variant.ml}
+                      key={`${variant.ml}-${variant.label || 'std'}-${index}`}
                       onClick={() => setSelectedVariantIndex(index)}
                       disabled={!variant.inStock}
                       className={`px-4 py-2 border text-sm font-medium transition-all ${
