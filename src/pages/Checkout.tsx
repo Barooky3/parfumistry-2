@@ -265,6 +265,7 @@ const Checkout = () => {
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
+      try { localStorage.removeItem('checkoutOrderContext'); } catch {}
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('checkoutFreeSample');
       setFreeSample(null);
