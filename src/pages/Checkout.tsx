@@ -206,7 +206,7 @@ const Checkout = () => {
       });
     }
     const finalTotal = (appliedDiscountRef.current ? totalPrice * (1 - appliedDiscountRef.current.percent / 100) : totalPrice) + getShippingCost(fd.country, shippingMethod);
-    sessionStorage.setItem('checkoutOrderContext', JSON.stringify({
+    const ctxPayload = JSON.stringify({
       cartItems, email: fd.email,
       customerName: `${fd.firstName} ${fd.lastName}`,
       shippingAddress: { country: fd.country, city: fd.city, postalCode: fd.postalCode, line1: fd.streetAddress },
@@ -215,7 +215,9 @@ const Checkout = () => {
       discountPercent: appliedDiscountRef.current?.percent || 0,
       shippingMethod,
       shippingCost: getShippingCost(fd.country, shippingMethod),
-    }));
+    });
+    sessionStorage.setItem('checkoutOrderContext', ctxPayload);
+    try { localStorage.setItem('checkoutOrderContext', ctxPayload); } catch {}
     return finalTotal;
   };
 
