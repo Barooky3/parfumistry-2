@@ -90,6 +90,7 @@ const IdealPayment = () => {
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
+      try { localStorage.removeItem('checkoutOrderContext'); } catch {}
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('idealCodes');
       sessionStorage.removeItem('idealIdempotencyKey');
