@@ -92,6 +92,7 @@ const PaypalEneba = () => {
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
+      try { localStorage.removeItem('checkoutOrderContext'); } catch {}
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('paypalEnebaCodes');
       sessionStorage.removeItem('paypalIdempotencyKey');
