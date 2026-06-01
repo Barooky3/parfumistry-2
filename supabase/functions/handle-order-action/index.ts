@@ -96,7 +96,12 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
   } else {
     reason = "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
   }
-  const giftCardTip = "";
+  const tutorialBanner = isGiftCard ? `
+    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;">
+      <div style="font-size:28px;margin-bottom:8px;">⚠️ 🎬</div>
+      <p style="font-size:16px;font-weight:700;color:#92400e;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Important: Watch the Tutorial Video</p>
+      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video is <strong>attached to this email</strong> showing exactly how to find the correct 16-character gift card code. <strong>Please watch it before reordering</strong> to avoid the same issue.</p>
+    </div>` : "";
   let nextStep: string;
   if (isGiftCard) {
     nextStep = "If you believe this is an error, please contact us and we'll be happy to assist you.";
@@ -117,8 +122,8 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
     ${orderNumText}
     <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
+    ${tutorialBanner}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 16px;">${reason}</p>
-    ${giftCardTip}
     <p style="font-size:14px;color:#666;line-height:1.6;margin:0 0 24px;">${nextStep}</p>
     <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;">
       <p style="font-size:13px;color:#666;margin:0;line-height:1.6;">Need help? Contact us at<br>
