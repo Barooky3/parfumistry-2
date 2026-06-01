@@ -265,8 +265,8 @@ export const ScenePaste: React.FC = () => {
           <div style={{
             position: "absolute", left: cx - 16, top: cy - 16,
             width: 36, height: 36, borderRadius: 18,
-            border: "3px solid #16a34a", opacity: Math.max(0, 1 - (frame - 120) / 15),
-            transform: `scale(${1 + (frame - 120) / 12})`,
+            border: "3px solid #16a34a", opacity: Math.max(0, 1 - (frame - 122) / 15),
+            transform: `scale(${1 + (frame - 122) / 12})`,
             pointerEvents: "none",
           }} />
         )}
