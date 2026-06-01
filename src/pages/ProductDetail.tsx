@@ -143,22 +143,27 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       />
                     </div>
                   ) : (
-                    <div style={isProductShot ? (innerStyle || undefined) : undefined} className="w-full h-full flex items-end justify-center relative">
+                    <div className="w-full h-full relative">
                       {imageList.map((src, i) => {
                         const isShot = src === product.image;
+                        const wrapStyle = isShot ? (innerStyle || undefined) : undefined;
                         return (
-                          <img
+                          <div
                             key={src + i}
-                            src={src}
-                            alt={product.name}
+                            style={wrapStyle}
                             className={cn(
-                              "absolute inset-0 w-full h-full transition-opacity duration-200",
-                              isShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover",
-                              i === selectedImageIndex ? "opacity-100" : "opacity-0"
+                              "absolute inset-0 w-full h-full flex items-end justify-center transition-opacity duration-200",
+                              i === selectedImageIndex ? "opacity-100" : "opacity-0 pointer-events-none"
                             )}
-                            loading={i === 0 ? "eager" : "lazy"}
-                            decoding="async"
-                          />
+                          >
+                            <img
+                              src={src}
+                              alt={product.name}
+                              className={cn("w-full h-full", isShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+                              loading={i === 0 ? "eager" : "lazy"}
+                              decoding="async"
+                            />
+                          </div>
                         );
                       })}
                     </div>
