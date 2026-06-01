@@ -65,6 +65,7 @@ const RevolutApp = () => {
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
+      try { localStorage.removeItem('checkoutOrderContext'); } catch {}
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('revolutIdempotencyKey');
       navigate(`/checkout?completed=revolut_app`);
