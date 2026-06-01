@@ -407,15 +407,39 @@ serve(async (req) => {
               </div>`
             : "";
 
-          await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              from: "Parfumistry <orders@parfumistry.net>",
-              to: [order.customer_email],
-              reply_to: "ewhz3384@gmail.com",
-              subject: order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry",
-              html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
+          // For "order_number" rejection, attach the tutorial video + add a prominent banner
+          const includeTutorial = rejectionReason === "order_number";
+          let tutorialAttachment: { filename: string; content: string } | null = null;
+          if (includeTutorial) {
+            try {
+              const vidRes = await fetch("https://parfumistry.net/videos/rewarble-tutorial.mp4");
+              if (vidRes.ok) {
+                const buf = new Uint8Array(await vidRes.arrayBuffer());
+                let binary = "";
+                const chunk = 0x8000;
+                for (let i = 0; i < buf.length; i += chunk) {
+                  binary += String.fromCharCode.apply(null, Array.from(buf.subarray(i, i + chunk)));
+                }
+                tutorialAttachment = { filename: "rewarble-gift-card-tutorial.mp4", content: btoa(binary) };
+              }
+            } catch (e) {
+              console.error("Failed to fetch tutorial video:", e);
+            }
+          }
+
+          const tutorialBanner = includeTutorial ? `
+    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;">
+      <div style="font-size:28px;margin-bottom:8px;">⚠️ 🎬</div>
+      <p style="font-size:16px;font-weight:700;color:#92400e;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Important: Watch the Tutorial Video</p>
+      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video is <strong>attached to this email</strong> showing exactly how to find the correct 16-character gift card code. <strong>Please watch it before reordering</strong> to avoid the same issue.</p>
+    </div>` : "";
+
+          const emailPayload: any = {
+            from: "Parfumistry <orders@parfumistry.net>",
+            to: [order.customer_email],
+            reply_to: "ewhz3384@gmail.com",
+            subject: order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry",
+            html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
 <div style="max-width:600px;margin:0 auto;background:#fff;">
   <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
     <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
@@ -424,6 +448,7 @@ serve(async (req) => {
     <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">${isCOD ? "Order Cancelled" : "Payment Not Received"}</h2>
     ${order.order_number ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${order.order_number}</strong></p>` : ""}
     <p style="font-size:15px;color:#333;">Hi <strong>${escapeHtml(order.customer_name || "Valued Customer")}</strong>,</p>
+    ${tutorialBanner}
     <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
     ${adminNotesHtml}
     <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
@@ -432,7 +457,15 @@ serve(async (req) => {
     </div>
   </div>
 </div></body></html>`,
-            }),
+          };
+          if (tutorialAttachment) {
+            emailPayload.attachments = [tutorialAttachment];
+          }
+
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify(emailPayload),
           });
         }
 
