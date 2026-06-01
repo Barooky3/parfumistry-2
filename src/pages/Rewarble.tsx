@@ -108,6 +108,7 @@ const Rewarble = () => {
       });
       clearCart();
       sessionStorage.removeItem('checkoutOrderContext');
+      try { localStorage.removeItem('checkoutOrderContext'); } catch {}
       sessionStorage.removeItem('checkoutFormData');
       sessionStorage.removeItem('rewarbleCodes');
       sessionStorage.removeItem('rewarbleIdempotencyKey');
