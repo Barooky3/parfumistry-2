@@ -143,13 +143,24 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                       />
                     </div>
                   ) : (
-                    <div style={isProductShot ? (innerStyle || undefined) : undefined} className="w-full h-full flex items-end justify-center">
-                      <img 
-                        src={currentSrc} 
-                        alt={product.name} 
-                        className={cn("w-full h-full", isProductShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
-                        loading="eager"
-                      />
+                    <div style={isProductShot ? (innerStyle || undefined) : undefined} className="w-full h-full flex items-end justify-center relative">
+                      {imageList.map((src, i) => {
+                        const isShot = src === product.image;
+                        return (
+                          <img
+                            key={src + i}
+                            src={src}
+                            alt={product.name}
+                            className={cn(
+                              "absolute inset-0 w-full h-full transition-opacity duration-200",
+                              isShot && (product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover",
+                              i === selectedImageIndex ? "opacity-100" : "opacity-0"
+                            )}
+                            loading={i === 0 ? "eager" : "lazy"}
+                            decoding="async"
+                          />
+                        );
+                      })}
                     </div>
                   )}
                 </div>
