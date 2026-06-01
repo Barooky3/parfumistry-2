@@ -415,7 +415,6 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 26.99, inStock: true },
       { ml: 100, price: 34.99, inStock: true },
-      { ml: 100, price: 30.99, inStock: true, label: '100ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
   },
@@ -961,7 +960,7 @@ export const products: Product[] = [
       { ml: 50, price: 23.99, inStock: true },
       { ml: 100, price: 32.99, inStock: true },
       { ml: 150, price: 39.99, inStock: true },
-      { ml: 100, price: 27.99, inStock: true, label: '100ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
+      { ml: 100, price: 27.99, inStock: true, label: '100ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
   },
@@ -996,7 +995,6 @@ export const products: Product[] = [
     variants: [
       { ml: 75, price: 21.99, inStock: true },
       { ml: 125, price: 28.99, inStock: true },
-      { ml: 125, price: 24.99, inStock: true, label: '125ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
   },
@@ -1128,6 +1126,7 @@ export const products: Product[] = [
     variants: [
       { ml: 75, price: 26.99, inStock: true },
       { ml: 125, price: 33.99, inStock: true },
+      { ml: 125, price: 29.99, inStock: true, label: '125ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
   },
   {
@@ -1156,7 +1155,7 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 25.99, inStock: true },
       { ml: 100, price: 33.99, inStock: true },
-      { ml: 100, price: 29.99, inStock: true, label: '100ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
+      { ml: 100, price: 29.99, inStock: true, label: '100ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
   },
@@ -1453,7 +1452,7 @@ export const products: Product[] = [
       { ml: 40, price: 21.99, inStock: true },
       { ml: 60, price: 23.99, inStock: true },
       { ml: 100, price: 28.99, inStock: true },
-      { ml: 100, price: 25.99, inStock: true, label: '100ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
+      { ml: 100, price: 25.99, inStock: true, label: '100ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
   },
   {

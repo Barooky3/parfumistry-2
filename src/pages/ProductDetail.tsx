@@ -215,9 +215,12 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   ))}
                 </div>
                 {selectedVariant?.note && (
-                  <p className="text-[11px] text-muted-foreground italic mt-2 leading-snug">
-                    {selectedVariant.note}
-                  </p>
+                  <div className="mt-3 flex items-start gap-2 border border-accent/40 bg-accent/5 px-3 py-2 rounded-sm">
+                    <Info className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
+                    <p className="text-[11px] md:text-xs text-foreground/80 leading-snug">
+                      {selectedVariant.note}
+                    </p>
+                  </div>
                 )}
               </div>
             )}
