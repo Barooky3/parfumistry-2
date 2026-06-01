@@ -140,6 +140,7 @@ function getLocationFromTimezone(): { country: string; city: string } {
       'Africa/Johannesburg': { country: 'South Africa', city: 'Johannesburg' },
       'Africa/Lagos': { country: 'Nigeria', city: 'Lagos' },
       'Africa/Nairobi': { country: 'Kenya', city: 'Nairobi' },
+      'Africa/Harare': { country: 'Zimbabwe', city: 'Harare' },
       'Africa/Casablanca': { country: 'Morocco', city: 'Casablanca' },
       'Africa/Tunis': { country: 'Tunisia', city: 'Tunis' },
       'Africa/Algiers': { country: 'Algeria', city: 'Algiers' },

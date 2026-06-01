@@ -36,7 +36,7 @@ const COUNTRIES = [
   'Philippines', 'Hong Kong', 'Taiwan', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Cambodia', 'Myanmar', 'Macao',
   'Australia', 'New Zealand',
   'South Africa', 'Egypt', 'Morocco', 'Nigeria', 'Kenya', 'Ghana', 'Tunisia', 'Algeria', 'Senegal',
-  'Ivory Coast', 'Cameroon', 'Tanzania', 'Ethiopia', 'Mauritius',
+  'Ivory Coast', 'Cameroon', 'Tanzania', 'Ethiopia', 'Mauritius', 'Zimbabwe',
 ].sort();
 
 const EU_UK_COUNTRIES = new Set([

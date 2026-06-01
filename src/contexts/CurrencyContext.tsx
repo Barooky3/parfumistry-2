@@ -90,6 +90,7 @@ const COUNTRY_CODE_CURRENCY_MAP: Record<string, Currency> = {
   AU: 'AUD', NZ: 'NZD',
   // Africa
   ZA: 'ZAR', EG: 'EGP', MA: 'MAD', NG: 'NGN',
+  ZW: 'USD',
 };
 
 // Map country names to their currency codes
@@ -119,6 +120,7 @@ export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Sri Lanka': 'USD', 'Nepal': 'USD', 'Cambodia': 'USD', 'Myanmar': 'USD', 'Macao': 'USD',
   'Australia': 'AUD', 'New Zealand': 'NZD',
   'South Africa': 'ZAR', 'Egypt': 'EGP', 'Morocco': 'MAD', 'Nigeria': 'NGN',
+  'Zimbabwe': 'USD',
   'Algeria': 'EUR', 'Senegal': 'EUR', 'Ivory Coast': 'EUR', 'Cameroon': 'EUR',
   'Tanzania': 'USD', 'Ethiopia': 'USD', 'Mauritius': 'USD',
 };

@@ -80,6 +80,7 @@ const COUNTRY_CODE_MAP: Record<string, string> = {
   'Australia': 'AU', 'New Zealand': 'NZ',
   'South Africa': 'ZA', 'Egypt': 'EG', 'Morocco': 'MA', 'Nigeria': 'NG',
   'Kenya': 'KE', 'Ghana': 'GH', 'Tunisia': 'TN',
+  'Zimbabwe': 'ZW',
   'Algeria': 'DZ', 'Senegal': 'SN', 'Ivory Coast': 'CI', 'Cameroon': 'CM',
   'Tanzania': 'TZ', 'Ethiopia': 'ET', 'Mauritius': 'MU',
 };
