@@ -742,8 +742,6 @@ const Checkout = () => {
           </Button>
 
 
-          <PaymentMethodExplainer />
-
           <p className="text-[10px] text-muted-foreground/60 text-center">
             By completing this purchase you agree to our terms and conditions
           </p>
