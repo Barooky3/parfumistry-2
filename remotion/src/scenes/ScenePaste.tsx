@@ -26,10 +26,10 @@ export const ScenePaste: React.FC = () => {
   const pasteFrame = 80;
   const typed = frame < pasteFrame ? "" : code;
 
-  // After scrolling, the code input sits around screen y ≈ 500 (scene coords ≈ 360).
-  // Confirm button center around scene (800, 620).
-  const inputX = 800, inputY = 360;
-  const confirmX = 800, confirmY = 620;
+  // After scrolling 560px, the code input center sits at scene (800, 160)
+  // and the confirm button center at scene (800, 360).
+  const inputX = 800, inputY = 160;
+  const confirmX = 800, confirmY = 360;
 
   const cx = interpolate(
     frame,
