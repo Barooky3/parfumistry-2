@@ -657,6 +657,8 @@ const Checkout = () => {
             📋 Read our return and refund policy before purchasing →
           </Link>
 
+          <PaymentMethodExplainer />
+
           {isProcessing && (
             <div className="flex flex-col items-center justify-center py-6 gap-3">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
