@@ -11,7 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
-import { getVisaRewarbleCard } from '@/utils/cardRecommendation';
+const REWARBLE_G2A_URL = 'https://www.g2a.com/paypal-gift-card-60-eur-by-rewarble-global-i10000339995001';
 
 const Rewarble = () => {
   const { toast } = useToast();
@@ -163,13 +163,13 @@ const Rewarble = () => {
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">1</span>
               <div>
                 <p className="text-sm font-medium text-foreground">Purchase a PayPal Rewarble gift card on G2A</p>
-                {orderTotalNum > 0 ? (
-                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                    Your cart total is <strong>€{orderTotal}</strong>, so the closest PayPal Rewarble card that covers it is <strong>{getVisaRewarbleCard(orderTotalNum).label}</strong>. Tap the button below — it opens G2A with a search for that exact card. Pick the cheapest listing from a trusted seller, then check out on G2A using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard, and many more).
-                  </p>
-                ) : (
-                  <p className="text-xs text-muted-foreground mt-0.5">Buy a card closest to your order amount — see your cart total at checkout.</p>
-                )}
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                  {orderTotalNum > 0 ? (
+                    <>Your cart total is <strong>€{orderTotal}</strong>. Tap the button below to open the PayPal Rewarble listing on G2A, press the <strong>"+more"</strong> button under <em>Amount</em>, and pick any card value that covers your total. Then check out on G2A using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard, and many more).</>
+                  ) : (
+                    <>Tap the button below to open the PayPal Rewarble listing on G2A, press the <strong>"+more"</strong> button under <em>Amount</em>, and pick any card value that covers your cart total.</>
+                  )}
+                </p>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Mastercard</span>
@@ -178,10 +178,16 @@ const Rewarble = () => {
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Paysafecard</span>
                   <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">& more</span>
                 </div>
+                <div className="rounded-md border border-sky-500/30 bg-sky-50 dark:bg-sky-950/20 px-3 py-2 mt-2 flex items-start gap-2">
+                  <Shield className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
+                  <p className="text-[11px] font-medium text-sky-800 dark:text-sky-300 leading-relaxed">
+                    You do <strong>not</strong> need a PayPal account to complete this payment — G2A checkout accepts cards and many other methods.
+                  </p>
+                </div>
                 <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
-                  onClick={() => window.open(orderTotalNum > 0 ? getVisaRewarbleCard(orderTotalNum).url : 'https://www.g2a.com/search?query=PayPal+Rewarble', '_blank')}>
+                  onClick={() => window.open(REWARBLE_G2A_URL, '_blank')}>
                   <ExternalLink className="h-3 w-3 mr-1.5" />
-                  {orderTotalNum > 0 ? `Find ${getVisaRewarbleCard(orderTotalNum).label} PayPal Rewarble on G2A` : 'Find PayPal Rewarble on G2A'}
+                  Open PayPal Rewarble on G2A
                 </Button>
               </div>
             </div>
@@ -243,8 +249,7 @@ const Rewarble = () => {
           </div>
           <div className="px-5 py-3 border-t border-border">
             <p className="text-xs text-muted-foreground leading-relaxed">
-            Step-by-step: search Rewarble on G2A → pay with preferred payment method → receive your code by email → paste it here and confirm.
-
+            Step-by-step: open the G2A Rewarble page → tap "+more" and pick your amount → pay with your preferred method → receive your code by email → paste it here and confirm.
             </p>
           </div>
         </div>
