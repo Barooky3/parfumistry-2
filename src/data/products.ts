@@ -1452,7 +1452,7 @@ export const products: Product[] = [
       { ml: 40, price: 21.99, inStock: true },
       { ml: 60, price: 23.99, inStock: true },
       { ml: 100, price: 28.99, inStock: true },
-      { ml: 100, price: 25.99, inStock: true, label: '100ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
+      { ml: 100, price: 25.99, inStock: true, label: '100ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
   },
   {
