@@ -67,21 +67,23 @@ export const SceneBrowse: React.FC = () => {
   // 110-130 highlight 30 EUR + click
   const expanded = frame >= 50;
 
-  // "+more" tile center (approx) ≈ (1190, 770) in 1920x1080 — bottom-right of base 7-col grid
-  const moreX = 1190, moreY = 770;
-  // 30 EUR tile center (in expanded grid, a few rows below) ≈ (940, 905)
-  const thirtyX = 940, thirtyY = 905;
+  // Coordinates are in BrowserChrome inner content space (1600 x 852).
+  // Cursor tip sits at (+2, +2) inside its 28x28 svg, so subtract 2.
+  // "+189 more" tile center — bottom-right of the base 7-col grid in the variant card.
+  const moreX = 1038, moreY = 572;
+  // 30 EUR tile center — 4th expanded row, 6th column.
+  const thirtyX = 958, thirtyY = 700;
 
   const cx = interpolate(
     frame,
     [0, 38, 50, 60, 105, 130],
-    [1500, moreX - 2, moreX - 2, moreX - 2, thirtyX - 2, thirtyX - 2],
+    [1400, moreX - 2, moreX - 2, moreX - 2, thirtyX - 2, thirtyX - 2],
     { extrapolateRight: "clamp" }
   );
   const cy = interpolate(
     frame,
     [0, 38, 50, 60, 105, 130],
-    [300, moreY - 2, moreY - 2, moreY - 2, thirtyY - 2, thirtyY - 2],
+    [200, moreY - 2, moreY - 2, moreY - 2, thirtyY - 2, thirtyY - 2],
     { extrapolateRight: "clamp" }
   );
   const clickMore = frame >= 40 && frame <= 50;
