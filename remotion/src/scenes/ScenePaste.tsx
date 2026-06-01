@@ -33,18 +33,18 @@ export const ScenePaste: React.FC = () => {
 
   const cx = interpolate(
     frame,
-    [0, 25, 55, 75, 110, 135],
+    [0, 25, 55, 75, 95, 120],
     [1300, 1300, 1300, inputX - 2, inputX - 2, confirmX - 2],
     { extrapolateRight: "clamp" }
   );
   const cy = interpolate(
     frame,
-    [0, 25, 55, 75, 110, 135],
+    [0, 25, 55, 75, 95, 120],
     [200, 200, 320, inputY - 2, inputY - 2, confirmY - 2],
     { extrapolateRight: "clamp" }
   );
-  const clickingConfirm = frame >= 120 && frame <= 135;
-  const success = frame >= 138;
+  const clickingConfirm = frame >= 122 && frame <= 137;
+  const success = frame >= 140;
 
   return (
     <AbsoluteFill style={{ opacity: enter }}>
