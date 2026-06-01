@@ -995,7 +995,6 @@ export const products: Product[] = [
     variants: [
       { ml: 75, price: 21.99, inStock: true },
       { ml: 125, price: 28.99, inStock: true },
-      { ml: 125, price: 24.99, inStock: true, label: '125ml Tester', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
   },
