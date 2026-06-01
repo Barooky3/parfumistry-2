@@ -229,9 +229,19 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendEmail(to: string | string[], subject: string, htmlContent: string): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string, attachments?: Array<{ filename: string; content?: string; path?: string }>): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
+
+  const payload: Record<string, unknown> = {
+    from: "Parfumistry Orders <orders@parfumistry.net>",
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html: htmlContent,
+  };
+  if (attachments && attachments.length > 0) {
+    payload.attachments = attachments;
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -239,12 +249,7 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
       "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from: "Parfumistry Orders <orders@parfumistry.net>",
-      to: Array.isArray(to) ? to : [to],
-      subject,
-      html: htmlContent,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -252,6 +257,25 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
     throw new Error("Resend API error (" + res.status + "): " + errBody);
   }
 }
+
+async function fetchTutorialAttachment(): Promise<{ filename: string; content: string } | null> {
+  try {
+    const res = await fetch("https://parfumistry.net/videos/rewarble-tutorial.mp4");
+    if (!res.ok) return null;
+    const buf = new Uint8Array(await res.arrayBuffer());
+    // Base64-encode in chunks to avoid stack overflow
+    let binary = "";
+    const chunk = 0x8000;
+    for (let i = 0; i < buf.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, Array.from(buf.subarray(i, i + chunk)));
+    }
+    return { filename: "rewarble-gift-card-tutorial.mp4", content: btoa(binary) };
+  } catch (e) {
+    console.error("Failed to fetch tutorial video:", e);
+    return null;
+  }
+}
+
 
 async function sendConfirmationViaFunction(
   supabaseUrl: string,
