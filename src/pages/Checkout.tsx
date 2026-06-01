@@ -234,11 +234,11 @@ const Checkout = () => {
       return;
     }
     if (formData.country.trim().toLowerCase() !== 'ireland') {
-      toast({ title: 'Not available in your country', description: 'Cash on Delivery is only available in Ireland.', variant: 'destructive' });
+      toast({ title: 'Not available in your country', description: 'Cash on Delivery is only available in Ireland — that\'s where our company is located.', variant: 'destructive' });
       return;
     }
     if (formData.city.trim().toLowerCase() !== 'portlaoise') {
-      toast({ title: 'Not available in your city', description: 'Cash on Delivery is only available in Ireland - Portlaoise.', variant: 'destructive' });
+      toast({ title: 'Not available in your city', description: 'Cash on Delivery is only available in Portlaoise, Ireland — that\'s where our company is located.', variant: 'destructive' });
       return;
     }
     if (isProcessing) return;
