@@ -97,11 +97,11 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     reason = "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
   }
   const tutorialBanner = isGiftCard ? `
-    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;">
+    <a href="https://parfumistry.net/videos/rewarble-tutorial.mp4" style="display:block;text-decoration:none;background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;" target=\"_blank\">
       <div style="font-size:28px;margin-bottom:8px;">⚠️ 🎬</div>
       <p style="font-size:16px;font-weight:700;color:#92400e;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Important: Watch the Tutorial Video</p>
-      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video is <strong>attached to this email</strong> showing exactly how to find the correct 16-character gift card code. <strong>Please watch it before reordering</strong> to avoid the same issue.</p>
-    </div>` : "";
+      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video shows exactly how to find the correct 16-character gift card code. <strong>Click here to watch it before reordering</strong> to avoid the same issue.</p>
+    </a>` : "";
   let nextStep: string;
   if (isGiftCard) {
     nextStep = "If you believe this is an error, please contact us and we'll be happy to assist you.";
