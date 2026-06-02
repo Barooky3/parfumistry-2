@@ -999,6 +999,29 @@ export const products: Product[] = [
 
   },
   {
+    id: 'le-beau-paradise-garden',
+    name: 'Le Beau Paradise Garden',
+    brand: 'Jean Paul Gaultier',
+    price: 23.99,
+    category: 'men',
+    description: 'A fresh aquatic-green twist on Le Beau – crisp watery notes, mint and ginger meet creamy coconut, juicy fig and a salty breeze, drying down to warm tonka and sandalwood. A bright, summery escape with the unmistakable Le Beau sensuality.',
+    scentNotes: {
+      top: ['Green Notes', 'Watery Notes', 'Mint', 'Ginger'],
+      heart: ['Coconut', 'Fig', 'Salt'],
+      base: ['Tonka Bean', 'Sandalwood'],
+    },
+    scentNotesImage: '/src/assets/products/le-beau-paradise-garden-notes.png',
+    accentColor: '#2F5D3A',
+    image: '/src/assets/products/le-beau-paradise-garden.png',
+    affiliateUrl: '/product/le-beau-paradise-garden',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 75, price: 23.99, inStock: true },
+      { ml: 125, price: 30.99, inStock: true },
+    ],
+  },
+  {
     id: 'spicebomb-extreme',
     name: 'Spicebomb Extreme',
     brand: 'Viktor & Rolf',
