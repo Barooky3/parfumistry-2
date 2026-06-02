@@ -124,7 +124,7 @@ const Rewarble = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto px-4 py-8 sm:py-12">
+      <div className="max-w-lg md:max-w-4xl mx-auto px-4 py-8 sm:py-12">
         {/* Back link */}
         <Link to="/checkout" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
           <ArrowLeft className="h-4 w-4" />
