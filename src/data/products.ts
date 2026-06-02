@@ -21,6 +21,7 @@ import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
 import bornInRomaCoralFantasyLifestyle from '@/assets/products/born-in-roma-coral-fantasy-lifestyle.png';
 import leBeauParadiseGardenImage from '@/assets/products/le-beau-paradise-garden.png';
 import leBeauParadiseGardenNotes from '@/assets/products/le-beau-paradise-garden-notes.png';
+import leBeauParadiseGardenGallery from '@/assets/products/le-beau-paradise-garden-gallery.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -1015,6 +1016,7 @@ export const products: Product[] = [
     scentNotesImage: leBeauParadiseGardenNotes,
     accentColor: '#2F5D3A',
     image: leBeauParadiseGardenImage,
+    additionalImages: [leBeauParadiseGardenGallery],
     affiliateUrl: '/product/le-beau-paradise-garden',
     inStock: true,
     featured: true,
