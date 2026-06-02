@@ -212,6 +212,34 @@ const Rewarble = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Video Tutorial — mobile only, appended to instructions */}
+              <div className="md:hidden pt-3 border-t border-border">
+                <p className="text-xs font-semibold text-foreground tracking-wide mb-2">Watch how it works</p>
+                <div className="relative rounded-lg overflow-hidden">
+                  <video
+                    ref={videoRef}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="w-full aspect-video bg-black rounded-lg"
+                  >
+                    <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
+                  </video>
+                  <button
+                    type="button"
+                    onClick={handleFullscreen}
+                    aria-label="Fullscreen"
+                    className="absolute top-2 right-2 z-10 rounded-md bg-black/60 hover:bg-black/80 text-white p-2 backdrop-blur-sm transition-colors"
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+                  Step-by-step: open the G2A Rewarble page → tap "+more" and pick your amount → pay with your preferred method → receive your code by email → paste it here and confirm.
+                </p>
+              </div>
+
               <div className="mt-2 pt-3 border-t border-border">
                 <p className="text-xs text-muted-foreground">
                   Confused or need help?{' '}
@@ -226,14 +254,13 @@ const Rewarble = () => {
             </div>
           </div>
 
-          {/* Video Tutorial */}
-          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
+          {/* Video Tutorial — desktop only */}
+          <div className="hidden md:flex rounded-xl border border-border bg-card shadow-sm overflow-hidden flex-col">
             <div className="px-5 py-3.5 border-b border-border bg-muted/30">
               <h2 className="text-sm font-semibold text-foreground tracking-wide">Watch how it works</h2>
             </div>
             <div className="p-0 relative flex-1">
               <video
-                ref={videoRef}
                 controls
                 playsInline
                 preload="metadata"
