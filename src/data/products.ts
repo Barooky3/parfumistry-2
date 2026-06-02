@@ -19,6 +19,8 @@ import leBeauLeParfumLifestyle from '@/assets/products/le-beau-le-parfum-lifesty
 import yslYEdpLifestyle from '@/assets/products/ysl-y-edp-lifestyle.png';
 import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
 import bornInRomaCoralFantasyLifestyle from '@/assets/products/born-in-roma-coral-fantasy-lifestyle.png';
+import leBeauParadiseGardenImage from '@/assets/products/le-beau-paradise-garden.png';
+import leBeauParadiseGardenNotes from '@/assets/products/le-beau-paradise-garden-notes.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -1010,9 +1012,9 @@ export const products: Product[] = [
       heart: ['Coconut', 'Fig', 'Salt'],
       base: ['Tonka Bean', 'Sandalwood'],
     },
-    scentNotesImage: '/src/assets/products/le-beau-paradise-garden-notes.png',
+    scentNotesImage: leBeauParadiseGardenNotes,
     accentColor: '#2F5D3A',
-    image: '/src/assets/products/le-beau-paradise-garden.png',
+    image: leBeauParadiseGardenImage,
     affiliateUrl: '/product/le-beau-paradise-garden',
     inStock: true,
     featured: true,
