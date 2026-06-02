@@ -145,7 +145,7 @@ export const ProductAttributes = ({ productId }: Props) => {
                   />
                 )}
               </div>
-              <div className="flex justify-between mt-3 text-[10px] tracking-[0.15em] uppercase text-foreground/60">
+              <div className="flex justify-between mt-3 text-[9px] md:text-[10px] tracking-[0.12em] md:tracking-[0.15em] uppercase text-foreground/60">
                 <span>{f.left}</span>
                 {f.center && <span className="text-accent/80">{f.center}</span>}
                 <span>{f.right}</span>
