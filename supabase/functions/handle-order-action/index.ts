@@ -97,11 +97,11 @@ function buildRejectionEmailHtml(customerName: string, isGiftCard: boolean = fal
     reason = "Unfortunately, your payment could not be verified and did not go through. <strong>No money has been taken from your account.</strong>";
   }
   const tutorialBanner = isGiftCard ? `
-    <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;">
+    <a href="https://parfumistry.net/videos/rewarble-tutorial.mp4" style="display:block;text-decoration:none;background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #d97706;padding:20px 24px;border-radius:10px;margin:0 0 24px;text-align:center;" target=\"_blank\">
       <div style="font-size:28px;margin-bottom:8px;">⚠️ 🎬</div>
       <p style="font-size:16px;font-weight:700;color:#92400e;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Important: Watch the Tutorial Video</p>
-      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video is <strong>attached to this email</strong> showing exactly how to find the correct 16-character gift card code. <strong>Please watch it before reordering</strong> to avoid the same issue.</p>
-    </div>` : "";
+      <p style="font-size:14px;color:#92400e;line-height:1.5;margin:0;">A short tutorial video shows exactly how to find the correct 16-character gift card code. <strong>Click here to watch it before reordering</strong> to avoid the same issue.</p>
+    </a>` : "";
   let nextStep: string;
   if (isGiftCard) {
     nextStep = "If you believe this is an error, please contact us and we'll be happy to assist you.";
@@ -229,7 +229,7 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendEmail(to: string | string[], subject: string, htmlContent: string, attachments?: Array<{ filename: string; content?: string; path?: string }>): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
@@ -239,9 +239,6 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
     subject,
     html: htmlContent,
   };
-  if (attachments && attachments.length > 0) {
-    payload.attachments = attachments;
-  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -255,24 +252,6 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
   if (!res.ok) {
     const errBody = await res.text();
     throw new Error("Resend API error (" + res.status + "): " + errBody);
-  }
-}
-
-async function fetchTutorialAttachment(): Promise<{ filename: string; content: string } | null> {
-  try {
-    const res = await fetch("https://parfumistry.net/videos/rewarble-tutorial.mp4");
-    if (!res.ok) return null;
-    const buf = new Uint8Array(await res.arrayBuffer());
-    // Base64-encode in chunks to avoid stack overflow
-    let binary = "";
-    const chunk = 0x8000;
-    for (let i = 0; i < buf.length; i += chunk) {
-      binary += String.fromCharCode.apply(null, Array.from(buf.subarray(i, i + chunk)));
-    }
-    return { filename: "rewarble-gift-card-tutorial.mp4", content: btoa(binary) };
-  } catch (e) {
-    console.error("Failed to fetch tutorial video:", e);
-    return null;
   }
 }
 
@@ -451,15 +430,10 @@ serve(async (req) => {
       const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number, isBankTransferRej);
       const rejSubject = order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry";
-      
+
       let rejEmailWarning = "";
       try {
-        const attachments: Array<{ filename: string; content: string }> = [];
-        if (isGiftCard) {
-          const tutorial = await fetchTutorialAttachment();
-          if (tutorial) attachments.push(tutorial);
-        }
-        await sendEmail(order.customer_email, rejSubject, rejectionHtml, attachments.length ? attachments : undefined);
+        await sendEmail(order.customer_email, rejSubject, rejectionHtml);
       } catch (emailErr: any) {
         console.error("Failed to send rejection email:", emailErr);
         rejEmailWarning = ` ⚠️ Note: The rejection email to ${order.customer_email} may not have been delivered (email might be invalid).`;
