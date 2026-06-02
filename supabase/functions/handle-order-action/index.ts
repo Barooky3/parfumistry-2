@@ -229,7 +229,7 @@ function buildAdminInvoiceHtml(
 </body></html>`;
 }
 
-async function sendEmail(to: string | string[], subject: string, htmlContent: string, attachments?: Array<{ filename: string; content?: string; path?: string }>): Promise<void> {
+async function sendEmail(to: string | string[], subject: string, htmlContent: string): Promise<void> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY not configured");
 
@@ -239,9 +239,6 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
     subject,
     html: htmlContent,
   };
-  if (attachments && attachments.length > 0) {
-    payload.attachments = attachments;
-  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -255,24 +252,6 @@ async function sendEmail(to: string | string[], subject: string, htmlContent: st
   if (!res.ok) {
     const errBody = await res.text();
     throw new Error("Resend API error (" + res.status + "): " + errBody);
-  }
-}
-
-async function fetchTutorialAttachment(): Promise<{ filename: string; content: string } | null> {
-  try {
-    const res = await fetch("https://parfumistry.net/videos/rewarble-tutorial.mp4");
-    if (!res.ok) return null;
-    const buf = new Uint8Array(await res.arrayBuffer());
-    // Base64-encode in chunks to avoid stack overflow
-    let binary = "";
-    const chunk = 0x8000;
-    for (let i = 0; i < buf.length; i += chunk) {
-      binary += String.fromCharCode.apply(null, Array.from(buf.subarray(i, i + chunk)));
-    }
-    return { filename: "rewarble-gift-card-tutorial.mp4", content: btoa(binary) };
-  } catch (e) {
-    console.error("Failed to fetch tutorial video:", e);
-    return null;
   }
 }
 
