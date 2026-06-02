@@ -430,15 +430,10 @@ serve(async (req) => {
       const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
       const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number, isBankTransferRej);
       const rejSubject = order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry";
-      
+
       let rejEmailWarning = "";
       try {
-        const attachments: Array<{ filename: string; content: string }> = [];
-        if (isGiftCard) {
-          const tutorial = await fetchTutorialAttachment();
-          if (tutorial) attachments.push(tutorial);
-        }
-        await sendEmail(order.customer_email, rejSubject, rejectionHtml, attachments.length ? attachments : undefined);
+        await sendEmail(order.customer_email, rejSubject, rejectionHtml);
       } catch (emailErr: any) {
         console.error("Failed to send rejection email:", emailErr);
         rejEmailWarning = ` ⚠️ Note: The rejection email to ${order.customer_email} may not have been delivered (email might be invalid).`;
