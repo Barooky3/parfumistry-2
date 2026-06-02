@@ -19,6 +19,11 @@ import leBeauLeParfumLifestyle from '@/assets/products/le-beau-le-parfum-lifesty
 import yslYEdpLifestyle from '@/assets/products/ysl-y-edp-lifestyle.png';
 import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
 import bornInRomaCoralFantasyLifestyle from '@/assets/products/born-in-roma-coral-fantasy-lifestyle.png';
+import bornInRomaGreenStravaganzaLifestyle from '@/assets/products/born-in-roma-green-stravaganza-lifestyle.png';
+import theMostWantedEdpIntenseLifestyle from '@/assets/products/the-most-wanted-edp-intense-lifestyle.png';
+import strongerWithYouAmberLifestyle from '@/assets/products/stronger-with-you-amber-lifestyle.png';
+import strongerWithYouParfumLifestyle from '@/assets/products/stronger-with-you-parfum-lifestyle.png';
+import strongerWithYouAbsolutelyLifestyle from '@/assets/products/stronger-with-you-absolutely-lifestyle.png';
 import leBeauParadiseGardenImage from '@/assets/products/le-beau-paradise-garden.png';
 import leBeauParadiseGardenNotes from '@/assets/products/le-beau-paradise-garden-notes.png';
 import leBeauParadiseGardenGallery from '@/assets/products/le-beau-paradise-garden-gallery.png';
@@ -441,6 +446,7 @@ export const products: Product[] = [
     accentColor: '#4A7C3F',
     image: '/images/scent-notes/born-in-roma-green-stravaganza.png',
     imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
+    additionalImages: [bornInRomaGreenStravaganzaLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
@@ -1698,6 +1704,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4A76A',
     image: 'https://profparfums.store/cdn/shop/files/1C01C9E5-CAD8-4745-8AED-B06A573E591B_converted_1.png?v=1768068489&width=1200',
+    additionalImages: [strongerWithYouAmberLifestyle],
     affiliateUrl: '/product/stronger-with-you-amber',
     inStock: true,
     variants: [
@@ -1728,6 +1735,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B1A1A',
     image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-absolute-8775051.png?v=1768068488&width=1200',
+    additionalImages: [strongerWithYouAbsolutelyLifestyle],
     affiliateUrl: '/product/stronger-with-you-absolutely',
     inStock: true,
     variants: [
@@ -1758,6 +1766,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B6EA8',
     image: 'https://profparfums.store/cdn/shop/files/stronger-with-you-parfum-2174125.png?v=1768068547&width=1200',
+    additionalImages: [strongerWithYouParfumLifestyle],
     affiliateUrl: '/product/stronger-with-you-parfum',
     inStock: true,
     variants: [
@@ -1812,6 +1821,7 @@ export const products: Product[] = [
     },
     accentColor: '#B8860B',
     image: 'https://profparfums.store/cdn/shop/files/product_2_matched_1.png?v=1768068488&width=1200',
+    additionalImages: [theMostWantedEdpIntenseLifestyle],
     affiliateUrl: '/product/the-most-wanted-edp-intense',
     inStock: true,
     variants: [
