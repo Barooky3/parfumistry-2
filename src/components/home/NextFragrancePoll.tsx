@@ -4,28 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import ultraMaleImg from '@/assets/products/poll-ultra-male.png';
-import leBeauParadiseImg from '@/assets/products/poll-le-beau-paradise-garden.png';
+import afternoonSwimImg from '@/assets/products/poll-afternoon-swim.png';
+import godOfFireImg from '@/assets/products/poll-god-of-fire.png';
+import leBeauParadiseImg from '@/assets/products/le-beau-paradise-garden.png';
 
-const POLL_ID = 'next-arrival-2026-01';
+const POLL_ID = 'next-arrival-2026-02';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'le-beau-paradise-garden',
-    label: 'JPG Le Beau Paradise Garden',
-    image: leBeauParadiseImg,
+    key: 'lv-afternoon-swim',
+    label: 'LV Afternoon Swim',
+    image: afternoonSwimImg,
   },
   {
-    key: 'ultra-male',
-    label: 'JPG Ultra Male',
-    image: ultraMaleImg,
+    key: 'god-of-fire',
+    label: 'SHL God of Fire',
+    image: godOfFireImg,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Bad Boy Cobalt',
-  image: '/images/bad-boy-cobalt.png',
+  name: 'JPG Le Beau Paradise Garden',
+  image: leBeauParadiseImg,
 };
 
 function getFingerprint(): string {

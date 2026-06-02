@@ -19,6 +19,8 @@ import leBeauLeParfumLifestyle from '@/assets/products/le-beau-le-parfum-lifesty
 import yslYEdpLifestyle from '@/assets/products/ysl-y-edp-lifestyle.png';
 import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
 import bornInRomaCoralFantasyLifestyle from '@/assets/products/born-in-roma-coral-fantasy-lifestyle.png';
+import leBeauParadiseGardenImage from '@/assets/products/le-beau-paradise-garden.png';
+import leBeauParadiseGardenNotes from '@/assets/products/le-beau-paradise-garden-notes.png';
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
@@ -997,6 +999,29 @@ export const products: Product[] = [
       { ml: 125, price: 28.99, inStock: true },
     ],
 
+  },
+  {
+    id: 'le-beau-paradise-garden',
+    name: 'Le Beau Paradise Garden',
+    brand: 'Jean Paul Gaultier',
+    price: 23.99,
+    category: 'men',
+    description: 'A fresh aquatic-green twist on Le Beau – crisp watery notes, mint and ginger meet creamy coconut, juicy fig and a salty breeze, drying down to warm tonka and sandalwood. A bright, summery escape with the unmistakable Le Beau sensuality.',
+    scentNotes: {
+      top: ['Green Notes', 'Watery Notes', 'Mint', 'Ginger'],
+      heart: ['Coconut', 'Fig', 'Salt'],
+      base: ['Tonka Bean', 'Sandalwood'],
+    },
+    scentNotesImage: leBeauParadiseGardenNotes,
+    accentColor: '#2F5D3A',
+    image: leBeauParadiseGardenImage,
+    affiliateUrl: '/product/le-beau-paradise-garden',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 75, price: 23.99, inStock: true },
+      { ml: 125, price: 30.99, inStock: true },
+    ],
   },
   {
     id: 'spicebomb-extreme',
