@@ -105,17 +105,17 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Mobile FAQ — prominent centered pill */}
+          {/* Mobile FAQ — prominent centered pill with glow */}
           <div className="md:hidden flex-1 flex items-center justify-center px-1 sm:px-2 min-w-0">
             <Link
               to="/faq"
               className={cn(
-                'flex items-center gap-1 sm:gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-[0.14em] uppercase shadow-lg ring-2 ring-accent/50 ring-offset-1 ring-offset-background transition-all active:scale-95 shrink-0',
+                'flex items-center gap-1 sm:gap-1.5 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold tracking-[0.14em] uppercase shadow-lg shadow-accent/25 ring-2 ring-accent/60 ring-offset-2 ring-offset-background transition-all active:scale-95 shrink-0 animate-pulse',
                 'bg-accent text-accent-foreground'
               )}
               aria-label="FAQ"
             >
-              <HelpCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={2.5} />
+              <HelpCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2.5} />
               <span className="min-[380px]:hidden">?</span>
               <span className="hidden min-[380px]:inline">FAQ</span>
             </Link>

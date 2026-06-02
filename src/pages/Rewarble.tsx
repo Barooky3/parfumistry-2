@@ -124,7 +124,7 @@ const Rewarble = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto px-4 py-8 sm:py-12">
+      <div className="max-w-lg md:max-w-4xl mx-auto px-4 py-8 sm:py-12">
         {/* Back link */}
         <Link to="/checkout" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
           <ArrowLeft className="h-4 w-4" />
@@ -155,103 +155,106 @@ const Rewarble = () => {
           <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <p className="text-xs font-medium text-amber-800 dark:text-amber-300 leading-relaxed">Please follow the payment instructions carefully to avoid delays with your order.</p>
         </div>
-        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
-          <div className="px-5 py-3.5 border-b border-border bg-muted/30">
-            <h2 className="text-sm font-semibold text-foreground tracking-wide">Payment instructions</h2>
-          </div>
-          <div className="px-5 py-4 space-y-4">
-            <div className="flex gap-3">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">1</span>
-              <div>
-                <p className="text-sm font-medium text-foreground">Purchase a PayPal Rewarble gift card on G2A</p>
-                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                  {orderTotalNum > 0 ? (
-                    <>Your cart total is <strong>€{orderTotal}</strong>. Tap the button below to open the PayPal Rewarble listing on G2A, press the <strong>"+more"</strong> button under <em>Amount</em>, and pick any card value that covers your total. Then check out on G2A using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard, and many more).</>
-                  ) : (
-                    <>Tap the button below to open the PayPal Rewarble listing on G2A, press the <strong>"+more"</strong> button under <em>Amount</em>, and pick any card value that covers your cart total.</>
-                  )}
-                </p>
-                <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>
-                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Mastercard</span>
-                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Apple Pay</span>
-                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Google Pay</span>
-                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Paysafecard</span>
-                  <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">& more</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Payment instructions */}
+          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+              <h2 className="text-sm font-semibold text-foreground tracking-wide">Payment instructions</h2>
+            </div>
+            <div className="px-5 py-4 space-y-4">
+              <div className="flex gap-3">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">1</span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Purchase a PayPal Rewarble gift card on G2A</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    {orderTotalNum > 0 ? (
+                      <>Your cart total is <strong>€{orderTotal}</strong>. Tap the button below to open the PayPal Rewarble listing on G2A, press the <strong>"+more"</strong> button under <em>Amount</em>, and pick any card value that covers your total. Then check out on G2A using whichever method you prefer (Visa, Mastercard, Apple Pay, Google Pay, Paysafecard, and many more).</>
+                    ) : (
+                      <>Tap the button below to open the PayPal Rewarble listing on G2A, press the <strong>"+more"</strong> button under <em>Amount</em>, and pick any card value that covers your cart total.</>
+                    )}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
+                    <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Visa</span>
+                    <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Mastercard</span>
+                    <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Apple Pay</span>
+                    <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Google Pay</span>
+                    <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">Paysafecard</span>
+                    <span className="text-[11px] text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded">& more</span>
+                  </div>
+                  <div className="rounded-md border border-sky-500/30 bg-sky-50 dark:bg-sky-950/20 px-3 py-2 mt-2 flex items-start gap-2">
+                    <Shield className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
+                    <p className="text-[11px] font-medium text-sky-800 dark:text-sky-300 leading-relaxed">
+                      You do <strong>not</strong> need a PayPal account to complete this payment — G2A checkout accepts cards and many other methods.
+                    </p>
+                  </div>
+                  <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
+                    onClick={() => window.open(REWARBLE_G2A_URL, '_blank')}>
+                    <ExternalLink className="h-3 w-3 mr-1.5" />
+                    Open PayPal Rewarble on G2A
+                  </Button>
                 </div>
-                <div className="rounded-md border border-sky-500/30 bg-sky-50 dark:bg-sky-950/20 px-3 py-2 mt-2 flex items-start gap-2">
-                  <Shield className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
-                  <p className="text-[11px] font-medium text-sky-800 dark:text-sky-300 leading-relaxed">
-                    You do <strong>not</strong> need a PayPal account to complete this payment — G2A checkout accepts cards and many other methods.
+              </div>
+              <div className="flex gap-3">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">2</span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Get your Rewarble code by email</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    Right after purchase, G2A sends the PayPal Rewarble code straight to the email you used at G2A checkout — usually within a minute or two. Open the email, copy the 16-character code (letters and numbers — <strong>not</strong> the long order number that starts with <strong>#</strong>), come back to this page, and paste it into the field below.
                   </p>
                 </div>
-                <Button type="button" variant="outline" size="sm" className="mt-2 text-xs"
-                  onClick={() => window.open(REWARBLE_G2A_URL, '_blank')}>
-                  <ExternalLink className="h-3 w-3 mr-1.5" />
-                  Open PayPal Rewarble on G2A
-                </Button>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">2</span>
-              <div>
-                <p className="text-sm font-medium text-foreground">Get your Rewarble code by email</p>
-                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                  Right after purchase, G2A sends the PayPal Rewarble code straight to the email you used at G2A checkout — usually within a minute or two. Open the email, copy the 16-character code (letters and numbers — <strong>not</strong> the long order number that starts with <strong>#</strong>), come back to this page, and paste it into the field below.
+              <div className="flex gap-3">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Confirm your payment</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    Press the green "Confirm Payment" button at the bottom. Your code is sent to Rewarble for validation, your order is placed as pending, and you'll get a confirmation email. Funds are only released to me once your delivery has arrived safely.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-2 pt-3 border-t border-border">
+                <p className="text-xs text-muted-foreground">
+                  Confused or need help?{' '}
+                  <a href="https://www.tiktok.com/@fragranceprofs" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">
+                    Contact us on TikTok
+                  </a>
                 </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#7C3AED] text-white text-xs font-bold shrink-0 mt-0.5">3</span>
-              <div>
-                <p className="text-sm font-medium text-foreground">Confirm your payment</p>
-                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                  Press the green "Confirm Payment" button at the bottom. Your code is sent to Rewarble for validation, your order is placed as pending, and you'll get a confirmation email. Funds are only released to me once your delivery has arrived safely.
-                </p>
-              </div>
-            </div>
-            <div className="mt-2 pt-3 border-t border-border">
-              <p className="text-xs text-muted-foreground">
-                Confused or need help?{' '}
-                <a href="https://www.tiktok.com/@fragranceprofs" target="_blank" rel="noopener noreferrer" className="text-accent font-medium hover:underline">
-                  Contact us on TikTok
-                </a>
-              </p>
-              <div className="mt-3">
-                <PaymentMethodExplainer />
+                <div className="mt-3">
+                  <PaymentMethodExplainer />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Video Tutorial */}
-        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mb-6">
-          <div className="px-5 py-3.5 border-b border-border bg-muted/30">
-            <h2 className="text-sm font-semibold text-foreground tracking-wide">Watch how it works</h2>
-          </div>
-          <div className="p-0 relative">
-            <video
-              ref={videoRef}
-              controls
-              playsInline
-              preload="metadata"
-              className="w-full aspect-video bg-black"
-            >
-              <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
-            </video>
-            <button
-              type="button"
-              onClick={handleFullscreen}
-              aria-label="Fullscreen"
-              className="absolute top-2 right-2 z-10 rounded-md bg-black/60 hover:bg-black/80 text-white p-2 backdrop-blur-sm transition-colors"
-            >
-              <Maximize2 className="h-4 w-4" />
-            </button>
-          </div>
-          <div className="px-5 py-3 border-t border-border">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-            Step-by-step: open the G2A Rewarble page → tap "+more" and pick your amount → pay with your preferred method → receive your code by email → paste it here and confirm.
-            </p>
+          {/* Video Tutorial */}
+          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
+            <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+              <h2 className="text-sm font-semibold text-foreground tracking-wide">Watch how it works</h2>
+            </div>
+            <div className="p-0 relative flex-1">
+              <video
+                ref={videoRef}
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full h-full min-h-[200px] aspect-video bg-black"
+              >
+                <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
+              </video>
+              <button
+                type="button"
+                onClick={handleFullscreen}
+                aria-label="Fullscreen"
+                className="absolute top-2 right-2 z-10 rounded-md bg-black/60 hover:bg-black/80 text-white p-2 backdrop-blur-sm transition-colors"
+              >
+                <Maximize2 className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="px-5 py-3 border-t border-border">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+              Step-by-step: open the G2A Rewarble page → tap "+more" and pick your amount → pay with your preferred method → receive your code by email → paste it here and confirm.
+              </p>
+            </div>
           </div>
         </div>
 
