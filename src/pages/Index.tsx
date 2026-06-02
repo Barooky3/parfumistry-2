@@ -22,7 +22,10 @@ const Index = () => {
   const allBestsellers = getBestsellers();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const newestArrival = getProductById('bad-boy-cobalt');
+  const newArrivals = [
+    getProductById('bad-boy-cobalt'),
+    getProductById('le-beau-paradise-garden'),
+  ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = searchQuery.trim()
