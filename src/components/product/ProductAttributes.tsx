@@ -110,11 +110,11 @@ export const ProductAttributes = ({ productId }: Props) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-10 gap-y-7">
+      <div className="grid grid-cols-2 gap-x-4 md:gap-x-10 gap-y-7">
         {FIELDS.map((f) => {
           const value = editing ? draft[f.key] : attrs[f.key];
           return (
-            <div key={f.key}>
+            <div key={f.key} className="min-w-0">
               <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-3">
                 {f.label}
               </p>
@@ -145,10 +145,10 @@ export const ProductAttributes = ({ productId }: Props) => {
                   />
                 )}
               </div>
-              <div className="flex justify-between mt-3 text-[9px] md:text-[10px] tracking-[0.12em] md:tracking-[0.15em] uppercase text-foreground/60">
-                <span>{f.left}</span>
-                {f.center && <span className="text-accent/80">{f.center}</span>}
-                <span>{f.right}</span>
+              <div className="flex justify-between items-center gap-1 mt-3 text-[8px] md:text-[10px] leading-tight tracking-[0.06em] md:tracking-[0.15em] uppercase text-foreground/60 whitespace-nowrap">
+                <span className="truncate">{f.left}</span>
+                {f.center && <span className="text-accent/80 truncate">{f.center}</span>}
+                <span className="truncate">{f.right}</span>
               </div>
             </div>
           );
