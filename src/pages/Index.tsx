@@ -22,7 +22,10 @@ const Index = () => {
   const allBestsellers = getBestsellers();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const newestArrival = getProductById('bad-boy-cobalt');
+  const newArrivals = [
+    getProductById('bad-boy-cobalt'),
+    getProductById('le-beau-paradise-garden'),
+  ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = searchQuery.trim()
@@ -158,7 +161,7 @@ const Index = () => {
 
 
       {/* New Arrivals Section */}
-      {newestArrival && (
+      {newArrivals.length > 0 && (
         <section className="pt-6 md:pt-10 pb-6 md:pb-10 bg-background">
           <div className="container">
             <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
@@ -167,19 +170,21 @@ const Index = () => {
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-6 md:mb-8">
               New Arrivals
             </h2>
-            <div className="max-w-[220px] mx-auto">
-              <div className="relative bg-secondary/30 border border-border/25 rounded-xl p-4 md:p-5">
-                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                  <Sparkles className="h-2 w-2" />
-                  New
+            <div className="grid grid-cols-2 gap-3 md:gap-5 max-w-[460px] mx-auto">
+              {newArrivals.map((product) => (
+                <div key={product.id} className="relative bg-secondary/30 border border-border/25 rounded-xl p-3 md:p-4">
+                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                    <Sparkles className="h-2 w-2" />
+                    New
+                  </div>
+                  <ProductCard
+                    product={product}
+                    imageBgClassName="bg-[#E5DCD5]"
+                    hideCategoryBadge
+                    imageWrapperClassName="border-[3px] border-border/50 rounded-sm"
+                  />
                 </div>
-                <ProductCard
-                  product={newestArrival}
-                  imageBgClassName="bg-[#E5DCD5]"
-                  hideCategoryBadge
-                  imageWrapperClassName="border-[3px] border-border/50 rounded-sm"
-                />
-              </div>
+              ))}
             </div>
           </div>
         </section>
