@@ -18,12 +18,6 @@ import theMostWantedParfumLifestyle from '@/assets/products/the-most-wanted-parf
 import leBeauLeParfumLifestyle from '@/assets/products/le-beau-le-parfum-lifestyle.png';
 import yslYEdpLifestyle from '@/assets/products/ysl-y-edp-lifestyle.png';
 import myselfEdpLifestyle from '@/assets/products/myself-edp-lifestyle.png';
-import bornInRomaCoralFantasyLifestyle from '@/assets/products/born-in-roma-coral-fantasy-lifestyle.png';
-import bornInRomaGreenStravaganzaLifestyle from '@/assets/products/born-in-roma-green-stravaganza-lifestyle.png';
-import theMostWantedEdpIntenseLifestyle from '@/assets/products/the-most-wanted-edp-intense-lifestyle.png';
-import strongerWithYouAmberLifestyle from '@/assets/products/stronger-with-you-amber-lifestyle.png';
-import strongerWithYouParfumLifestyle from '@/assets/products/stronger-with-you-parfum-lifestyle.png';
-import strongerWithYouAbsolutelyLifestyle from '@/assets/products/stronger-with-you-absolutely-lifestyle.png';
 import leBeauParadiseGardenImage from '@/assets/products/le-beau-paradise-garden.png';
 import leBeauParadiseGardenNotes from '@/assets/products/le-beau-paradise-garden-notes.png';
 import leBeauParadiseGardenGallery from '@/assets/products/le-beau-paradise-garden-gallery.png';
@@ -35,6 +29,7 @@ import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-yo
 import strongerWithYouAmberGallery from '@/assets/products/stronger-with-you-amber-gallery.png.asset.json';
 import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-parfum-gallery.png.asset.json';
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
+
 
 // Bestseller IDs matching profparfums.store homepage order
 export const bestsellerIds = [
