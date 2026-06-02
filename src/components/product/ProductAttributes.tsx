@@ -110,7 +110,7 @@ export const ProductAttributes = ({ productId }: Props) => {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-x-6 md:gap-x-10 gap-y-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-10 gap-y-7">
         {FIELDS.map((f) => {
           const value = editing ? draft[f.key] : attrs[f.key];
           return (
@@ -145,7 +145,7 @@ export const ProductAttributes = ({ productId }: Props) => {
                   />
                 )}
               </div>
-              <div className="flex justify-between mt-3 text-[10px] tracking-[0.15em] uppercase text-foreground/60">
+              <div className="flex justify-between mt-3 text-[9px] md:text-[10px] tracking-[0.12em] md:tracking-[0.15em] uppercase text-foreground/60">
                 <span>{f.left}</span>
                 {f.center && <span className="text-accent/80">{f.center}</span>}
                 <span>{f.right}</span>
