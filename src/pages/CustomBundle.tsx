@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { getFragrances } from '@/data/products';
@@ -6,8 +6,10 @@ import { Product, ProductVariant } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { cn } from '@/lib/utils';
 import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAllProductNameOverrides } from '@/hooks/useProductName';
+
+const STORAGE_PREFIX = 'custom-bundle:';
 
 const MAX_ITEMS = 5;
 
@@ -63,10 +65,43 @@ const CustomBundle = () => {
   const [selections, setSelections] = useState<BundleSelection[]>([]);
   const [bundleName, setBundleName] = useState('');
   const [search, setSearch] = useState('');
+  const [editId, setEditId] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { addItem } = useCart();
   const nameOverrides = useAllProductNameOverrides();
   const displayName = (p: Product) => nameOverrides[p.id] || p.name;
+
+  // Rehydrate from a previously added custom bundle (cart link with ?edit=id)
+  useEffect(() => {
+    const id = searchParams.get('edit');
+    if (!id) return;
+    try {
+      const raw = localStorage.getItem(STORAGE_PREFIX + id);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        bundleName?: string;
+        items: Array<{ productId: string; ml: number }>;
+      };
+      const all = getFragrances();
+      const restored: BundleSelection[] = [];
+      saved.items.forEach((it) => {
+        const product = all.find((p) => p.id === it.productId);
+        if (!product || !product.variants) return;
+        const variant = product.variants.find((v) => v.ml === it.ml) || product.variants[0];
+        if (!variant) return;
+        restored.push({ product, variant, bundlePrice: getBundlePrice(variant.price) });
+      });
+      if (restored.length > 0) {
+        setSelections(restored);
+        setBundleName(saved.bundleName || '');
+        setEditId(id);
+      }
+    } catch {
+      // ignore
+    }
+  }, [searchParams]);
+
 
   const fragrances = useMemo(() => {
     const all = getFragrances().filter(p => p.variants && p.variants.length > 0);
@@ -101,8 +136,9 @@ const CustomBundle = () => {
   };
 
   const handleAddToCart = () => {
+    const id = editId || `custom-bundle-${Date.now()}`;
     const bundleProduct: Product = {
-      id: `custom-bundle-${Date.now()}`,
+      id,
       name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => displayName(s.product)).join(', ') + ')',
       brand: 'Parfumistry',
       price: totalPrice,
@@ -113,6 +149,17 @@ const CustomBundle = () => {
       inStock: true,
       isBundle: true,
     };
+    try {
+      localStorage.setItem(
+        STORAGE_PREFIX + id,
+        JSON.stringify({
+          bundleName,
+          items: selections.map((s) => ({ productId: s.product.id, ml: s.variant.ml })),
+        })
+      );
+    } catch {
+      // ignore quota errors
+    }
     addItem(bundleProduct, undefined, totalPrice);
     navigate('/');
   };

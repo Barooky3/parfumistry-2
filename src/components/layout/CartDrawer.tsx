@@ -40,9 +40,11 @@ export const CartDrawer = () => {
                 {items.map((item) => {
                   const cartKey = item.selectedMl ? `${item.product.id}-${item.selectedMl}` : item.product.id;
                   const displayPrice = item.selectedPrice || item.product.price;
+                  const isCustomBundle = item.product.id.startsWith('custom-bundle-');
+                  const productHref = isCustomBundle ? `/custom-bundle?edit=${item.product.id}` : `/product/${item.product.id}`;
                   return (
                     <div key={cartKey} className="flex gap-4">
-                      <Link to={`/product/${item.product.id}`} onClick={closeCart} className={cn("w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden", item.product.imagePadding && "p-1")}>
+                      <Link to={productHref} onClick={closeCart} className={cn("w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden", item.product.imagePadding && "p-1")}>
                         {item.product.bundleImages && item.product.bundleImages.length > 0 ? (
                           <div className="flex items-end justify-center gap-0.5 h-full p-1">
                             {item.product.bundleImages.map((img, imgIdx) => (
@@ -54,7 +56,7 @@ export const CartDrawer = () => {
                         )}
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <Link to={`/product/${item.product.id}`} onClick={closeCart} className="text-sm font-medium text-foreground hover:text-accent transition-colors line-clamp-2">
+                        <Link to={productHref} onClick={closeCart} className="text-sm font-medium text-foreground hover:text-accent transition-colors line-clamp-2">
                           {item.product.name}
                         </Link>
                         {item.selectedMl && <p className="text-xs text-muted-foreground mt-0.5">{item.selectedMl}ml</p>}
