@@ -6,8 +6,10 @@ import { Product, ProductVariant } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { cn } from '@/lib/utils';
 import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAllProductNameOverrides } from '@/hooks/useProductName';
+
+const STORAGE_PREFIX = 'custom-bundle:';
 
 const MAX_ITEMS = 5;
 
