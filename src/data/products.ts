@@ -22,6 +22,7 @@ import leBeauParadiseGardenImage from '@/assets/products/le-beau-paradise-garden
 import leBeauParadiseGardenNotes from '@/assets/products/le-beau-paradise-garden-notes.png';
 import leBeauParadiseGardenGallery from '@/assets/products/le-beau-paradise-garden-gallery.png';
 import aventusGallery from '@/assets/products/aventus-gallery.png.asset.json';
+import aventusAbsoluProduct from '@/assets/products/aventus-absolu-product.png.asset.json';
 import badBoyCobaltGallery from '@/assets/products/bad-boy-cobalt-gallery.png.asset.json';
 import bornInRomaCoralFantasyGallery from '@/assets/products/born-in-roma-coral-fantasy-gallery.png.asset.json';
 import bornInRomaGreenStravaganzaGallery from '@/assets/products/born-in-roma-green-stravaganza-gallery.png.asset.json';
