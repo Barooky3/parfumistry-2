@@ -79,9 +79,9 @@ const CustomBundle = () => {
     if (!search.trim()) return fragrances;
     const q = search.toLowerCase();
     return fragrances.filter(p =>
-      p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
+      displayName(p).toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
     );
-  }, [fragrances, search]);
+  }, [fragrances, search, nameOverrides]);
 
   const totalPrice = selections.reduce((sum, s) => sum + s.bundlePrice, 0);
   const totalOriginal = selections.reduce((sum, s) => sum + s.variant.price, 0);
