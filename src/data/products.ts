@@ -30,6 +30,8 @@ import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-yo
 import strongerWithYouAmberGallery from '@/assets/products/stronger-with-you-amber-gallery.png.asset.json';
 import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-parfum-gallery.png.asset.json';
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
+import eveningSweetheartGallery from '@/assets/products/evening-sweetheart-gallery.png.asset.json';
+import sleekAndCleanGallery from '@/assets/products/sleek-and-clean-gallery.png.asset.json';
 import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
 import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
@@ -71,6 +73,7 @@ export const products: Product[] = [
       { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
+    additionalImages: [eveningSweetheartGallery.url],
     variants: [
       { ml: 50, price: 64.99, inStock: true, label: 'All 50ml (75ml for JPG)' },
       { ml: 100, price: 86.99, inStock: true, label: 'All 100ml (125ml for JPG)' },
@@ -118,6 +121,7 @@ export const products: Product[] = [
       { name: 'Dior Sauvage Parfum', topNote: 'Bergamot', heartNote: 'Sandalwood', baseNote: 'Vanilla', accentColor: '#2C3E50' },
       { name: 'Armani Code', topNote: 'Bergamot', heartNote: 'Olive Blossom', baseNote: 'Tonka Bean', accentColor: '#2C2C2C' },
     ],
+    additionalImages: [sleekAndCleanGallery.url],
     variants: [
       { ml: 50, price: 60.99, inStock: true, label: 'All 50ml' },
       { ml: 100, price: 78.99, inStock: true, label: 'All 100ml' },
