@@ -334,7 +334,7 @@ export const products: Product[] = [
       'Sandalwood': '/scent-notes/sandalwood.png',
     },
     accentColor: '#1A1A2E',
-    image: 'https://profparfums.store/cdn/shop/files/creed-aventus-absolu-8001034.png?v=1768068489&width=1200',
+    image: aventusAbsoluProduct.url,
     additionalImages: [aventusAbsoluLifestyle],
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
