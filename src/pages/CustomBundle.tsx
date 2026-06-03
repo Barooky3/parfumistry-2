@@ -314,7 +314,7 @@ const CustomBundle = () => {
                     {product.brand}
                   </p>
                   <h3 className="text-sm font-medium text-foreground mb-1 line-clamp-1">
-                    {product.name}
+                    {displayName(product)}
                   </h3>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{variant.ml}ml</span>
