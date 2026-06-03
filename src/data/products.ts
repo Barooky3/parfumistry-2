@@ -1532,6 +1532,7 @@ export const products: Product[] = [
     },
     accentColor: '#C19A5B',
     image: 'https://profparfums.store/cdn/shop/files/xerjoff-naxos-3352432.png?v=1768068487&width=1200',
+    additionalImages: [naxosGallery.url],
     affiliateUrl: '/product/naxos',
     inStock: true,
     featured: true,
