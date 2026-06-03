@@ -1361,6 +1361,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=1200',
+    additionalImages: [libreGallery.url],
     affiliateUrl: 'https://litbuy.com/product/0/873128790811?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
