@@ -73,6 +73,7 @@ export const products: Product[] = [
       { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
       { name: 'Stronger With You Intensely', topNote: 'Pink Pepper', heartNote: 'Toffee', baseNote: 'Vanilla', accentColor: '#C0392B' },
     ],
+    additionalImages: [eveningSweetheartGallery.url],
     variants: [
       { ml: 50, price: 64.99, inStock: true, label: 'All 50ml (75ml for JPG)' },
       { ml: 100, price: 86.99, inStock: true, label: 'All 100ml (125ml for JPG)' },
