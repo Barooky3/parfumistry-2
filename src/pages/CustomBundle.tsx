@@ -7,6 +7,7 @@ import { useCart } from '@/contexts/CartContext';
 import { cn } from '@/lib/utils';
 import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAllProductNameOverrides } from '@/hooks/useProductName';
 
 const MAX_ITEMS = 5;
 
@@ -64,6 +65,8 @@ const CustomBundle = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const nameOverrides = useAllProductNameOverrides();
+  const displayName = (p: Product) => nameOverrides[p.id] || p.name;
 
   const fragrances = useMemo(() => {
     const all = getFragrances().filter(p => p.variants && p.variants.length > 0);
@@ -76,9 +79,9 @@ const CustomBundle = () => {
     if (!search.trim()) return fragrances;
     const q = search.toLowerCase();
     return fragrances.filter(p =>
-      p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
+      displayName(p).toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
     );
-  }, [fragrances, search]);
+  }, [fragrances, search, nameOverrides]);
 
   const totalPrice = selections.reduce((sum, s) => sum + s.bundlePrice, 0);
   const totalOriginal = selections.reduce((sum, s) => sum + s.variant.price, 0);
@@ -100,11 +103,11 @@ const CustomBundle = () => {
   const handleAddToCart = () => {
     const bundleProduct: Product = {
       id: `custom-bundle-${Date.now()}`,
-      name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => s.product.name).join(', ') + ')',
+      name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => displayName(s.product)).join(', ') + ')',
       brand: 'Parfumistry',
       price: totalPrice,
       category: 'bundle',
-      description: `Custom bundle: ${selections.map(s => `${s.product.name} ${s.variant.ml}ml`).join(', ')}`,
+      description: `Custom bundle: ${selections.map(s => `${displayName(s.product)} ${s.variant.ml}ml`).join(', ')}`,
       image: selections[0]?.product.image || '',
       affiliateUrl: '',
       inStock: true,
@@ -218,7 +221,7 @@ const CustomBundle = () => {
                     exit={{ opacity: 0, scale: 0.8 }}
                     className="flex items-center gap-1.5 bg-background text-foreground text-xs px-3 py-1.5 rounded-full border border-border shadow-sm"
                   >
-                    <span className="max-w-[120px] truncate">{sel.product.name}</span>
+                    <span className="max-w-[120px] truncate">{displayName(sel.product)}</span>
                     <span className="text-muted-foreground">({sel.variant.ml}ml)</span>
                     <button
                       onClick={() => handleRemove(i)}
@@ -276,7 +279,7 @@ const CustomBundle = () => {
                 <div className="aspect-square bg-secondary flex items-center justify-center p-4 relative overflow-hidden">
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={displayName(product)}
                     className={cn(
                       "w-full h-full object-contain transition-transform duration-300",
                       !isDisabled && "group-hover:scale-105",
@@ -311,7 +314,7 @@ const CustomBundle = () => {
                     {product.brand}
                   </p>
                   <h3 className="text-sm font-medium text-foreground mb-1 line-clamp-1">
-                    {product.name}
+                    {displayName(product)}
                   </h3>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{variant.ml}ml</span>

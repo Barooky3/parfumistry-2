@@ -56,6 +56,19 @@ export const useProductNameOverride = (productId: string): string | null => {
   return cache[productId] || null;
 };
 
+export const useAllProductNameOverrides = (): Record<string, string> => {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!fetchPromise) fetchAllProductNameOverrides();
+    const listener = () => setTick((t) => t + 1);
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }, []);
+  return cache;
+};
+
 export const useDisplayName = (productId: string, fallback: string): string => {
   const override = useProductNameOverride(productId);
   return override || fallback;
