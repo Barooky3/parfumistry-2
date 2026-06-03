@@ -136,8 +136,9 @@ const CustomBundle = () => {
   };
 
   const handleAddToCart = () => {
+    const id = editId || `custom-bundle-${Date.now()}`;
     const bundleProduct: Product = {
-      id: `custom-bundle-${Date.now()}`,
+      id,
       name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => displayName(s.product)).join(', ') + ')',
       brand: 'Parfumistry',
       price: totalPrice,
@@ -148,6 +149,17 @@ const CustomBundle = () => {
       inStock: true,
       isBundle: true,
     };
+    try {
+      localStorage.setItem(
+        STORAGE_PREFIX + id,
+        JSON.stringify({
+          bundleName,
+          items: selections.map((s) => ({ productId: s.product.id, ml: s.variant.ml })),
+        })
+      );
+    } catch {
+      // ignore quota errors
+    }
     addItem(bundleProduct, undefined, totalPrice);
     navigate('/');
   };
