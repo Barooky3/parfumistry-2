@@ -135,12 +135,7 @@ export const products: Product[] = [
     price: 40.99,
     category: 'bundle',
     description: 'The ultimate Jean Paul Gaultier trio – three iconic scents that cover every mood and occasion.',
-    image: '',
-    bundleImages: [
-      '/__l5e/assets-v1/e4dff361-e02c-43a6-9a18-c0876933c5cc/f5db0f17-85a7-4892-bb9e-f7be8d91b966-converted-1.png',
-      '/__l5e/assets-v1/817ab087-4466-497e-a09d-2eafb7b02489/jean-paul-gaultier-le-male-le-parfum-9203208.png',
-      '/__l5e/assets-v1/807ffe41-fb70-4b63-9421-7c3d4f0cb6b1/cd9d450b-b45d-4ab9-9750-9bd6ad00db2f-png-only-1.png',
-    ],
+    image: jpgBundleGallery.url,
     affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
     isBundle: true,
