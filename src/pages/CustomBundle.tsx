@@ -103,11 +103,11 @@ const CustomBundle = () => {
   const handleAddToCart = () => {
     const bundleProduct: Product = {
       id: `custom-bundle-${Date.now()}`,
-      name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => s.product.name).join(', ') + ')',
+      name: (bundleName.trim() || 'Custom Bundle') + ' (' + selections.map(s => displayName(s.product)).join(', ') + ')',
       brand: 'Parfumistry',
       price: totalPrice,
       category: 'bundle',
-      description: `Custom bundle: ${selections.map(s => `${s.product.name} ${s.variant.ml}ml`).join(', ')}`,
+      description: `Custom bundle: ${selections.map(s => `${displayName(s.product)} ${s.variant.ml}ml`).join(', ')}`,
       image: selections[0]?.product.image || '',
       affiliateUrl: '',
       inStock: true,
