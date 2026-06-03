@@ -65,6 +65,8 @@ const CustomBundle = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const nameOverrides = useAllProductNameOverrides();
+  const displayName = (p: Product) => nameOverrides[p.id] || p.name;
 
   const fragrances = useMemo(() => {
     const all = getFragrances().filter(p => p.variants && p.variants.length > 0);
