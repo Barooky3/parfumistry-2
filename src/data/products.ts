@@ -30,6 +30,8 @@ import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-yo
 import strongerWithYouAmberGallery from '@/assets/products/stronger-with-you-amber-gallery.png.asset.json';
 import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-parfum-gallery.png.asset.json';
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
+import eveningSweetheartGallery from '@/assets/products/evening-sweetheart-gallery.png.asset.json';
+import sleekAndCleanGallery from '@/assets/products/sleek-and-clean-gallery.png.asset.json';
 import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
 import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
