@@ -1807,6 +1807,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8C8A0',
     image: 'https://profparfums.store/cdn/shop/files/image_f5380ed8-72f9-4429-ae98-588f5395b6ba.png?v=1768493348&width=1200',
+    additionalImages: [symphonyGallery.url],
     affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
     inStock: false,
     variants: [
