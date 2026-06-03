@@ -7,6 +7,7 @@ import { useCart } from '@/contexts/CartContext';
 import { cn } from '@/lib/utils';
 import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAllProductNameOverrides } from '@/hooks/useProductName';
 
 const MAX_ITEMS = 5;
 
