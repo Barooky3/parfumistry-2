@@ -121,6 +121,7 @@ export const products: Product[] = [
       { name: 'Dior Sauvage Parfum', topNote: 'Bergamot', heartNote: 'Sandalwood', baseNote: 'Vanilla', accentColor: '#2C3E50' },
       { name: 'Armani Code', topNote: 'Bergamot', heartNote: 'Olive Blossom', baseNote: 'Tonka Bean', accentColor: '#2C2C2C' },
     ],
+    additionalImages: [sleekAndCleanGallery.url],
     variants: [
       { ml: 50, price: 60.99, inStock: true, label: 'All 50ml' },
       { ml: 100, price: 78.99, inStock: true, label: 'All 100ml' },
