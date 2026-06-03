@@ -29,6 +29,10 @@ import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-yo
 import strongerWithYouAmberGallery from '@/assets/products/stronger-with-you-amber-gallery.png.asset.json';
 import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-parfum-gallery.png.asset.json';
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
+import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
+import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
+import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
+import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -1229,6 +1233,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=1200',
+    additionalImages: [blackOpiumGallery.url],
     affiliateUrl: '/product/black-opium',
     inStock: true,
     variants: [
@@ -1356,6 +1361,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-libre-8359553.png?v=1768068486&width=1200',
+    additionalImages: [libreGallery.url],
     affiliateUrl: 'https://litbuy.com/product/0/873128790811?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
@@ -1526,6 +1532,7 @@ export const products: Product[] = [
     },
     accentColor: '#C19A5B',
     image: 'https://profparfums.store/cdn/shop/files/xerjoff-naxos-3352432.png?v=1768068487&width=1200',
+    additionalImages: [naxosGallery.url],
     affiliateUrl: '/product/naxos',
     inStock: true,
     featured: true,
@@ -1800,6 +1807,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8C8A0',
     image: 'https://profparfums.store/cdn/shop/files/image_f5380ed8-72f9-4429-ae98-588f5395b6ba.png?v=1768493348&width=1200',
+    additionalImages: [symphonyGallery.url],
     affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
     inStock: false,
     variants: [
