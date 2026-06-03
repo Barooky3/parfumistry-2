@@ -189,7 +189,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             )}
 
-            <ProductAttributes productId={product.id} />
+            {!product.isBundle && <ProductAttributes productId={product.id} />}
           </motion.div>
 
           {/* Info */}
