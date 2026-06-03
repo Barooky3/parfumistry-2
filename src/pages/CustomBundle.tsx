@@ -279,7 +279,7 @@ const CustomBundle = () => {
                 <div className="aspect-square bg-secondary flex items-center justify-center p-4 relative overflow-hidden">
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={displayName(product)}
                     className={cn(
                       "w-full h-full object-contain transition-transform duration-300",
                       !isDisabled && "group-hover:scale-105",
