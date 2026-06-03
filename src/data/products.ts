@@ -1233,6 +1233,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: 'https://profparfums.store/cdn/shop/files/ysl-black-opium-3914424.png?v=1768068488&width=1200',
+    additionalImages: [blackOpiumGallery.url],
     affiliateUrl: '/product/black-opium',
     inStock: true,
     variants: [
