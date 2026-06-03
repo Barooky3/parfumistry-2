@@ -29,6 +29,10 @@ import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-yo
 import strongerWithYouAmberGallery from '@/assets/products/stronger-with-you-amber-gallery.png.asset.json';
 import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-parfum-gallery.png.asset.json';
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
+import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
+import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
+import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
+import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
