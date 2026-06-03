@@ -221,7 +221,7 @@ const CustomBundle = () => {
                     exit={{ opacity: 0, scale: 0.8 }}
                     className="flex items-center gap-1.5 bg-background text-foreground text-xs px-3 py-1.5 rounded-full border border-border shadow-sm"
                   >
-                    <span className="max-w-[120px] truncate">{sel.product.name}</span>
+                    <span className="max-w-[120px] truncate">{displayName(sel.product)}</span>
                     <span className="text-muted-foreground">({sel.variant.ml}ml)</span>
                     <button
                       onClick={() => handleRemove(i)}
