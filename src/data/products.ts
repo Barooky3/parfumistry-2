@@ -36,6 +36,7 @@ import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
 import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
 import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
+import lvAfternoonSwimImage from '@/assets/products/lv-afternoon-swim.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
