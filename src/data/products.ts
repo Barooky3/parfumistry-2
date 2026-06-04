@@ -36,6 +36,7 @@ import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
 import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
 import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
+import lvAfternoonSwimImage from '@/assets/products/lv-afternoon-swim.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -845,6 +846,35 @@ export const products: Product[] = [
     image: '/__l5e/assets-v1/e7eb0188-1275-4fe3-a298-e27d81313aad/product-4-matched-1.png',
     additionalImages: [imaginationLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 100, price: 60.99, inStock: true },
+      { ml: 200, price: 74.99, inStock: true },
+    ],
+  },
+  {
+    id: 'lv-afternoon-swim',
+    name: 'Afternoon Swim',
+    brand: 'Louis Vuitton',
+    price: 60.99,
+    category: 'unisex',
+    description: 'Louis Vuitton Afternoon Swim is a vibrant, sun-drenched citrus burst — juicy Sicilian and Mandarin oranges sparkle over bergamot, warmed by a touch of spicy ginger and rounded with creamy ambergris. A fresh, joyful scent that feels like a sunlit dive into the Mediterranean.',
+    scentNotes: {
+      top: ['Mandarin Orange', 'Sicilian Orange', 'Bergamot'],
+      heart: ['Ginger'],
+      base: ['Ambergris'],
+    },
+    scentNoteImages: {
+      'Mandarin Orange': '/scent-notes/mandarin.png',
+      'Sicilian Orange': '/scent-notes/blood-orange.png',
+      'Bergamot': '/scent-notes/bergamot.png',
+      'Ginger': '/scent-notes/ginger.png',
+      'Ambergris': '/scent-notes/ambergris.png',
+    },
+    accentColor: '#F2A93A',
+    image: lvAfternoonSwimImage.url,
+    affiliateUrl: '/product/lv-afternoon-swim',
     inStock: true,
     featured: true,
     variants: [

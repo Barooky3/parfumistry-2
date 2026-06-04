@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import afternoonSwimImg from '@/assets/products/poll-afternoon-swim.png';
-import godOfFireImg from '@/assets/products/poll-god-of-fire.png';
-import leBeauParadiseImg from '@/assets/products/le-beau-paradise-garden.png';
+import ombreNomadeImg from '@/assets/products/lv-ombre-nomade.png.asset.json';
+import torino21Img from '@/assets/products/xerjoff-torino21.png.asset.json';
+import afternoonSwimImg from '@/assets/products/lv-afternoon-swim.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-02';
+const POLL_ID = 'next-arrival-2026-06';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'lv-afternoon-swim',
-    label: 'LV Afternoon Swim',
-    image: afternoonSwimImg,
+    key: 'xerjoff-torino21',
+    label: 'Xerjoff Torino 21',
+    image: torino21Img.url,
   },
   {
-    key: 'god-of-fire',
-    label: 'SHL God of Fire',
-    image: godOfFireImg,
+    key: 'lv-ombre-nomade',
+    label: 'LV Ombre Nomade',
+    image: ombreNomadeImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'JPG Le Beau Paradise Garden',
-  image: leBeauParadiseImg,
+  name: 'LV Afternoon Swim',
+  image: afternoonSwimImg.url,
 };
 
 function getFingerprint(): string {
