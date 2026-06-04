@@ -37,6 +37,7 @@ import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
 import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
 import lvAfternoonSwimImage from '@/assets/products/lv-afternoon-swim.png.asset.json';
+import lvAfternoonSwimGallery from '@/assets/products/lv-afternoon-swim-gallery.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -874,6 +875,7 @@ export const products: Product[] = [
     },
     accentColor: '#F2A93A',
     image: lvAfternoonSwimImage.url,
+    additionalImages: [lvAfternoonSwimGallery.url],
     affiliateUrl: '/product/lv-afternoon-swim',
     inStock: true,
     featured: true,
