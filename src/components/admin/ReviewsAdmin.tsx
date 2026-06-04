@@ -143,7 +143,6 @@ const ReviewsAdmin = () => {
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                 <span className="text-foreground/80">{r.customer_name}</span>
-                {r.customer_email && <span>· {r.customer_email}</span>}
               </div>
               <div className="flex gap-2">
                 {r.status === 'pending' && (
