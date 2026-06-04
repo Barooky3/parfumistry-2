@@ -284,6 +284,33 @@ export type Database = {
         }
         Relationships: []
       }
+      product_price_overrides: {
+        Row: {
+          base_price: number | null
+          id: string
+          original_price: number | null
+          product_id: string
+          updated_at: string
+          variants: Json | null
+        }
+        Insert: {
+          base_price?: number | null
+          id?: string
+          original_price?: number | null
+          product_id: string
+          updated_at?: string
+          variants?: Json | null
+        }
+        Update: {
+          base_price?: number | null
+          id?: string
+          original_price?: number | null
+          product_id?: string
+          updated_at?: string
+          variants?: Json | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
