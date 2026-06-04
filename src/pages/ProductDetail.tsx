@@ -17,6 +17,8 @@ import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPad
 import { useDisplayName } from '@/hooks/useProductName';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 import { NameEditor } from '@/components/admin/NameEditor';
+import { PriceEditor } from '@/components/admin/PriceEditor';
+import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +33,10 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
 
-  const product = id ? getProductById(id) : undefined;
+  const rawProduct = id ? getProductById(id) : undefined;
+  // Subscribe to price overrides so the page re-renders when admin saves new prices
+  useProductPriceOverride(id || '');
+  const product = rawProduct ? applyPriceOverride(rawProduct) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const displayName = useDisplayName(id || '', product?.name || '');
   const relatedProducts = (() => {
@@ -243,7 +248,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
 
             {/* Price */}
-            <div className="flex items-baseline gap-3 mb-4">
+            <div className="flex items-baseline gap-3 mb-4 flex-wrap">
               <span className="text-xl md:text-2xl font-semibold text-foreground">
                 {formatPrice(displayPrice)}
               </span>
@@ -252,6 +257,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   {formatPrice(displayOriginalPrice)}
                 </span>
               )}
+              {isAdmin && <PriceEditor product={product} />}
             </div>
 
 
