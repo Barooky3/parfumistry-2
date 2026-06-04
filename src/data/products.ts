@@ -140,6 +140,7 @@ export const products: Product[] = [
       '/__l5e/assets-v1/817ab087-4466-497e-a09d-2eafb7b02489/jean-paul-gaultier-le-male-le-parfum-9203208.png',
       '/__l5e/assets-v1/807ffe41-fb70-4b63-9421-7c3d4f0cb6b1/cd9d450b-b45d-4ab9-9750-9bd6ad00db2f-png-only-1.png',
     ],
+    additionalImages: ['/__l5e/assets-v1/20238307-86b4-4a70-87ed-e70789f5f2c9/jpg-collection-gallery.png'],
     affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
     inStock: true,
     isBundle: true,
