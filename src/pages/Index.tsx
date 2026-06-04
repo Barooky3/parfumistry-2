@@ -25,6 +25,7 @@ const Index = () => {
   const newArrivals = [
     getProductById('bad-boy-cobalt'),
     getProductById('le-beau-paradise-garden'),
+    getProductById('lv-afternoon-swim'),
   ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
 
