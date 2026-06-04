@@ -171,7 +171,7 @@ const Index = () => {
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground text-center mb-6 md:mb-8">
               New Arrivals
             </h2>
-            <div className="grid grid-cols-2 gap-3 md:gap-5 max-w-[460px] mx-auto">
+            <div className="grid grid-cols-3 gap-2 md:gap-4 max-w-[680px] mx-auto">
               {newArrivals.map((product) => (
                 <div key={product.id} className="relative bg-secondary/30 border border-border/25 rounded-xl p-3 md:p-4">
                   <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
