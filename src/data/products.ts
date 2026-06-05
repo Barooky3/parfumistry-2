@@ -185,6 +185,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B6914',
     image: '/__l5e/assets-v1/cce76f80-193d-4fc3-9d9a-27f79e49b78a/mancera-amore-caffe-1050170.png',
+    additionalImages: [amoreCaffeGallery.url],
     affiliateUrl: '/product/amore-caffe',
     inStock: false,
     featured: true,
