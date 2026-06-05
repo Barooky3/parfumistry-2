@@ -227,8 +227,12 @@ serve(async (req) => {
 
     const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
     const checkoutRef = idempotencyKey ? refPrefix + "-idem-" + idempotencyKey : refPrefix + "-" + Date.now();
-    // Privacy: do NOT store full address. Only persist country + shipping method.
-    const minimalShipping = {
+    // Store full shipping address as entered at checkout
+    const fullShipping = {
+      line1: shippingAddress?.line1 || null,
+      line2: (shippingAddress as any)?.line2 || null,
+      city: shippingAddress?.city || null,
+      postalCode: shippingAddress?.postalCode || null,
       country: shippingAddress?.country || null,
       shippingMethod: (shippingAddress as any)?.shippingMethod || null,
     };
@@ -236,7 +240,7 @@ serve(async (req) => {
       checkout_reference: checkoutRef,
       customer_email: customerEmail,
       customer_name: customerName || "Valued Customer",
-      shipping_address: minimalShipping,
+      shipping_address: fullShipping,
       order_items: normalizedItems,
       total_amount: parseFloat(calculatedTotal),
       status: "pending_approval",
