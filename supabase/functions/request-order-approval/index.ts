@@ -49,7 +49,7 @@ function buildApprovalEmailHtml(
   customerEmail: string,
   items: OrderItem[],
   totalAmount: string,
-  shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
+  shippingAddress: { line1?: string; line2?: string; city?: string; postalCode?: string; country?: string },
   baseUrl: string,
   paymentMethod?: string,
   giftCardCode?: string,
