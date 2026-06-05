@@ -49,7 +49,7 @@ function buildApprovalEmailHtml(
   customerEmail: string,
   items: OrderItem[],
   totalAmount: string,
-  shippingAddress: { line1?: string; city?: string; postalCode?: string; country?: string },
+  shippingAddress: { line1?: string; line2?: string; city?: string; postalCode?: string; country?: string },
   baseUrl: string,
   paymentMethod?: string,
   giftCardCode?: string,
@@ -67,7 +67,13 @@ function buildApprovalEmailHtml(
     </td></tr>`;
   }).join("");
 
-  const addressText = shippingAddress?.country || "N/A";
+  const addressLines = [
+    shippingAddress?.line1,
+    shippingAddress?.line2,
+    [shippingAddress?.postalCode, shippingAddress?.city].filter(Boolean).join(" "),
+    shippingAddress?.country,
+  ].filter(Boolean);
+  const addressHtml = addressLines.length > 0 ? addressLines.map((l) => escapeHtml(String(l))).join("<br/>") : "N/A";
 
   const orderNumRow = orderNumber
     ? `<tr><td style="padding:4px 0;color:#999;width:120px;">Order #:</td><td style="padding:4px 0;"><strong>#${orderNumber}</strong></td></tr>`
@@ -85,7 +91,7 @@ function buildApprovalEmailHtml(
       ${orderNumRow}
       <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(customerName)}</strong></td></tr>
       <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(customerEmail)}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Country:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;vertical-align:top;">Address:</td><td style="padding:4px 0;line-height:1.5;">${addressHtml}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Total:</td><td style="padding:4px 0;"><strong>€${totalAmount}</strong></td></tr>
     </table>
     <div style="text-align:center;margin-top:24px;margin-bottom:16px;">
@@ -221,8 +227,12 @@ serve(async (req) => {
 
     const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
     const checkoutRef = idempotencyKey ? refPrefix + "-idem-" + idempotencyKey : refPrefix + "-" + Date.now();
-    // Privacy: do NOT store full address. Only persist country + shipping method.
-    const minimalShipping = {
+    // Store full shipping address as entered at checkout
+    const fullShipping = {
+      line1: shippingAddress?.line1 || null,
+      line2: (shippingAddress as any)?.line2 || null,
+      city: shippingAddress?.city || null,
+      postalCode: shippingAddress?.postalCode || null,
       country: shippingAddress?.country || null,
       shippingMethod: (shippingAddress as any)?.shippingMethod || null,
     };
@@ -230,7 +240,7 @@ serve(async (req) => {
       checkout_reference: checkoutRef,
       customer_email: customerEmail,
       customer_name: customerName || "Valued Customer",
-      shipping_address: minimalShipping,
+      shipping_address: fullShipping,
       order_items: normalizedItems,
       total_amount: parseFloat(calculatedTotal),
       status: "pending_approval",
@@ -255,7 +265,7 @@ serve(async (req) => {
       customerEmail,
       normalizedItems,
       calculatedTotal,
-      { country: shippingAddress?.country },
+      shippingAddress || {},
       supabaseUrl,
       paymentMethod,
       giftCardCode,
