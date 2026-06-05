@@ -1439,6 +1439,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4548E',
     image: '/__l5e/assets-v1/4d69057c-ca6d-4e67-b05b-4b0de852cb3e/yves-saint-laurent-mon-paris-7356496.png',
+    additionalImages: [monParisGallery.url],
     affiliateUrl: 'https://litbuy.com/product/0/762497810755?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
