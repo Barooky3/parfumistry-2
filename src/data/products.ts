@@ -38,6 +38,9 @@ import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json'
 import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
 import lvAfternoonSwimImage from '@/assets/products/lv-afternoon-swim.png.asset.json';
 import lvAfternoonSwimGallery from '@/assets/products/lv-afternoon-swim-gallery.webp.asset.json';
+import amoreCaffeGallery from '@/assets/products/amore-caffe-gallery.png.asset.json';
+import paradoxeGallery from '@/assets/products/paradoxe-gallery.png.asset.json';
+import monParisGallery from '@/assets/products/mon-paris-gallery.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -182,6 +185,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B6914',
     image: '/__l5e/assets-v1/cce76f80-193d-4fc3-9d9a-27f79e49b78a/mancera-amore-caffe-1050170.png',
+    additionalImages: [amoreCaffeGallery.url],
     affiliateUrl: '/product/amore-caffe',
     inStock: false,
     featured: true,
@@ -755,6 +759,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8A090',
     image: '/images/scent-notes/prada-paradoxe.png',
+    additionalImages: [paradoxeGallery.url],
     imagePadding: 'p-[0.8rem] md:p-[1.8rem]',
     affiliateUrl: 'https://litbuy.com/product/0/953992936772?inviteCode=4W9SCOLDU',
     inStock: true,
@@ -1434,6 +1439,7 @@ export const products: Product[] = [
     },
     accentColor: '#D4548E',
     image: '/__l5e/assets-v1/4d69057c-ca6d-4e67-b05b-4b0de852cb3e/yves-saint-laurent-mon-paris-7356496.png',
+    additionalImages: [monParisGallery.url],
     affiliateUrl: 'https://litbuy.com/product/0/762497810755?inviteCode=4W9SCOLDU',
     inStock: true,
     variants: [
