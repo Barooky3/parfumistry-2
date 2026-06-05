@@ -56,6 +56,8 @@ import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.ass
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
 import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asset.json';
 import aoudVanilleGalleryAi from '@/assets/products/aoud-vanille-gallery-ai.png.asset.json';
+import blackOrchidGalleryAi from '@/assets/products/black-orchid-gallery-ai.png.asset.json';
+import pacificChillGalleryAi from '@/assets/products/pacific-chill-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -428,6 +430,7 @@ export const products: Product[] = [
     accentColor: '#4A1942',
     image: '/__l5e/assets-v1/341a3bca-4092-4dd4-9792-87b2f96f31dd/tom-ford-black-orchid-1912271.png',
     affiliateUrl: '/product/black-orchid',
+    additionalImages: [blackOrchidGalleryAi.url],
     inStock: true,
     variants: [
       { ml: 50, price: 28.99, inStock: true },
@@ -1632,6 +1635,7 @@ export const products: Product[] = [
     accentColor: '#87CEEB',
     image: '/__l5e/assets-v1/23f86d1b-1383-4340-ae4e-f7a816687c2c/image-6261aa49-3221-4a96-91e9-c8d120107fc0.png',
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
+    additionalImages: [pacificChillGalleryAi.url],
     inStock: true,
     variants: [
       { ml: 100, price: 64.99, inStock: true },
