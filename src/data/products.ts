@@ -41,6 +41,7 @@ import lvAfternoonSwimGallery from '@/assets/products/lv-afternoon-swim-gallery.
 import amoreCaffeGallery from '@/assets/products/amore-caffe-gallery.png.asset.json';
 import paradoxeGallery from '@/assets/products/paradoxe-gallery.png.asset.json';
 import monParisGallery from '@/assets/products/mon-paris-gallery.png.asset.json';
+import paradigmeGallery from '@/assets/products/paradigme-gallery.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -1636,6 +1637,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C2C2C',
     image: '/__l5e/assets-v1/42571a45-9f45-45a6-8078-f2ab827ff525/prada-resized-uniform-54c5598a-9a6e-47d7-8803-0a385e54b9c6.png',
+    additionalImages: [paradigmeGallery.url],
     affiliateUrl: '/product/paradigme',
     inStock: true,
     variants: [
