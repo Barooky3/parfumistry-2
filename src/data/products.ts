@@ -188,11 +188,11 @@ export const products: Product[] = [
     image: '/__l5e/assets-v1/cce76f80-193d-4fc3-9d9a-27f79e49b78a/mancera-amore-caffe-1050170.png',
     additionalImages: [amoreCaffeGallery.url],
     affiliateUrl: '/product/amore-caffe',
-    inStock: false,
+    inStock: true,
     featured: true,
     variants: [
-      { ml: 60, price: 26.99, inStock: false },
-      { ml: 120, price: 34.99, inStock: false },
+      { ml: 60, price: 26.99, inStock: true },
+      { ml: 120, price: 34.99, inStock: true },
     ],
   },
   {
