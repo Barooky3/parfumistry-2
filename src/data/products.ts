@@ -759,6 +759,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8A090',
     image: '/images/scent-notes/prada-paradoxe.png',
+    additionalImages: [paradoxeGallery.url],
     imagePadding: 'p-[0.8rem] md:p-[1.8rem]',
     affiliateUrl: 'https://litbuy.com/product/0/953992936772?inviteCode=4W9SCOLDU',
     inStock: true,
