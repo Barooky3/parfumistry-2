@@ -49,6 +49,9 @@ import khamrahParfumGalleryAi from '@/assets/products/khamrah-parfum-gallery-ai.
 import erbaPuraGalleryAi from '@/assets/products/erba-pura-gallery-ai.png.asset.json';
 import phantomParfumGalleryAi from '@/assets/products/phantom-parfum-gallery-ai.png.asset.json';
 import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.json';
+import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
+import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
+import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -394,6 +397,7 @@ export const products: Product[] = [
       { ml: 50, price: 22.99, inStock: true },
       { ml: 100, price: 28.99, inStock: true },
     ],
+    additionalImages: [oneMillionElixirGalleryAi.url],
   },
   {
     id: 'black-orchid',
@@ -835,6 +839,7 @@ export const products: Product[] = [
       { ml: 50, price: 31.99, inStock: true },
       { ml: 100, price: 41.99, inStock: true },
     ],
+    additionalImages: [diorHommeIntenseGalleryAi.url],
   },
   {
     id: 'imagination',
@@ -1200,6 +1205,7 @@ export const products: Product[] = [
       { ml: 50, price: 23.99, inStock: true },
       { ml: 100, price: 31.99, inStock: true },
     ],
+    additionalImages: [oneMillionParfumGalleryAi.url],
   },
   {
     id: 'le-male-elixir',
