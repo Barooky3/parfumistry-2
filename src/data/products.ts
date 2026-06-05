@@ -52,6 +52,10 @@ import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.
 import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
 import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
+import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
+import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
+import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asset.json';
+import aoudVanilleGalleryAi from '@/assets/products/aoud-vanille-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -290,6 +294,7 @@ export const products: Product[] = [
     accentColor: '#C9A050',
     image: '/__l5e/assets-v1/bc5d8e1e-c0a8-4bdb-8448-8eda567cdb1e/mancera-aoud-vanille-5716076.png',
     affiliateUrl: '/product/aoud-vanille',
+    additionalImages: [aoudVanilleGalleryAi.url],
     inStock: true,
     variants: [
       { ml: 60, price: 26.99, inStock: true },
@@ -805,6 +810,7 @@ export const products: Product[] = [
     accentColor: '#5DADE2',
     image: '/__l5e/assets-v1/b4bdc85c-a2de-42ef-89f8-558c8ac133f8/mancera-french-riviera-9959440.png',
     affiliateUrl: '/product/french-riviera',
+    additionalImages: [frenchRivieraGalleryAi.url],
     inStock: false,
     variants: [
       { ml: 60, price: 27.99, inStock: false },
@@ -1357,6 +1363,7 @@ export const products: Product[] = [
     accentColor: '#7EC8E3',
     image: '/__l5e/assets-v1/8e6807e3-a30c-4716-82ac-c095bdc5f765/jpg-le-beau-edt-bg-removed-1-1.png',
     affiliateUrl: '/product/le-beau-edt',
+    additionalImages: [leBeauEdtGalleryAi.url],
     inStock: false,
     variants: [
       { ml: 75, price: 21.99, inStock: false },
@@ -1932,6 +1939,7 @@ export const products: Product[] = [
     accentColor: '#8B4513',
     image: '/__l5e/assets-v1/7083dd8c-acbb-4bdc-a29d-ec688b0c1507/mancera-tonka-cola-5797937.png',
     affiliateUrl: '/product/tonka-cola',
+    additionalImages: [tonkaColaGalleryAi.url],
     inStock: true,
     variants: [
       { ml: 60, price: 25.99, inStock: true },
