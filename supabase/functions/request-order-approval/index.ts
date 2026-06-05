@@ -67,7 +67,13 @@ function buildApprovalEmailHtml(
     </td></tr>`;
   }).join("");
 
-  const addressText = shippingAddress?.country || "N/A";
+  const addressLines = [
+    shippingAddress?.line1,
+    shippingAddress?.line2,
+    [shippingAddress?.postalCode, shippingAddress?.city].filter(Boolean).join(" "),
+    shippingAddress?.country,
+  ].filter(Boolean);
+  const addressHtml = addressLines.length > 0 ? addressLines.map((l) => escapeHtml(String(l))).join("<br/>") : "N/A";
 
   const orderNumRow = orderNumber
     ? `<tr><td style="padding:4px 0;color:#999;width:120px;">Order #:</td><td style="padding:4px 0;"><strong>#${orderNumber}</strong></td></tr>`
@@ -85,7 +91,7 @@ function buildApprovalEmailHtml(
       ${orderNumRow}
       <tr><td style="padding:4px 0;color:#999;width:120px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(customerName)}</strong></td></tr>
       <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(customerEmail)}</td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Country:</td><td style="padding:4px 0;">${escapeHtml(addressText)}</td></tr>
+      <tr><td style="padding:4px 0;color:#999;vertical-align:top;">Address:</td><td style="padding:4px 0;line-height:1.5;">${addressHtml}</td></tr>
       <tr><td style="padding:4px 0;color:#999;">Total:</td><td style="padding:4px 0;"><strong>€${totalAmount}</strong></td></tr>
     </table>
     <div style="text-align:center;margin-top:24px;margin-bottom:16px;">
