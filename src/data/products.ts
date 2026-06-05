@@ -1245,12 +1245,12 @@ export const products: Product[] = [
     image: '/__l5e/assets-v1/353a8f1d-d35b-4a1b-89ae-3b420556b2dd/product-3-matched-1.png',
     additionalImages: [theMostWantedParfumLifestyle],
     affiliateUrl: '/product/the-most-wanted-parfum',
-    inStock: true,
+    inStock: false,
     featured: true,
     variants: [
-      { ml: 50, price: 25.99, inStock: true },
-      { ml: 100, price: 33.99, inStock: true },
-      { ml: 100, price: 29.99, inStock: true, label: '100ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
+      { ml: 50, price: 25.99, inStock: false },
+      { ml: 100, price: 33.99, inStock: false },
+      { ml: 100, price: 29.99, inStock: false, label: '100ml [Tester]', note: 'Comes without its original packaging but has never been opened or used.' },
     ],
 
   },
