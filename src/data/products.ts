@@ -42,6 +42,13 @@ import amoreCaffeGallery from '@/assets/products/amore-caffe-gallery.png.asset.j
 import paradoxeGallery from '@/assets/products/paradoxe-gallery.png.asset.json';
 import monParisGallery from '@/assets/products/mon-paris-gallery.png.asset.json';
 import paradigmeGallery from '@/assets/products/paradigme-gallery.png.asset.json';
+import silverMountainWaterGalleryAi from '@/assets/products/silver-mountain-water-gallery-ai.png.asset.json';
+import aoudLemonMintGalleryAi from '@/assets/products/aoud-lemon-mint-gallery-ai.png.asset.json';
+import sauvageParfumGalleryAi from '@/assets/products/sauvage-parfum-gallery-ai.png.asset.json';
+import khamrahParfumGalleryAi from '@/assets/products/khamrah-parfum-gallery-ai.png.asset.json';
+import erbaPuraGalleryAi from '@/assets/products/erba-pura-gallery-ai.png.asset.json';
+import phantomParfumGalleryAi from '@/assets/products/phantom-parfum-gallery-ai.png.asset.json';
+import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -249,6 +256,7 @@ export const products: Product[] = [
     },
     accentColor: '#C8D96F',
     image: '/__l5e/assets-v1/4ee0bb5d-efb4-45c5-9506-9ba944a34a4e/mancera-aoud-lemon-mint-3807519.png',
+    additionalImages: [aoudLemonMintGalleryAi.url],
     affiliateUrl: '/product/aoud-lemon-mint',
     inStock: true,
     variants: [
@@ -590,6 +598,7 @@ export const products: Product[] = [
     },
     accentColor: '#DAA520',
     image: '/__l5e/assets-v1/2a7e3cd4-7b66-45d7-a395-726485057916/xerjoff-erba-gold-9327888.png',
+    additionalImages: [erbaGoldGalleryAi.url],
     affiliateUrl: '/product/erba-gold',
     inStock: true,
     variants: [
@@ -620,6 +629,7 @@ export const products: Product[] = [
     },
     accentColor: '#E8B84B',
     image: '/__l5e/assets-v1/80f0d4ad-97a2-4e6b-a949-40df3099f6a4/xerjoff-erba-pura-8755466.png',
+    additionalImages: [erbaPuraGalleryAi.url],
     affiliateUrl: '/product/erba-pura',
     inStock: true,
     variants: [
@@ -914,6 +924,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B4513',
     image: '/__l5e/assets-v1/f612e51b-ef3a-4e58-87e3-7207c92e1a36/lattafa-khamrah-6018164.png',
+    additionalImages: [khamrahParfumGalleryAi.url],
     affiliateUrl: '/product/khamrah-parfum',
     inStock: true,
     featured: true,
@@ -1507,6 +1518,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A1A1A',
     image: '/images/scent-notes/phantom-parfum.png',
+    additionalImages: [phantomParfumGalleryAi.url],
     imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
     affiliateUrl: 'https://litbuy.com/product/0/966979827880?inviteCode=4W9SCOLDU',
     inStock: true,
@@ -1697,6 +1709,7 @@ export const products: Product[] = [
     },
     accentColor: '#2C3E50',
     image: '/__l5e/assets-v1/7f10c8cb-6cc3-40b6-9c07-348af740b597/dior-sauvage-3604373.png',
+    additionalImages: [sauvageParfumGalleryAi.url],
     affiliateUrl: '/product/sauvage-parfum',
     inStock: true,
     featured: true,
@@ -1730,6 +1743,7 @@ export const products: Product[] = [
     },
     accentColor: '#C0C0C0',
     image: '/__l5e/assets-v1/5c98461c-03f8-424e-bb57-199548bc4dc8/creed-silver-mountain-water-3465174.png',
+    additionalImages: [silverMountainWaterGalleryAi.url],
     affiliateUrl: '/product/silver-mountain-water',
     inStock: true,
     variants: [
