@@ -1629,8 +1629,8 @@ export const products: Product[] = [
     scentNoteImages: {
       'Mint': '/scent-notes/mint.png',
       'Lemon': '/scent-notes/lemon.png',
-      'Basil': '/scent-notes/green-notes.png',
-      'Thyme': '/scent-notes/green-notes.png',
+      'Basil': '/scent-notes/basil.png',
+      'Thyme': '/scent-notes/thyme.png',
       'Black Currant': '/scent-notes/black-currant.png',
       'Lavender': '/scent-notes/lavender.png',
       'Rosemary': '/scent-notes/rosemary.png',
