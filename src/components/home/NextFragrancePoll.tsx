@@ -4,23 +4,23 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import ombreNomadeImg from '@/assets/products/lv-ombre-nomade.png.asset.json';
 import torino21Img from '@/assets/products/xerjoff-torino21.png.asset.json';
-import afternoonSwimImg from '@/assets/products/lv-afternoon-swim.png.asset.json';
+import neroliPortofinoImg from '@/assets/products/tom-ford-neroli-portofino.png.asset.json';
+import baccaratRougeExtraitImg from '@/assets/products/baccarat-rouge-540-extrait.png.asset.json';
 
 const POLL_ID = 'next-arrival-2026-07';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'lv-ombre-nomade',
-    label: 'LV Ombre Nomade',
-    image: ombreNomadeImg.url,
+    key: 'tom-ford-neroli-portofino',
+    label: 'TF Neroli Portofino',
+    image: neroliPortofinoImg.url,
   },
   {
-    key: 'lv-afternoon-swim-2',
-    label: 'LV Afternoon Swim',
-    image: afternoonSwimImg.url,
+    key: 'baccarat-rouge-540-extrait',
+    label: 'Baccarat Rouge 540 Extrait',
+    image: baccaratRougeExtraitImg.url,
   },
 ] as const;
 
