@@ -58,6 +58,7 @@ import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asse
 import aoudVanilleGalleryAi from '@/assets/products/aoud-vanille-gallery-ai.png.asset.json';
 import blackOrchidGalleryAi from '@/assets/products/black-orchid-gallery-ai.png.asset.json';
 import pacificChillGalleryAi from '@/assets/products/pacific-chill-gallery-ai.png.asset.json';
+import xerjoffTorino21Image from '@/assets/products/xerjoff-torino21.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -1610,6 +1611,37 @@ export const products: Product[] = [
     featured: true,
     variants: [
       { ml: 100, price: 51.99, inStock: true },
+    ],
+  },
+  {
+    id: 'xerjoff-torino-21',
+    name: 'Torino 21',
+    brand: 'Xerjoff',
+    price: 42.99,
+    category: 'unisex',
+    description: 'Xerjoff Torino 21 is a smooth, refined fragrance built around bergamot, lavender and rich tobacco leaf. It opens fresh and slightly citrusy, then settles into a warm, slightly sweet tobacco heart with hints of leather and woods. Elegant, masculine-leaning unisex scent perfect for cooler days and dressed-up evenings.',
+    scentNotes: {
+      top: ['Bergamot', 'Lavender'],
+      heart: ['Tobacco', 'Leather'],
+      base: ['Tonka Bean', 'Woods', 'Vanilla'],
+    },
+    scentNoteImages: {
+      'Bergamot': '/scent-notes/bergamot.png',
+      'Lavender': '/scent-notes/lavender.png',
+      'Tobacco': '/scent-notes/tobacco.png',
+      'Leather': '/scent-notes/leather.png',
+      'Tonka Bean': '/scent-notes/tonka-bean.png',
+      'Woods': '/scent-notes/woody-notes.png',
+      'Vanilla': '/scent-notes/vanilla.png',
+    },
+    accentColor: '#7A5A3A',
+    image: xerjoffTorino21Image.url,
+    affiliateUrl: '/product/xerjoff-torino-21',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 42.99, inStock: true },
+      { ml: 100, price: 54.99, inStock: true },
     ],
   },
   {

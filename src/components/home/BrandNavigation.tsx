@@ -12,6 +12,7 @@ const brands = [
   { name: 'PDM', slug: 'pdm' },
   { name: 'Creed', slug: 'creed' },
   { name: 'Mancera', slug: 'mancera' },
+  { name: 'Xerjoff', slug: 'xerjoff' },
 ];
 
 export const BrandNavigation = () => {
