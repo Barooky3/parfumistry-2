@@ -59,6 +59,7 @@ import aoudVanilleGalleryAi from '@/assets/products/aoud-vanille-gallery-ai.png.
 import blackOrchidGalleryAi from '@/assets/products/black-orchid-gallery-ai.png.asset.json';
 import pacificChillGalleryAi from '@/assets/products/pacific-chill-gallery-ai.png.asset.json';
 import xerjoffTorino21Image from '@/assets/products/xerjoff-torino21.png.asset.json';
+import xerjoffTorino21GalleryAi from '@/assets/products/xerjoff-torino21-gallery-ai.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -1619,23 +1620,27 @@ export const products: Product[] = [
     brand: 'Xerjoff',
     price: 42.99,
     category: 'unisex',
-    description: 'Xerjoff Torino 21 is a smooth, refined fragrance built around bergamot, lavender and rich tobacco leaf. It opens fresh and slightly citrusy, then settles into a warm, slightly sweet tobacco heart with hints of leather and woods. Elegant, masculine-leaning unisex scent perfect for cooler days and dressed-up evenings.',
+    description: 'Xerjoff Torino 21 is a vibrant herbal-citrus fragrance that opens with cool mint, bright lemon, basil and thyme — fresh, green and alive. It softens into a bouquet of black currant, lavender, rosemary and jasmine, then dries down to a warm, refined base of musk and delicate vervain. Sophisticated, unisex, and instantly recognisable.',
     scentNotes: {
-      top: ['Bergamot', 'Lavender'],
-      heart: ['Tobacco', 'Leather'],
-      base: ['Tonka Bean', 'Woods', 'Vanilla'],
+      top: ['Mint', 'Lemon', 'Basil', 'Thyme'],
+      heart: ['Black Currant', 'Lavender', 'Rosemary', 'Jasmine'],
+      base: ['Musk', 'Vervain'],
     },
     scentNoteImages: {
-      'Bergamot': '/scent-notes/bergamot.png',
+      'Mint': '/scent-notes/mint.png',
+      'Lemon': '/scent-notes/lemon.png',
+      'Basil': '/scent-notes/green-notes.png',
+      'Thyme': '/scent-notes/green-notes.png',
+      'Black Currant': '/scent-notes/black-currant.png',
       'Lavender': '/scent-notes/lavender.png',
-      'Tobacco': '/scent-notes/tobacco.png',
-      'Leather': '/scent-notes/leather.png',
-      'Tonka Bean': '/scent-notes/tonka-bean.png',
-      'Woods': '/scent-notes/woody-notes.png',
-      'Vanilla': '/scent-notes/vanilla.png',
+      'Rosemary': '/scent-notes/rosemary.png',
+      'Jasmine': '/scent-notes/jasmine.png',
+      'Musk': '/scent-notes/musk.png',
+      'Vervain': '/scent-notes/flowers.png',
     },
-    accentColor: '#7A5A3A',
+    accentColor: '#1E2A6B',
     image: xerjoffTorino21Image.url,
+    additionalImages: [xerjoffTorino21GalleryAi.url],
     affiliateUrl: '/product/xerjoff-torino-21',
     inStock: true,
     featured: true,

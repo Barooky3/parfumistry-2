@@ -183,6 +183,7 @@ const Index = () => {
                     imageBgClassName="bg-[#E5DCD5]"
                     hideCategoryBadge
                     imageWrapperClassName="border-[3px] border-border/50 rounded-sm"
+                    paddingContext="new-arrivals"
                   />
                 </div>
               ))}

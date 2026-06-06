@@ -23,15 +23,18 @@ interface ProductCardProps {
   hideCategoryBadge?: boolean;
   /** Apply classes to the image wrapper only (not the text content below). */
   imageWrapperClassName?: string;
+  /** Namespace the padding/scale override so this placement is independent (e.g. "new-arrivals"). */
+  paddingContext?: string;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName }, ref) => {
+  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName, paddingContext }, ref) => {
 
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
-    const paddingOverride = useProductPadding(product.id);
+    const paddingKey = paddingContext ? `${product.id}::${paddingContext}` : product.id;
+    const paddingOverride = useProductPadding(paddingKey);
     const displayName = useDisplayName(product.id, product.name);
 
     const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
@@ -89,7 +92,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
                   !hasOverride && product.imagePadding
                 )}
               >
-                {isAdmin && <PaddingAdjuster productId={product.id} productName={displayName} />}
+                {isAdmin && <PaddingAdjuster productId={paddingKey} productName={paddingContext ? `${displayName} · ${paddingContext}` : displayName} />}
                 {isAdmin && <NameEditor productId={product.id} originalName={product.name} />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
                   <div className="relative w-full h-full" style={innerStyle || undefined}>
