@@ -1636,7 +1636,7 @@ export const products: Product[] = [
       'Rosemary': '/scent-notes/rosemary.png',
       'Jasmine': '/scent-notes/jasmine.png',
       'Musk': '/scent-notes/musk.png',
-      'Vervain': '/scent-notes/vervain.png',
+      'Vervain': '/scent-notes/flowers.png',
     },
     accentColor: '#1E2A6B',
     image: xerjoffTorino21Image.url,
