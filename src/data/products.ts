@@ -915,7 +915,7 @@ export const products: Product[] = [
   },
   {
     id: 'lv-afternoon-swim',
-    addedAt: '2024-01-01',
+    addedAt: '2026-05-15',
     name: 'Afternoon Swim',
     brand: 'Louis Vuitton',
     price: 60.99,
@@ -1702,7 +1702,7 @@ export const products: Product[] = [
   },
   {
     id: 'tom-ford-neroli-portofino',
-    addedAt: '2024-01-01',
+    addedAt: '2026-06-07',
     name: 'Neroli Portofino',
     brand: 'Tom Ford',
     price: 74.99,

@@ -75,22 +75,13 @@ const Shop = () => {
       case 'price-asc': result.sort((a, b) => a.price - b.price); break;
       case 'price-desc': result.sort((a, b) => b.price - a.price); break;
       case 'newest': {
-        // Newest-first ordering. Bundles pinned to the top, then explicit
-        // recent additions (newest first), then everything else by array index desc.
-        const RECENT_ORDER = [
-          'tom-ford-neroli-portofino',
-          'lv-afternoon-swim',
-        ];
-        const recencyRank = (id: string) => {
-          const i = RECENT_ORDER.indexOf(id);
-          return i === -1 ? Infinity : i;
-        };
+        // Bundles pinned to the top, then by addedAt desc, then by array index desc.
+        const ts = (p: typeof result[number]) => (p.addedAt ? new Date(p.addedAt).getTime() : 0);
         result.sort((a, b) => {
           if (a.isBundle && !b.isBundle) return -1;
           if (!a.isBundle && b.isBundle) return 1;
-          const ra = recencyRank(a.id);
-          const rb = recencyRank(b.id);
-          if (ra !== rb) return ra - rb;
+          const diff = ts(b) - ts(a);
+          if (diff !== 0) return diff;
           const aIdx = products.findIndex(p => p.id === a.id);
           const bIdx = products.findIndex(p => p.id === b.id);
           return bIdx - aIdx;
