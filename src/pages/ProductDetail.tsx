@@ -19,6 +19,8 @@ import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 import { NameEditor } from '@/components/admin/NameEditor';
 import { PriceEditor } from '@/components/admin/PriceEditor';
 import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
+import { applyStockOverride, useProductStockOverride } from '@/hooks/useProductStock';
+import { StockEditor } from '@/components/admin/StockEditor';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
