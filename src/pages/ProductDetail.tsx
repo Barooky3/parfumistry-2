@@ -36,9 +36,10 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
 
   const rawProduct = id ? getProductById(id) : undefined;
-  // Subscribe to price overrides so the page re-renders when admin saves new prices
+  // Subscribe to price + stock overrides so the page re-renders when admin saves
   useProductPriceOverride(id || '');
-  const product = rawProduct ? applyPriceOverride(rawProduct) : undefined;
+  useProductStockOverride(id || '');
+  const product = rawProduct ? applyStockOverride(applyPriceOverride(rawProduct)) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const displayName = useDisplayName(id || '', product?.name || '');
   const relatedProducts = (() => {
