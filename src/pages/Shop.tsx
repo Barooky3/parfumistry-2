@@ -74,7 +74,15 @@ const Shop = () => {
     switch (sortBy) {
       case 'price-asc': result.sort((a, b) => a.price - b.price); break;
       case 'price-desc': result.sort((a, b) => b.price - a.price); break;
-      case 'newest': result.reverse(); break;
+      case 'newest':
+        result.sort((a, b) => {
+          const aIdx = products.findIndex(p => p.id === a.id);
+          const bIdx = products.findIndex(p => p.id === b.id);
+          if (a.isBundle && !b.isBundle) return -1;
+          if (!a.isBundle && b.isBundle) return 1;
+          return bIdx - aIdx;
+        });
+        break;
     }
     return result;
   }, [category, brandFilter, selectedCategories, priceRange, sortBy, searchQuery]);
