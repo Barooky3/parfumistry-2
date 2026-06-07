@@ -9,8 +9,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { useDisplayName } from '@/hooks/useProductName';
+import { applyStockOverride, useProductStockOverride } from '@/hooks/useProductStock';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 import { NameEditor } from '@/components/admin/NameEditor';
+import { StockEditor } from '@/components/admin/StockEditor';
 
 interface ProductCardProps {
   product: Product;
