@@ -99,6 +99,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               >
                 {isAdmin && <PaddingAdjuster productId={paddingKey} productName={paddingContext ? `${displayName} · ${paddingContext}` : displayName} />}
                 {isAdmin && <NameEditor productId={product.id} originalName={product.name} />}
+                {isAdmin && <StockEditor product={rawProduct} variant="card" />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
                   <div className="relative w-full h-full" style={innerStyle || undefined}>
                     <motion.img
