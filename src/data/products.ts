@@ -60,6 +60,8 @@ import blackOrchidGalleryAi from '@/assets/products/black-orchid-gallery-ai.png.
 import pacificChillGalleryAi from '@/assets/products/pacific-chill-gallery-ai.png.asset.json';
 import xerjoffTorino21Image from '@/assets/products/xerjoff-torino21.png.asset.json';
 import xerjoffTorino21GalleryAi from '@/assets/products/xerjoff-torino21-gallery-ai.webp.asset.json';
+import tomFordNeroliPortofinoImage from '@/assets/products/tom-ford-neroli-portofino.png.asset.json';
+import tomFordNeroliPortofinoGalleryAi from '@/assets/products/tom-ford-neroli-portofino-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -1647,6 +1649,45 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 42.99, inStock: true },
       { ml: 100, price: 54.99, inStock: true },
+    ],
+  },
+  {
+    id: 'tom-ford-neroli-portofino',
+    name: 'Neroli Portofino',
+    brand: 'Tom Ford',
+    price: 74.99,
+    category: 'unisex',
+    description: 'Tom Ford Neroli Portofino is a luminous citrus-aromatic fragrance inspired by the Italian Riviera. It opens with a sparkling burst of bergamot, mandarin, lemon and bitter orange, woven with lavender, rosemary and myrtle. The heart blossoms into a sun-warmed bouquet of African orange flower, neroli, jasmine and pitosporum, settling into a soft, refined base of amber, ambrette and angelica. Crisp, clean and effortlessly elegant.',
+    scentNotes: {
+      top: ['Bergamot', 'Mandarin Orange', 'Lemon', 'Bitter Orange', 'Lavender', 'Rosemary', 'Myrtle'],
+      heart: ['African Orange Flower', 'Neroli', 'Jasmine', 'Pitosporum'],
+      base: ['Amber', 'Ambrette', 'Angelica'],
+    },
+    scentNoteImages: {
+      'Bergamot': '/scent-notes/bergamot.png',
+      'Mandarin Orange': '/scent-notes/mandarin.png',
+      'Lemon': '/scent-notes/lemon.png',
+      'Bitter Orange': '/scent-notes/blood-orange.png',
+      'Lavender': '/scent-notes/lavender.png',
+      'Rosemary': '/scent-notes/rosemary.png',
+      'Myrtle': '/scent-notes/jasmine.png',
+      'African Orange Flower': '/scent-notes/orange-blossom.png',
+      'Neroli': '/scent-notes/neroli.png',
+      'Jasmine': '/scent-notes/jasmine.png',
+      'Pitosporum': '/scent-notes/orange-blossom.png',
+      'Amber': '/scent-notes/amber.png',
+      'Ambrette': '/scent-notes/ambrette.png',
+      'Angelica': '/scent-notes/rosemary.png',
+    },
+    accentColor: '#1F6F7A',
+    image: tomFordNeroliPortofinoImage.url,
+    additionalImages: [tomFordNeroliPortofinoGalleryAi.url],
+    affiliateUrl: '/product/tom-ford-neroli-portofino',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 74.99, inStock: true },
+      { ml: 100, price: 94.99, inStock: true },
     ],
   },
   {
