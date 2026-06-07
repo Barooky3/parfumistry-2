@@ -60,6 +60,8 @@ import blackOrchidGalleryAi from '@/assets/products/black-orchid-gallery-ai.png.
 import pacificChillGalleryAi from '@/assets/products/pacific-chill-gallery-ai.png.asset.json';
 import xerjoffTorino21Image from '@/assets/products/xerjoff-torino21.png.asset.json';
 import xerjoffTorino21GalleryAi from '@/assets/products/xerjoff-torino21-gallery-ai.webp.asset.json';
+import tomFordNeroliPortofinoImage from '@/assets/products/tom-ford-neroli-portofino.png.asset.json';
+import tomFordNeroliPortofinoGalleryAi from '@/assets/products/tom-ford-neroli-portofino-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
