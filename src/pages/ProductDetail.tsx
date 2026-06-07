@@ -129,6 +129,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={displayName} variant="detail" />}
                   {isAdmin && <NameEditor productId={product.id} originalName={product.name} variant="detail" />}
+                  {isAdmin && rawProduct && <StockEditor product={rawProduct} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
                     <div className="relative w-full h-full" style={innerStyle || undefined}>
                       <img
