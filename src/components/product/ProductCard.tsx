@@ -9,8 +9,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { useDisplayName } from '@/hooks/useProductName';
+import { applyStockOverride, useProductStockOverride } from '@/hooks/useProductStock';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 import { NameEditor } from '@/components/admin/NameEditor';
+import { StockEditor } from '@/components/admin/StockEditor';
 
 interface ProductCardProps {
   product: Product;
@@ -28,11 +30,14 @@ interface ProductCardProps {
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName, paddingContext }, ref) => {
+  ({ product: rawProduct, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName, paddingContext }, ref) => {
 
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
+    // Subscribe so card re-renders on stock changes
+    useProductStockOverride(rawProduct.id);
+    const product = applyStockOverride(rawProduct);
     const paddingKey = paddingContext ? `${product.id}::${paddingContext}` : product.id;
     const paddingOverride = useProductPadding(paddingKey);
     const displayName = useDisplayName(product.id, product.name);
@@ -94,6 +99,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
               >
                 {isAdmin && <PaddingAdjuster productId={paddingKey} productName={paddingContext ? `${displayName} · ${paddingContext}` : displayName} />}
                 {isAdmin && <NameEditor productId={product.id} originalName={product.name} />}
+                {isAdmin && <StockEditor product={rawProduct} variant="card" />}
                 {product.bundleImages && product.bundleImages.length > 0 ? (
                   <div className="relative w-full h-full" style={innerStyle || undefined}>
                     <motion.img

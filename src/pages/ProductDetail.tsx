@@ -19,6 +19,8 @@ import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 import { NameEditor } from '@/components/admin/NameEditor';
 import { PriceEditor } from '@/components/admin/PriceEditor';
 import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
+import { applyStockOverride, useProductStockOverride } from '@/hooks/useProductStock';
+import { StockEditor } from '@/components/admin/StockEditor';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
@@ -34,9 +36,10 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const isAdmin = user && ADMIN_EMAILS.includes(user.email || "");
 
   const rawProduct = id ? getProductById(id) : undefined;
-  // Subscribe to price overrides so the page re-renders when admin saves new prices
+  // Subscribe to price + stock overrides so the page re-renders when admin saves
   useProductPriceOverride(id || '');
-  const product = rawProduct ? applyPriceOverride(rawProduct) : undefined;
+  useProductStockOverride(id || '');
+  const product = rawProduct ? applyStockOverride(applyPriceOverride(rawProduct)) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const displayName = useDisplayName(id || '', product?.name || '');
   const relatedProducts = (() => {
@@ -126,6 +129,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 >
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={displayName} variant="detail" />}
                   {isAdmin && <NameEditor productId={product.id} originalName={product.name} variant="detail" />}
+                  {isAdmin && rawProduct && <StockEditor product={rawProduct} variant="detail" />}
                   {product.bundleImages && product.bundleImages.length > 0 ? (
                     <div className="relative w-full h-full" style={innerStyle || undefined}>
                       <img

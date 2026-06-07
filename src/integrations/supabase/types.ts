@@ -311,6 +311,30 @@ export type Database = {
         }
         Relationships: []
       }
+      product_stock_overrides: {
+        Row: {
+          created_at: string
+          in_stock: boolean | null
+          product_id: string
+          updated_at: string
+          variants: Json | null
+        }
+        Insert: {
+          created_at?: string
+          in_stock?: boolean | null
+          product_id: string
+          updated_at?: string
+          variants?: Json | null
+        }
+        Update: {
+          created_at?: string
+          in_stock?: boolean | null
+          product_id?: string
+          updated_at?: string
+          variants?: Json | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
