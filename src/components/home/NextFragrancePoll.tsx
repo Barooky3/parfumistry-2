@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import torino21Img from '@/assets/products/xerjoff-torino21.png.asset.json';
 import neroliPortofinoImg from '@/assets/products/tom-ford-neroli-portofino.png.asset.json';
-import baccaratRougeExtraitImg from '@/assets/products/baccarat-rouge-540-extrait.png.asset.json';
+import tobaccoVanilleImg from '@/assets/products/tom-ford-tobacco-vanille.png.asset.json';
+import byTheFireplaceImg from '@/assets/products/margiela-by-the-fireplace.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-07';
+const POLL_ID = 'next-arrival-2026-08';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'tom-ford-neroli-portofino',
-    label: 'TF Neroli Portofino',
-    image: neroliPortofinoImg.url,
+    key: 'tom-ford-tobacco-vanille',
+    label: 'TF Tobacco Vanille',
+    image: tobaccoVanilleImg.url,
   },
   {
-    key: 'baccarat-rouge-540-extrait',
-    label: 'Baccarat Rouge 540 Extrait',
-    image: baccaratRougeExtraitImg.url,
+    key: 'margiela-by-the-fireplace',
+    label: 'Margiela By The Fireplace',
+    image: byTheFireplaceImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Xerjoff Torino 21',
-  image: torino21Img.url,
+  name: 'Tom Ford Neroli Portofino',
+  image: neroliPortofinoImg.url,
 };
 
 function getFingerprint(): string {
