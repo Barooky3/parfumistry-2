@@ -82,6 +82,7 @@ export const products: Product[] = [
   // ===== FRAGRANCE BUNDLES =====
   {
     id: 'evening-sweetheart-bundle',
+    addedAt: '2024-01-01',
     name: 'Fragrance Bundle "Evening Sweetheart"',
     brand: 'Parfumistry',
     price: 64.99,
@@ -107,6 +108,7 @@ export const products: Product[] = [
   },
   {
     id: 'young-playboy-bundle',
+    addedAt: '2024-01-01',
     name: 'Fragrance Bundle "Young Playboy"',
     brand: 'Parfumistry',
     price: 67.99,
@@ -131,6 +133,7 @@ export const products: Product[] = [
   },
   {
     id: 'sleek-and-clean-bundle',
+    addedAt: '2024-01-01',
     name: 'Fragrance Bundle "Sleek and Clean"',
     brand: 'Parfumistry',
     price: 60.99,
@@ -155,6 +158,7 @@ export const products: Product[] = [
   },
   {
     id: 'jpg-bundle',
+    addedAt: '2024-01-01',
     name: 'Fragrance Bundle "The JPG Collection"',
     brand: 'Parfumistry',
     price: 40.99,
@@ -184,6 +188,7 @@ export const products: Product[] = [
   // ===== FRAGRANCES =====
   {
     id: 'amore-caffe',
+    addedAt: '2024-01-01',
     name: 'Amore Caffé',
     brand: 'Mancera',
     price: 26.99,
@@ -216,6 +221,7 @@ export const products: Product[] = [
   },
   {
     id: 'althair',
+    addedAt: '2024-01-01',
     name: 'Althair',
     brand: 'Parfums de Marly',
     price: 40.99,
@@ -249,6 +255,7 @@ export const products: Product[] = [
   },
   {
     id: 'aoud-lemon-mint',
+    addedAt: '2024-01-01',
     name: 'Aoud Lemon Mint',
     brand: 'Mancera',
     price: 25.99,
@@ -279,6 +286,7 @@ export const products: Product[] = [
   },
   {
     id: 'aoud-vanille',
+    addedAt: '2024-01-01',
     name: 'Aoud Vanille',
     brand: 'Mancera',
     price: 26.99,
@@ -309,6 +317,7 @@ export const products: Product[] = [
   },
   {
     id: 'aventus',
+    addedAt: '2024-01-01',
     name: 'Aventus',
     brand: 'Creed',
     price: 55.99,
@@ -343,6 +352,7 @@ export const products: Product[] = [
   },
   {
     id: 'aventus-absolu',
+    addedAt: '2024-01-01',
     name: 'Aventus Absolu',
     brand: 'Creed',
     price: 57.99,
@@ -379,6 +389,7 @@ export const products: Product[] = [
   },
   {
     id: '1-million-elixir',
+    addedAt: '2024-01-01',
     name: '1 Million Elixir',
     brand: 'Paco Rabanne',
     price: 22.99,
@@ -412,6 +423,7 @@ export const products: Product[] = [
   },
   {
     id: 'black-orchid',
+    addedAt: '2024-01-01',
     name: 'Black Orchid',
     brand: 'Tom Ford',
     price: 28.99,
@@ -443,6 +455,7 @@ export const products: Product[] = [
   },
   {
     id: 'born-in-roma-intense',
+    addedAt: '2024-01-01',
     name: 'Born in Roma Intense',
     brand: 'Valentino',
     price: 26.99,
@@ -472,6 +485,7 @@ export const products: Product[] = [
   },
   {
     id: 'born-in-roma-green-stravaganza',
+    addedAt: '2024-01-01',
     name: 'Born in Roma Green Stravaganza',
     brand: 'Valentino',
     price: 26.99,
@@ -500,6 +514,7 @@ export const products: Product[] = [
   },
   {
     id: 'born-in-roma',
+    addedAt: '2024-01-01',
     name: 'Born in Roma',
     brand: 'Valentino',
     price: 26.99,
@@ -531,6 +546,7 @@ export const products: Product[] = [
   },
   {
     id: 'cedrat-boise',
+    addedAt: '2024-01-01',
     name: 'Cedrat Boisé',
     brand: 'Mancera',
     price: 25.99,
@@ -560,6 +576,7 @@ export const products: Product[] = [
   },
   {
     id: 'delina',
+    addedAt: '2024-01-01',
     name: 'Delina',
     brand: 'Parfums de Marly',
     price: 36.99,
@@ -594,6 +611,7 @@ export const products: Product[] = [
   },
   {
     id: 'erba-gold',
+    addedAt: '2024-01-01',
     name: 'Erba Gold',
     brand: 'Xerjoff',
     price: 39.99,
@@ -624,6 +642,7 @@ export const products: Product[] = [
   },
   {
     id: 'erba-pura',
+    addedAt: '2024-01-01',
     name: 'Erba Pura',
     brand: 'Xerjoff',
     price: 41.99,
@@ -655,6 +674,7 @@ export const products: Product[] = [
   },
   {
     id: 'eros-energy',
+    addedAt: '2024-01-01',
     name: 'Eros Energy',
     brand: 'Versace',
     price: 26.99,
@@ -690,6 +710,7 @@ export const products: Product[] = [
   },
   {
     id: 'eros-flame',
+    addedAt: '2024-01-01',
     name: 'Eros Flame',
     brand: 'Versace',
     price: 26.99,
@@ -725,6 +746,7 @@ export const products: Product[] = [
   },
   {
     id: 'eros-parfum',
+    addedAt: '2024-01-01',
     name: 'Eros Parfum',
     brand: 'Versace',
     price: 22.99,
@@ -760,6 +782,7 @@ export const products: Product[] = [
   },
   {
     id: 'prada-paradoxe',
+    addedAt: '2024-01-01',
     name: 'Paradoxe',
     brand: 'Prada',
     price: 23.99,
@@ -796,6 +819,7 @@ export const products: Product[] = [
   },
   {
     id: 'french-riviera',
+    addedAt: '2024-01-01',
     name: 'French Riviera',
     brand: 'Mancera',
     price: 27.99,
@@ -826,6 +850,7 @@ export const products: Product[] = [
   },
   {
     id: 'homme-intense',
+    addedAt: '2024-01-01',
     name: 'Homme Intense',
     brand: 'Dior',
     price: 31.99,
@@ -856,6 +881,7 @@ export const products: Product[] = [
   },
   {
     id: 'imagination',
+    addedAt: '2024-01-01',
     name: 'Imagination',
     brand: 'Louis Vuitton',
     price: 60.99,
@@ -889,6 +915,7 @@ export const products: Product[] = [
   },
   {
     id: 'lv-afternoon-swim',
+    addedAt: '2024-01-01',
     name: 'Afternoon Swim',
     brand: 'Louis Vuitton',
     price: 60.99,
@@ -919,6 +946,7 @@ export const products: Product[] = [
   },
   {
     id: 'khamrah-parfum',
+    addedAt: '2024-01-01',
     name: 'Khamrah Parfum',
     brand: 'Lattafa',
     price: 20.99,
@@ -952,6 +980,7 @@ export const products: Product[] = [
   },
   {
     id: 'khamrah-qahwa',
+    addedAt: '2024-01-01',
     name: 'Khamrah Qahwa',
     brand: 'Lattafa',
     price: 34.99,
@@ -981,6 +1010,7 @@ export const products: Product[] = [
   },
   {
     id: 'layton',
+    addedAt: '2024-01-01',
     name: 'Layton',
     brand: 'Parfums de Marly',
     price: 41.99,
@@ -1016,6 +1046,7 @@ export const products: Product[] = [
   // ===== BEST SELLERS =====
   {
     id: 'stronger-with-you-intensely',
+    addedAt: '2024-01-01',
     name: 'Stronger With You Intensely',
     brand: 'Giorgio Armani',
     price: 23.99,
@@ -1055,6 +1086,7 @@ export const products: Product[] = [
   },
   {
     id: 'le-beau-le-parfum',
+    addedAt: '2024-01-01',
     name: 'Le Beau Le Parfum',
     brand: 'Jean Paul Gaultier',
     price: 21.99,
@@ -1089,6 +1121,7 @@ export const products: Product[] = [
   },
   {
     id: 'le-beau-paradise-garden',
+    addedAt: '2024-01-01',
     name: 'Le Beau Paradise Garden',
     brand: 'Jean Paul Gaultier',
     price: 23.99,
@@ -1123,6 +1156,7 @@ export const products: Product[] = [
   },
   {
     id: 'spicebomb-extreme',
+    addedAt: '2024-01-01',
     name: 'Spicebomb Extreme',
     brand: 'Viktor & Rolf',
     price: 26.99,
@@ -1154,6 +1188,7 @@ export const products: Product[] = [
   },
   {
     id: 'born-in-roma-coral-fantasy',
+    addedAt: '2024-01-01',
     name: 'Born in Roma Coral Fantasy',
     brand: 'Valentino',
     price: 23.99,
@@ -1188,6 +1223,7 @@ export const products: Product[] = [
   },
   {
     id: '1-million-parfum',
+    addedAt: '2024-01-01',
     name: '1 Million Parfum',
     brand: 'Paco Rabanne',
     price: 23.99,
@@ -1222,6 +1258,7 @@ export const products: Product[] = [
   },
   {
     id: 'le-male-elixir',
+    addedAt: '2024-01-01',
     name: 'Le Male Elixir',
     brand: 'Jean Paul Gaultier',
     price: 26.99,
@@ -1255,6 +1292,7 @@ export const products: Product[] = [
   },
   {
     id: 'the-most-wanted-parfum',
+    addedAt: '2024-01-01',
     name: 'The Most Wanted Parfum',
     brand: 'Azzaro',
     price: 25.99,
@@ -1285,6 +1323,7 @@ export const products: Product[] = [
   },
   {
     id: 'black-opium',
+    addedAt: '2024-01-01',
     name: 'Black Opium',
     brand: 'Yves Saint Laurent',
     price: 21.99,
@@ -1317,6 +1356,7 @@ export const products: Product[] = [
   },
   {
     id: 'le-male-le-parfum',
+    addedAt: '2024-01-01',
     name: 'Le Male Le Parfum',
     brand: 'Jean Paul Gaultier',
     price: 25.99,
@@ -1349,6 +1389,7 @@ export const products: Product[] = [
   // ===== ADDITIONAL PRODUCTS =====
   {
     id: 'le-beau-edt',
+    addedAt: '2024-01-01',
     name: 'Le Beau EDT',
     brand: 'Jean Paul Gaultier',
     price: 21.99,
@@ -1379,6 +1420,7 @@ export const products: Product[] = [
   },
   {
     id: 'le-male-elixir-absolu',
+    addedAt: '2024-01-01',
     name: 'Le Male Elixir Absolu',
     brand: 'Jean Paul Gaultier',
     price: 25.99,
@@ -1414,6 +1456,7 @@ export const products: Product[] = [
   },
   {
     id: 'libre',
+    addedAt: '2024-01-01',
     name: 'LIBRE',
     brand: 'Yves Saint Laurent',
     price: 21.99,
@@ -1447,6 +1490,7 @@ export const products: Product[] = [
   },
   {
     id: 'mon-paris',
+    addedAt: '2024-01-01',
     name: 'Mon Paris',
     brand: 'Yves Saint Laurent',
     price: 20.99,
@@ -1481,6 +1525,7 @@ export const products: Product[] = [
   },
   {
     id: 'myself-edp',
+    addedAt: '2024-01-01',
     name: 'Myself EDP',
     brand: 'Yves Saint Laurent',
     price: 21.99,
@@ -1513,6 +1558,7 @@ export const products: Product[] = [
   },
   {
     id: 'phantom-parfum',
+    addedAt: '2024-01-01',
     name: 'Phantom Parfum',
     brand: 'Paco Rabanne',
     price: 22.99,
@@ -1549,6 +1595,7 @@ export const products: Product[] = [
   },
   {
     id: 'ysl-y-edp',
+    addedAt: '2024-01-01',
     name: 'Y Eau de Parfum',
     brand: 'Yves Saint Laurent',
     price: 21.99,
@@ -1586,6 +1633,7 @@ export const products: Product[] = [
   },
   {
     id: 'naxos',
+    addedAt: '2024-01-01',
     name: 'Naxos',
     brand: 'Xerjoff',
     price: 40.99,
@@ -1618,6 +1666,7 @@ export const products: Product[] = [
   },
   {
     id: 'xerjoff-torino-21',
+    addedAt: '2024-01-01',
     name: 'Torino 21',
     brand: 'Xerjoff',
     price: 42.99,
@@ -1653,6 +1702,7 @@ export const products: Product[] = [
   },
   {
     id: 'tom-ford-neroli-portofino',
+    addedAt: '2024-01-01',
     name: 'Neroli Portofino',
     brand: 'Tom Ford',
     price: 74.99,
@@ -1692,6 +1742,7 @@ export const products: Product[] = [
   },
   {
     id: 'pacific-chill',
+    addedAt: '2024-01-01',
     name: 'Pacific Chill',
     brand: 'Louis Vuitton',
     price: 64.99,
@@ -1722,6 +1773,7 @@ export const products: Product[] = [
   },
   {
     id: 'paradigme',
+    addedAt: '2024-01-01',
     name: 'Paradigme',
     brand: 'Prada',
     price: 27.99,
@@ -1753,6 +1805,7 @@ export const products: Product[] = [
   },
   {
     id: 'red-tobacco',
+    addedAt: '2024-01-01',
     name: 'Red Tobacco',
     brand: 'Mancera',
     price: 26.99,
@@ -1783,6 +1836,7 @@ export const products: Product[] = [
   },
   {
     id: 'sauvage-parfum',
+    addedAt: '2024-01-01',
     name: 'Sauvage Parfum',
     brand: 'Dior',
     price: 22.99,
@@ -1816,6 +1870,7 @@ export const products: Product[] = [
   },
   {
     id: 'silver-mountain-water',
+    addedAt: '2024-01-01',
     name: 'Silver Mountain Water',
     brand: 'Creed',
     price: 54.99,
@@ -1848,6 +1903,7 @@ export const products: Product[] = [
   },
   {
     id: 'stronger-with-you-amber',
+    addedAt: '2024-01-01',
     name: 'Stronger With You Amber',
     brand: 'Giorgio Armani',
     price: 23.99,
@@ -1879,6 +1935,7 @@ export const products: Product[] = [
   },
   {
     id: 'stronger-with-you-absolutely',
+    addedAt: '2024-01-01',
     name: 'Stronger With You Absolutely',
     brand: 'Giorgio Armani',
     price: 26.99,
@@ -1910,6 +1967,7 @@ export const products: Product[] = [
   },
   {
     id: 'stronger-with-you-parfum',
+    addedAt: '2024-01-01',
     name: 'Stronger With You Parfum',
     brand: 'Giorgio Armani',
     price: 22.99,
@@ -1941,6 +1999,7 @@ export const products: Product[] = [
   },
   {
     id: 'symphony',
+    addedAt: '2024-01-01',
     name: 'Symphony',
     brand: 'Louis Vuitton',
     price: 67.99,
@@ -1970,6 +2029,7 @@ export const products: Product[] = [
   },
   {
     id: 'the-most-wanted-edp-intense',
+    addedAt: '2024-01-01',
     name: 'The Most Wanted EDP Intense',
     brand: 'Azzaro',
     price: 25.99,
@@ -1997,6 +2057,7 @@ export const products: Product[] = [
   },
   {
     id: 'tonka-cola',
+    addedAt: '2024-01-01',
     name: 'Tonka Cola',
     brand: 'Mancera',
     price: 25.99,
@@ -2030,6 +2091,7 @@ export const products: Product[] = [
   },
   {
     id: 'xplicit-vanilla',
+    addedAt: '2024-01-01',
     name: 'Xplicit Vanilla',
     brand: 'Mancera',
     price: 28.99,
@@ -2060,6 +2122,7 @@ export const products: Product[] = [
   },
   {
     id: 'bad-boy-cobalt',
+    addedAt: '2024-01-01',
     name: 'Bad Boy Cobalt Parfum',
     brand: 'Carolina Herrera',
     price: 25.99,

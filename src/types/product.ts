@@ -46,6 +46,7 @@ export interface Product {
   imagePadding?: string;
   bundleImages?: string[]; // Multiple product images for composite bundle display
   hotDeal?: boolean; // Show fire discount badge
+  addedAt?: string; // ISO date when product was added to the store
 }
 
 export interface CartItem {
