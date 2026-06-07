@@ -30,11 +30,14 @@ interface ProductCardProps {
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ product, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName, paddingContext }, ref) => {
+  ({ product: rawProduct, className, imageAspect = 'portrait', imageBgClassName, hideCategoryBadge, imageWrapperClassName, paddingContext }, ref) => {
 
     const { formatPrice } = useCurrency();
     const { t } = useLanguage();
     const { user } = useAuth();
+    // Subscribe so card re-renders on stock changes
+    useProductStockOverride(rawProduct.id);
+    const product = applyStockOverride(rawProduct);
     const paddingKey = paddingContext ? `${product.id}::${paddingContext}` : product.id;
     const paddingOverride = useProductPadding(paddingKey);
     const displayName = useDisplayName(product.id, product.name);
