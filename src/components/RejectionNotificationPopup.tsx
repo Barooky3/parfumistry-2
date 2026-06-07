@@ -1,23 +1,32 @@
 import { useEffect, useState } from 'react';
-import { AlertTriangle, X, ShoppingCart, ArrowRight, CreditCard } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
+import { AlertTriangle, Mail, ShoppingCart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface RejectedOrder {
   id: string;
   order_number: number | null;
   rejection_notes: string | null;
   created_at: string;
-  checkout_reference?: string;
 }
 
-const DEFAULT_REASON = "Unfortunately, your payment could not be verified and your order has been cancelled. Please try again or contact us for assistance.";
+const DEFAULT_REASON =
+  "Unfortunately, your payment could not be verified and your order has been cancelled.";
 
 // Parse value mismatch notes like "Code value: £10.00 GBP (≈ €8.50) | Cart value: €25.00 | Missing: €16.50"
-// or "Code value: €10.00 | Cart value: €25.00 | Missing: €15.00"
 const parseValueMismatch = (notes: string | null) => {
   if (!notes) return null;
-  const match = notes.match(/Code value:\s*(.+?)\s*\|\s*Cart value:\s*€([\d.]+)\s*\|\s*Missing:\s*€([\d.]+)/);
+  const match = notes.match(
+    /Code value:\s*(.+?)\s*\|\s*Cart value:\s*€([\d.]+)\s*\|\s*Missing:\s*€([\d.]+)/,
+  );
   if (!match) return null;
   return {
     codeValue: match[1],
@@ -29,11 +38,10 @@ const parseValueMismatch = (notes: string | null) => {
 export const RejectionNotificationPopup = () => {
   const [rejectedOrders, setRejectedOrders] = useState<RejectedOrder[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const checkRejections = async () => {
-      // Only check for authenticated users
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user?.email) return;
 
@@ -41,7 +49,7 @@ export const RejectionNotificationPopup = () => {
         const { data, error } = await supabase.functions.invoke('check-rejected-orders', {});
         if (error || !data?.rejectedOrders?.length) return;
         setRejectedOrders(data.rejectedOrders);
-        setVisible(true);
+        setOpen(true);
       } catch {
         // silently fail
       }
@@ -64,9 +72,9 @@ export const RejectionNotificationPopup = () => {
     }
 
     if (currentIndex < rejectedOrders.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
     } else {
-      setVisible(false);
+      setOpen(false);
     }
   };
 
@@ -76,128 +84,103 @@ export const RejectionNotificationPopup = () => {
   const mismatchData = parseValueMismatch(current.rejection_notes);
   const isValueMismatch = !!mismatchData;
   const reason = isValueMismatch
-    ? `The value of the gift card you provided does not match your cart total.`
-    : (current.rejection_notes?.trim() || DEFAULT_REASON);
+    ? 'The value of the gift card you provided does not match your cart total.'
+    : current.rejection_notes?.trim() || DEFAULT_REASON;
   const orderLabel = current.order_number ? `#${current.order_number}` : '';
 
   return (
-    <AnimatePresence>
-      {visible && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="relative w-full max-w-md bg-background border border-border rounded-xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
-          >
-            {/* Red top bar */}
-            <div className="h-1.5 bg-red-500" />
+    <AlertDialog open={open}>
+      <AlertDialogContent className="max-w-md">
+        <AlertDialogHeader>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="h-10 w-10 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+            </div>
+            <AlertDialogTitle className="text-lg">
+              Order {orderLabel} Rejected
+            </AlertDialogTitle>
+          </div>
+          <AlertDialogDescription className="text-sm leading-relaxed">
+            {reason}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-            {/* Close button */}
-            <button
-              onClick={handleDismiss}
-              className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-muted transition-colors text-muted-foreground z-10"
-            >
-              <X className="h-4 w-4" />
-            </button>
-
-            <div className="p-6">
-              {/* Icon + title */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="shrink-0 w-10 h-10 rounded-full bg-red-100 dark:bg-red-950/30 flex items-center justify-center">
-                  <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-foreground">
-                    Order {orderLabel} Rejected
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    {isValueMismatch ? 'Gift card value mismatch' : "We couldn't process your order"}
-                  </p>
-                </div>
+        {isValueMismatch && mismatchData && (
+          <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-lg p-4">
+            <div className="space-y-1.5 text-sm">
+              <div className="flex justify-between">
+                <span className="text-amber-700 dark:text-amber-400">Code value:</span>
+                <span className="font-semibold text-amber-900 dark:text-amber-200">
+                  {mismatchData.codeValue}
+                </span>
               </div>
-
-              {/* Reason */}
-              <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 rounded-lg p-4 mb-4">
-                <p className="text-sm text-red-800 dark:text-red-300 leading-relaxed">
-                  {reason}
-                </p>
+              <div className="flex justify-between">
+                <span className="text-amber-700 dark:text-amber-400">Cart value:</span>
+                <span className="font-semibold text-amber-900 dark:text-amber-200">
+                  €{mismatchData.cartValue}
+                </span>
               </div>
-
-              {/* Value mismatch breakdown */}
-              {isValueMismatch && mismatchData && (
-                <>
-                  <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-lg p-4 mb-4">
-                    <div className="space-y-1.5 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-amber-700 dark:text-amber-400">Code value:</span>
-                        <span className="font-semibold text-amber-900 dark:text-amber-200">{mismatchData.codeValue}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-amber-700 dark:text-amber-400">Cart value:</span>
-                        <span className="font-semibold text-amber-900 dark:text-amber-200">€{mismatchData.cartValue}</span>
-                      </div>
-                      <div className="h-px bg-amber-300 dark:bg-amber-700 my-1" />
-                      <div className="flex justify-between">
-                        <span className="text-amber-700 dark:text-amber-400 font-medium">Missing amount:</span>
-                        <span className="font-bold text-red-600 dark:text-red-400">€{mismatchData.missingAmount}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tutorial steps */}
-                  <div className="bg-muted/50 border border-border rounded-lg p-4 mb-5">
-                    <h4 className="text-sm font-semibold text-foreground mb-3">How to redo your order:</h4>
-                    <div className="space-y-3">
-                      <div className="flex gap-3">
-                        <div className="shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">1</div>
-                        <div className="text-sm text-muted-foreground">
-                          <strong className="text-foreground">Buy a new gift card</strong> to cover the missing amount (€{mismatchData.missingAmount}).
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <div className="shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">2</div>
-                        <div className="text-sm text-muted-foreground">
-                          <strong className="text-foreground">Add the same items</strong> to your cart again on our website.
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <div className="shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">3</div>
-                        <div className="text-sm text-muted-foreground">
-                          <strong className="text-foreground">Enter both codes</strong> at checkout — the original code you already used, plus the new one.
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <div className="shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">4</div>
-                        <div className="text-sm text-muted-foreground">
-                          <strong className="text-foreground">Submit</strong> your new order and we'll verify both codes.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Non-mismatch spacer */}
-              {!isValueMismatch && <div className="mb-1" />}
-
-              {/* CTA */}
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-muted-foreground">
-                  {rejectedOrders.length > 1 && `${currentIndex + 1} of ${rejectedOrders.length}`}
-                </p>
-                <button
-                  onClick={handleDismiss}
-                  className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
-                  {currentIndex < rejectedOrders.length - 1 ? 'Next' : 'Got it'}
-                </button>
+              <div className="h-px bg-amber-300 dark:bg-amber-700 my-1" />
+              <div className="flex justify-between">
+                <span className="text-amber-700 dark:text-amber-400 font-medium">
+                  Missing amount:
+                </span>
+                <span className="font-bold text-destructive">
+                  €{mismatchData.missingAmount}
+                </span>
               </div>
             </div>
-          </motion.div>
+          </div>
+        )}
+
+        {/* How to fix */}
+        <div className="bg-muted/50 border border-border rounded-lg p-4">
+          <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+            <ShoppingCart className="h-4 w-4" />
+            How to fix this:
+          </h4>
+          {isValueMismatch && mismatchData ? (
+            <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
+              <li>
+                Buy a new gift card to cover the missing{' '}
+                <strong className="text-foreground">€{mismatchData.missingAmount}</strong>.
+              </li>
+              <li>Add the same items to your cart again.</li>
+              <li>
+                At checkout, enter <strong className="text-foreground">both codes</strong> —
+                the original one plus the new one.
+              </li>
+              <li>Submit your order and we'll verify both codes.</li>
+            </ol>
+          ) : (
+            <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
+              <li>Re-add the items to your cart.</li>
+              <li>Try again with a valid payment code or a different payment method.</li>
+              <li>If you keep having trouble, reply to our email and we'll help.</li>
+            </ol>
+          )}
         </div>
-      )}
-    </AnimatePresence>
+
+        {/* Check email reminder */}
+        <div className="flex items-start gap-2 text-xs text-muted-foreground bg-muted/30 border border-border rounded-lg p-3">
+          <Mail className="h-4 w-4 shrink-0 mt-0.5" />
+          <p>
+            We've sent the full details to your email. Please check your inbox (and spam
+            folder) for more information.
+          </p>
+        </div>
+
+        <AlertDialogFooter>
+          {rejectedOrders.length > 1 && (
+            <p className="text-xs text-muted-foreground mr-auto self-center">
+              {currentIndex + 1} of {rejectedOrders.length}
+            </p>
+          )}
+          <AlertDialogAction onClick={handleDismiss}>
+            {currentIndex < rejectedOrders.length - 1 ? 'Next' : 'I Understand'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
