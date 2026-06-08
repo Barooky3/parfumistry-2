@@ -566,6 +566,9 @@ export const products: Product[] = [
       'White Musk': '/scent-notes/musk.png',
     },
     accentColor: '#B8860B',
+    additionalImages: [
+      '/__l5e/assets-v1/09e05a47-02bf-428d-969b-11e13a4fc787/scent-notes-98.png',
+    ],
     image: '/__l5e/assets-v1/a5cfba82-1563-47c1-ba12-dc19e4ba4785/mancera-cedrat-boise-8376726.png',
     affiliateUrl: '/product/cedrat-boise',
     inStock: false,
@@ -1001,7 +1004,9 @@ export const products: Product[] = [
       'Musk': '/scent-notes/musk.png',
     },
     accentColor: '#6B3A2A',
-    scentNotesImage: '/__l5e/assets-v1/a6ea831c-775e-4e89-a970-f7ee1d014ad8/scent-notes-95.png',
+    additionalImages: [
+      '/__l5e/assets-v1/a6ea831c-775e-4e89-a970-f7ee1d014ad8/scent-notes-95.png',
+    ],
     image: '/__l5e/assets-v1/c1d88e91-850a-4b6d-8384-fca411263f9b/lataffa-khamrah-qahwa-4225237.png',
     affiliateUrl: '/product/khamrah-qahwa',
     inStock: false,
@@ -1178,6 +1183,9 @@ export const products: Product[] = [
       'Leather': '/scent-notes/leather.png',
     },
     accentColor: '#8B0000',
+    additionalImages: [
+      '/__l5e/assets-v1/f7277c2a-cc1e-4498-904d-bb4b2fa19679/scent-notes-99.png',
+    ],
     image: '/__l5e/assets-v1/39148be2-aca4-47f5-bef5-9f94c39fd3b2/spicebomb.png',
     affiliateUrl: '/product/spicebomb-extreme',
     inStock: false,
@@ -1827,6 +1835,9 @@ export const products: Product[] = [
       'Oud': '/scent-notes/oud.png',
     },
     accentColor: '#B22222',
+    additionalImages: [
+      '/__l5e/assets-v1/8c8ea4fa-b894-4662-8ca5-0bc374a5db2c/scent-notes-97.png',
+    ],
     image: '/__l5e/assets-v1/ea8dcdb4-dcef-4929-b5b5-3dd14cf5d38c/mancera-red-tobacco-3937206.png',
     affiliateUrl: '/product/red-tobacco',
     inStock: true,
@@ -2113,6 +2124,9 @@ export const products: Product[] = [
       'Musk': '/scent-notes/musk.png',
     },
     accentColor: '#6B3A2A',
+    additionalImages: [
+      '/__l5e/assets-v1/b1ef01ef-03fb-4719-93c9-8f3697a1dffe/scent-notes-96.png',
+    ],
     image: '/__l5e/assets-v1/f3202f9e-6e0d-4dc2-9a75-8d008b1f8391/mancera-xplicit-vanilla-7508759.png',
     affiliateUrl: '/product/xplicit-vanilla',
     inStock: true,
