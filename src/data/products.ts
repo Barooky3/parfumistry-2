@@ -62,6 +62,11 @@ import xerjoffTorino21Image from '@/assets/products/xerjoff-torino21.png.asset.j
 import xerjoffTorino21GalleryAi from '@/assets/products/xerjoff-torino21-gallery-ai.webp.asset.json';
 import tomFordNeroliPortofinoImage from '@/assets/products/tom-ford-neroli-portofino.png.asset.json';
 import tomFordNeroliPortofinoGalleryAi from '@/assets/products/tom-ford-neroli-portofino-gallery-ai.png.asset.json';
+import khamrahQahwaGalleryAi from '@/assets/products/khamrah-qahwa-gallery-ai.png.asset.json';
+import xplicitVanillaGalleryAi from '@/assets/products/xplicit-vanilla-gallery-ai.png.asset.json';
+import redTobaccoGalleryAi from '@/assets/products/red-tobacco-gallery-ai.png.asset.json';
+import cedratBoiseGalleryAi from '@/assets/products/cedrat-boise-gallery-ai.png.asset.json';
+import spicebombExtremeGalleryAi from '@/assets/products/spicebomb-extreme-gallery-ai.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -573,6 +578,7 @@ export const products: Product[] = [
       { ml: 60, price: 25.99, inStock: false },
       { ml: 120, price: 33.99, inStock: false },
     ],
+    additionalImages: [cedratBoiseGalleryAi.url],
   },
   {
     id: 'delina',
@@ -1007,6 +1013,7 @@ export const products: Product[] = [
     variants: [
       { ml: 100, price: 34.99, inStock: false },
     ],
+    additionalImages: [khamrahQahwaGalleryAi.url],
   },
   {
     id: 'layton',
@@ -1185,6 +1192,7 @@ export const products: Product[] = [
       { ml: 50, price: 26.99, inStock: false },
       { ml: 90, price: 34.99, inStock: false },
     ],
+    additionalImages: [spicebombExtremeGalleryAi.url],
   },
   {
     id: 'born-in-roma-coral-fantasy',
@@ -1833,6 +1841,7 @@ export const products: Product[] = [
       { ml: 60, price: 26.99, inStock: true },
       { ml: 120, price: 35.99, inStock: true },
     ],
+    additionalImages: [redTobaccoGalleryAi.url],
   },
   {
     id: 'sauvage-parfum',
@@ -2119,6 +2128,7 @@ export const products: Product[] = [
       { ml: 60, price: 28.99, inStock: true },
       { ml: 120, price: 36.99, inStock: true },
     ],
+    additionalImages: [xplicitVanillaGalleryAi.url],
   },
   {
     id: 'bad-boy-cobalt',
