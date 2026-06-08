@@ -1835,6 +1835,9 @@ export const products: Product[] = [
       'Oud': '/scent-notes/oud.png',
     },
     accentColor: '#B22222',
+    additionalImages: [
+      '/__l5e/assets-v1/8c8ea4fa-b894-4662-8ca5-0bc374a5db2c/scent-notes-97.png',
+    ],
     image: '/__l5e/assets-v1/ea8dcdb4-dcef-4929-b5b5-3dd14cf5d38c/mancera-red-tobacco-3937206.png',
     affiliateUrl: '/product/red-tobacco',
     inStock: true,
