@@ -566,6 +566,9 @@ export const products: Product[] = [
       'White Musk': '/scent-notes/musk.png',
     },
     accentColor: '#B8860B',
+    additionalImages: [
+      '/__l5e/assets-v1/09e05a47-02bf-428d-969b-11e13a4fc787/scent-notes-98.png',
+    ],
     image: '/__l5e/assets-v1/a5cfba82-1563-47c1-ba12-dc19e4ba4785/mancera-cedrat-boise-8376726.png',
     affiliateUrl: '/product/cedrat-boise',
     inStock: false,
