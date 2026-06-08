@@ -2124,6 +2124,9 @@ export const products: Product[] = [
       'Musk': '/scent-notes/musk.png',
     },
     accentColor: '#6B3A2A',
+    additionalImages: [
+      '/__l5e/assets-v1/b1ef01ef-03fb-4719-93c9-8f3697a1dffe/scent-notes-96.png',
+    ],
     image: '/__l5e/assets-v1/f3202f9e-6e0d-4dc2-9a75-8d008b1f8391/mancera-xplicit-vanilla-7508759.png',
     affiliateUrl: '/product/xplicit-vanilla',
     inStock: true,
