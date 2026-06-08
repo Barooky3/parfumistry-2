@@ -300,8 +300,8 @@ serve(async (req) => {
     const token = url.searchParams.get("token");
     const action = url.searchParams.get("action");
 
-    if (!orderId || !token || !action) {
-      return new Response(buildResultPage("Invalid Link", "Missing required parameters.", false), {
+    if (!orderId || !token || !action || (action !== "approve" && action !== "reject" && action !== "reject_order_number")) {
+      return new Response(buildResultPage("Invalid Link", "Missing or invalid parameters.", false), {
         headers: { "Content-Type": "text/html" }, status: 400,
       });
     }
