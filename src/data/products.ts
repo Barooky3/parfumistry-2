@@ -1001,6 +1001,7 @@ export const products: Product[] = [
       'Musk': '/scent-notes/musk.png',
     },
     accentColor: '#6B3A2A',
+    scentNotesImage: '/__l5e/assets-v1/a6ea831c-775e-4e89-a970-f7ee1d014ad8/scent-notes-95.png',
     image: '/__l5e/assets-v1/c1d88e91-850a-4b6d-8384-fca411263f9b/lataffa-khamrah-qahwa-4225237.png',
     affiliateUrl: '/product/khamrah-qahwa',
     inStock: false,
