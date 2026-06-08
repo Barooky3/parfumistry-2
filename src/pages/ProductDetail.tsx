@@ -226,19 +226,28 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                     <button
                       key={`${variant.ml}-${variant.label || 'std'}-${index}`}
                       onClick={() => setSelectedVariantIndex(index)}
-                      disabled={!variant.inStock}
                       className={`px-4 py-2 border text-sm font-medium transition-all ${
                         selectedVariantIndex === index
-                          ? 'border-primary bg-primary text-primary-foreground'
+                          ? variant.inStock
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-destructive bg-destructive/10 text-destructive'
                           : variant.inStock
                           ? 'border-border bg-background text-foreground hover:border-primary'
-                          : 'border-border bg-muted text-muted-foreground cursor-not-allowed line-through'
+                          : 'border-border bg-muted text-muted-foreground line-through hover:border-destructive'
                       }`}
                     >
                       {variant.label || `${variant.ml}ml`}
                     </button>
                   ))}
                 </div>
+                {selectedVariant && !selectedVariant.inStock && (
+                  <div className="mt-3 flex items-start gap-2 border border-destructive/40 bg-destructive/5 px-3 py-2 rounded-sm">
+                    <Info className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
+                    <p className="text-[11px] md:text-xs text-foreground/80 leading-snug">
+                      This size is currently out of stock. Please select another size or check back soon.
+                    </p>
+                  </div>
+                )}
                 {selectedVariant?.note && (
                   <div className="mt-3 flex items-start gap-2 border border-accent/40 bg-accent/5 px-3 py-2 rounded-sm">
                     <Info className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
