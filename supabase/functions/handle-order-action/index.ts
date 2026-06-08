@@ -424,12 +424,43 @@ serve(async (req) => {
         });
       }
 
-      await supabase.from("orders").update({ status: "rejected", updated_at: new Date().toISOString() }).eq("id", orderId);
-
       const isGiftCard = order.checkout_reference?.startsWith("rewarble");
       const isBankTransferRej = order.checkout_reference?.startsWith("bank-transfer");
-      const rejectionHtml = buildRejectionEmailHtml(order.customer_name || "Valued Customer", isGiftCard, order.order_number, isBankTransferRej);
-      const rejSubject = order.order_number ? `Order #${order.order_number} Update - Parfumistry` : "Order Update - Parfumistry";
+      const isOrderNumReject = action === "reject_order_number";
+
+      const customerName = order.customer_name || "Valued Customer";
+      const orderNumber = order.order_number;
+      let rejectionHtml: string;
+      let notesForDb: string | null = null;
+
+      if (isOrderNumReject) {
+        // Mirror admin-orders "order_number" rejection email exactly
+        notesForDb = "Customer provided Rewarble order number instead of gift card code (rejected via email).";
+        const reason = "It looks like you provided the <strong>Rewarble order number</strong> instead of the <strong>gift card code</strong>. The order number is a number starting with <strong>#</strong> (e.g. #123456) and is <strong>not</strong> what we need.<br><br>The actual gift card code is <strong>16 characters long</strong> and contains <strong>letters and numbers</strong>, for example: <strong style=\"font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px;\">9YVMBH7H4CXHCX7J</strong>.<br><br><div style=\"background:#f9fafb;border:1px solid #e5e7eb;padding:16px 20px;border-radius:8px;margin:12px 0;\"><div style=\"font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#1a1a1a;font-weight:600;margin-bottom:10px;\">How to find your real code</div><ol style=\"margin:0;padding-left:20px;font-size:14px;color:#333;line-height:1.7;\"><li>Open the <strong>confirmation email</strong> you received from the place where you bought the gift card.</li><li>Click the <strong>\u201CGet Order\u201D</strong> button in that email \u2014 it will take you to their website.</li><li>On that page, press <strong>\u201CDisplay Key\u201D</strong> (or \u201CReveal Code\u201D).</li><li>The 16-character code that appears is your <strong>gift card code</strong> \u2014 that\u2019s what we need.</li></ol></div>Please place a new order and enter the correct gift card code. Your current order has been cancelled.";
+        const nextStep = "Please try again or contact us for assistance.";
+        rejectionHtml = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f3ef;font-family:Arial,sans-serif;">
+<div style="max-width:600px;margin:0 auto;background:#fff;">
+  <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;">PARFUMISTRY</h1>
+  </div>
+  <div style="padding:32px;">
+    <h2 style="color:#1a1a1a;font-size:20px;margin:0 0 16px;">Payment Not Received</h2>
+    ${orderNumber ? `<p style="font-size:13px;color:#999;margin:0 0 12px;">Order Number: <strong style="color:#1a1a1a;">#${orderNumber}</strong></p>` : ""}
+    <p style="font-size:15px;color:#333;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;">${reason}</p>
+    <p style="font-size:14px;color:#666;line-height:1.6;">${nextStep}</p>
+    <div style="background:#faf9f6;border:1px solid #eee;padding:20px 24px;border-radius:8px;text-align:center;margin-top:24px;">
+      <p style="font-size:13px;color:#666;margin:0;">Need help? Contact us at <a href="mailto:support@parfumistry.net" style="color:#c9a96e;">support@parfumistry.net</a>${orderNumber ? '<br><span style="font-size:12px;color:#999;">Please include your order number: <strong>#' + orderNumber + '</strong></span>' : ''}</p>
+    </div>
+  </div>
+</div></body></html>`;
+      } else {
+        rejectionHtml = buildRejectionEmailHtml(customerName, isGiftCard, orderNumber, isBankTransferRej);
+      }
+
+      await supabase.from("orders").update({ status: "rejected", rejection_notes: notesForDb, updated_at: new Date().toISOString() }).eq("id", orderId);
+
+      const rejSubject = orderNumber ? `Order #${orderNumber} Update - Parfumistry` : "Order Update - Parfumistry";
 
       let rejEmailWarning = "";
       try {
@@ -439,9 +470,10 @@ serve(async (req) => {
         rejEmailWarning = ` ⚠️ Note: The rejection email to ${order.customer_email} may not have been delivered (email might be invalid).`;
       }
 
-      console.log("Order rejected and customer notified:", orderId);
+      console.log("Order rejected and customer notified:", orderId, "variant:", action);
 
-      return new Response(buildResultPage("Order Rejected", "A rejection notification has been sent to " + order.customer_email + "." + rejEmailWarning, false), {
+      const successTitle = isOrderNumReject ? "Order Rejected (Order Number Provided)" : "Order Rejected";
+      return new Response(buildResultPage(successTitle, "A rejection notification has been sent to " + order.customer_email + "." + rejEmailWarning, false), {
         headers: { "Content-Type": "text/html" },
         status: 200,
       });
