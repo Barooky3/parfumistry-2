@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { useDisplayName } from '@/hooks/useProductName';
 import { applyStockOverride, useProductStockOverride } from '@/hooks/useProductStock';
+import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
 import { PaddingAdjuster } from '@/components/admin/PaddingAdjuster';
 import { NameEditor } from '@/components/admin/NameEditor';
 import { StockEditor } from '@/components/admin/StockEditor';
@@ -37,7 +38,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     const { user } = useAuth();
     // Subscribe so card re-renders on stock changes
     useProductStockOverride(rawProduct.id);
-    const product = applyStockOverride(rawProduct);
+    useProductPriceOverride(rawProduct.id);
+    const product = applyStockOverride(applyPriceOverride(rawProduct));
     const paddingKey = paddingContext ? `${product.id}::${paddingContext}` : product.id;
     const paddingOverride = useProductPadding(paddingKey);
     const displayName = useDisplayName(product.id, product.name);
