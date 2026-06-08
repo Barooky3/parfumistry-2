@@ -1184,7 +1184,7 @@ export const products: Product[] = [
     },
     accentColor: '#8B0000',
     additionalImages: [
-      '/__l5e/assets-v1/f7277c2a-cc1e-4498-904d-bb4b2fa19679/scent-notes-99.png',
+      '/__l5e/assets-v1/e87d7f04-58d0-45d1-8ed3-f8833103d046/scent-notes-100.png',
     ],
     image: '/__l5e/assets-v1/39148be2-aca4-47f5-bef5-9f94c39fd3b2/spicebomb.png',
     affiliateUrl: '/product/spicebomb-extreme',
