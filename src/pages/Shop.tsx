@@ -153,6 +153,29 @@ const Shop = () => {
 
       <section className="py-10 md:py-14">
         <div className="container">
+          {/* Custom Bundle CTA */}
+          <div className="mb-8 p-6 md:p-8 border border-border bg-secondary/40 text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="text-left">
+                <h3 className="font-display text-lg md:text-xl text-foreground mb-1">
+                  Make Your Own Bundle
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Pick any 5 fragrances at special bundle prices
+                </p>
+              </div>
+              <Link to="/custom-bundle">
+                <Button
+                  size="lg"
+                  className="rounded-none text-sm font-semibold tracking-[0.12em] uppercase bg-accent text-accent-foreground hover:bg-accent/90 px-8 py-6 shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Make Your Own Bundle
+                </Button>
+              </Link>
+            </div>
+          </div>
+
           <div className="mb-8">
             <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
