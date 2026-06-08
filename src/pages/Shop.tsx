@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, X, Search } from 'lucide-react';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { SlidersHorizontal, X, Search, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
