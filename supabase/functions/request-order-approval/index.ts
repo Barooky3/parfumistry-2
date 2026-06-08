@@ -57,6 +57,7 @@ function buildApprovalEmailHtml(
 ): string {
   const approveUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=approve`;
   const rejectUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject`;
+  const rejectOrderNumUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject_order_number`;
   const proofUrl = `${baseUrl}/functions/v1/request-proof-of-payment?id=${orderId}&token=${token}`;
 
   const itemRows = items.map((item) => {
