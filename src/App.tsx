@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, type ComponentType } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,7 +16,7 @@ const isDynamicImportError = (error: unknown) => {
   return /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(message);
 };
 
-const lazyWithReload = <T extends React.ComponentType<unknown>>(loader: () => Promise<{ default: T }>) =>
+const lazyWithReload = <T extends ComponentType<unknown>>(loader: () => Promise<{ default: T }>) =>
   lazy(() =>
     loader().catch((error) => {
       if (typeof window !== 'undefined' && isDynamicImportError(error)) {
