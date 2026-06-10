@@ -1,14 +1,34 @@
-import { ReactNode, lazy, Suspense, useEffect, useState } from 'react';
+import { ReactNode, lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
 import { PromoBanner } from './PromoBanner';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
 
+const isDynamicImportError = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error || '');
+  return /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(message);
+};
+
+const lazyWithReload = <T extends ComponentType<unknown>>(loader: () => Promise<{ default: T }>) =>
+  lazy(() =>
+    loader().catch((error) => {
+      if (typeof window !== 'undefined' && isDynamicImportError(error)) {
+        const key = '__widget_chunk_reload__';
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, '1');
+          window.location.reload();
+          return new Promise<{ default: T }>(() => undefined);
+        }
+      }
+      throw error;
+    })
+  );
+
 // Lazy-load non-critical widgets to reduce initial main-thread work
-const SocialProofPopup = lazy(() => import('@/components/SocialProofPopup').then(m => ({ default: m.SocialProofPopup })));
-const VisitorTracker = lazy(() => import('@/components/VisitorTracker').then(m => ({ default: m.VisitorTracker })));
-const RejectionNotificationPopup = lazy(() => import('@/components/RejectionNotificationPopup').then(m => ({ default: m.RejectionNotificationPopup })));
-const BannedUserPopup = lazy(() => import('@/components/BannedUserPopup').then(m => ({ default: m.BannedUserPopup })));
+const SocialProofPopup = lazyWithReload(() => import('@/components/SocialProofPopup').then(m => ({ default: m.SocialProofPopup })));
+const VisitorTracker = lazyWithReload(() => import('@/components/VisitorTracker').then(m => ({ default: m.VisitorTracker })));
+const RejectionNotificationPopup = lazyWithReload(() => import('@/components/RejectionNotificationPopup').then(m => ({ default: m.RejectionNotificationPopup })));
+const BannedUserPopup = lazyWithReload(() => import('@/components/BannedUserPopup').then(m => ({ default: m.BannedUserPopup })));
 
 
 interface LayoutProps {
