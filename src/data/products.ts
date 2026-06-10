@@ -32,6 +32,7 @@ import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-pa
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
 import eveningSweetheartGallery from '@/assets/products/evening-sweetheart-gallery.png.asset.json';
 import sleekAndCleanGallery from '@/assets/products/sleek-and-clean-gallery.png.asset.json';
+import youngPlayboyGallery from '@/assets/products/young-playboy-gallery-ai.png.asset.json';
 import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
 import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
@@ -131,6 +132,7 @@ export const products: Product[] = [
       { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A' },
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
     ],
+    additionalImages: [youngPlayboyGallery.url],
     variants: [
       { ml: 50, price: 67.99, inStock: true, label: 'All 50ml (75ml for JPG)' },
       { ml: 100, price: 82.99, inStock: true, label: 'All 100ml (125ml for JPG)' },
