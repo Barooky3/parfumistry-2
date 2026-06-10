@@ -132,6 +132,7 @@ export const products: Product[] = [
       { name: 'Stronger With You Absolutely', topNote: 'Juniper', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#8B1A1A' },
       { name: '1 Million Elixir', topNote: 'Blood Mandarin', heartNote: 'Rose', baseNote: 'Vanilla', accentColor: '#DAA520' },
     ],
+    additionalImages: [youngPlayboyGallery.url],
     variants: [
       { ml: 50, price: 67.99, inStock: true, label: 'All 50ml (75ml for JPG)' },
       { ml: 100, price: 82.99, inStock: true, label: 'All 100ml (125ml for JPG)' },
