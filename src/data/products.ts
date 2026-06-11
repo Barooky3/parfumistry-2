@@ -26,6 +26,7 @@ import aventusAbsoluProduct from '@/assets/products/aventus-absolu-product.png.a
 import badBoyCobaltGallery from '@/assets/products/bad-boy-cobalt-gallery.png.asset.json';
 import badBoyCobaltGalleryAi from '@/assets/products/bad-boy-cobalt-gallery-ai.png.asset.json';
 import leMaleElixirGalleryAi from '@/assets/products/le-male-elixir-gallery-ai.png.asset.json';
+import aventusAbsoluGalleryAi from '@/assets/products/aventus-absolu-gallery-ai.png.asset.json';
 import bornInRomaCoralFantasyGallery from '@/assets/products/born-in-roma-coral-fantasy-gallery.png.asset.json';
 import bornInRomaGreenStravaganzaGallery from '@/assets/products/born-in-roma-green-stravaganza-gallery.png.asset.json';
 import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-you-absolutely-gallery.png.asset.json';
@@ -389,7 +390,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A1A2E',
     image: aventusAbsoluProduct.url,
-    additionalImages: [aventusAbsoluLifestyle],
+    additionalImages: [aventusAbsoluGalleryAi.url, aventusAbsoluLifestyle],
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
