@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getFirstVisitAt } from '@/utils/firstVisit';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Shield, Loader2, Lock, Copy } from 'lucide-react';
+import { ArrowLeft, Shield, Loader2, Lock, Copy, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 
 const PAYMENT_ID = 'Parfumistry payment database 232';
+const VALID_PAYMENT_ID = '23889';
 
 const BancontactPayment = () => {
   const { toast } = useToast();
@@ -18,6 +20,9 @@ const BancontactPayment = () => {
   const { currency, formatPrice } = useCurrency();
   const orderTotalNum = orderTotal ? parseFloat(orderTotal) : 0;
   const [isProcessing, setIsProcessing] = useState(false);
+  const [step, setStep] = useState<'pay' | 'verify'>('pay');
+  const [paymentIdInput, setPaymentIdInput] = useState('');
+  const [idError, setIdError] = useState<string | null>(null);
   const { clearCart } = useCart();
 
   const [idempotencyKey] = useState(() => {
@@ -35,8 +40,19 @@ const BancontactPayment = () => {
     } catch {}
   };
 
-  const handleConfirm = async () => {
+  const handleVerifyAndSubmit = async () => {
     if (isProcessing) return;
+    const entered = paymentIdInput.trim();
+    if (entered !== VALID_PAYMENT_ID) {
+      setIdError('Invalid Bancontact payment ID. Your payment could not be verified — the order was not placed.');
+      toast({
+        title: 'Payment verification failed',
+        description: 'The Bancontact payment ID you entered is not valid. No order has been placed.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setIdError(null);
     setIsProcessing(true);
     try {
       const orderContext = sessionStorage.getItem('checkoutOrderContext') || localStorage.getItem('checkoutOrderContext');
@@ -50,7 +66,7 @@ const BancontactPayment = () => {
           shippingAddress: { ...ctx.shippingAddress, shippingMethod: ctx.shippingMethod || 'standard' },
           totalAmount: ctx.totalAmount,
           paymentMethod: 'bancontact',
-          giftCardCode: PAYMENT_ID,
+          giftCardCode: `BANCONTACT-${entered}`,
           discountCode: ctx.discountCode || null,
           discountPercent: ctx.discountPercent || 0,
           idempotencyKey,
@@ -70,11 +86,6 @@ const BancontactPayment = () => {
       setIsProcessing(false);
     }
   };
-
-  useEffect(() => {
-    handleConfirm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -153,10 +164,63 @@ const BancontactPayment = () => {
           </div>
         </div>
 
-        {isProcessing && (
-          <div className="w-full h-[52px] rounded-lg text-sm font-semibold tracking-wide bg-[#005498]/20 text-[#005498] flex items-center justify-center gap-2">
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Processing your order automatically…
+        {step === 'pay' ? (
+          <button
+            type="button"
+            onClick={() => setStep('verify')}
+            className="w-full h-[52px] rounded-lg text-sm font-semibold tracking-wide bg-[#005498] text-white hover:bg-[#004380] transition-colors"
+          >
+            I have paid
+          </button>
+        ) : (
+          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+              <h2 className="text-sm font-semibold text-foreground tracking-wide">Verify your Bancontact payment</h2>
+            </div>
+            <div className="px-5 py-4 space-y-3">
+              <label className="text-xs text-muted-foreground block">
+                Enter the Bancontact payment ID from your app's confirmation
+              </label>
+              <Input
+                value={paymentIdInput}
+                onChange={(e) => { setPaymentIdInput(e.target.value); if (idError) setIdError(null); }}
+                placeholder="e.g. 23889"
+                disabled={isProcessing}
+                inputMode="numeric"
+                autoComplete="off"
+                className="h-11 text-base tracking-wider"
+              />
+              {idError && (
+                <div className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5">
+                  <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                  <p className="text-xs text-destructive leading-relaxed">{idError}</p>
+                </div>
+              )}
+              <Button
+                type="button"
+                onClick={handleVerifyAndSubmit}
+                disabled={isProcessing || paymentIdInput.trim().length === 0}
+                className="w-full h-[52px] text-sm font-semibold tracking-wide bg-[#005498] text-white hover:bg-[#004380]"
+              >
+                {isProcessing ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Verifying payment…
+                  </span>
+                ) : (
+                  'Verify & complete order'
+                )}
+              </Button>
+              {!isProcessing && (
+                <button
+                  type="button"
+                  onClick={() => setStep('pay')}
+                  className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  ← Back
+                </button>
+              )}
+            </div>
           </div>
         )}
 
