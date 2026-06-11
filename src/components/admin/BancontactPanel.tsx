@@ -107,9 +107,23 @@ export default function BancontactPanel({ userEmail }: Props) {
   }, []);
 
   const [customOpen, setCustomOpen] = useState(false);
-  const [customItems, setCustomItems] = useState<CustomItem[]>([{ brand: "Dior", name: "Sauvage", price: 39.99, quantity: 1, selectedMl: 100 }]);
+  const [customItems, setCustomItems] = useState<CustomItem[]>([]);
+  const [customShipping, setCustomShipping] = useState<ShippingChoice>("standard");
   const [customTotal, setCustomTotal] = useState<string>("");
   const [busy, setBusy] = useState(false);
+
+  // Hydrate price overrides so catalog reflects live prices
+  useEffect(() => { fetchAllProductPriceOverrides(); }, []);
+  const catalog = useMemo(() => CATALOG.map(applyPriceOverride), []);
+
+  const itemsSubtotal = useMemo(
+    () => customItems.reduce((s, it) => s + (Number(it.price) || 0) * Math.max(1, Math.floor(Number(it.quantity) || 1)), 0),
+    [customItems]
+  );
+  const autoTotal = useMemo(
+    () => Math.round((itemsSubtotal + SHIPPING_COSTS[customShipping]) * 100) / 100,
+    [itemsSubtotal, customShipping]
+  );
 
   const applyCounterRow = useCallback((row: any) => {
     if (!row) return;
