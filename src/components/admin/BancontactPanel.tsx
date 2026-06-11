@@ -417,6 +417,69 @@ export default function BancontactPanel({ userEmail }: Props) {
         </div>
       )}
 
+      {/* Pending Bancontact orders — Bancontact admin only */}
+      {isBancontactAdmin && (
+        <div className="mt-4 border-t pt-3">
+          <button onClick={() => setPendingBCOpen(v => !v)} className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              Pending Bancontact Orders
+              <span className="px-1.5 py-0.5 rounded bg-yellow-500/15 text-yellow-600 text-[10px] font-semibold">
+                {pendingBC.length}
+              </span>
+              {pendingBCLoading && <RefreshCw className="h-3 w-3 animate-spin opacity-60" />}
+            </p>
+            <div className="flex items-center gap-2">
+              <span
+                role="button"
+                onClick={(e) => { e.stopPropagation(); fetchPendingBancontact(); }}
+                className="text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                Refresh
+              </span>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${pendingBCOpen ? "rotate-180" : ""}`} />
+            </div>
+          </button>
+          {pendingBCOpen && (
+            <div className="mt-2 space-y-2 max-h-80 overflow-y-auto">
+              {pendingBC.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-3 text-center">No pending Bancontact orders.</p>
+              ) : pendingBC.map((o) => {
+                const addr = o.shipping_address || {};
+                const addrLine = [addr.line1, addr.city, addr.country].filter(Boolean).join(", ");
+                const busyRow = actingId === o.id;
+                return (
+                  <div key={o.id} className="text-xs border rounded px-3 py-2 bg-background/40">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold">#{o.order_number ?? o.id.slice(0,8)}</span>
+                          <span className="opacity-80">{o.customer_name}</span>
+                          <span className="opacity-60">· {o.customer_email}</span>
+                        </div>
+                        {addrLine && <div className="opacity-60 mt-0.5 truncate">{addrLine}</div>}
+                        <div className="opacity-60 mt-0.5">{format(new Date(o.created_at), "dd MMM HH:mm")}</div>
+                      </div>
+                      <div className="font-semibold">€{Number(o.total_amount).toFixed(2)}</div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <Button size="sm" variant="default" className="h-7 text-xs bg-green-600 hover:bg-green-700" disabled={busyRow} onClick={() => handlePendingAction(o, "approve")}>
+                        ✓ Approve
+                      </Button>
+                      <Button size="sm" variant="destructive" className="h-7 text-xs" disabled={busyRow} onClick={() => handlePendingAction(o, "reject")}>
+                        ✕ Reject
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs" disabled={busyRow} onClick={() => handlePendingAction(o, "relay_split")}>
+                        ⇄ Relay 50/50
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Contributing entries */}
       {snapshot.orders.length > 0 && (
         <div className="mt-3 border-t pt-2">
