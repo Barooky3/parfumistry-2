@@ -13,9 +13,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { toast } from "sonner";
-import { RefreshCw, ChevronDown, Trash2, Plus, Zap, Settings2 } from "lucide-react";
+import { RefreshCw, ChevronDown, Trash2, Plus, Zap, Settings2, ChevronsUpDown, X } from "lucide-react";
 import { format, formatDistanceToNowStrict } from "date-fns";
+import { products as CATALOG } from "@/data/products";
+import { applyPriceOverride, fetchAllProductPriceOverrides } from "@/hooks/useProductPrice";
 
 const PRIMARY_ADMIN = "ewhz3384@gmail.com";
 const ADMIN_EMAILS = [PRIMARY_ADMIN, "elkhabirmalik@gmail.com"];
