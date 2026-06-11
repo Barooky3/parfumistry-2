@@ -79,23 +79,32 @@ export const useProductPriceOverride = (productId: string): PriceOverride | null
 
 export const applyPriceOverride = <T extends Product>(product: T): T => {
   const ov = cache[product.id];
-  if (!ov) return product;
   const next: T = { ...product };
-  if (ov.base_price !== null && ov.base_price !== undefined) next.price = ov.base_price;
-  if (ov.original_price !== null && ov.original_price !== undefined) {
-    next.originalPrice = ov.original_price;
+  if (ov) {
+    if (ov.base_price !== null && ov.base_price !== undefined) next.price = ov.base_price;
+    if (ov.original_price !== null && ov.original_price !== undefined) {
+      next.originalPrice = ov.original_price;
+    }
+    if (ov.variants && ov.variants.length && product.variants) {
+      next.variants = product.variants.map((v, i) => {
+        const o = ov.variants?.[i];
+        if (!o) return v;
+        return {
+          ...v,
+          price: typeof o.price === 'number' ? o.price : v.price,
+          originalPrice:
+            typeof o.originalPrice === 'number' ? o.originalPrice : v.originalPrice,
+        };
+      });
+    }
   }
-  if (ov.variants && ov.variants.length && product.variants) {
-    next.variants = product.variants.map((v, i) => {
-      const o = ov.variants?.[i];
-      if (!o) return v;
-      return {
-        ...v,
-        price: typeof o.price === 'number' ? o.price : v.price,
-        originalPrice:
-          typeof o.originalPrice === 'number' ? o.originalPrice : v.originalPrice,
-      };
-    });
+  // Always sync the outside (card) price to the cheapest variant when variants exist
+  if (next.variants && next.variants.length) {
+    const cheapest = next.variants.reduce((a, b) => (a.price <= b.price ? a : b));
+    next.price = cheapest.price;
+    if (cheapest.originalPrice !== undefined) {
+      next.originalPrice = cheapest.originalPrice;
+    }
   }
   return next;
 };
