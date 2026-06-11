@@ -56,6 +56,7 @@ import phantomParfumGalleryAi from '@/assets/products/phantom-parfum-gallery-ai.
 import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.json';
 import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
 import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
+import imaginationGalleryAi from '@/assets/products/imagination-gallery-ai.png.asset.json';
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
@@ -916,7 +917,7 @@ export const products: Product[] = [
     },
     accentColor: '#F5C542',
     image: '/__l5e/assets-v1/e7eb0188-1275-4fe3-a298-e27d81313aad/product-4-matched-1.png',
-    additionalImages: [imaginationLifestyle],
+    additionalImages: [imaginationGalleryAi.url, imaginationLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
