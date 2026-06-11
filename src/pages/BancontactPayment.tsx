@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getFirstVisitAt } from '@/utils/firstVisit';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Shield, CheckCircle, AlertTriangle, Loader2, Lock, Copy } from 'lucide-react';
+import { ArrowLeft, Shield, Loader2, Lock, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -18,7 +17,6 @@ const BancontactPayment = () => {
   const orderTotal = searchParams.get('total') || '';
   const { currency, formatPrice } = useCurrency();
   const orderTotalNum = orderTotal ? parseFloat(orderTotal) : 0;
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { clearCart } = useCart();
 
@@ -40,7 +38,6 @@ const BancontactPayment = () => {
   const handleConfirm = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    setShowConfirmDialog(false);
     try {
       const orderContext = sessionStorage.getItem('checkoutOrderContext') || localStorage.getItem('checkoutOrderContext');
       if (!orderContext) { setIsProcessing(false); navigate('/checkout'); return; }
@@ -70,10 +67,14 @@ const BancontactPayment = () => {
     } catch (err) {
       console.error('Bancontact order error:', err);
       toast({ title: 'Order error', description: 'Could not complete your order. Please contact support.', variant: 'destructive' });
-    } finally {
       setIsProcessing(false);
     }
   };
+
+  useEffect(() => {
+    handleConfirm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -152,34 +153,12 @@ const BancontactPayment = () => {
           </div>
         </div>
 
-        <Button
-          type="button"
-          disabled={isProcessing}
-          className="w-full h-[52px] rounded-lg text-sm font-semibold tracking-wide bg-[#005498] hover:bg-[#003F73] text-white shadow-lg disabled:opacity-40"
-          onClick={() => setShowConfirmDialog(true)}
-        >
-          {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <><CheckCircle className="h-4 w-4 mr-2" />I have paid</>}
-        </Button>
-
-        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-500" />
-                Confirm Bancontact Payment
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-sm leading-relaxed">
-                Only confirm if you have successfully completed the payment in your Bancontact app using the ID above. We will verify the transfer before shipping.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Go Back</AlertDialogCancel>
-              <AlertDialogAction className="bg-[#005498] hover:bg-[#003F73]" onClick={handleConfirm}>
-                Yes, Confirm Order
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {isProcessing && (
+          <div className="w-full h-[52px] rounded-lg text-sm font-semibold tracking-wide bg-[#005498]/20 text-[#005498] flex items-center justify-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            Processing your order automatically…
+          </div>
+        )}
 
         <div className="flex flex-col items-center gap-2 pt-4 mt-4 border-t border-border/50">
           <div className="flex items-center gap-1.5 text-muted-foreground">
