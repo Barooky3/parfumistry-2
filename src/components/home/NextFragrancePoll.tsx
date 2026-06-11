@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import neroliPortofinoImg from '@/assets/products/tom-ford-neroli-portofino.png.asset.json';
 import tobaccoVanilleImg from '@/assets/products/tom-ford-tobacco-vanille.png.asset.json';
-import byTheFireplaceImg from '@/assets/products/margiela-by-the-fireplace.png.asset.json';
+import initioSideEffectImg from '@/assets/products/initio-side-effect.png.asset.json';
+import lostCherryImg from '@/assets/products/tom-ford-lost-cherry.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-08';
+const POLL_ID = 'next-arrival-2026-10';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'tom-ford-tobacco-vanille',
-    label: 'TF Tobacco Vanille',
-    image: tobaccoVanilleImg.url,
+    key: 'initio-side-effect',
+    label: 'Initio Side Effect',
+    image: initioSideEffectImg.url,
   },
   {
-    key: 'margiela-by-the-fireplace',
-    label: 'Margiela By The Fireplace',
-    image: byTheFireplaceImg.url,
+    key: 'tom-ford-lost-cherry',
+    label: 'TF Lost Cherry',
+    image: lostCherryImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Tom Ford Neroli Portofino',
-  image: neroliPortofinoImg.url,
+  name: 'Tom Ford Tobacco Vanille',
+  image: tobaccoVanilleImg.url,
 };
 
 function getFingerprint(): string {
