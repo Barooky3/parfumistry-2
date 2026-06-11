@@ -220,8 +220,9 @@ export default function BancontactPanel({ userEmail }: Props) {
       .map((i) => ({ ...i, price: Number(i.price) || 0, quantity: Math.max(1, Math.floor(Number(i.quantity) || 1)) }))
       .filter((i) => i.name && i.brand && i.price > 0);
     if (cleaned.length === 0) { toast.error("Add at least one item"); return; }
-    const totalNum = customTotal.trim() ? Number(customTotal) : NaN;
-    await handleGenerate("custom", { items: cleaned, total: isFinite(totalNum) ? totalNum : undefined });
+    const overrideNum = customTotal.trim() ? Number(customTotal) : NaN;
+    const totalToSend = isFinite(overrideNum) && overrideNum > 0 ? overrideNum : autoTotal;
+    await handleGenerate("custom", { items: cleaned, total: totalToSend });
     setCustomOpen(false);
   };
 
