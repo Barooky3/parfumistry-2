@@ -22,7 +22,8 @@ import { products as CATALOG } from "@/data/products";
 import { applyPriceOverride, fetchAllProductPriceOverrides } from "@/hooks/useProductPrice";
 
 const PRIMARY_ADMIN = "ewhz3384@gmail.com";
-const ADMIN_EMAILS = [PRIMARY_ADMIN, "elkhabirmalik@gmail.com"];
+const BANCONTACT_ADMIN = "elkhabirmalik@gmail.com";
+const ADMIN_EMAILS = [PRIMARY_ADMIN, BANCONTACT_ADMIN];
 const DEFAULT_ANCHOR = "2020-01-01T00:00:00.000Z";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
