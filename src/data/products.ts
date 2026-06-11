@@ -24,6 +24,7 @@ import leBeauParadiseGardenGallery from '@/assets/products/le-beau-paradise-gard
 import aventusGallery from '@/assets/products/aventus-gallery.png.asset.json';
 import aventusAbsoluProduct from '@/assets/products/aventus-absolu-product.png.asset.json';
 import badBoyCobaltGallery from '@/assets/products/bad-boy-cobalt-gallery.png.asset.json';
+import badBoyCobaltGalleryAi from '@/assets/products/bad-boy-cobalt-gallery-ai.png.asset.json';
 import bornInRomaCoralFantasyGallery from '@/assets/products/born-in-roma-coral-fantasy-gallery.png.asset.json';
 import bornInRomaGreenStravaganzaGallery from '@/assets/products/born-in-roma-green-stravaganza-gallery.png.asset.json';
 import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-you-absolutely-gallery.png.asset.json';
@@ -2159,7 +2160,7 @@ export const products: Product[] = [
     },
     accentColor: '#1E3A8A',
     image: '/images/bad-boy-cobalt.png',
-    additionalImages: [badBoyCobaltGallery.url],
+    additionalImages: [badBoyCobaltGalleryAi.url],
     affiliateUrl: '/product/bad-boy-cobalt',
     inStock: true,
     variants: [
