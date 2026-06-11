@@ -917,7 +917,7 @@ export const products: Product[] = [
     },
     accentColor: '#F5C542',
     image: '/__l5e/assets-v1/e7eb0188-1275-4fe3-a298-e27d81313aad/product-4-matched-1.png',
-    additionalImages: [imaginationLifestyle],
+    additionalImages: [imaginationGalleryAi.url, imaginationLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
