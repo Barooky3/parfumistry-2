@@ -8,6 +8,73 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "elkhabirmalik@gmail.com"];
+const BANCONTACT_RECIPIENT = "elkhabirmalik@gmail.com";
+
+function buildBancontactApprovalEmailHtml(
+  orderId: string,
+  token: string,
+  customerName: string,
+  customerEmail: string,
+  items: OrderItem[],
+  totalAmount: string,
+  shippingAddress: { line1?: string; line2?: string; city?: string; postalCode?: string; country?: string },
+  baseUrl: string,
+  orderNumber?: number | null,
+): string {
+  const approveUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=approve`;
+  const rejectUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=reject`;
+  const relayUrl = `${baseUrl}/functions/v1/handle-order-action?id=${orderId}&token=${token}&action=relay_split`;
+
+  const itemRows = items.map((item) => {
+    const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
+    return `<tr><td style="padding:10px 0;border-bottom:1px solid #2a2a2a;font-family:Arial,sans-serif;color:#e5e5e5;font-size:14px;line-height:1.5;">
+      <strong style="color:#fff;">${escapeHtml(item.brand)}</strong> — ${escapeHtml(item.name)}${mlLabel}<br/>
+      <span style="color:#999;font-size:13px;">Qty: ${item.quantity} · EUR ${(item.price * item.quantity).toFixed(2)}</span>
+    </td></tr>`;
+  }).join("");
+
+  const addressLines = [
+    shippingAddress?.line1,
+    shippingAddress?.line2,
+    [shippingAddress?.postalCode, shippingAddress?.city].filter(Boolean).join(" "),
+    shippingAddress?.country,
+  ].filter(Boolean);
+  const addressHtml = addressLines.length > 0 ? addressLines.map((l) => escapeHtml(String(l))).join("<br/>") : "N/A";
+  const orderNumText = orderNumber ? `#${orderNumber}` : "—";
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+<div style="max-width:600px;margin:0 auto;background:#1f1f1f;">
+  <div style="background:#11366b;padding:36px 24px;text-align:center;">
+    <h1 style="margin:0;font-size:30px;font-weight:800;letter-spacing:1px;line-height:1.2;">
+      <span style="color:#facc15;">NEW</span><br/>
+      <span style="background:#facc15;color:#111;padding:4px 12px;border-radius:4px;display:inline-block;margin:6px 0;">BANCONTACT</span><br/>
+      <span style="color:#facc15;">ORDER</span>
+    </h1>
+    <p style="color:#cbd5e1;font-size:14px;margin:14px 0 0;">Awaiting your approval</p>
+  </div>
+  <div style="padding:24px;">
+    <table style="width:100%;font-size:15px;color:#e5e5e5;border-collapse:collapse;">
+      <tr><td style="padding:6px 0;color:#9ca3af;width:90px;">Order #:</td><td style="padding:6px 0;color:#fff;font-weight:700;">${orderNumText}</td></tr>
+      <tr><td style="padding:6px 0;color:#9ca3af;">Customer:</td><td style="padding:6px 0;color:#fff;font-weight:700;">${escapeHtml(customerName)}</td></tr>
+      <tr><td style="padding:6px 0;color:#9ca3af;">Email:</td><td style="padding:6px 0;color:#60a5fa;">${escapeHtml(customerEmail)}</td></tr>
+      <tr><td style="padding:6px 0;color:#9ca3af;vertical-align:top;">Address:</td><td style="padding:6px 0;color:#60a5fa;line-height:1.5;">${addressHtml}</td></tr>
+      <tr><td style="padding:6px 0;color:#9ca3af;">Payment:</td><td style="padding:6px 0;"><span style="background:#facc15;color:#111;padding:2px 8px;border-radius:3px;font-weight:700;">Bancontact</span> <span style="color:#fff;font-weight:600;">(Verified)</span></td></tr>
+      <tr><td style="padding:6px 0;color:#9ca3af;">Total:</td><td style="padding:6px 0;color:#fff;font-weight:700;">EUR ${totalAmount}</td></tr>
+    </table>
+    <div style="margin:24px 0 12px;text-align:center;">
+      <a href="${approveUrl}" style="display:block;background:#16a34a;color:#fff;padding:14px 24px;border-radius:6px;text-decoration:none;font-weight:700;font-size:15px;margin-bottom:10px;">✓ Approve</a>
+      <a href="${rejectUrl}" style="display:block;background:#dc2626;color:#fff;padding:14px 24px;border-radius:6px;text-decoration:none;font-weight:700;font-size:15px;margin-bottom:10px;">✕ Reject</a>
+      <a href="${relayUrl}" style="display:block;background:#7c3aed;color:#fff;padding:14px 24px;border-radius:6px;text-decoration:none;font-weight:700;font-size:15px;">⇄ Relay 50/50 (half now, half in 1h)</a>
+    </div>
+    <div style="border-top:1px solid #2a2a2a;padding-top:14px;margin-top:18px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#9ca3af;margin-bottom:6px;">Order Items</div>
+      <table style="width:100%;">${itemRows}</table>
+    </div>
+  </div>
+</div>
+</body></html>`;
+}
 
 const VALID_DISCOUNT_CODES: Record<string, number> = {
   'professor15': 15,
@@ -261,33 +328,53 @@ serve(async (req) => {
       throw new Error("Failed to store order");
     }
 
-    // Send approval email to admin immediately for all payment methods
-    const html = buildApprovalEmailHtml(
-      order.id,
-      token,
-      customerName || "Valued Customer",
-      customerEmail,
-      normalizedItems,
-      calculatedTotal,
-      shippingAddress || {},
-      supabaseUrl,
-      paymentMethod,
-      giftCardCode,
-      order.order_number,
-    );
-
     const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-    const methodLabels: Record<string, string> = {
-      rewarble: "Rewarble Order",
-      revolut_app: "Revolut Order",
-      bank_transfer: "Bank Transfer Order",
-      paypal_eneba: "PayPal/Eneba Order",
-      bancontact: "Bancontact Order",
-      cod: "Cash on Delivery Order",
-    };
-    const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
-    await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
-    console.log("Approval email sent to admin for order:", order.id);
+
+    if (paymentMethod === "bancontact") {
+      // Bancontact orders go ONLY to elkhabirmalik with the dedicated dark template
+      // with 3 buttons: Approve, Reject, Relay 50/50.
+      const bcHtml = buildBancontactApprovalEmailHtml(
+        order.id,
+        token,
+        customerName || "Valued Customer",
+        customerEmail,
+        normalizedItems,
+        calculatedTotal,
+        shippingAddress || {},
+        supabaseUrl,
+        order.order_number,
+      );
+      await sendEmail(
+        BANCONTACT_RECIPIENT,
+        `New Bancontact Order${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`,
+        bcHtml,
+      );
+      console.log("Bancontact approval email sent to", BANCONTACT_RECIPIENT, "for order:", order.id);
+    } else {
+      const html = buildApprovalEmailHtml(
+        order.id,
+        token,
+        customerName || "Valued Customer",
+        customerEmail,
+        normalizedItems,
+        calculatedTotal,
+        shippingAddress || {},
+        supabaseUrl,
+        paymentMethod,
+        giftCardCode,
+        order.order_number,
+      );
+      const methodLabels: Record<string, string> = {
+        rewarble: "Rewarble Order",
+        revolut_app: "Revolut Order",
+        bank_transfer: "Bank Transfer Order",
+        paypal_eneba: "PayPal/Eneba Order",
+        cod: "Cash on Delivery Order",
+      };
+      const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
+      await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+      console.log("Approval email sent to admin for order:", order.id);
+    }
 
     // Auto proof emails removed — customers now upload proof via the website after confirming payment
 
