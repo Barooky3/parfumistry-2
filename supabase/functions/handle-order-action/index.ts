@@ -408,11 +408,41 @@ serve(async (req) => {
 
       console.log("Order approved, customer email + admin invoice sent:", orderId);
 
-      const resultMsg = emailWarning
-        ? "Order approved. ⚠️ However, the customer email (" + order.customer_email + ") may be invalid — the confirmation email might not have been delivered."
-        : "The confirmation email has been sent to " + order.customer_email + ".";
+      // Relay 50/50: credit half to the bancontact live counter now, schedule the
+      // second half +1h via bancontact_orders (timer-tick will pay it out).
+      let relayMsg = "";
+      if (action === "relay_split") {
+        const nowIso = new Date().toISOString();
+        const dueIso = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+        const relayToken = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
+        const { error: bcErr } = await supabase.from("bancontact_orders").insert({
+          customer_name: order.customer_name || "Valued Customer",
+          customer_email: order.customer_email,
+          country: (order.shipping_address as any)?.country || null,
+          order_items: items,
+          total_amount: order.total_amount,
+          status: "split",
+          approval_token: relayToken,
+          source: "checkout_relay",
+          split_first_at: nowIso,
+          split_second_due_at: dueIso,
+        });
+        if (bcErr) {
+          console.error("Failed to insert relay split row:", bcErr);
+          relayMsg = " ⚠️ Counter relay failed: " + bcErr.message;
+        } else {
+          await supabase.from("bancontact_live_counter").update({ updated_at: nowIso }).eq("id", 1);
+          const half = (Number(order.total_amount) / 2).toFixed(2);
+          relayMsg = ` Relay 50/50 active: €${half} credited now, €${half} in 1 hour.`;
+        }
+      }
 
-      return new Response(buildResultPage("Order Approved", resultMsg, true), {
+      const resultMsg = (emailWarning
+        ? "Order approved. ⚠️ However, the customer email (" + order.customer_email + ") may be invalid — the confirmation email might not have been delivered."
+        : "The confirmation email has been sent to " + order.customer_email + ".") + relayMsg;
+
+      const title = action === "relay_split" ? "Order Approved (Relay 50/50)" : "Order Approved";
+      return new Response(buildResultPage(title, resultMsg, true), {
         headers: { "Content-Type": "text/html" },
         status: 200,
       });
