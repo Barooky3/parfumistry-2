@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+
 import {
   Dialog,
   DialogContent,
@@ -255,7 +255,6 @@ export default function BancontactPanel({ userEmail }: Props) {
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-wider flex items-center gap-2">
             Live Counter — Bancontact
-            <Badge variant="secondary" className="text-[10px] uppercase tracking-wider">Test</Badge>
           </p>
           <p className="text-[11px] text-muted-foreground mt-0.5">
             Since {format(new Date(snapshot.resetAt), "dd MMM yyyy, HH:mm")} · {snapshot.count} credited entries

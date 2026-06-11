@@ -18,6 +18,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ChevronsUpDown, Check, Gift, X } from 'lucide-react';
 import { getFragrances } from '@/data/products';
 import { useBannedStatus } from '@/hooks/useBannedStatus';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 const COUNTRIES = [
@@ -102,6 +103,8 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isBanned } = useBannedStatus();
+  const { user } = useAuth();
+  const showBancontact = (user?.email || '').toLowerCase() === 'elkhabirmalik@gmail.com';
 
 
   const [isCompleted, setIsCompleted] = useState(false);
@@ -674,6 +677,27 @@ const Checkout = () => {
               Fill in all fields above to continue
             </p>
           )}
+
+          {showBancontact && (
+            <div className="relative rounded-xl border-2 border-[#005498] bg-gradient-to-br from-[#005498]/5 to-transparent p-3 shadow-md">
+              <span className="absolute -top-2 left-3 px-2 py-0.5 rounded-full bg-[#005498] text-white text-[10px] font-bold tracking-wider uppercase">Recommended</span>
+              <Button
+                type="button"
+                disabled={!isFormValid() || isProcessing}
+                className="w-full h-12 rounded-lg text-sm font-bold tracking-wide bg-[#005498] hover:bg-[#003F73] text-white"
+                onClick={() => handlePayment('bancontact')}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="font-extrabold tracking-tight">BC</span>
+                  Pay with Bancontact
+                </span>
+              </Button>
+              <p className="text-[11px] text-muted-foreground text-center mt-2 leading-snug">
+                Full buyer protection · chargebacks · pay with card, Apple Pay, Google Pay
+              </p>
+            </div>
+          )}
+
 
           {/* Card / Apple Pay / Google Pay */}
           <Button

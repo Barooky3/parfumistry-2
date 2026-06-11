@@ -64,14 +64,13 @@ interface Order {
 }
 
 function getPaymentMethod(ref: string): string {
-  if (ref?.startsWith("rewarble")) return "Rewarble";
-  if (ref?.startsWith("revolut-app") || ref?.startsWith("revolut")) return "Revolut";
-  if (ref?.startsWith("bank-transfer")) return "Bank Transfer";
-  if (ref?.startsWith("paypal")) return "PayPal";
+  if (ref?.startsWith("bancontact")) return "Bancontact";
+  if (ref?.startsWith("cod")) return "Cash on Delivery";
+  if (ref?.startsWith("rewarble") || ref?.startsWith("paypal") || ref?.startsWith("ideal")) return "Rewarble";
   return "Other";
 }
 
-const PAYMENT_METHODS = ["All", "Rewarble", "PayPal", "Bank Transfer", "Revolut"];
+const PAYMENT_METHODS = ["All", "Rewarble", "Bancontact", "Cash on Delivery"];
 
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
@@ -839,9 +838,8 @@ export default function AdminOrders() {
 
   const pmColors: Record<string, string> = {
     "Rewarble": "bg-purple-100 text-purple-800",
-    "PayPal": "bg-blue-100 text-blue-800",
-    "Bank Transfer": "bg-emerald-100 text-emerald-800",
-    "Revolut": "bg-cyan-100 text-cyan-800",
+    "Bancontact": "bg-amber-100 text-amber-800",
+    "Cash on Delivery": "bg-emerald-100 text-emerald-800",
     "Other": "bg-gray-100 text-gray-800",
   };
 
