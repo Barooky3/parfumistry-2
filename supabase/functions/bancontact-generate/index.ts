@@ -122,32 +122,90 @@ interface RealOrderRow {
 }
 
 async function pickCustomer(supabase: ReturnType<typeof createClient>): Promise<{ name: string; email: string; country: string | null } | null> {
-  // Older than 14 days, never use the pending bucket; prefer oldest pool, then randomize.
-  const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+  // 1. Cooldown window: don't reuse any customer (real or bancontact) seen in the last 2 days.
+  const COOLDOWN_MS = 2 * 24 * 60 * 60 * 1000;
+  const cooldownCutoff = new Date(Date.now() - COOLDOWN_MS).toISOString();
+  // Real orders must be older than 2 days to enter the pool (matches the rule:
+  // "after 1-2 days, add them to the available database").
+  const ageCutoff = cooldownCutoff;
+
+  // 2. Emails recently used in bancontact_orders — fully blocked until cooldown clears.
+  const { data: recentBC } = await supabase
+    .from("bancontact_orders")
+    .select("customer_email, created_at")
+    .gte("created_at", cooldownCutoff);
+  const blocked = new Set<string>();
+  for (const r of (recentBC || []) as Array<{ customer_email: string }>) {
+    if (r.customer_email) blocked.add(r.customer_email.toLowerCase());
+  }
+
+  // 3. Build the full eligible pool from real (non-pending) orders older than the cutoff.
   const { data } = await supabase
     .from("orders")
-    .select("customer_name, customer_email, shipping_address")
+    .select("customer_name, customer_email, shipping_address, created_at")
     .neq("status", "pending_approval")
-    .lt("created_at", cutoff)
+    .lt("created_at", ageCutoff)
     .order("created_at", { ascending: true })
-    .limit(200);
-  const rows = (data || []) as Array<{ customer_name: string; customer_email: string; shipping_address: any }>;
+    .limit(2000);
+  const rows = (data || []) as Array<{ customer_name: string; customer_email: string; shipping_address: any; created_at: string }>;
   if (rows.length === 0) return null;
-  // De-duplicate by email so we don't keep picking the same person.
-  const seen = new Set<string>();
-  const unique = rows.filter((r) => {
+
+  // 4. Dedupe by email — keep the newest record per email so name/country reflect latest order.
+  const byEmail = new Map<string, { name: string; email: string; country: string | null; created_at: string }>();
+  for (const r of rows) {
     const key = (r.customer_email || "").toLowerCase();
-    if (!key || seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-  const pool = unique.length > 0 ? unique : rows;
-  const row = pick(pool);
-  return {
-    name: row.customer_name || "Valued Customer",
-    email: row.customer_email,
-    country: row.shipping_address?.country || null,
-  };
+    if (!key) continue;
+    const existing = byEmail.get(key);
+    const entry = {
+      name: r.customer_name || "Valued Customer",
+      email: r.customer_email,
+      country: r.shipping_address?.country || null,
+      created_at: r.created_at,
+    };
+    if (!existing || new Date(entry.created_at) > new Date(existing.created_at)) {
+      byEmail.set(key, entry);
+    }
+  }
+  const unique = Array.from(byEmail.values());
+  if (unique.length === 0) return null;
+
+  // 5. Drop everyone currently in the cooldown window.
+  const available = unique.filter((u) => !blocked.has(u.email.toLowerCase()));
+
+  // 6. Fetch last-used-in-bancontact timestamp per email (covers older usage outside cooldown).
+  const allEmails = unique.map((u) => u.email);
+  const { data: allBCUsage } = await supabase
+    .from("bancontact_orders")
+    .select("customer_email, created_at")
+    .in("customer_email", allEmails);
+  const lastUsed = new Map<string, number>();
+  for (const r of (allBCUsage || []) as Array<{ customer_email: string; created_at: string }>) {
+    const key = (r.customer_email || "").toLowerCase();
+    const t = new Date(r.created_at).getTime();
+    const prev = lastUsed.get(key);
+    if (prev === undefined || t > prev) lastUsed.set(key, t);
+  }
+
+  // 7. Selection strategy:
+  //    a) Prefer never-used available customers (random pick for variety).
+  //    b) Else, least-recently-used available customers.
+  //    c) If cooldown blocks everyone, fall back to LRU across the whole pool (true exhaustion).
+  const pool = available.length > 0 ? available : unique;
+  const neverUsed = pool.filter((u) => !lastUsed.has(u.email.toLowerCase()));
+  let chosen: typeof pool[number];
+  if (neverUsed.length > 0) {
+    chosen = pick(neverUsed);
+  } else {
+    const sorted = [...pool].sort((a, b) => {
+      const ta = lastUsed.get(a.email.toLowerCase()) ?? 0;
+      const tb = lastUsed.get(b.email.toLowerCase()) ?? 0;
+      return ta - tb; // oldest-used first
+    });
+    // Mild randomness across the 5 least-recently-used so it doesn't look mechanical.
+    chosen = pick(sorted.slice(0, Math.min(5, sorted.length)));
+  }
+
+  return { name: chosen.name, email: chosen.email, country: chosen.country };
 }
 
 async function buildRandomItems(supabase: ReturnType<typeof createClient>): Promise<{ items: BancItem[]; total: number }> {
