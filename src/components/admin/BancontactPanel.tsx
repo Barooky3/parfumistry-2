@@ -628,6 +628,3 @@ function ProductPickerCombobox({
     </Popover>
   );
 }
-    </div>
-  );
-}
