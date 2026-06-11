@@ -56,6 +56,7 @@ import phantomParfumGalleryAi from '@/assets/products/phantom-parfum-gallery-ai.
 import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.json';
 import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
 import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
+import imaginationGalleryAi from '@/assets/products/imagination-gallery-ai.png.asset.json';
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
