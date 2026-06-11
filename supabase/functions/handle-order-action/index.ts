@@ -338,7 +338,7 @@ serve(async (req) => {
       );
     }
 
-    if (action === "approve") {
+    if (action === "relay_split" || action === "approve") {
       // Atomic check-and-update to prevent duplicate invoices
       const { data: updated, error: updateErr } = await supabase
         .from("orders")
