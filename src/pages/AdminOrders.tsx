@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { products } from "@/data/products";
 import { Product } from "@/types/product";
+import BancontactPanel from "@/components/admin/BancontactPanel";
 
 const PRIMARY_ADMIN = "ewhz3384@gmail.com";
 const ADMIN_EMAILS = [PRIMARY_ADMIN, "elkhabirmalik@gmail.com"];
@@ -1245,6 +1246,8 @@ export default function AdminOrders() {
             )}
           </div>
         </div>
+
+        <BancontactPanel userEmail={user?.email || ""} />
 
         <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>
           <DialogContent>
