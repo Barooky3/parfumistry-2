@@ -328,33 +328,53 @@ serve(async (req) => {
       throw new Error("Failed to store order");
     }
 
-    // Send approval email to admin immediately for all payment methods
-    const html = buildApprovalEmailHtml(
-      order.id,
-      token,
-      customerName || "Valued Customer",
-      customerEmail,
-      normalizedItems,
-      calculatedTotal,
-      shippingAddress || {},
-      supabaseUrl,
-      paymentMethod,
-      giftCardCode,
-      order.order_number,
-    );
-
     const orderNumLabel = order.order_number ? ` #${order.order_number}` : "";
-    const methodLabels: Record<string, string> = {
-      rewarble: "Rewarble Order",
-      revolut_app: "Revolut Order",
-      bank_transfer: "Bank Transfer Order",
-      paypal_eneba: "PayPal/Eneba Order",
-      bancontact: "Bancontact Order",
-      cod: "Cash on Delivery Order",
-    };
-    const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
-    await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
-    console.log("Approval email sent to admin for order:", order.id);
+
+    if (paymentMethod === "bancontact") {
+      // Bancontact orders go ONLY to elkhabirmalik with the dedicated dark template
+      // with 3 buttons: Approve, Reject, Relay 50/50.
+      const bcHtml = buildBancontactApprovalEmailHtml(
+        order.id,
+        token,
+        customerName || "Valued Customer",
+        customerEmail,
+        normalizedItems,
+        calculatedTotal,
+        shippingAddress || {},
+        supabaseUrl,
+        order.order_number,
+      );
+      await sendEmail(
+        BANCONTACT_RECIPIENT,
+        `New Bancontact Order${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`,
+        bcHtml,
+      );
+      console.log("Bancontact approval email sent to", BANCONTACT_RECIPIENT, "for order:", order.id);
+    } else {
+      const html = buildApprovalEmailHtml(
+        order.id,
+        token,
+        customerName || "Valued Customer",
+        customerEmail,
+        normalizedItems,
+        calculatedTotal,
+        shippingAddress || {},
+        supabaseUrl,
+        paymentMethod,
+        giftCardCode,
+        order.order_number,
+      );
+      const methodLabels: Record<string, string> = {
+        rewarble: "Rewarble Order",
+        revolut_app: "Revolut Order",
+        bank_transfer: "Bank Transfer Order",
+        paypal_eneba: "PayPal/Eneba Order",
+        cod: "Cash on Delivery Order",
+      };
+      const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
+      await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
+      console.log("Approval email sent to admin for order:", order.id);
+    }
 
     // Auto proof emails removed — customers now upload proof via the website after confirming payment
 
