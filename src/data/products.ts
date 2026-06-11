@@ -24,9 +24,6 @@ import leBeauParadiseGardenGallery from '@/assets/products/le-beau-paradise-gard
 import aventusGallery from '@/assets/products/aventus-gallery.png.asset.json';
 import aventusAbsoluProduct from '@/assets/products/aventus-absolu-product.png.asset.json';
 import badBoyCobaltGallery from '@/assets/products/bad-boy-cobalt-gallery.png.asset.json';
-import badBoyCobaltGalleryAi from '@/assets/products/bad-boy-cobalt-gallery-ai.png.asset.json';
-import leMaleElixirGalleryAi from '@/assets/products/le-male-elixir-gallery-ai.png.asset.json';
-import aventusAbsoluGalleryAi from '@/assets/products/aventus-absolu-gallery-ai.png.asset.json';
 import bornInRomaCoralFantasyGallery from '@/assets/products/born-in-roma-coral-fantasy-gallery.png.asset.json';
 import bornInRomaGreenStravaganzaGallery from '@/assets/products/born-in-roma-green-stravaganza-gallery.png.asset.json';
 import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-you-absolutely-gallery.png.asset.json';
@@ -56,7 +53,6 @@ import phantomParfumGalleryAi from '@/assets/products/phantom-parfum-gallery-ai.
 import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.json';
 import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
 import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
-import imaginationGalleryAi from '@/assets/products/imagination-gallery-ai.png.asset.json';
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
@@ -391,7 +387,7 @@ export const products: Product[] = [
     },
     accentColor: '#1A1A2E',
     image: aventusAbsoluProduct.url,
-    additionalImages: [aventusAbsoluGalleryAi.url, aventusAbsoluLifestyle],
+    additionalImages: [aventusAbsoluLifestyle],
     affiliateUrl: '/product/aventus-absolu',
     inStock: true,
     variants: [
@@ -917,7 +913,7 @@ export const products: Product[] = [
     },
     accentColor: '#F5C542',
     image: '/__l5e/assets-v1/e7eb0188-1275-4fe3-a298-e27d81313aad/product-4-matched-1.png',
-    additionalImages: [imaginationGalleryAi.url, imaginationLifestyle],
+    additionalImages: [imaginationLifestyle],
     affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
@@ -1294,7 +1290,7 @@ export const products: Product[] = [
     },
     accentColor: '#C58917',
     image: '/__l5e/assets-v1/e4dff361-e02c-43a6-9a18-c0876933c5cc/f5db0f17-85a7-4892-bb9e-f7be8d91b966-converted-1.png',
-    additionalImages: [leMaleElixirGalleryAi.url, leMaleElixirLifestyle2],
+    additionalImages: [leMaleElixirLifestyle2],
     affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
@@ -2163,7 +2159,7 @@ export const products: Product[] = [
     },
     accentColor: '#1E3A8A',
     image: '/images/bad-boy-cobalt.png',
-    additionalImages: [badBoyCobaltGalleryAi.url],
+    additionalImages: [badBoyCobaltGallery.url],
     affiliateUrl: '/product/bad-boy-cobalt',
     inStock: true,
     variants: [
