@@ -25,6 +25,7 @@ import aventusGallery from '@/assets/products/aventus-gallery.png.asset.json';
 import aventusAbsoluProduct from '@/assets/products/aventus-absolu-product.png.asset.json';
 import badBoyCobaltGallery from '@/assets/products/bad-boy-cobalt-gallery.png.asset.json';
 import badBoyCobaltGalleryAi from '@/assets/products/bad-boy-cobalt-gallery-ai.png.asset.json';
+import leMaleElixirGalleryAi from '@/assets/products/le-male-elixir-gallery-ai.png.asset.json';
 import bornInRomaCoralFantasyGallery from '@/assets/products/born-in-roma-coral-fantasy-gallery.png.asset.json';
 import bornInRomaGreenStravaganzaGallery from '@/assets/products/born-in-roma-green-stravaganza-gallery.png.asset.json';
 import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-you-absolutely-gallery.png.asset.json';
@@ -1291,7 +1292,7 @@ export const products: Product[] = [
     },
     accentColor: '#C58917',
     image: '/__l5e/assets-v1/e4dff361-e02c-43a6-9a18-c0876933c5cc/f5db0f17-85a7-4892-bb9e-f7be8d91b966-converted-1.png',
-    additionalImages: [leMaleElixirLifestyle2],
+    additionalImages: [leMaleElixirGalleryAi.url, leMaleElixirLifestyle2],
     affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU',
     inStock: true,
     featured: true,
