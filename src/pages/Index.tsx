@@ -24,7 +24,7 @@ const Index = () => {
   const navigate = useNavigate();
   const newArrivals = [
     getProductById('bad-boy-cobalt'),
-    getProductById('tom-ford-neroli-portofino'),
+    getProductById('tom-ford-tobacco-vanille'),
     getProductById('lv-afternoon-swim'),
   ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
