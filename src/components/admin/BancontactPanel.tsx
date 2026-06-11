@@ -113,6 +113,65 @@ export default function BancontactPanel({ userEmail }: Props) {
   const [customTotal, setCustomTotal] = useState<string>("");
   const [busy, setBusy] = useState(false);
 
+  const isBancontactAdmin = userEmail === BANCONTACT_ADMIN;
+  const [pendingBC, setPendingBC] = useState<any[]>([]);
+  const [pendingBCLoading, setPendingBCLoading] = useState(false);
+  const [pendingBCOpen, setPendingBCOpen] = useState(true);
+  const [actingId, setActingId] = useState<string | null>(null);
+
+  const fetchPendingBancontact = useCallback(async () => {
+    if (!isBancontactAdmin) return;
+    setPendingBCLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/admin-orders?status=pending_approval`, {
+        headers: {
+          "Authorization": `Bearer ${session?.access_token ?? ""}`,
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
+        },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json?.error || `Request failed (${res.status})`);
+      const all = Array.isArray(json.orders) ? json.orders : [];
+      setPendingBC(all.filter((o: any) => typeof o.checkout_reference === "string" && o.checkout_reference.startsWith("bancontact")));
+    } catch (e: any) {
+      toast.error(e.message || "Failed to load pending Bancontact orders");
+    } finally {
+      setPendingBCLoading(false);
+    }
+  }, [isBancontactAdmin]);
+
+  useEffect(() => {
+    if (!isBancontactAdmin) return;
+    fetchPendingBancontact();
+    const ch = supabase
+      .channel("bancontact_pending_orders")
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => fetchPendingBancontact())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [isBancontactAdmin, fetchPendingBancontact]);
+
+  const handlePendingAction = useCallback(async (order: any, action: "approve" | "reject" | "relay_split") => {
+    if (!order?.approval_token) { toast.error("Missing approval token"); return; }
+    if (action === "reject" && !confirm(`Reject order #${order.order_number ?? order.id.slice(0,8)}?`)) return;
+    setActingId(order.id);
+    try {
+      const url = `${SUPABASE_URL}/functions/v1/handle-order-action?id=${order.id}&token=${order.approval_token}&action=${action}`;
+      const res = await fetch(url, { method: "GET" });
+      if (!res.ok) throw new Error(`Action failed (${res.status})`);
+      toast.success(
+        action === "approve" ? "Order approved" :
+        action === "reject" ? "Order rejected" :
+        "Relay 50/50 started"
+      );
+      setPendingBC((prev) => prev.filter((o) => o.id !== order.id));
+    } catch (e: any) {
+      toast.error(e.message || "Action failed");
+    } finally {
+      setActingId(null);
+    }
+  }, []);
+
   // Hydrate price overrides so catalog reflects live prices
   useEffect(() => { fetchAllProductPriceOverrides(); }, []);
   const catalog = useMemo(() => CATALOG.map(applyPriceOverride), []);
