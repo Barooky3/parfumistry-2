@@ -369,8 +369,17 @@ serve(async (req) => {
     const subject = `Bancontact Order: ${customer.name} - EUR${total.toFixed(2)}`;
     await sendEmail(RECIPIENT, subject, html);
 
-    return new Response(JSON.stringify({ success: true, orderId: order.id, customer: customer.name, total }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+    return new Response(JSON.stringify({
+      success: true,
+      orderId: order.id,
+      customer: customer.name,
+      total,
+      exhausted: pickRes.exhausted,
+      poolSize: pickRes.poolSize,
+      warning: pickRes.exhausted
+        ? `Customer pool exhausted (${pickRes.poolSize} eligible, all within 2d cooldown). Reused least-recently-used customer.`
+        : undefined,
+    }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
   } catch (e: any) {
     console.error("bancontact-generate error:", e);
     return new Response(JSON.stringify({ error: e.message }),
