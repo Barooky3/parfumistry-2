@@ -212,7 +212,7 @@ serve(async (req) => {
 
     // Server-side idempotency check: if this idempotency key was already used, return the existing order
     if (idempotencyKey) {
-      const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
+      const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : paymentMethod === "bancontact" ? "bancontact" : paymentMethod === "cod" ? "cod" : "revolut";
       const expectedRef = refPrefix + "-idem-" + idempotencyKey;
       const { data: existingOrder } = await supabase
         .from("orders")
@@ -229,7 +229,7 @@ serve(async (req) => {
       }
     }
 
-    const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : "revolut";
+    const refPrefix = paymentMethod === "rewarble" ? "rewarble" : paymentMethod === "bank_transfer" ? "bank-transfer" : paymentMethod === "revolut_app" ? "revolut-app" : paymentMethod === "bancontact" ? "bancontact" : paymentMethod === "cod" ? "cod" : "revolut";
     const checkoutRef = idempotencyKey ? refPrefix + "-idem-" + idempotencyKey : refPrefix + "-" + Date.now();
     // Store full shipping address as entered at checkout
     const fullShipping = {
@@ -282,6 +282,8 @@ serve(async (req) => {
       revolut_app: "Revolut Order",
       bank_transfer: "Bank Transfer Order",
       paypal_eneba: "PayPal/Eneba Order",
+      bancontact: "Bancontact Order",
+      cod: "Cash on Delivery Order",
     };
     const emailPrefix = methodLabels[paymentMethod || ""] || "Order Approval";
     await sendEmail(ADMIN_EMAILS, `${emailPrefix}${orderNumLabel}: ${customerName || customerEmail} - EUR${calculatedTotal}`, html);
