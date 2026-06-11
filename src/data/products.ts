@@ -69,6 +69,7 @@ import xplicitVanillaGalleryAi from '@/assets/products/xplicit-vanilla-gallery-a
 import redTobaccoGalleryAi from '@/assets/products/red-tobacco-gallery-ai.png.asset.json';
 import cedratBoiseGalleryAi from '@/assets/products/cedrat-boise-gallery-ai.png.asset.json';
 import spicebombExtremeGalleryAi from '@/assets/products/spicebomb-extreme-gallery-ai.png.asset.json';
+import tomFordTobaccoVanille from '@/assets/products/tom-ford-tobacco-vanille.png.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -1743,6 +1744,39 @@ export const products: Product[] = [
     image: tomFordNeroliPortofinoImage.url,
     additionalImages: [tomFordNeroliPortofinoGalleryAi.url],
     affiliateUrl: '/product/tom-ford-neroli-portofino',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 74.99, inStock: true },
+      { ml: 100, price: 94.99, inStock: true },
+    ],
+  },
+  {
+    id: 'tom-ford-tobacco-vanille',
+    addedAt: '2026-06-11',
+    name: 'Tobacco Vanille',
+    brand: 'Tom Ford',
+    price: 74.99,
+    category: 'unisex',
+    description: 'Tom Ford Tobacco Vanille is a warm, opulent oriental that wraps you in rich tobacco leaf, creamy vanilla, and spicy notes over a base of tonka bean, cocoa, and dry fruits. Smoky, sweet, and unmistakably luxurious — a true cold-weather statement scent.',
+    scentNotes: {
+      top: ['Tobacco Leaf', 'Spicy Notes'],
+      heart: ['Tonka Bean', 'Tobacco Blossom', 'Vanilla'],
+      base: ['Cocoa', 'Dry Fruits', 'Sweet Wood Sap'],
+    },
+    scentNoteImages: {
+      'Tobacco Leaf': '/scent-notes/tobacco.png',
+      'Spicy Notes': '/scent-notes/spicy-notes.png',
+      'Tonka Bean': '/scent-notes/tonka.png',
+      'Tobacco Blossom': '/scent-notes/tobacco.png',
+      'Vanilla': '/scent-notes/vanilla.png',
+      'Cocoa': '/scent-notes/cocoa.png',
+      'Dry Fruits': '/scent-notes/dry-fruits.png',
+      'Sweet Wood Sap': '/scent-notes/sandalwood.png',
+    },
+    accentColor: '#6B3A1F',
+    image: tomFordTobaccoVanille.url,
+    affiliateUrl: '/product/tom-ford-tobacco-vanille',
     inStock: true,
     featured: true,
     variants: [

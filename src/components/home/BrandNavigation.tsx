@@ -13,6 +13,7 @@ const brands = [
   { name: 'Creed', slug: 'creed' },
   { name: 'Mancera', slug: 'mancera' },
   { name: 'Xerjoff', slug: 'xerjoff' },
+  { name: 'Tom Ford', slug: 'tomford' },
 ];
 
 export const BrandNavigation = () => {
