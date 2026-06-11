@@ -13,9 +13,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { toast } from "sonner";
-import { RefreshCw, ChevronDown, Trash2, Plus, Zap, Settings2 } from "lucide-react";
+import { RefreshCw, ChevronDown, Trash2, Plus, Zap, Settings2, ChevronsUpDown, X } from "lucide-react";
 import { format, formatDistanceToNowStrict } from "date-fns";
+import { products as CATALOG } from "@/data/products";
+import { applyPriceOverride, fetchAllProductPriceOverrides } from "@/hooks/useProductPrice";
 
 const PRIMARY_ADMIN = "ewhz3384@gmail.com";
 const ADMIN_EMAILS = [PRIMARY_ADMIN, "elkhabirmalik@gmail.com"];
@@ -46,7 +50,9 @@ type HistoryEntry = {
 };
 type Snapshot = { gross: number; count: number; net: number; orders: ContribOrder[]; adSpend: number; resetAt: string; history: HistoryEntry[] };
 
-type CustomItem = { brand: string; name: string; price: number; quantity: number; selectedMl?: number };
+type CustomItem = { productId?: string; brand: string; name: string; price: number; quantity: number; selectedMl?: number };
+type ShippingChoice = "none" | "standard" | "express";
+const SHIPPING_COSTS: Record<ShippingChoice, number> = { none: 0, standard: 3.99, express: 12.99 };
 
 const TIMER_MODES: { value: string; label: string; range: string }[] = [
   { value: "hyper_aggressive", label: "Hyper Aggressive", range: "1–5 min" },
@@ -101,9 +107,23 @@ export default function BancontactPanel({ userEmail }: Props) {
   }, []);
 
   const [customOpen, setCustomOpen] = useState(false);
-  const [customItems, setCustomItems] = useState<CustomItem[]>([{ brand: "Dior", name: "Sauvage", price: 39.99, quantity: 1, selectedMl: 100 }]);
+  const [customItems, setCustomItems] = useState<CustomItem[]>([]);
+  const [customShipping, setCustomShipping] = useState<ShippingChoice>("standard");
   const [customTotal, setCustomTotal] = useState<string>("");
   const [busy, setBusy] = useState(false);
+
+  // Hydrate price overrides so catalog reflects live prices
+  useEffect(() => { fetchAllProductPriceOverrides(); }, []);
+  const catalog = useMemo(() => CATALOG.map(applyPriceOverride), []);
+
+  const itemsSubtotal = useMemo(
+    () => customItems.reduce((s, it) => s + (Number(it.price) || 0) * Math.max(1, Math.floor(Number(it.quantity) || 1)), 0),
+    [customItems]
+  );
+  const autoTotal = useMemo(
+    () => Math.round((itemsSubtotal + SHIPPING_COSTS[customShipping]) * 100) / 100,
+    [itemsSubtotal, customShipping]
+  );
 
   const applyCounterRow = useCallback((row: any) => {
     if (!row) return;
@@ -200,8 +220,9 @@ export default function BancontactPanel({ userEmail }: Props) {
       .map((i) => ({ ...i, price: Number(i.price) || 0, quantity: Math.max(1, Math.floor(Number(i.quantity) || 1)) }))
       .filter((i) => i.name && i.brand && i.price > 0);
     if (cleaned.length === 0) { toast.error("Add at least one item"); return; }
-    const totalNum = customTotal.trim() ? Number(customTotal) : NaN;
-    await handleGenerate("custom", { items: cleaned, total: isFinite(totalNum) ? totalNum : undefined });
+    const overrideNum = customTotal.trim() ? Number(customTotal) : NaN;
+    const totalToSend = isFinite(overrideNum) && overrideNum > 0 ? overrideNum : autoTotal;
+    await handleGenerate("custom", { items: cleaned, total: totalToSend });
     setCustomOpen(false);
   };
 
@@ -449,29 +470,108 @@ export default function BancontactPanel({ userEmail }: Props) {
 
       {/* Custom order dialog */}
       <Dialog open={customOpen} onOpenChange={setCustomOpen}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Custom Bancontact Order</DialogTitle>
-            <DialogDescription>Customer details are auto-pulled from older real orders. Set your own items and (optionally) total.</DialogDescription>
+            <DialogDescription>Pick items from the live catalogue. Total auto-calculates with shipping. Customer is auto-pulled from older real orders.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-2 max-h-[50vh] overflow-y-auto">
-            {customItems.map((it, idx) => (
-              <div key={idx} className="grid grid-cols-12 gap-1 items-center">
-                <Input className="col-span-3 h-8 text-xs" placeholder="Brand" value={it.brand} onChange={(e) => setCustomItems(p => p.map((x, i) => i === idx ? { ...x, brand: e.target.value } : x))} />
-                <Input className="col-span-4 h-8 text-xs" placeholder="Name" value={it.name} onChange={(e) => setCustomItems(p => p.map((x, i) => i === idx ? { ...x, name: e.target.value } : x))} />
-                <Input className="col-span-2 h-8 text-xs" type="number" placeholder="ML" value={it.selectedMl ?? ""} onChange={(e) => setCustomItems(p => p.map((x, i) => i === idx ? { ...x, selectedMl: Number(e.target.value) || undefined } : x))} />
-                <Input className="col-span-1 h-8 text-xs" type="number" placeholder="Qty" value={it.quantity} onChange={(e) => setCustomItems(p => p.map((x, i) => i === idx ? { ...x, quantity: Number(e.target.value) || 1 } : x))} />
-                <Input className="col-span-2 h-8 text-xs" type="number" step="0.01" placeholder="€" value={it.price} onChange={(e) => setCustomItems(p => p.map((x, i) => i === idx ? { ...x, price: Number(e.target.value) || 0 } : x))} />
-              </div>
-            ))}
-            <Button variant="ghost" size="sm" className="text-xs" onClick={() => setCustomItems(p => [...p, { brand: "", name: "", price: 0, quantity: 1 }])}>
+          <div className="space-y-2 max-h-[55vh] overflow-y-auto pr-1">
+            {customItems.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-3">No items yet — add one below.</p>
+            )}
+            {customItems.map((it, idx) => {
+              const product = it.productId ? catalog.find((p) => p.id === it.productId) : undefined;
+              return (
+                <div key={idx} className="grid grid-cols-12 gap-1.5 items-center">
+                  <div className="col-span-6">
+                    <ProductPickerCombobox
+                      catalog={catalog}
+                      value={it.productId}
+                      onPick={(p) => {
+                        const cheapest = p.variants && p.variants.length
+                          ? p.variants.reduce((a, b) => (a.price <= b.price ? a : b))
+                          : null;
+                        setCustomItems((prev) => prev.map((x, i) => i === idx ? {
+                          ...x,
+                          productId: p.id,
+                          brand: p.brand,
+                          name: p.name,
+                          price: cheapest ? cheapest.price : p.price,
+                          selectedMl: cheapest ? cheapest.ml : undefined,
+                        } : x));
+                      }}
+                    />
+                  </div>
+                  <div className="col-span-3">
+                    {product && product.variants && product.variants.length > 0 ? (
+                      <Select
+                        value={it.selectedMl !== undefined ? String(it.selectedMl) : ""}
+                        onValueChange={(v) => {
+                          const ml = Number(v);
+                          const variant = product.variants?.find((x) => x.ml === ml);
+                          setCustomItems((prev) => prev.map((x, i) => i === idx ? {
+                            ...x,
+                            selectedMl: ml,
+                            price: variant ? variant.price : x.price,
+                          } : x));
+                        }}
+                      >
+                        <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="ML" /></SelectTrigger>
+                        <SelectContent>
+                          {product.variants.map((v) => (
+                            <SelectItem key={v.ml} value={String(v.ml)} className="text-xs">
+                              {v.ml}ml — €{v.price.toFixed(2)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input className="h-8 text-xs" type="number" placeholder="ML" value={it.selectedMl ?? ""} onChange={(e) => setCustomItems((p) => p.map((x, i) => i === idx ? { ...x, selectedMl: Number(e.target.value) || undefined } : x))} />
+                    )}
+                  </div>
+                  <Input className="col-span-1 h-8 text-xs" type="number" min={1} placeholder="Qty" value={it.quantity} onChange={(e) => setCustomItems((p) => p.map((x, i) => i === idx ? { ...x, quantity: Number(e.target.value) || 1 } : x))} />
+                  <Input className="col-span-2 h-8 text-xs" type="number" step="0.01" placeholder="€" value={it.price} onChange={(e) => setCustomItems((p) => p.map((x, i) => i === idx ? { ...x, price: Number(e.target.value) || 0 } : x))} />
+                  <button onClick={() => setCustomItems((p) => p.filter((_, i) => i !== idx))} className="text-muted-foreground hover:text-destructive flex justify-center" aria-label="Remove item">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              );
+            })}
+            <Button variant="ghost" size="sm" className="text-xs" onClick={() => setCustomItems((p) => [...p, { brand: "", name: "", price: 0, quantity: 1 }])}>
               <Plus className="h-3 w-3 mr-1" /> Add item
             </Button>
           </div>
-          <div className="border-t pt-2">
-            <label className="text-xs text-muted-foreground">Override total (optional)</label>
-            <Input type="number" step="0.01" placeholder="Leave blank to auto-sum" value={customTotal} onChange={(e) => setCustomTotal(e.target.value)} className="h-8 text-xs" />
+
+          <div className="border-t pt-3 space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <label className="text-xs text-muted-foreground">Shipping</label>
+              <Select value={customShipping} onValueChange={(v) => setCustomShipping(v as ShippingChoice)}>
+                <SelectTrigger className="h-8 w-[220px] text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="standard" className="text-xs">Standard — €3.99</SelectItem>
+                  <SelectItem value="express" className="text-xs">Express — €12.99</SelectItem>
+                  <SelectItem value="none" className="text-xs">No shipping — €0.00</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Items subtotal</span>
+              <span>€{itemsSubtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Shipping</span>
+              <span>€{SHIPPING_COSTS[customShipping].toFixed(2)}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm font-semibold border-t pt-2">
+              <span>Auto Total</span>
+              <span>€{autoTotal.toFixed(2)}</span>
+            </div>
+            <div>
+              <label className="text-[11px] text-muted-foreground">Override total (optional)</label>
+              <Input type="number" step="0.01" placeholder="Leave blank to use auto total" value={customTotal} onChange={(e) => setCustomTotal(e.target.value)} className="h-8 text-xs" />
+            </div>
           </div>
+
           <DialogFooter>
             <Button variant="ghost" onClick={() => setCustomOpen(false)}>Cancel</Button>
             <Button onClick={handleCustomSubmit} disabled={busy}>Send to Bancontact</Button>
@@ -479,5 +579,52 @@ export default function BancontactPanel({ userEmail }: Props) {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function ProductPickerCombobox({
+  catalog,
+  value,
+  onPick,
+}: {
+  catalog: ReturnType<typeof applyPriceOverride>[] | any[];
+  value?: string;
+  onPick: (p: any) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const selected = value ? catalog.find((p: any) => p.id === value) : undefined;
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" size="sm" className="h-8 w-full justify-between text-xs font-normal">
+          <span className="truncate">
+            {selected ? `${selected.brand} — ${selected.name}` : "Pick product..."}
+          </span>
+          <ChevronsUpDown className="h-3 w-3 opacity-50 ml-1 shrink-0" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search catalogue..." className="h-9" />
+          <CommandList>
+            <CommandEmpty>No product found.</CommandEmpty>
+            <CommandGroup>
+              {catalog.map((p: any) => (
+                <CommandItem
+                  key={p.id}
+                  value={`${p.brand} ${p.name}`}
+                  onSelect={() => { onPick(p); setOpen(false); }}
+                  className="text-xs"
+                >
+                  <span className="font-medium mr-1">{p.brand}</span>
+                  <span className="opacity-80">{p.name}</span>
+                  <span className="ml-auto opacity-60">€{Number(p.price).toFixed(2)}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
