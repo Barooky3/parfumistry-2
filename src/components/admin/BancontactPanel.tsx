@@ -50,7 +50,9 @@ type HistoryEntry = {
 };
 type Snapshot = { gross: number; count: number; net: number; orders: ContribOrder[]; adSpend: number; resetAt: string; history: HistoryEntry[] };
 
-type CustomItem = { brand: string; name: string; price: number; quantity: number; selectedMl?: number };
+type CustomItem = { productId?: string; brand: string; name: string; price: number; quantity: number; selectedMl?: number };
+type ShippingChoice = "none" | "standard" | "express";
+const SHIPPING_COSTS: Record<ShippingChoice, number> = { none: 0, standard: 3.99, express: 12.99 };
 
 const TIMER_MODES: { value: string; label: string; range: string }[] = [
   { value: "hyper_aggressive", label: "Hyper Aggressive", range: "1–5 min" },
