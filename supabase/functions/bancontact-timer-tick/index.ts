@@ -73,7 +73,12 @@ serve(async (req) => {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${supabaseServiceKey}`,
             },
-            body: JSON.stringify({ mode: "random", source: "timed" }),
+            body: JSON.stringify({
+              mode: "random",
+              source: "timed",
+              // 90% draw from the seed pool, 10% from history.
+              customerSource: Math.random() < 0.9 ? "seed" : "history",
+            }),
           });
           actions.generated = res.ok;
         } catch (e) {
