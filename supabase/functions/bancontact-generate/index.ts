@@ -189,30 +189,52 @@ type PickResult = {
   poolSize: number;
 };
 
-async function pickCustomer(supabase: ReturnType<typeof createClient>): Promise<PickResult> {
-  // Tally how many times each seed customer has previously been used in
-  // bancontact_orders. We match by customer_name (case-insensitive) since
-  // some seeds have no real email.
+async function pickCustomer(
+  supabase: ReturnType<typeof createClient>,
+  source: "seed" | "history" = "seed",
+): Promise<PickResult> {
+  // Pull past bancontact orders both to tally usage AND (for "history" mode)
+  // to source the pool of names.
   const { data: prev } = await supabase
     .from("bancontact_orders")
-    .select("customer_name");
+    .select("customer_name, customer_email, country");
   const counts = new Map<string, number>();
-  for (const r of (prev || []) as Array<{ customer_name: string | null }>) {
+  const historyMap = new Map<string, { name: string; email: string; country: string }>();
+  for (const r of (prev || []) as Array<{ customer_name: string | null; customer_email: string | null; country: string | null }>) {
     const k = (r.customer_name || "").trim().toLowerCase();
     if (!k) continue;
     counts.set(k, (counts.get(k) ?? 0) + 1);
+    if (!historyMap.has(k)) {
+      historyMap.set(k, {
+        name: r.customer_name || "",
+        email: r.customer_email || "",
+        country: r.country || "",
+      });
+    }
   }
 
-  // Find the minimum usage count across the seed pool, then pick at random
+  // Choose the pool based on source.
+  let pool: Array<{ name: string; email: string; country: string }>;
+  if (source === "history") {
+    pool = Array.from(historyMap.values());
+    if (pool.length === 0) {
+      // Fallback to seed pool if no history exists yet.
+      pool = SEED_CUSTOMERS.map((s) => ({ name: s.name, email: s.email, country: s.country }));
+    }
+  } else {
+    pool = SEED_CUSTOMERS.map((s) => ({ name: s.name, email: s.email, country: s.country }));
+  }
+
+  // Find the minimum usage count across the chosen pool, then pick at random
   // from everyone tied at that minimum. When everyone is at >=1 we've
   // "exhausted" one full cycle and naturally jumble + reuse from there.
   let minCount = Infinity;
-  for (const s of SEED_CUSTOMERS) {
+  for (const s of pool) {
     const c = counts.get(s.name.toLowerCase()) ?? 0;
     if (c < minCount) minCount = c;
   }
   if (minCount === Infinity) minCount = 0;
-  const tier = SEED_CUSTOMERS.filter(
+  const tier = pool.filter(
     (s) => (counts.get(s.name.toLowerCase()) ?? 0) === minCount,
   );
   const chosen = pick(tier);
@@ -223,7 +245,7 @@ async function pickCustomer(supabase: ReturnType<typeof createClient>): Promise<
     email: emailFor(chosen),
     country: chosen.country || null,
     exhausted: minCount >= 1,
-    poolSize: SEED_CUSTOMERS.length,
+    poolSize: pool.length,
   };
 }
 
