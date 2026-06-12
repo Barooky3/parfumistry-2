@@ -58,7 +58,7 @@ const SHIPPING_COSTS: Record<ShippingChoice, number> = { none: 0, standard: 3.99
 const TIMER_MODES: { value: string; label: string; range: string }[] = [
   { value: "hyper_aggressive", label: "Hyper Aggressive", range: "1–5 min" },
   { value: "aggressive", label: "Aggressive", range: "10–20 min" },
-  { value: "hard", label: "Hard", range: "30–45 min" },
+  { value: "hard", label: "Hard", range: "20–45 min" },
   { value: "normal", label: "Normal", range: "40–60 min" },
   { value: "relaxed", label: "Relaxed", range: "65–90 min" },
   { value: "hyper_relaxed", label: "Hyper Relaxed", range: "95–120 min" },
