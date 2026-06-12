@@ -393,7 +393,9 @@ export default function BancontactPanel({ userEmail }: Props) {
             </div>
             <div className="flex items-center gap-3">
               <Select value={timer.mode} onValueChange={async (v) => {
-                await persistTimer({ mode: v, nextAt: timer.enabled ? new Date(Date.now() + 60_000).toISOString() : null });
+                const m = TIMER_MODES.find((x) => x.value === v);
+                const delayMs = m ? (m.min + Math.random() * (m.max - m.min)) * 60_000 : 60_000;
+                await persistTimer({ mode: v, nextAt: timer.enabled ? new Date(Date.now() + delayMs).toISOString() : null });
               }}>
                 <SelectTrigger className="h-8 w-[200px] text-xs">
                   <SelectValue />
