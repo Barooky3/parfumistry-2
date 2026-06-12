@@ -292,23 +292,8 @@ serve(async (req) => {
     const body = await req.json().catch(() => ({} as any));
     const mode: "random" | "custom" = body?.mode === "custom" ? "custom" : "random";
     const source: string = body?.source === "timed" ? "timed" : mode;
-    // Strict mode: when true, bail out instead of reusing a recently-used customer.
-    // Default: manual (UI) calls are strict so the admin sees a clear error; the
-    // timed generator is non-strict so the loop keeps running via LRU rotation.
-    const strict: boolean = typeof body?.strict === "boolean"
-      ? body.strict
-      : source !== "timed";
 
-    const pickRes = await pickCustomer(supabase, { allowRepeats: !strict });
-    if (!pickRes.ok) {
-      const message = pickRes.reason === "no_real_orders"
-        ? "No real customer orders are available yet to base a Bancontact order on. Wait until at least one approved order is older than 2 days."
-        : `All ${pickRes.poolSize} eligible customers were used in the last 2 days. Wait for the cooldown to clear, or re-run with repeats allowed.`;
-      return new Response(
-        JSON.stringify({ error: message, reason: pickRes.reason, poolSize: pickRes.poolSize }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 409 },
-      );
-    }
+    const pickRes = await pickCustomer(supabase);
     const customer = { name: pickRes.name, email: pickRes.email, country: pickRes.country };
 
     let items: BancItem[];
