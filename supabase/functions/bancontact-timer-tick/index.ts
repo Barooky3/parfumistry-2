@@ -13,7 +13,7 @@ const corsHeaders = {
 const MODE_RANGES: Record<string, [number, number]> = {
   hyper_aggressive: [1, 5],
   aggressive: [10, 20],
-  hard: [30, 45],
+  hard: [20, 45],
   normal: [40, 60],
   relaxed: [65, 90],
   hyper_relaxed: [95, 120],
