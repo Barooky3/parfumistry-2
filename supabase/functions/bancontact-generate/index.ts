@@ -113,128 +113,117 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
   }
 }
 
-interface RealOrderRow {
-  customer_name: string;
-  customer_email: string;
-  shipping_address: { country?: string } | null;
-  order_items: BancItem[] | null;
-  total_amount: number;
+// Seed customer pool — taken from a real orders export. The bancontact
+// generator picks exclusively from this list (NOT from the live orders
+// table) so that the same vetted set of names/countries rotates through.
+// Cycle behavior: pick from the customer(s) with the fewest prior bancontact
+// uses. Once everyone has been used N times, the pool naturally jumbles and
+// reuses (random pick among the new min-count tier).
+const SEED_CUSTOMERS: Array<{ name: string; email: string; country: string; city: string }> = [
+  { name: "Mikey Dooley", email: "", country: "IE", city: "Birr" },
+  { name: "Tolga Dursun", email: "tolga3152006@gmail.com", country: "DE", city: "Garbsen" },
+  { name: "Vid Jerebic", email: "", country: "SI", city: "Beltinci" },
+  { name: "Arturo", email: "a76908388@gmail.com", country: "IT", city: "Milan" },
+  { name: "Teagan Owens", email: "", country: "US", city: "Gower" },
+  { name: "Marko Kajunić", email: "marko.kajunic@gmail.com", country: "HR", city: "Osijek" },
+  { name: "penny photiou", email: "pennyphotiou@gmail.com", country: "CY", city: "Limassol" },
+  { name: "Anish Moraes", email: "anishmoraes@gmail.com", country: "GB", city: "London" },
+  { name: "Kolyčius", email: "tajus.koly@gmail.com", country: "LT", city: "Panevėžys" },
+  { name: "Noa Rožanković", email: "rozankovicnoa@gmail.com", country: "HR", city: "Sisak" },
+  { name: "Gonçalo Moreira", email: "moreiragoncalo0512@gmail.com", country: "BE", city: "Bruxelles" },
+  { name: "NITHIPHAT KHAMMUEANG", email: "mimisakkengnxn@gmail.com", country: "DK", city: "Fredercia" },
+  { name: "Rafael Fausto", email: "EndinhoBrazil82@gmail.com", country: "GB", city: "Bournemouth" },
+  { name: "Hugo Lord", email: "hugolord12345@icloud.com", country: "GB", city: "Bournemouth, Christchurch and Poole" },
+  { name: "Max Fausto", email: "maxwendell@gmail.com", country: "GB", city: "Bournemouth" },
+  { name: "Genet Goytom", email: "genetgoytom0@gmail.com", country: "SE", city: "Lidköping" },
+  { name: "Michael Goryunov", email: "23goryunovm@latymer.co.uk", country: "GB", city: "London" },
+  { name: "Mohamed Faragoni", email: "mfaragoni2010@gmail.com", country: "GB", city: "Tower Hamlets, London" },
+  { name: "Karl-Emil Nielsen", email: "karlyergo2@gmail.com", country: "DK", city: "Sæby" },
+  { name: "Stefanos Malamis", email: "stefanosmal12345678@gmail.com", country: "BG", city: "Ruse" },
+  { name: "Malik Elkhabir", email: "Ewhz3384@gmail.com", country: "IE", city: "Portloaise" },
+  { name: "Alexander Rodriguez", email: "alexander09981726@gmail.com", country: "US", city: "Murrieta" },
+  { name: "Loukas Mandjipas", email: "Loukas.Mandjipas.l.m@gmail.com", country: "CY", city: "Nicosia" },
+  { name: "Drake Piazza", email: "piazzaboyz2011@gmail.com", country: "US", city: "Cameron" },
+  { name: "Brayden Cable", email: "bray91611@icloud.com", country: "US", city: "Elkland" },
+  { name: "Mubarak Test", email: "nslnfsnvs@gmail.com", country: "BG", city: "sofia" },
+  { name: "Victor Arellano", email: "cruz920arellano@gmail.com", country: "US", city: "Atlanta" },
+  { name: "Mubarak Elkhabir", email: "saloon.70.toques@icloud.com", country: "BG", city: "Sofia" },
+  { name: "Joshua Ayoola", email: "", country: "GB", city: "Doenpatrick" },
+  { name: "Matteo Collavo", email: "matteocollavo29@gmail.com", country: "BE", city: "Flémalle" },
+  { name: "Lukas Tesar", email: "dvere.tesar@gmail.com", country: "CZ", city: "Brno" },
+  { name: "Philip Mikiciuk", email: "snoobyfoxy@gmail.com", country: "DK", city: "Helsingør" },
+  { name: "CRISTIAN-ANDREI VASII", email: "christianandrei2020@gmail.com", country: "RO", city: "Ploiesti" },
+  { name: "Simão Silva", email: "simao2008silva@gmail.com", country: "PT", city: "Ponte De Lima" },
+  { name: "Nikolaj møgelgaard", email: "nickjensen2312@gmail.com", country: "DK", city: "Dragør" },
+  { name: "Matias Qato", email: "matiasqato12@gmail.com", country: "ES", city: "Castelldefels" },
+  { name: "Pedro Pina Simon", email: "laruedadeltiempo2025@gmail.com", country: "ES", city: "Madrid" },
+  { name: "Karl-Emil brøndum Nielsen", email: "karlyergo2@gmail.com", country: "DK", city: "Sæby" },
+  { name: "Nicholas Boms", email: "n8657884@gmail.com", country: "GB", city: "Erith" },
+  { name: "Eftimie Alberto", email: "albertoeftimie2020@gmail.com", country: "RO", city: "Brasov" },
+  { name: "Anto Slabik", email: "", country: "IE", city: "Castlebar" },
+  { name: "Borja Tamarit", email: "borjatamarit@gmail.com", country: "ES", city: "Antromero" },
+  { name: "Mubarak", email: "Ewhz3384@gmail.com", country: "BG", city: "Sofia" },
+];
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, ".")
+    .replace(/^\.+|\.+$/g, "");
 }
 
-type PickResult =
-  | { ok: true; name: string; email: string; country: string | null; exhausted: boolean; poolSize: number }
-  | { ok: false; reason: "no_real_orders" | "all_in_cooldown_strict"; poolSize: number };
+function emailFor(seed: { name: string; email: string }): string {
+  if (seed.email && seed.email.includes("@")) return seed.email;
+  const slug = slugify(seed.name) || "customer";
+  return `${slug}@customer.local`;
+}
 
-async function pickCustomer(
-  supabase: ReturnType<typeof createClient>,
-  opts: { allowRepeats: boolean } = { allowRepeats: true },
-): Promise<PickResult> {
-  // 1. Cooldown window: don't reuse any customer (real or bancontact) seen in the last 2 days.
-  const COOLDOWN_MS = 2 * 24 * 60 * 60 * 1000;
-  const cooldownCutoff = new Date(Date.now() - COOLDOWN_MS).toISOString();
-  const ageCutoff = cooldownCutoff;
+type PickResult = {
+  ok: true;
+  name: string;
+  email: string;
+  country: string | null;
+  exhausted: boolean;
+  poolSize: number;
+};
 
-  // 2. Emails recently used in bancontact_orders — fully blocked until cooldown clears.
-  const { data: recentBC } = await supabase
+async function pickCustomer(supabase: ReturnType<typeof createClient>): Promise<PickResult> {
+  // Tally how many times each seed customer has previously been used in
+  // bancontact_orders. We match by customer_name (case-insensitive) since
+  // some seeds have no real email.
+  const { data: prev } = await supabase
     .from("bancontact_orders")
-    .select("customer_email, created_at")
-    .gte("created_at", cooldownCutoff);
-  const blocked = new Set<string>();
-  for (const r of (recentBC || []) as Array<{ customer_email: string }>) {
-    if (r.customer_email) blocked.add(r.customer_email.toLowerCase());
+    .select("customer_name");
+  const counts = new Map<string, number>();
+  for (const r of (prev || []) as Array<{ customer_name: string | null }>) {
+    const k = (r.customer_name || "").trim().toLowerCase();
+    if (!k) continue;
+    counts.set(k, (counts.get(k) ?? 0) + 1);
   }
 
-  // 3. Build the full eligible pool from real (non-pending) orders older than the cutoff.
-  const { data } = await supabase
-    .from("orders")
-    .select("customer_name, customer_email, shipping_address, created_at")
-    .neq("status", "pending_approval")
-    .lt("created_at", ageCutoff)
-    .order("created_at", { ascending: true })
-    .limit(2000);
-  const rows = (data || []) as Array<{ customer_name: string; customer_email: string; shipping_address: any; created_at: string }>;
-  if (rows.length === 0) return { ok: false, reason: "no_real_orders", poolSize: 0 };
-
-  // 4. Dedupe by email — keep the newest record per email so name/country reflect latest order.
-  const byEmail = new Map<string, { name: string; email: string; country: string | null; created_at: string }>();
-  for (const r of rows) {
-    const key = (r.customer_email || "").toLowerCase();
-    if (!key) continue;
-    const existing = byEmail.get(key);
-    const entry = {
-      name: r.customer_name || "Valued Customer",
-      email: r.customer_email,
-      country: r.shipping_address?.country || null,
-      created_at: r.created_at,
-    };
-    if (!existing || new Date(entry.created_at) > new Date(existing.created_at)) {
-      byEmail.set(key, entry);
-    }
+  // Find the minimum usage count across the seed pool, then pick at random
+  // from everyone tied at that minimum. When everyone is at >=1 we've
+  // "exhausted" one full cycle and naturally jumble + reuse from there.
+  let minCount = Infinity;
+  for (const s of SEED_CUSTOMERS) {
+    const c = counts.get(s.name.toLowerCase()) ?? 0;
+    if (c < minCount) minCount = c;
   }
-  const unique = Array.from(byEmail.values());
-  if (unique.length === 0) return { ok: false, reason: "no_real_orders", poolSize: 0 };
-
-  // 5. Drop everyone currently in the cooldown window.
-  const available = unique.filter((u) => !blocked.has(u.email.toLowerCase()));
-
-  // 6. Fetch last-used-in-bancontact timestamp per email.
-  const allEmails = unique.map((u) => u.email);
-  const { data: allBCUsage } = await supabase
-    .from("bancontact_orders")
-    .select("customer_email, created_at")
-    .in("customer_email", allEmails);
-  const lastUsed = new Map<string, number>();
-  for (const r of (allBCUsage || []) as Array<{ customer_email: string; created_at: string }>) {
-    const key = (r.customer_email || "").toLowerCase();
-    const t = new Date(r.created_at).getTime();
-    const prev = lastUsed.get(key);
-    if (prev === undefined || t > prev) lastUsed.set(key, t);
-  }
-
-  // 7. Selection strategy + explicit exhaustion fallback:
-  //    a) Prefer never-used available customers (random pick for variety).
-  //    b) Else, least-recently-used among the available (cooldown-clear) pool.
-  //    c) EXHAUSTION (every eligible customer is still inside the 2-day cooldown):
-  //       - allowRepeats=true → rotate the least-recently-used customer back in (flag exhausted).
-  //       - allowRepeats=false → bail out with a friendly error so caller can stop & warn.
-  let chosen: { name: string; email: string; country: string | null; created_at: string };
-  let exhausted = false;
-
-  if (available.length > 0) {
-    const neverUsed = available.filter((u) => !lastUsed.has(u.email.toLowerCase()));
-    if (neverUsed.length > 0) {
-      chosen = pick(neverUsed);
-    } else {
-      const sorted = [...available].sort((a, b) => {
-        const ta = lastUsed.get(a.email.toLowerCase()) ?? 0;
-        const tb = lastUsed.get(b.email.toLowerCase()) ?? 0;
-        return ta - tb;
-      });
-      chosen = pick(sorted.slice(0, Math.min(5, sorted.length)));
-    }
-  } else {
-    if (!opts.allowRepeats) {
-      return { ok: false, reason: "all_in_cooldown_strict", poolSize: unique.length };
-    }
-    exhausted = true;
-    const sorted = [...unique].sort((a, b) => {
-      const ta = lastUsed.get(a.email.toLowerCase()) ?? 0;
-      const tb = lastUsed.get(b.email.toLowerCase()) ?? 0;
-      return ta - tb;
-    });
-    chosen = sorted[0];
-    console.warn(
-      `bancontact: customer pool exhausted (all ${unique.length} within 2d cooldown). Reusing LRU ${chosen.email}.`,
-    );
-  }
+  if (minCount === Infinity) minCount = 0;
+  const tier = SEED_CUSTOMERS.filter(
+    (s) => (counts.get(s.name.toLowerCase()) ?? 0) === minCount,
+  );
+  const chosen = pick(tier);
 
   return {
     ok: true,
     name: chosen.name,
-    email: chosen.email,
-    country: chosen.country,
-    exhausted,
-    poolSize: unique.length,
+    email: emailFor(chosen),
+    country: chosen.country || null,
+    exhausted: minCount >= 1,
+    poolSize: SEED_CUSTOMERS.length,
   };
 }
 
