@@ -267,7 +267,8 @@ export default function BancontactPanel({ userEmail }: Props) {
     setBusy(true);
     try {
       const res = await invokeFn("bancontact-generate", { mode, ...payload });
-      toast.success(`Bancontact order sent (€${Number(res.total).toFixed(2)} — ${res.customer})`);
+      const srcLabel = payload?.customerSource === "history" ? " [history]" : payload?.customerSource === "seed" ? " [seed]" : "";
+      toast.success(`Bancontact order sent${srcLabel} (€${Number(res.total).toFixed(2)} — ${res.customer})`);
     } catch (e: any) {
       toast.error(e.message || "Generation failed");
     } finally {
