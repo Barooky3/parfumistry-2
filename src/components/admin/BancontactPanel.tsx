@@ -284,7 +284,7 @@ export default function BancontactPanel({ userEmail }: Props) {
     if (cleaned.length === 0) { toast.error("Add at least one item"); return; }
     const overrideNum = customTotal.trim() ? Number(customTotal) : NaN;
     const totalToSend = isFinite(overrideNum) && overrideNum > 0 ? overrideNum : autoTotal;
-    await handleGenerate("custom", { items: cleaned, total: totalToSend });
+    await handleGenerate("custom", { items: cleaned, total: totalToSend, customerSource: customSource });
     setCustomOpen(false);
   };
 
