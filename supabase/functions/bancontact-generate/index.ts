@@ -351,16 +351,20 @@ async function pickCustomer(
   source: "seed" | "history" = "seed",
 ): Promise<PickResult> {
   // Pull past bancontact orders both to tally usage AND (for "history" mode)
-  // to source the pool of names.
+  // to source the pool of names. Ordered newest-first so we can track recency.
   const { data: prev } = await supabase
     .from("bancontact_orders")
-    .select("customer_name, customer_email, country");
+    .select("customer_name, customer_email, country, created_at")
+    .order("created_at", { ascending: false });
   const counts = new Map<string, number>();
+  const lastUsedIdx = new Map<string, number>(); // 0 = most recent
   const historyMap = new Map<string, { name: string; email: string; country: string }>();
-  for (const r of (prev || []) as Array<{ customer_name: string | null; customer_email: string | null; country: string | null }>) {
+  const rows = (prev || []) as Array<{ customer_name: string | null; customer_email: string | null; country: string | null; created_at: string | null }>;
+  rows.forEach((r, idx) => {
     const k = (r.customer_name || "").trim().toLowerCase();
-    if (!k) continue;
+    if (!k) return;
     counts.set(k, (counts.get(k) ?? 0) + 1);
+    if (!lastUsedIdx.has(k)) lastUsedIdx.set(k, idx);
     if (!historyMap.has(k)) {
       historyMap.set(k, {
         name: r.customer_name || "",
@@ -368,7 +372,7 @@ async function pickCustomer(
         country: r.country || "",
       });
     }
-  }
+  });
 
   // Choose the pool based on source.
   let pool: Array<{ name: string; email: string; country: string }>;
@@ -382,16 +386,25 @@ async function pickCustomer(
     pool = SEED_CUSTOMERS.map((s) => ({ name: s.name, email: s.email, country: s.country }));
   }
 
-  // Find the minimum usage count across the chosen pool, then pick at random
+  // Exclude recently-used names so we never reuse one that just appeared.
+  // Window scales with pool size but is bounded.
+  const recentWindow = Math.min(Math.max(20, Math.floor(pool.length * 0.5)), Math.max(0, pool.length - 1));
+  let candidates = pool.filter((s) => {
+    const idx = lastUsedIdx.get(s.name.toLowerCase());
+    return idx === undefined || idx >= recentWindow;
+  });
+  if (candidates.length === 0) candidates = pool;
+
+  // Find the minimum usage count across the candidates, then pick at random
   // from everyone tied at that minimum. When everyone is at >=1 we've
   // "exhausted" one full cycle and naturally jumble + reuse from there.
   let minCount = Infinity;
-  for (const s of pool) {
+  for (const s of candidates) {
     const c = counts.get(s.name.toLowerCase()) ?? 0;
     if (c < minCount) minCount = c;
   }
   if (minCount === Infinity) minCount = 0;
-  const tier = pool.filter(
+  const tier = candidates.filter(
     (s) => (counts.get(s.name.toLowerCase()) ?? 0) === minCount,
   );
   const chosen = pick(tier);
@@ -405,6 +418,7 @@ async function pickCustomer(
     poolSize: pool.length,
   };
 }
+
 
 async function buildRandomItems(supabase: ReturnType<typeof createClient>): Promise<{ items: BancItem[]; total: number }> {
   // Pull a wide pool of past order items to draw from.
