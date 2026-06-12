@@ -351,7 +351,7 @@ serve(async (req) => {
       exhausted: pickRes.exhausted,
       poolSize: pickRes.poolSize,
       warning: pickRes.exhausted
-        ? `Customer pool exhausted (${pickRes.poolSize} eligible, all within 2d cooldown). Reused least-recently-used customer.`
+        ? `Seed pool fully cycled (${pickRes.poolSize} customers). Reusing names from a jumbled rotation.`
         : undefined,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
   } catch (e: any) {
