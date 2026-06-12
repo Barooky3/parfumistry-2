@@ -314,8 +314,9 @@ serve(async (req) => {
     const body = await req.json().catch(() => ({} as any));
     const mode: "random" | "custom" = body?.mode === "custom" ? "custom" : "random";
     const source: string = body?.source === "timed" ? "timed" : mode;
+    const customerSource: "seed" | "history" = body?.customerSource === "history" ? "history" : "seed";
 
-    const pickRes = await pickCustomer(supabase);
+    const pickRes = await pickCustomer(supabase, customerSource);
     const customer = { name: pickRes.name, email: pickRes.email, country: pickRes.country };
 
     let items: BancItem[];
