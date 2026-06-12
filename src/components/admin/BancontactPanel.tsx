@@ -55,13 +55,13 @@ type CustomItem = { productId?: string; brand: string; name: string; price: numb
 type ShippingChoice = "none" | "standard" | "express";
 const SHIPPING_COSTS: Record<ShippingChoice, number> = { none: 0, standard: 3.99, express: 12.99 };
 
-const TIMER_MODES: { value: string; label: string; range: string }[] = [
-  { value: "hyper_aggressive", label: "Hyper Aggressive", range: "1–5 min" },
-  { value: "aggressive", label: "Aggressive", range: "10–20 min" },
-  { value: "hard", label: "Hard", range: "20–45 min" },
-  { value: "normal", label: "Normal", range: "40–60 min" },
-  { value: "relaxed", label: "Relaxed", range: "65–90 min" },
-  { value: "hyper_relaxed", label: "Hyper Relaxed", range: "95–120 min" },
+const TIMER_MODES: { value: string; label: string; range: string; min: number; max: number }[] = [
+  { value: "hyper_aggressive", label: "Hyper Aggressive", range: "1–5 min", min: 1, max: 5 },
+  { value: "aggressive", label: "Aggressive", range: "10–20 min", min: 10, max: 20 },
+  { value: "hard", label: "Hard", range: "20–45 min", min: 20, max: 45 },
+  { value: "normal", label: "Normal", range: "40–60 min", min: 40, max: 60 },
+  { value: "relaxed", label: "Relaxed", range: "65–90 min", min: 65, max: 90 },
+  { value: "hyper_relaxed", label: "Hyper Relaxed", range: "95–120 min", min: 95, max: 120 },
 ];
 
 async function invokeFn(name: string, body: any) {
@@ -393,7 +393,9 @@ export default function BancontactPanel({ userEmail }: Props) {
             </div>
             <div className="flex items-center gap-3">
               <Select value={timer.mode} onValueChange={async (v) => {
-                await persistTimer({ mode: v, nextAt: timer.enabled ? new Date(Date.now() + 60_000).toISOString() : null });
+                const m = TIMER_MODES.find((x) => x.value === v);
+                const delayMs = m ? (m.min + Math.random() * (m.max - m.min)) * 60_000 : 60_000;
+                await persistTimer({ mode: v, nextAt: timer.enabled ? new Date(Date.now() + delayMs).toISOString() : null });
               }}>
                 <SelectTrigger className="h-8 w-[200px] text-xs">
                   <SelectValue />
