@@ -111,6 +111,7 @@ export default function BancontactPanel({ userEmail }: Props) {
   const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   const [customShipping, setCustomShipping] = useState<ShippingChoice>("standard");
   const [customTotal, setCustomTotal] = useState<string>("");
+  const [customSource, setCustomSource] = useState<"seed" | "history">("seed");
   const [busy, setBusy] = useState(false);
 
   const isBancontactAdmin = userEmail === BANCONTACT_ADMIN;
