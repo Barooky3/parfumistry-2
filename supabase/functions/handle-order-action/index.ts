@@ -16,7 +16,7 @@ function escapeHtml(text: string): string {
     .replace(/'/g, '&#039;');
 }
 
-const ADMIN_EMAILS = ["ewhz3384@gmail.com"];
+const ADMIN_EMAILS = ["ewhz3384@gmail.com", "elkhabirmalik@gmail.com"];
 
 interface OrderItem {
   name: string;

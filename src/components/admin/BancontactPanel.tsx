@@ -121,7 +121,7 @@ export default function BancontactPanel({ userEmail }: Props) {
   const [actingId, setActingId] = useState<string | null>(null);
 
   const fetchPendingBancontact = useCallback(async () => {
-    if (!isBancontactAdmin) return;
+    if (!isAdmin) return;
     setPendingBCLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -140,17 +140,17 @@ export default function BancontactPanel({ userEmail }: Props) {
     } finally {
       setPendingBCLoading(false);
     }
-  }, [isBancontactAdmin]);
+  }, [isAdmin]);
 
   useEffect(() => {
-    if (!isBancontactAdmin) return;
+    if (!isAdmin) return;
     fetchPendingBancontact();
     const ch = supabase
       .channel("bancontact_pending_orders")
       .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => fetchPendingBancontact())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [isBancontactAdmin, fetchPendingBancontact]);
+  }, [isAdmin, fetchPendingBancontact]);
 
   const handlePendingAction = useCallback(async (order: any, action: "approve" | "reject" | "relay_split") => {
     if (!order?.approval_token) { toast.error("Missing approval token"); return; }
@@ -424,8 +424,8 @@ export default function BancontactPanel({ userEmail }: Props) {
         </div>
       )}
 
-      {/* Pending Bancontact orders — Bancontact admin only */}
-      {isBancontactAdmin && (
+      {/* Pending Bancontact orders — visible to both admins */}
+      {isAdmin && (
         <div className="mt-4 border-t pt-3">
           <button onClick={() => setPendingBCOpen(v => !v)} className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors">
             <p className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-2">
