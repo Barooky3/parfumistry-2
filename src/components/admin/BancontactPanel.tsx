@@ -672,6 +672,16 @@ export default function BancontactPanel({ userEmail }: Props) {
 
           <div className="border-t pt-3 space-y-2">
             <div className="flex items-center justify-between gap-3">
+              <label className="text-xs text-muted-foreground">Customer source</label>
+              <Select value={customSource} onValueChange={(v) => setCustomSource(v as "seed" | "history")}>
+                <SelectTrigger className="h-8 w-[220px] text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="seed" className="text-xs">Seed names</SelectItem>
+                  <SelectItem value="history" className="text-xs">History names</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center justify-between gap-3">
               <label className="text-xs text-muted-foreground">Shipping</label>
               <Select value={customShipping} onValueChange={(v) => setCustomShipping(v as ShippingChoice)}>
                 <SelectTrigger className="h-8 w-[220px] text-xs"><SelectValue /></SelectTrigger>
