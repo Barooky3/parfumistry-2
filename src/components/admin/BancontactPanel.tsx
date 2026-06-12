@@ -124,17 +124,13 @@ export default function BancontactPanel({ userEmail }: Props) {
     if (!isAdmin) return;
     setPendingBCLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/admin-orders?status=pending_approval`, {
-        headers: {
-          "Authorization": `Bearer ${session?.access_token ?? ""}`,
-          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
-        },
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json?.error || `Request failed (${res.status})`);
-      const all = Array.isArray(json.orders) ? json.orders : [];
-      setPendingBC(all.filter((o: any) => typeof o.checkout_reference === "string" && o.checkout_reference.startsWith("bancontact")));
+      const { data, error } = await supabase
+        .from("bancontact_orders")
+        .select("*")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setPendingBC(data || []);
     } catch (e: any) {
       toast.error(e.message || "Failed to load pending Bancontact orders");
     } finally {
@@ -147,22 +143,23 @@ export default function BancontactPanel({ userEmail }: Props) {
     fetchPendingBancontact();
     const ch = supabase
       .channel("bancontact_pending_orders")
-      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => fetchPendingBancontact())
+      .on("postgres_changes", { event: "*", schema: "public", table: "bancontact_orders" }, () => fetchPendingBancontact())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [isAdmin, fetchPendingBancontact]);
 
   const handlePendingAction = useCallback(async (order: any, action: "approve" | "reject" | "relay_split") => {
     if (!order?.approval_token) { toast.error("Missing approval token"); return; }
-    if (action === "reject" && !confirm(`Reject order #${order.order_number ?? order.id.slice(0,8)}?`)) return;
+    if (action === "reject" && !confirm(`Reject Bancontact order from ${order.customer_name}?`)) return;
     setActingId(order.id);
     try {
-      const url = `${SUPABASE_URL}/functions/v1/handle-order-action?id=${order.id}&token=${order.approval_token}&action=${action}`;
+      const fnAction = action === "relay_split" ? "split" : action;
+      const url = `${SUPABASE_URL}/functions/v1/bancontact-action?id=${order.id}&token=${order.approval_token}&action=${fnAction}`;
       const res = await fetch(url, { method: "GET" });
       if (!res.ok) throw new Error(`Action failed (${res.status})`);
       toast.success(
-        action === "approve" ? "Order approved" :
-        action === "reject" ? "Order rejected" :
+        action === "approve" ? "Bancontact order approved" :
+        action === "reject" ? "Bancontact order rejected" :
         "Relay 50/50 started"
       );
       setPendingBC((prev) => prev.filter((o) => o.id !== order.id));
