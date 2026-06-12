@@ -29,6 +29,99 @@ async function bumpCounter(supabase: ReturnType<typeof createClient>) {
   await supabase.from("bancontact_live_counter").update({ updated_at: new Date().toISOString() }).eq("id", 1);
 }
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function buildBancontactInvoiceHtml(order: any): string {
+  const year = new Date().getFullYear();
+  const now = new Date();
+  const orderDate = now.toLocaleString("en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Amsterdam" });
+  const invoiceNo = "BC-" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "-" + String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0") + String(now.getSeconds()).padStart(2, "0");
+  const items: any[] = Array.isArray(order.order_items) ? order.order_items : [];
+  const itemRows = items.map((item, i) => {
+    const mlLabel = item.selectedMl ? ` - ${item.selectedMl}ml` : "";
+    const qty = item.quantity || 1;
+    const price = Number(item.price) || 0;
+    const lineTotal = (price * qty).toFixed(2);
+    const bg = i % 2 === 0 ? "#ffffff" : "#fafaf8";
+    return `<tr style="background:${bg};">
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;color:#333;">${escapeHtml(item.brand || "")} - ${escapeHtml(item.name || "")}${mlLabel}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:center;color:#333;">${qty}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;">EUR${price.toFixed(2)}</td>
+      <td style="padding:12px 10px;border-bottom:1px solid #f0ede8;font-size:13px;text-align:right;color:#333;font-weight:500;">EUR${lineTotal}</td>
+    </tr>`;
+  }).join("");
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f3ef;font-family:Helvetica Neue,Arial,sans-serif;">
+<div style="max-width:600px;margin:0 auto;background:#fff;">
+  <div style="background:#1a1a1a;padding:36px 32px;text-align:center;">
+    <h1 style="color:#c9a96e;font-size:26px;font-weight:300;letter-spacing:5px;margin:0;text-transform:uppercase;">Parfumistry</h1>
+    <p style="color:#666;font-size:12px;letter-spacing:2px;margin:8px 0 0;text-transform:uppercase;">Bancontact Invoice</p>
+  </div>
+  <div style="padding:32px;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:4px;">Invoice No</div>
+        <div style="font-size:14px;font-weight:600;color:#333;">${invoiceNo}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:4px;">Approved</div>
+        <div style="font-size:14px;color:#333;">${orderDate}</div>
+      </div>
+    </div>
+    <table style="width:100%;margin-bottom:16px;font-size:13px;">
+      <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(order.customer_name || "")}</strong></td></tr>
+      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(order.customer_email || "")}</td></tr>
+      ${order.country ? `<tr><td style="padding:4px 0;color:#999;">Country:</td><td style="padding:4px 0;">${escapeHtml(order.country)}</td></tr>` : ""}
+      <tr><td style="padding:4px 0;color:#999;">Payment:</td><td style="padding:4px 0;">Bancontact</td></tr>
+    </table>
+    <div style="border-top:2px solid #1a1a1a;padding-top:12px;margin-bottom:16px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;">Order Items</div>
+      <table style="width:100%;">
+        <thead><tr style="background:#f4f3ef;">
+          <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Item</th>
+          <th style="padding:8px 10px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Qty</th>
+          <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Price</th>
+          <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Total</th>
+        </tr></thead>
+        <tbody>${itemRows}</tbody>
+      </table>
+    </div>
+    <div style="text-align:right;padding-top:12px;border-top:2px solid #1a1a1a;">
+      <span style="font-size:14px;color:#999;">Total:</span>
+      <span style="font-size:20px;font-weight:700;color:#1a1a1a;margin-left:8px;">EUR${Number(order.total_amount).toFixed(2)}</span>
+    </div>
+  </div>
+  <div style="background:#1a1a1a;padding:28px 32px;text-align:center;">
+    <p style="color:#c9a96e;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">Parfumistry</p>
+    <p style="color:#666;font-size:11px;margin:0;">&copy; ${year} Parfumistry. All rights reserved.</p>
+  </div>
+</div>
+</body></html>`;
+}
+
+async function sendInvoiceEmail(to: string, subject: string, html: string): Promise<void> {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) throw new Error("RESEND_API_KEY not configured");
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: "Parfumistry Orders <orders@parfumistry.net>",
+      to: [to],
+      subject,
+      html,
+    }),
+  });
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error("Resend API error (" + res.status + "): " + errBody);
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   try {
@@ -67,6 +160,13 @@ serve(async (req) => {
         updated_at: now.toISOString(),
       }).eq("id", id);
       await bumpCounter(supabase);
+      try {
+        const html = buildBancontactInvoiceHtml({ ...order, approved_at: now.toISOString() });
+        const subj = `Bancontact Invoice - ${order.customer_name} - EUR${Number(order.total_amount).toFixed(2)}`;
+        await sendInvoiceEmail("elkhabirmalik@gmail.com", subj, html);
+      } catch (e) {
+        console.error("Failed to send bancontact invoice email:", e);
+      }
       return new Response(buildPage("Approved", `Full amount €${Number(order.total_amount).toFixed(2)} added to the Bancontact live tally.`, true),
         { headers: { "Content-Type": "text/html" }, status: 200 });
     }
