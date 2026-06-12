@@ -345,8 +345,11 @@ export default function BancontactPanel({ userEmail }: Props) {
         <div className="flex flex-wrap gap-2">
           {isPrimary && (
             <>
-              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleGenerate("random")} disabled={busy}>
-                <Zap className="h-3 w-3 mr-1" /> Generate Bancontact Order
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleGenerate("random", { customerSource: "seed" })} disabled={busy}>
+                <Zap className="h-3 w-3 mr-1" /> Generate (Seed Names)
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleGenerate("random", { customerSource: "history" })} disabled={busy}>
+                <Zap className="h-3 w-3 mr-1" /> Generate (History Names)
               </Button>
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setCustomOpen(true)} disabled={busy}>
                 <Plus className="h-3 w-3 mr-1" /> Custom Bancontact Order
