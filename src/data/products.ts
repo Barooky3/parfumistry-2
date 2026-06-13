@@ -71,6 +71,8 @@ import cedratBoiseGalleryAi from '@/assets/products/cedrat-boise-gallery-ai.png.
 import spicebombExtremeGalleryAi from '@/assets/products/spicebomb-extreme-gallery-ai.png.asset.json';
 import tomFordTobaccoVanille from '@/assets/products/tom-ford-tobacco-vanille.png.asset.json';
 import tomFordTobaccoVanilleGalleryAi from '@/assets/products/tom-ford-tobacco-vanille-gallery-ai.webp.asset.json';
+import initioSideEffect from '@/assets/products/initio-side-effect.png.asset.json';
+import initioSideEffectGalleryAi from '@/assets/products/initio-side-effect-gallery-ai.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -2201,6 +2203,38 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 25.99, inStock: true },
       { ml: 100, price: 31.99, inStock: true },
+    ],
+  },
+  {
+    id: 'initio-side-effect',
+    addedAt: '2026-06-13',
+    name: 'Side Effect',
+    brand: 'Initio',
+    price: 84.99,
+    category: 'unisex',
+    description: 'Initio Side Effect is a hypnotic, addictive oriental that blends boozy rum and warming spices with smoky tobacco and creamy sandalwood. Rum, cinnamon and saffron open like a dimly lit lounge, melting into a heart of tobacco and luminous hedione before settling on a velvety sandalwood base. Sensual, magnetic, unforgettable — a true after-dark signature.',
+    scentNotes: {
+      top: ['Rum', 'Cinnamon', 'Saffron'],
+      heart: ['Tobacco', 'Hedione'],
+      base: ['Sandalwood'],
+    },
+    scentNoteImages: {
+      'Rum': '/scent-notes/bourbon-whiskey.png',
+      'Cinnamon': '/scent-notes/cinnamon.png',
+      'Saffron': '/scent-notes/saffron.png',
+      'Tobacco': '/scent-notes/tobacco.png',
+      'Hedione': '/scent-notes/jasmine.png',
+      'Sandalwood': '/scent-notes/sandalwood.png',
+    },
+    accentColor: '#4B2A57',
+    image: initioSideEffect.url,
+    additionalImages: [initioSideEffectGalleryAi.url],
+    affiliateUrl: '/product/initio-side-effect',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 84.99, inStock: true },
+      { ml: 90, price: 104.99, inStock: true },
     ],
   },
 ];
