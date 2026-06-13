@@ -86,26 +86,26 @@ const NextFragrancePoll = () => {
   const pct = (n: number) => (total === 0 ? 0 : Math.round((n / total) * 100));
 
   return (
-    <section className="pt-8 md:pt-12 pb-2 md:pb-4 bg-background">
-      <div className="container max-w-2xl">
+    <section className="pt-6 md:pt-10 pb-2 md:pb-4 bg-background">
+      <div className="container max-w-xl">
 
-        <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-2">
+        <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent text-center mb-1.5">
           You Decide
         </p>
-        <h2 className="font-display text-xl md:text-2xl lg:text-3xl text-foreground text-center mb-1">
+        <h2 className="font-display text-lg md:text-2xl lg:text-3xl text-foreground text-center mb-1">
           Which should we add next?
         </h2>
-        <p className="text-[11px] md:text-xs text-muted-foreground text-center mb-5">
+        <p className="text-[10px] md:text-xs text-muted-foreground text-center mb-4 md:mb-5">
           {voted ? 'Thanks for voting — here are the live results' : 'Tap your pick to reveal the results'}
         </p>
 
-        <div className="relative flex items-center justify-center gap-3 md:gap-4 mb-6 md:mb-8">
+        <div className="relative flex items-center justify-center gap-2.5 md:gap-4 mb-5 md:mb-8">
           {OPTIONS.map((opt, idx) => {
             const count = counts[opt.key] || 0;
             const percent = pct(count);
             const isPick = voted === opt.key;
             return (
-              <div key={opt.key} className="flex-1 max-w-[180px] md:max-w-[200px]">
+              <div key={opt.key} className="flex-1 max-w-[150px] md:max-w-[200px]">
                 <button
                   type="button"
                   onClick={() => vote(opt.key)}
@@ -120,7 +120,7 @@ const NextFragrancePoll = () => {
                     src={opt.image}
                     alt={opt.label}
                     loading="lazy"
-                    className="w-full h-full object-contain p-2 md:p-3 transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-contain p-1.5 md:p-3 transition-transform duration-500 group-hover:scale-105"
                   />
                   {isPick && (
                     <div className="absolute top-1.5 right-1.5 bg-accent text-accent-foreground rounded-full p-1 shadow">
@@ -154,15 +154,15 @@ const NextFragrancePoll = () => {
           })}
 
           {/* OR divider — absolutely centered between the two photos */}
-          <div className="absolute left-1/2 top-[calc(50%-12px)] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
-            <div className="font-display text-base md:text-lg italic text-accent-foreground bg-accent rounded-full h-9 w-9 md:h-10 md:w-10 flex items-center justify-center shadow-md uppercase tracking-wide">
+          <div className="absolute left-1/2 top-[calc(50%-10px)] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
+            <div className="font-display text-sm md:text-lg italic text-accent-foreground bg-accent rounded-full h-8 w-8 md:h-10 md:w-10 flex items-center justify-center shadow-md uppercase tracking-wide">
               or
             </div>
           </div>
         </div>
 
         {/* Last Winner — prominent, integrated champion card */}
-        <div className="relative mx-auto max-w-[320px]">
+        <div className="relative mx-auto max-w-[280px] md:max-w-[320px]">
           <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-accent text-accent-foreground text-[8px] font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full shadow-sm">
             <Trophy className="h-2.5 w-2.5" fill="currentColor" />
             Last Winner
