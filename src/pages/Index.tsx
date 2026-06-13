@@ -161,6 +161,11 @@ const Index = () => {
       <HomeTrackOrder />
 
 
+      {/* Next Fragrance Poll */}
+      <Suspense fallback={null}>
+        <NextFragrancePoll />
+      </Suspense>
+
       {/* New Arrivals Section */}
       {newArrivals.length > 0 && (
         <section className="pt-6 md:pt-10 pb-6 md:pb-10 bg-background">
@@ -191,12 +196,6 @@ const Index = () => {
           </div>
         </section>
       )}
-
-
-      {/* Next Fragrance Poll */}
-      <Suspense fallback={null}>
-        <NextFragrancePoll />
-      </Suspense>
 
       {/* Bestsellers Section */}
       <section id="bestsellers" className="pt-4 md:pt-6 pb-14 md:pb-20 bg-background">
