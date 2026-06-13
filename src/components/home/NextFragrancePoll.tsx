@@ -51,13 +51,12 @@ const NextFragrancePoll = () => {
   const showResults = !!voted || isAdmin;
 
   const loadCounts = async () => {
-    const { data } = await supabase
-      .from('poll_votes')
-      .select('choice')
-      .eq('poll_id', POLL_ID);
+    const { data } = await supabase.rpc('get_poll_counts', { _poll_id: POLL_ID });
     if (data) {
       const c: Record<string, number> = {};
-      for (const row of data) c[row.choice] = (c[row.choice] || 0) + 1;
+      for (const row of data as Array<{ choice: string; vote_count: number }>) {
+        c[row.choice] = Number(row.vote_count) || 0;
+      }
       setCounts(c);
     }
   };
