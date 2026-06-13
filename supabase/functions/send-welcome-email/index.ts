@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -6,14 +7,57 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function escapeHtml(text: string): string {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Require an authenticated user (prevents abuse / branded phishing)
+    const authHeader = req.headers.get("Authorization") || "";
+    const token = authHeader.replace("Bearer ", "");
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+    const authClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: userData, error: authError } = await authClient.auth.getUser();
+    if (authError || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { email, name } = await req.json();
     if (!email || !name) throw new Error("Email and name are required");
+
+    // Only allow sending the welcome email to the authenticated user's own address
+    if ((userData.user.email || "").toLowerCase() !== String(email).toLowerCase()) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(String(email))) throw new Error("Invalid email");
+    const safeName = escapeHtml(String(name).slice(0, 100));
 
     const apiKey = Deno.env.get("RESEND_API_KEY");
     if (!apiKey) throw new Error("RESEND_API_KEY not configured");
@@ -30,11 +74,11 @@ serve(async (req) => {
   </div>
 
   <div style="background:linear-gradient(135deg,#c9a96e 0%,#b8944f 100%);padding:28px 32px;text-align:center;">
-    <h2 style="color:#fff;font-size:22px;font-weight:400;margin:0;letter-spacing:1px;">Welcome, ${name}!</h2>
+    <h2 style="color:#fff;font-size:22px;font-weight:400;margin:0;letter-spacing:1px;">Welcome, ${safeName}!</h2>
   </div>
 
   <div style="padding:32px;">
-    <p style="font-size:16px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${name}</strong>,</p>
+    <p style="font-size:16px;color:#333;line-height:1.6;margin:0 0 16px;">Hi <strong>${safeName}</strong>,</p>
     <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 16px;">Thanks for creating an account with us. You now have access to our full collection of premium fragrances at competitive prices.</p>
     <p style="font-size:14px;color:#666;line-height:1.7;margin:0 0 24px;">As a welcome gift, here's a discount for your first order:</p>
 
@@ -82,7 +126,8 @@ serve(async (req) => {
 
     if (!res.ok) {
       const errBody = await res.text();
-      throw new Error("Resend API error (" + res.status + "): " + errBody);
+      console.error("Resend API error:", res.status, errBody);
+      throw new Error("Email provider error");
     }
 
     console.log("Welcome email sent to:", email);
@@ -94,7 +139,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error sending welcome email:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Unable to send welcome email" }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
