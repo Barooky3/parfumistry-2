@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import tobaccoVanilleImg from '@/assets/products/tom-ford-tobacco-vanille.png.asset.json';
 import initioSideEffectImg from '@/assets/products/initio-side-effect.png.asset.json';
-import lostCherryImg from '@/assets/products/tom-ford-lost-cherry.png.asset.json';
+import acquaDiGioParfumImg from '@/assets/products/acqua-di-gio-parfum.png.asset.json';
+import virginIslandWaterImg from '@/assets/products/creed-virgin-island-water.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-10';
+const POLL_ID = 'next-arrival-2026-12';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'initio-side-effect',
-    label: 'Initio Side Effect',
-    image: initioSideEffectImg.url,
+    key: 'acqua-di-gio-parfum',
+    label: 'Acqua Di Giò Parfum',
+    image: acquaDiGioParfumImg.url,
   },
   {
-    key: 'tom-ford-lost-cherry',
-    label: 'TF Lost Cherry',
-    image: lostCherryImg.url,
+    key: 'creed-virgin-island-water',
+    label: 'Creed Virgin Island Water',
+    image: virginIslandWaterImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Tom Ford Tobacco Vanille',
-  image: tobaccoVanilleImg.url,
+  name: 'Initio Side Effect',
+  image: initioSideEffectImg.url,
 };
 
 function getFingerprint(): string {
