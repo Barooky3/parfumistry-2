@@ -357,7 +357,7 @@ async function pickCustomer(
     .select("customer_name, customer_email, country, created_at")
     .order("created_at", { ascending: false });
   const counts = new Map<string, number>();
-  const lastUsedIdx = new Map<string, number>(); // 0 = most recent
+  const lastUsedIdx = new Map<string, number>(); // 0 = most recent (within bancontact only)
   const historyMap = new Map<string, { name: string; email: string; country: string }>();
   const rows = (prev || []) as Array<{ customer_name: string | null; customer_email: string | null; country: string | null; created_at: string | null }>;
   rows.forEach((r, idx) => {
@@ -373,6 +373,29 @@ async function pickCustomer(
       });
     }
   });
+
+  // For "history" mode, ALSO pull every customer that ever placed a regular order
+  // so the pool spans the entire site's order history — not just bancontact.
+  if (source === "history") {
+    const { data: regular } = await supabase
+      .from("orders")
+      .select("customer_name, customer_email, shipping_address")
+      .not("customer_name", "is", null);
+    const regRows = (regular || []) as Array<{ customer_name: string | null; customer_email: string | null; shipping_address: any }>;
+    for (const r of regRows) {
+      const name = (r.customer_name || "").trim();
+      if (!name) continue;
+      const k = name.toLowerCase();
+      if (historyMap.has(k)) continue;
+      const country =
+        (r.shipping_address && (r.shipping_address.country || r.shipping_address.Country)) || "";
+      historyMap.set(k, {
+        name,
+        email: r.customer_email || "",
+        country: String(country || ""),
+      });
+    }
+  }
 
   // Choose the pool based on source.
   let pool: Array<{ name: string; email: string; country: string }>;
