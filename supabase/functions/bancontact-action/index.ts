@@ -74,7 +74,7 @@ function buildBancontactInvoiceHtml(order: any): string {
     </div>
     <table style="width:100%;margin-bottom:16px;font-size:13px;">
       <tr><td style="padding:4px 0;color:#999;width:100px;">Customer:</td><td style="padding:4px 0;"><strong>${escapeHtml(order.customer_name || "")}</strong></td></tr>
-      <tr><td style="padding:4px 0;color:#999;">Email:</td><td style="padding:4px 0;">${escapeHtml(order.customer_email || "")}</td></tr>
+      
       ${order.country ? `<tr><td style="padding:4px 0;color:#999;">Country:</td><td style="padding:4px 0;">${escapeHtml(order.country)}</td></tr>` : ""}
       <tr><td style="padding:4px 0;color:#999;">Payment:</td><td style="padding:4px 0;">Bancontact</td></tr>
     </table>

@@ -458,7 +458,7 @@ export default function BancontactPanel({ userEmail }: Props) {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-semibold">#{o.order_number ?? o.id.slice(0,8)}</span>
                           <span className="opacity-80">{o.customer_name}</span>
-                          <span className="opacity-60">· {o.customer_email}</span>
+                          
                         </div>
                         {addrLine && <div className="opacity-60 mt-0.5 truncate">{addrLine}</div>}
                         <div className="opacity-60 mt-0.5">{format(new Date(o.created_at), "dd MMM HH:mm")}</div>
@@ -500,7 +500,6 @@ export default function BancontactPanel({ userEmail }: Props) {
                   <div className="text-muted-foreground truncate">
                     <span className="font-mono opacity-70">{o.kind === "full" ? "FULL" : o.kind === "split_1" ? "½₁" : "½₂"}</span>
                     <span className="ml-2">{o.customer_name}</span>
-                    <span className="ml-1 opacity-60">· {o.customer_email}</span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
@@ -557,7 +556,7 @@ export default function BancontactPanel({ userEmail }: Props) {
                           <div key={`${o.id}-${i}`} className="flex items-center justify-between gap-2 py-0.5">
                             <div className="text-muted-foreground truncate">
                               <span className="ml-2">{o.customer_name}</span>
-                              <span className="ml-1 opacity-60">· {o.customer_email}</span>
+                              
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
                               <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
