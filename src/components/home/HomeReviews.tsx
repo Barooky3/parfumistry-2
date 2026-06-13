@@ -189,9 +189,6 @@ const HomeReviews = () => {
               <h3 className="font-display text-2xl md:text-3xl text-foreground mb-2">
                 Share your experience
               </h3>
-              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed mb-6">
-                Tell us how your fragrances performed — your review helps fellow Parfumistry customers choose with confidence.
-              </p>
               {user ? (
                 <Button
                   onClick={() => setSubmitOpen(true)}
@@ -214,13 +211,13 @@ const HomeReviews = () => {
                 </Button>
               )}
               <div className="mt-6 pt-5 border-t border-border/40">
-                <p className="text-[13px] md:text-sm text-muted-foreground/90 leading-relaxed">
-                  Once your order arrives, leave a verified review and we'll send a <span className="text-foreground/90 font-medium">free gift</span> with your next order. Include photos of your products and you'll earn <span className="text-foreground/90 font-medium">extra samples</span> too. Just message us on TikTok{' '}
+                <p className="text-sm md:text-base text-foreground/90 leading-relaxed font-medium">
+                  Once your order arrives, leave a verified review and we'll send a <span className="text-foreground font-semibold">free gift</span> with your next order. Include photos of your products and you'll earn <span className="text-foreground font-semibold">extra samples</span> too. Just message us on TikTok{' '}
                   <a
                     href="https://www.tiktok.com/@parfumistry"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent underline-offset-2 hover:underline transition-colors"
+                    className="text-accent underline-offset-2 hover:underline transition-colors font-semibold"
                   >
                     @parfumistry
                   </a>{' '}
