@@ -214,12 +214,12 @@ const HomeReviews = () => {
                 <p className="text-sm md:text-base text-foreground/90 leading-relaxed font-medium">
                   Once your order arrives, leave a verified review and we'll send a <span className="text-foreground font-semibold">free gift</span> with your next order. Include photos of your products and you'll earn <span className="text-foreground font-semibold">extra samples</span> too. Just message us on TikTok{' '}
                   <a
-                    href="https://www.tiktok.com/@parfumistry"
+                    href="https://www.tiktok.com/@fragranceprofs"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-accent underline-offset-2 hover:underline transition-colors font-semibold"
                   >
-                    @parfumistry
+                    @fragranceprofs
                   </a>{' '}
                   with proof of your review.
                 </p>
