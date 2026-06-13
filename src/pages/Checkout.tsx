@@ -56,14 +56,8 @@ const getShippingCost = (country: string, method: ShippingMethod = 'standard'): 
   return 3.99;
 };
 
-const VALID_CODES: Record<string, number> = {
-  'professor15': 15,
-  'parfum10': 10,
-  'parfumz20': 20,
-  'parfumo30': 30,
-  'parfuma90': 90,
-  'parfumz50': 50,
-};
+// Discount code validation is performed server-side via the
+// `validate-discount` edge function — codes are never embedded in client code.
 
 const CountryCombobox = ({ value, onSelect }: { value: string; onSelect: (value: string) => void }) => {
   const [open, setOpen] = useState(false);
@@ -164,20 +158,26 @@ const Checkout = () => {
     return formData.country && formData.streetAddress && formData.postalCode && formData.city;
   };
 
-  const handleApplyDiscount = () => {
+  const handleApplyDiscount = async () => {
     setIsApplyingDiscount(true);
-    setTimeout(() => {
-      setIsApplyingDiscount(false);
-      const code = discountCode.trim().toLowerCase();
-      const percent = VALID_CODES[code];
-      if (percent) {
-        setAppliedDiscount({ code: discountCode.trim(), percent });
-        toast({ title: 'Discount applied!', description: `${percent}% off has been applied to your order.` });
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-discount', {
+        body: { code: discountCode.trim() },
+      });
+      const result = data as { valid?: boolean; percent?: number } | null;
+      if (!error && result?.valid && result.percent) {
+        setAppliedDiscount({ code: discountCode.trim(), percent: result.percent });
+        toast({ title: 'Discount applied!', description: `${result.percent}% off has been applied to your order.` });
       } else {
         setAppliedDiscount(null);
         toast({ title: 'Invalid code', description: 'This discount code is not valid.', variant: 'destructive' });
       }
-    }, 600);
+    } catch {
+      setAppliedDiscount(null);
+      toast({ title: 'Invalid code', description: 'This discount code is not valid.', variant: 'destructive' });
+    } finally {
+      setIsApplyingDiscount(false);
+    }
   };
 
   const formDataRef = useRef(formData);
