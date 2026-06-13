@@ -105,7 +105,7 @@ const NextFragrancePoll = () => {
             const percent = pct(count);
             const isPick = voted === opt.key;
             return (
-              <div key={opt.key} className="flex-1 max-w-[150px] md:max-w-[200px]">
+              <div key={opt.key} className="flex-1 max-w-[130px] md:max-w-[180px]">
                 <button
                   type="button"
                   onClick={() => vote(opt.key)}
