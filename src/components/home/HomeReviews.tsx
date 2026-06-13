@@ -186,12 +186,6 @@ const HomeReviews = () => {
           <div className="relative overflow-hidden bg-gradient-to-br from-card/80 via-card/50 to-card/30 border border-border/60 rounded-2xl p-7 md:p-9 flex flex-col justify-center backdrop-blur-sm shadow-xl">
             <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-accent/10 blur-3xl pointer-events-none" />
             <div className="relative">
-              <h3 className="font-display text-2xl md:text-3xl text-foreground mb-2">
-                Share your experience
-              </h3>
-              <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed mb-6">
-                Tell us how your fragrances performed — your review helps fellow Parfumistry customers choose with confidence.
-              </p>
               {user ? (
                 <Button
                   onClick={() => setSubmitOpen(true)}
@@ -214,8 +208,8 @@ const HomeReviews = () => {
                 </Button>
               )}
               <div className="mt-6 pt-5 border-t border-border/40">
-                <p className="text-[13px] md:text-sm text-muted-foreground/90 leading-relaxed">
-                  Once your order arrives, leave a verified review and we'll send a <span className="text-foreground/90 font-medium">free gift</span> with your next order. Include photos of your products and you'll earn <span className="text-foreground/90 font-medium">extra samples</span> too. Just message us on TikTok{' '}
+                <p className="text-sm md:text-base text-foreground/95 leading-relaxed font-medium">
+                  Once your order arrives, leave a verified review and we'll send a <span className="text-foreground font-semibold">free gift</span> with your next order. Include photos of your products and you'll earn <span className="text-foreground font-semibold">extra samples</span> too. Just message us on TikTok{' '}
                   <a
                     href="https://www.tiktok.com/@parfumistry"
                     target="_blank"
