@@ -23,7 +23,7 @@ const Index = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const newArrivals = [
-    getProductById('bad-boy-cobalt'),
+    getProductById('initio-side-effect'),
     getProductById('tom-ford-tobacco-vanille'),
     getProductById('lv-afternoon-swim'),
   ].filter(Boolean);
