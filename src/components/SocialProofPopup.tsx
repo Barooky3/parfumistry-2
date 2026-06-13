@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { X } from 'lucide-react';
 import { products, bestsellerIds } from '@/data/products';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
+
+type NameEntry = { display: string; country: string };
 
 const NAMES_BY_COUNTRY: Record<string, { male: string[]; female: string[]; last: string[] }> = {
   'Netherlands': { male: ['Daan', 'Sem', 'Thijs', 'Ruben', 'Bram', 'Stijn', 'Lars', 'Jesse'], female: ['Lieke', 'Fleur', 'Noor', 'Femke', 'Sanne'], last: ['de Vries', 'Jansen', 'Bakker', 'Visser', 'Smit', 'Meijer', 'Mulder', 'Bos', 'Vos', 'Peters'] },
@@ -89,9 +92,35 @@ export const SocialProofPopup = () => {
     timeAgo: string;
     paymentMethod: typeof PAYMENT_METHODS[0];
   } | null>(null);
-  const countryIndexRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const poolRef = useRef<NameEntry[]>([]);
+  const queueRef = useRef<NameEntry[]>([]);
+  const countryIndexRef = useRef(0);
   const shuffledCountriesRef = useRef<string[]>([]);
+
+  // Fallback synthetic entries built from the static lists
+  const buildFallbackPool = (): NameEntry[] => {
+    const out: NameEntry[] = [];
+    for (const country of ALL_COUNTRIES) {
+      const n = NAMES_BY_COUNTRY[country];
+      const firsts = [...n.male, ...n.female];
+      for (const f of firsts) {
+        for (const l of n.last) {
+          out.push({ display: `${f} ${l.charAt(0)}.`, country });
+        }
+      }
+    }
+    return out;
+  };
+
+  const reshuffleQueue = useCallback(() => {
+    const arr = [...poolRef.current];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    queueRef.current = arr;
+  }, []);
 
   useEffect(() => {
     const arr = [...ALL_COUNTRIES];
@@ -100,7 +129,27 @@ export const SocialProofPopup = () => {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     shuffledCountriesRef.current = arr;
-  }, []);
+
+    // Seed with fallback so popups can start immediately
+    poolRef.current = buildFallbackPool();
+    reshuffleQueue();
+
+    // Then fetch real customer names from the database
+    (async () => {
+      try {
+        const { data } = await supabase.functions.invoke('social-proof-names');
+        const entries: NameEntry[] = (data?.entries || []).filter(
+          (e: any) => e && typeof e.display === 'string' && typeof e.country === 'string'
+        );
+        if (entries.length > 0) {
+          poolRef.current = entries;
+          reshuffleQueue();
+        }
+      } catch {
+        // keep fallback
+      }
+    })();
+  }, [reshuffleQueue]);
 
   const scheduleNext = useCallback((fn: () => void) => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -108,22 +157,15 @@ export const SocialProofPopup = () => {
   }, []);
 
   const showNotification = useCallback(() => {
-    const countries = shuffledCountriesRef.current;
-    if (countries.length === 0) return;
-    const country = countries[countryIndexRef.current % countries.length];
-    countryIndexRef.current++;
-
-    const names = NAMES_BY_COUNTRY[country];
-    const isMale = Math.random() < 0.8;
-    const firstList = isMale ? names.male : names.female;
-    const first = firstList[Math.floor(Math.random() * firstList.length)];
-    const last = names.last[Math.floor(Math.random() * names.last.length)];
+    if (queueRef.current.length === 0) reshuffleQueue();
+    const entry = queueRef.current.shift();
+    if (!entry) { scheduleNext(showNotification); return; }
 
     const product = pickRandomProduct();
     if (!product) { scheduleNext(showNotification); return; }
     const timeAgo = randomMinutesAgo();
     const paymentMethod = pickRandomPaymentMethod();
-    setNotification({ product, customerName: `${first} ${last.charAt(0)}.`, country, timeAgo, paymentMethod });
+    setNotification({ product, customerName: entry.display, country: entry.country, timeAgo, paymentMethod });
     setVisible(true);
     setTimeout(() => {
       setVisible(false);
