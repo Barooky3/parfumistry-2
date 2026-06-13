@@ -4,6 +4,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const MAX_TEXT_LENGTH = 2000;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -12,6 +14,14 @@ Deno.serve(async (req) => {
     if (!text || typeof text !== "string") {
       return new Response(JSON.stringify({ error: "Missing text" }), {
         status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Hard input cap to limit abuse of the AI gateway
+    if (text.length > MAX_TEXT_LENGTH) {
+      return new Response(JSON.stringify({ error: "Text too long" }), {
+        status: 413,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -45,7 +55,8 @@ Deno.serve(async (req) => {
 
     if (!aiRes.ok) {
       const errText = await aiRes.text();
-      return new Response(JSON.stringify({ error: "AI error", detail: errText }), {
+      console.error("AI gateway error:", aiRes.status, errText);
+      return new Response(JSON.stringify({ error: "Translation unavailable" }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -58,7 +69,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    console.error("translate-text error:", e);
+    return new Response(JSON.stringify({ error: "Translation failed" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -653,6 +653,13 @@ export type Database = {
           order_count: number
         }[]
       }
+      get_poll_counts: {
+        Args: { _poll_id: string }
+        Returns: {
+          choice: string
+          vote_count: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
