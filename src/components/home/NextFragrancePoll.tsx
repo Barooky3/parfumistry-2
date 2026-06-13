@@ -51,8 +51,8 @@ const NextFragrancePoll = () => {
   const showResults = !!voted || isAdmin;
 
   const loadCounts = async () => {
-    const { data } = await supabase.rpc('get_poll_counts', { _poll_id: POLL_ID });
-    if (data) {
+    const { data } = await (supabase as any).rpc('get_poll_counts', { _poll_id: POLL_ID });
+    if (Array.isArray(data)) {
       const c: Record<string, number> = {};
       for (const row of data as Array<{ choice: string; vote_count: number }>) {
         c[row.choice] = Number(row.vote_count) || 0;
