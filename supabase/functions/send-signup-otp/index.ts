@@ -100,7 +100,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error sending OTP:", error);
     return new Response(
-      JSON.stringify({ error: "Unable to send verification code", debug: String(error) }),
+      JSON.stringify({ error: "Unable to send verification code" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
