@@ -500,7 +500,6 @@ export default function BancontactPanel({ userEmail }: Props) {
                   <div className="text-muted-foreground truncate">
                     <span className="font-mono opacity-70">{o.kind === "full" ? "FULL" : o.kind === "split_1" ? "½₁" : "½₂"}</span>
                     <span className="ml-2">{o.customer_name}</span>
-                    <span className="ml-1 opacity-60">· {o.customer_email}</span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
