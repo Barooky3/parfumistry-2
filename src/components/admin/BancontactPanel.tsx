@@ -556,7 +556,7 @@ export default function BancontactPanel({ userEmail }: Props) {
                           <div key={`${o.id}-${i}`} className="flex items-center justify-between gap-2 py-0.5">
                             <div className="text-muted-foreground truncate">
                               <span className="ml-2">{o.customer_name}</span>
-                              <span className="ml-1 opacity-60">· {o.customer_email}</span>
+                              
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
                               <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
