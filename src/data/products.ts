@@ -71,6 +71,8 @@ import cedratBoiseGalleryAi from '@/assets/products/cedrat-boise-gallery-ai.png.
 import spicebombExtremeGalleryAi from '@/assets/products/spicebomb-extreme-gallery-ai.png.asset.json';
 import tomFordTobaccoVanille from '@/assets/products/tom-ford-tobacco-vanille.png.asset.json';
 import tomFordTobaccoVanilleGalleryAi from '@/assets/products/tom-ford-tobacco-vanille-gallery-ai.webp.asset.json';
+import initioSideEffect from '@/assets/products/initio-side-effect.png.asset.json';
+import initioSideEffectGalleryAi from '@/assets/products/initio-side-effect-gallery-ai.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
