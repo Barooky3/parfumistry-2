@@ -59,20 +59,21 @@ export const PriceEditor = ({ product }: PriceEditorProps) => {
     };
   }, [open]);
 
+  const hasVariants = !!(product.variants && product.variants.length);
+
   const handleSave = async () => {
     setSaving(true);
-    const variants =
-      product.variants && product.variants.length
-        ? product.variants.map((v, i) => ({
-            ...v,
-            price: parseNum(variantPrices[i]?.price ?? '') ?? v.price,
-            originalPrice:
-              parseNum(variantPrices[i]?.originalPrice ?? '') ?? undefined,
-          }))
-        : null;
+    const variants = hasVariants
+      ? product.variants!.map((v, i) => ({
+          ...v,
+          price: parseNum(variantPrices[i]?.price ?? '') ?? v.price,
+          originalPrice:
+            parseNum(variantPrices[i]?.originalPrice ?? '') ?? undefined,
+        }))
+      : null;
     await saveProductPriceOverride(product.id, {
-      base_price: parseNum(basePrice),
-      original_price: parseNum(originalPrice),
+      base_price: hasVariants ? null : parseNum(basePrice),
+      original_price: hasVariants ? null : parseNum(originalPrice),
       variants,
     });
     setSaving(false);
