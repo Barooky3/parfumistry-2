@@ -4,11 +4,10 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import initioSideEffectImg from '@/assets/products/initio-side-effect.png.asset.json';
-import acquaDiGioParfumImg from '@/assets/products/acqua-di-gio-parfum.png.asset.json';
 import virginIslandWaterImg from '@/assets/products/creed-virgin-island-water.png.asset.json';
+import acquaDiGioParfumImg from '@/assets/products/acqua-di-gio-parfum.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12';
+const POLL_ID = 'next-arrival-2026-12-b';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
@@ -17,16 +16,11 @@ const OPTIONS = [
     label: 'Acqua Di Giò Parfum',
     image: acquaDiGioParfumImg.url,
   },
-  {
-    key: 'creed-virgin-island-water',
-    label: 'Creed Virgin Island Water',
-    image: virginIslandWaterImg.url,
-  },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Initio Side Effect',
-  image: initioSideEffectImg.url,
+  name: 'Creed Virgin Island Water',
+  image: virginIslandWaterImg.url,
 };
 
 function getFingerprint(): string {
