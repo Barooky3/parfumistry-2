@@ -142,34 +142,36 @@ export const PriceEditor = ({ product }: PriceEditorProps) => {
           <p className="text-[11px] text-white/40 truncate">{product.name}</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-[11px] text-white/70 mb-1.5 block">
-              Base price (€)
-            </label>
-            <Input
-              inputMode="decimal"
-              value={basePrice}
-              onChange={(e) => setBasePrice(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-neutral-800 border-white/20 text-white"
-              placeholder={toStr(product.price)}
-            />
+        {!hasVariants && (
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[11px] text-white/70 mb-1.5 block">
+                Base price (€)
+              </label>
+              <Input
+                inputMode="decimal"
+                value={basePrice}
+                onChange={(e) => setBasePrice(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-neutral-800 border-white/20 text-white"
+                placeholder={toStr(product.price)}
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-white/70 mb-1.5 block">
+                Compare-at (€)
+              </label>
+              <Input
+                inputMode="decimal"
+                value={originalPrice}
+                onChange={(e) => setOriginalPrice(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-neutral-800 border-white/20 text-white"
+                placeholder={toStr(product.originalPrice)}
+              />
+            </div>
           </div>
-          <div>
-            <label className="text-[11px] text-white/70 mb-1.5 block">
-              Compare-at (€)
-            </label>
-            <Input
-              inputMode="decimal"
-              value={originalPrice}
-              onChange={(e) => setOriginalPrice(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-neutral-800 border-white/20 text-white"
-              placeholder={toStr(product.originalPrice)}
-            />
-          </div>
-        </div>
+        )}
 
         {product.variants && product.variants.length > 0 && (
           <div className="border-t border-white/10 pt-3">
