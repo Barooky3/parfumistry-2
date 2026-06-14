@@ -98,12 +98,12 @@ export const applyPriceOverride = <T extends Product>(product: T): T => {
       });
     }
   }
-  // Always sync the outside (card) price to the cheapest variant when variants exist
+  // Always sync the outside (card) price to the first variant (the one displayed outside)
   if (next.variants && next.variants.length) {
-    const cheapest = next.variants.reduce((a, b) => (a.price <= b.price ? a : b));
-    next.price = cheapest.price;
-    if (cheapest.originalPrice !== undefined) {
-      next.originalPrice = cheapest.originalPrice;
+    const displayed = next.variants[0];
+    next.price = displayed.price;
+    if (displayed.originalPrice !== undefined) {
+      next.originalPrice = displayed.originalPrice;
     }
   }
   return next;
