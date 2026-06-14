@@ -73,6 +73,8 @@ import tomFordTobaccoVanille from '@/assets/products/tom-ford-tobacco-vanille.pn
 import tomFordTobaccoVanilleGalleryAi from '@/assets/products/tom-ford-tobacco-vanille-gallery-ai.webp.asset.json';
 import initioSideEffect from '@/assets/products/initio-side-effect.png.asset.json';
 import initioSideEffectGalleryAi from '@/assets/products/initio-side-effect-gallery-ai.webp.asset.json';
+import creedVirginIslandWater from '@/assets/products/creed-virgin-island-water.png.asset.json';
+import creedVirginIslandWaterGalleryAi from '@/assets/products/creed-virgin-island-water-gallery-ai.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
