@@ -25,7 +25,7 @@ const Index = () => {
   const newArrivals = [
     getProductById('creed-virgin-island-water'),
     getProductById('initio-side-effect'),
-    getProductById('tom-ford-tobacco-vanille'),
+    getProductById('lv-afternoon-swim'),
   ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
 
