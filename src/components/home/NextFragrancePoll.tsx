@@ -5,16 +5,22 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import virginIslandWaterImg from '@/assets/products/creed-virgin-island-water.png.asset.json';
-import acquaDiGioParfumImg from '@/assets/products/acqua-di-gio-parfum.png.asset.json';
+import mindGamesBlockadeImg from '@/assets/products/mind-games-blockade.png.asset.json';
+import godOfFireImg from '@/assets/products/shl-god-of-fire.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12-b';
+const POLL_ID = 'next-arrival-2026-12-c';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'acqua-di-gio-parfum',
-    label: 'Acqua Di Giò Parfum',
-    image: acquaDiGioParfumImg.url,
+    key: 'mind-games-blockade',
+    label: 'Mind Games Blockade',
+    image: mindGamesBlockadeImg.url,
+  },
+  {
+    key: 'shl-god-of-fire',
+    label: 'SHL God of Fire',
+    image: godOfFireImg.url,
   },
 ] as const;
 
