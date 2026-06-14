@@ -2239,6 +2239,42 @@ export const products: Product[] = [
       { ml: 90, price: 104.99, inStock: true },
     ],
   },
+  {
+    id: 'creed-virgin-island-water',
+    addedAt: '2026-06-14',
+    name: 'Virgin Island Water',
+    brand: 'Creed',
+    price: 89.99,
+    category: 'unisex',
+    description: 'Creed Virgin Island Water is a luminous tropical escape — a sun-drenched blend of juicy lime and bergamot lifted by sweet coconut milk and ivory white flowers, settling on a soft bed of white musk, patchouli and tonka bean. Crisp, creamy and effortlessly summery, it captures the feeling of barefoot evenings on a Caribbean shore.',
+    scentNotes: {
+      top: ['Lime', 'Bergamot', 'Mandarin'],
+      heart: ['Coconut', 'Jasmine', 'Hibiscus', 'Ylang-Ylang'],
+      base: ['White Musk', 'Patchouli', 'Tonka Bean'],
+    },
+    scentNoteImages: {
+      'Lime': '/scent-notes/lime.png',
+      'Bergamot': '/scent-notes/bergamot.png',
+      'Mandarin': '/scent-notes/mandarin.png',
+      'Coconut': '/scent-notes/coconut.png',
+      'Jasmine': '/scent-notes/jasmine.png',
+      'Hibiscus': '/scent-notes/hibiscus.png',
+      'Ylang-Ylang': '/scent-notes/ylang-ylang.png',
+      'White Musk': '/scent-notes/white-musk.png',
+      'Patchouli': '/scent-notes/patchouli.png',
+      'Tonka Bean': '/scent-notes/tonka-bean.png',
+    },
+    accentColor: '#4FA3B8',
+    image: creedVirginIslandWater.url,
+    additionalImages: [creedVirginIslandWaterGalleryAi.url],
+    affiliateUrl: '/product/creed-virgin-island-water',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 89.99, inStock: true },
+      { ml: 100, price: 119.99, inStock: true },
+    ],
+  },
 ];
 
 
