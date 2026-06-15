@@ -115,11 +115,15 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
           >
             {(() => {
               const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
-              const imageList = product.additionalImages && product.additionalImages.length > 0
-                ? [...product.additionalImages, product.image]
-                : [product.image];
-              const currentSrc = imageList[selectedImageIndex] || product.image;
-              const isProductShot = currentSrc === product.image;
+              const hasBundle = product.bundleImages && product.bundleImages.length > 0;
+              const extras = product.additionalImages || [];
+              // For bundles: first slot is the composite, then extras. For others: extras + product image.
+              const imageList = hasBundle
+                ? ['__BUNDLE__', ...extras]
+                : (extras.length > 0 ? [...extras, product.image] : [product.image]);
+              const currentSrc = imageList[selectedImageIndex] || imageList[0];
+              const showingBundle = hasBundle && currentSrc === '__BUNDLE__';
+              const isProductShot = !hasBundle && currentSrc === product.image;
               return (
                 <div 
                   className={cn(
@@ -130,22 +134,22 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   {isAdmin && <PaddingAdjuster productId={product.id} productName={displayName} variant="detail" />}
                   {isAdmin && <NameEditor productId={product.id} originalName={product.name} variant="detail" />}
                   {isAdmin && rawProduct && <StockEditor product={rawProduct} variant="detail" />}
-                  {product.bundleImages && product.bundleImages.length > 0 ? (
+                  {showingBundle ? (
                     <div className="relative w-full h-full" style={innerStyle || undefined}>
                       <img
-                        src={product.bundleImages[0]}
+                        src={product.bundleImages![0]}
                         alt={`${product.name} item 1`}
                         className="absolute top-[8%] left-[4%] h-[58%] w-auto object-contain drop-shadow-md z-10"
                         loading="eager"
                       />
                       <img
-                        src={product.bundleImages[2]}
+                        src={product.bundleImages![2]}
                         alt={`${product.name} item 3`}
                         className="absolute top-[8%] right-[4%] h-[58%] w-auto object-contain drop-shadow-md z-10"
                         loading="eager"
                       />
                       <img
-                        src={product.bundleImages[1]}
+                        src={product.bundleImages![1]}
                         alt={`${product.name} item 2`}
                         className="absolute bottom-[6%] left-1/2 -translate-x-1/2 h-[62%] w-auto object-contain drop-shadow-lg z-20"
                         loading="eager"
@@ -154,7 +158,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   ) : (
                     <div className="w-full h-full relative">
                       {imageList.map((src, i) => {
-                        const isShot = src === product.image;
+                        if (src === '__BUNDLE__') return null;
+                        const isShot = !hasBundle && src === product.image;
                         const wrapStyle = isShot ? (innerStyle || undefined) : undefined;
                         return (
                           <div
@@ -180,9 +185,12 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               );
             })()}
-            {product.additionalImages && product.additionalImages.length > 0 && !product.bundleImages && (
+            {((product.additionalImages && product.additionalImages.length > 0) || (product.bundleImages && product.bundleImages.length > 0 && (product.additionalImages?.length ?? 0) > 0)) && (
               <div className="flex gap-3 px-1">
-                {[...product.additionalImages, product.image].map((src, idx) => (
+                {(product.bundleImages && product.bundleImages.length > 0
+                  ? ['__BUNDLE__', ...(product.additionalImages || [])]
+                  : [...(product.additionalImages || []), product.image]
+                ).map((src, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIndex(idx)}
@@ -192,11 +200,20 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                     )}
                     aria-label={`View image ${idx + 1}`}
                   >
-                    <img src={src} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                    {src === '__BUNDLE__' && product.bundleImages ? (
+                      <div className="relative w-full h-full">
+                        <img src={product.bundleImages[0]} alt="" className="absolute top-[10%] left-[4%] h-[55%] w-auto object-contain z-10" />
+                        <img src={product.bundleImages[2]} alt="" className="absolute top-[10%] right-[4%] h-[55%] w-auto object-contain z-10" />
+                        <img src={product.bundleImages[1]} alt="" className="absolute bottom-[6%] left-1/2 -translate-x-1/2 h-[60%] w-auto object-contain z-20" />
+                      </div>
+                    ) : (
+                      <img src={src} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                    )}
                   </button>
                 ))}
               </div>
             )}
+
 
             {!product.isBundle && <ProductAttributes productId={product.id} />}
           </motion.div>
