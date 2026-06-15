@@ -33,7 +33,7 @@ import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-ed
 import eveningSweetheartGallery from '@/assets/products/evening-sweetheart-gallery.png.asset.json';
 import sleekAndCleanGallery from '@/assets/products/sleek-and-clean-gallery.png.asset.json';
 import youngPlayboyGallery from '@/assets/products/young-playboy-gallery-ai.png.asset.json';
-import jpgBundleGalleryAi from '@/assets/products/jpg-bundle-gallery-new.png.asset.json';
+import jpgBundleGalleryAi from '@/assets/products/jpg-bundle-gallery-ai.png.asset.json';
 import naxosGallery from '@/assets/products/naxos-gallery.webp.asset.json';
 import blackOpiumGallery from '@/assets/products/black-opium-gallery.webp.asset.json';
 import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json';
