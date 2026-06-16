@@ -119,7 +119,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               const extras = product.additionalImages || [];
               // For bundles: first slot is the composite, then extras. For others: extras + product image.
               const imageList = hasBundle
-                ? ['__BUNDLE__', ...extras]
+                ? [...extras, '__BUNDLE__']
                 : (extras.length > 0 ? [...extras, product.image] : [product.image]);
               const currentSrc = imageList[selectedImageIndex] || imageList[0];
               const showingBundle = hasBundle && currentSrc === '__BUNDLE__';
