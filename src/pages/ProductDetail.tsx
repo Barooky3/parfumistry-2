@@ -52,6 +52,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   // ML variant selection state
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const selectedVariant = product?.variants?.[selectedVariantIndex];
+  // Reset gallery thumbnail when variant's gallery image changes
+  useEffect(() => { setSelectedImageIndex(0); }, [selectedVariant?.galleryImage]);
   const displayPrice = selectedVariant?.price || product?.price || 0;
   const displayOriginalPrice = selectedVariant?.originalPrice || product?.originalPrice;
   const isInStock = selectedVariant?.inStock ?? product?.inStock ?? false;
