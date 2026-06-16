@@ -101,6 +101,7 @@ interface OrderItem {
   price: number;
   quantity: number;
   selectedMl?: number;
+  product_id?: string;
 }
 
 function generateToken(): string {
