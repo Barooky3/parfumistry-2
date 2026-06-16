@@ -188,7 +188,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {((product.additionalImages && product.additionalImages.length > 0) || (product.bundleImages && product.bundleImages.length > 0 && (product.additionalImages?.length ?? 0) > 0)) && (
               <div className="flex gap-3 px-1">
                 {(product.bundleImages && product.bundleImages.length > 0
-                  ? ['__BUNDLE__', ...(product.additionalImages || [])]
+                  ? [...(product.additionalImages || []), '__BUNDLE__']
                   : [...(product.additionalImages || []), product.image]
                 ).map((src, idx) => (
                   <button
