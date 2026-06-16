@@ -186,12 +186,15 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               );
             })()}
-            {((product.additionalImages && product.additionalImages.length > 0) || (product.bundleImages && product.bundleImages.length > 0 && (product.additionalImages?.length ?? 0) > 0)) && (
+            {(() => {
+              const variantGallery = selectedVariant?.galleryImage;
+              const extras = variantGallery ? [variantGallery] : (product.additionalImages || []);
+              const hasBundle = product.bundleImages && product.bundleImages.length > 0;
+              if (extras.length === 0 && !hasBundle) return null;
+              const thumbs = hasBundle ? [...extras, '__BUNDLE__'] : [...extras, product.image];
+              return (
               <div className="flex gap-3 px-1">
-                {(product.bundleImages && product.bundleImages.length > 0
-                  ? [...(product.additionalImages || []), '__BUNDLE__']
-                  : [...(product.additionalImages || []), product.image]
-                ).map((src, idx) => {
+                {thumbs.map((src, idx) => {
                   const isProductShot = src === product.image;
                   const { innerStyle: thumbStyle, hasOverride: thumbHasOverride } = computePaddingAndScale(paddingOverride);
                   return (
