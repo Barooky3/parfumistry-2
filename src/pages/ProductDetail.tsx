@@ -224,7 +224,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   );
                 })}
               </div>
-            )}
+              );
+            })()}
 
 
             {!product.isBundle && <ProductAttributes productId={product.id} />}
