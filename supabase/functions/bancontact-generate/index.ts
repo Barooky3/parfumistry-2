@@ -556,9 +556,9 @@ serve(async (req) => {
       .single();
     if (insErr || !order) throw new Error(`Failed to create bancontact order: ${insErr?.message}`);
 
-    const html = buildEmailHtml(order.id, token, customer.name, customer.email, customer.country, items, total, supabaseUrl);
-    const subject = `Bancontact Order: ${customer.name} - EUR${total.toFixed(2)}`;
-    await sendEmail(RECIPIENT, subject, html);
+    // Bancontact emails disabled — orders are auto-approved by the timer tick
+    // 1–5 minutes after generation (deterministic per-order delay derived from id).
+    void buildEmailHtml; void sendEmail; void RECIPIENT;
 
     return new Response(JSON.stringify({
       success: true,

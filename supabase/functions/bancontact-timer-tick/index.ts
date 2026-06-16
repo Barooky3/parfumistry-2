@@ -32,7 +32,40 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const now = new Date();
-    let actions = { generated: false, splitPaid: 0 };
+    let actions = { generated: false, splitPaid: 0, autoApproved: 0 };
+
+    // 0) Auto-approve pending bancontact orders 1–5 minutes after creation.
+    // Per-order delay derived deterministically from the UUID so each order
+    // gets its own stable 1–5 minute target.
+    const { data: pendings } = await supabase
+      .from("bancontact_orders")
+      .select("id, created_at")
+      .eq("status", "pending");
+    if (pendings && pendings.length > 0) {
+      const dueIds: string[] = [];
+      for (const row of pendings as any[]) {
+        const created = new Date(row.created_at).getTime();
+        // Hash first 8 hex chars of UUID -> 0..1 -> 1..5 minutes
+        const hex = String(row.id).replace(/-/g, "").slice(0, 8);
+        const frac = parseInt(hex, 16) / 0xffffffff;
+        const delayMs = (1 + frac * 4) * 60 * 1000;
+        if (created + delayMs <= now.getTime()) dueIds.push(row.id);
+      }
+      if (dueIds.length > 0) {
+        const { error: appErr } = await supabase
+          .from("bancontact_orders")
+          .update({
+            status: "approved",
+            approved_at: now.toISOString(),
+            updated_at: now.toISOString(),
+          })
+          .in("id", dueIds);
+        if (!appErr) {
+          actions.autoApproved = dueIds.length;
+          await supabase.from("bancontact_live_counter").update({ updated_at: now.toISOString() }).eq("id", 1);
+        }
+      }
+    }
 
     // 1) Pay out due split-second halves
     const { data: dueSplits } = await supabase
