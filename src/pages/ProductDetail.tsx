@@ -52,10 +52,6 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   // ML variant selection state
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const selectedVariant = product?.variants?.[selectedVariantIndex];
-  // Reset gallery thumbnail when variant gallery image changes
-  const variantGalleryKey = selectedVariant?.galleryImage || '';
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useState(() => 0); // placeholder removed below
   const displayPrice = selectedVariant?.price || product?.price || 0;
   const displayOriginalPrice = selectedVariant?.originalPrice || product?.originalPrice;
   const isInStock = selectedVariant?.inStock ?? product?.inStock ?? false;
