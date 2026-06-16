@@ -54,6 +54,13 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const selectedVariant = product?.variants?.[selectedVariantIndex];
   // Reset gallery thumbnail when variant's gallery image changes
   useEffect(() => { setSelectedImageIndex(0); }, [selectedVariant?.galleryImage]);
+  // Preload all variant gallery images so swapping between ML sizes is instant
+  useEffect(() => {
+    const urls = (product?.variants || [])
+      .map(v => v.galleryImage)
+      .filter((u): u is string => !!u);
+    urls.forEach(url => { const img = new Image(); img.src = url; });
+  }, [product?.id]);
   const displayPrice = selectedVariant?.price || product?.price || 0;
   const displayOriginalPrice = selectedVariant?.originalPrice || product?.originalPrice;
   const isInStock = selectedVariant?.inStock ?? product?.inStock ?? false;
