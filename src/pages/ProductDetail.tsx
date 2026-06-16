@@ -1,4 +1,4 @@
-import { useState, forwardRef } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Zap, Shield, ShoppingBag, CreditCard, Home, ChevronRight, Star, StarHalf, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -52,6 +52,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   // ML variant selection state
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const selectedVariant = product?.variants?.[selectedVariantIndex];
+  // Reset gallery thumbnail when variant's gallery image changes
+  useEffect(() => { setSelectedImageIndex(0); }, [selectedVariant?.galleryImage]);
   const displayPrice = selectedVariant?.price || product?.price || 0;
   const displayOriginalPrice = selectedVariant?.originalPrice || product?.originalPrice;
   const isInStock = selectedVariant?.inStock ?? product?.inStock ?? false;
@@ -116,7 +118,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {(() => {
               const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
               const hasBundle = product.bundleImages && product.bundleImages.length > 0;
-              const extras = product.additionalImages || [];
+              const variantGallery = selectedVariant?.galleryImage;
+              const extras = variantGallery ? [variantGallery] : (product.additionalImages || []);
               // For bundles: first slot is the composite, then extras. For others: extras + product image.
               const imageList = hasBundle
                 ? [...extras, '__BUNDLE__']
@@ -185,12 +188,15 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               );
             })()}
-            {((product.additionalImages && product.additionalImages.length > 0) || (product.bundleImages && product.bundleImages.length > 0 && (product.additionalImages?.length ?? 0) > 0)) && (
+            {(() => {
+              const variantGallery = selectedVariant?.galleryImage;
+              const extras = variantGallery ? [variantGallery] : (product.additionalImages || []);
+              const hasBundle = product.bundleImages && product.bundleImages.length > 0;
+              if (extras.length === 0 && !hasBundle) return null;
+              const thumbs = hasBundle ? [...extras, '__BUNDLE__'] : [...extras, product.image];
+              return (
               <div className="flex gap-3 px-1">
-                {(product.bundleImages && product.bundleImages.length > 0
-                  ? [...(product.additionalImages || []), '__BUNDLE__']
-                  : [...(product.additionalImages || []), product.image]
-                ).map((src, idx) => {
+                {thumbs.map((src, idx) => {
                   const isProductShot = src === product.image;
                   const { innerStyle: thumbStyle, hasOverride: thumbHasOverride } = computePaddingAndScale(paddingOverride);
                   return (
@@ -220,7 +226,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                   );
                 })}
               </div>
-            )}
+              );
+            })()}
 
 
             {!product.isBundle && <ProductAttributes productId={product.id} />}

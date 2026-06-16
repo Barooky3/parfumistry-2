@@ -7,6 +7,7 @@ export interface ProductVariant {
   inStock: boolean;
   label?: string;
   note?: string;
+  galleryImage?: string; // Optional per-variant AI gallery image shown in product detail
 }
 
 
