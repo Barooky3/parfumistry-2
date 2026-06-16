@@ -266,6 +266,7 @@ serve(async (req) => {
           price: item.selectedPrice || item.product.price,
           quantity: item.quantity,
           selectedMl: item.selectedMl,
+          product_id: item.product.id,
         };
       }
       return item as OrderItem;
