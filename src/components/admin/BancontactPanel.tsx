@@ -421,8 +421,8 @@ export default function BancontactPanel({ userEmail }: Props) {
         </div>
       )}
 
-      {/* Pending Bancontact orders — visible to both admins */}
-      {isAdmin && (
+      {/* Pending Bancontact orders — hidden for restricted bancontact admin */}
+      {isAdmin && !isBancontactAdmin && (
         <div className="mt-4 border-t pt-3">
           <button onClick={() => setPendingBCOpen(v => !v)} className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors">
             <p className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -512,8 +512,8 @@ export default function BancontactPanel({ userEmail }: Props) {
         </div>
       )}
 
-      {/* Reset history — hidden for restricted bancontact admin */}
-      {!isBancontactAdmin && (
+      {/* Reset history */}
+      {(
       <div className="mt-4 border-t pt-3">
         <button onClick={() => setHistoryOpen(v => !v)} className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors">
           <p className="text-xs text-muted-foreground uppercase tracking-wider">
