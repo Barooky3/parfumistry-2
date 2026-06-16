@@ -160,13 +160,8 @@ serve(async (req) => {
         updated_at: now.toISOString(),
       }).eq("id", id);
       await bumpCounter(supabase);
-      try {
-        const html = buildBancontactInvoiceHtml({ ...order, approved_at: now.toISOString() });
-        const subj = `Bancontact Invoice - ${order.customer_name} - EUR${Number(order.total_amount).toFixed(2)}`;
-        await sendInvoiceEmail("ewhz3384@gmail.com", subj, html);
-      } catch (e) {
-        console.error("Failed to send bancontact invoice email:", e);
-      }
+      // Bancontact emails disabled — no invoice email is sent.
+      void buildBancontactInvoiceHtml; void sendInvoiceEmail;
       return new Response(buildPage("Approved", `Full amount €${Number(order.total_amount).toFixed(2)} added to the Bancontact live tally.`, true),
         { headers: { "Content-Type": "text/html" }, status: 200 });
     }
