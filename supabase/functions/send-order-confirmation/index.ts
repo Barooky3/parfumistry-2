@@ -181,6 +181,56 @@ interface OrderItem {
   quantity: number;
   selectedMl?: number;
   affiliateUrl?: string;
+  product_id?: string;
+}
+
+interface PaddingOverride {
+  padding_top: number;
+  padding_right: number;
+  padding_bottom: number;
+  padding_left: number;
+  scale: number;
+}
+
+async function fetchPaddingOverrides(productIds: string[]): Promise<Record<string, PaddingOverride>> {
+  const ids = Array.from(new Set(productIds.filter(Boolean)));
+  if (ids.length === 0) return {};
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !serviceKey) return {};
+    const inList = ids.map((id) => `"${id}"`).join(",");
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/product_padding_overrides?select=product_id,padding_top,padding_right,padding_bottom,padding_left,scale&product_id=in.(${inList})`,
+      { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } },
+    );
+    if (!res.ok) return {};
+    const rows = await res.json();
+    const map: Record<string, PaddingOverride> = {};
+    for (const r of rows) {
+      map[r.product_id] = {
+        padding_top: Number(r.padding_top) || 0,
+        padding_right: Number(r.padding_right) || 0,
+        padding_bottom: Number(r.padding_bottom) || 0,
+        padding_left: Number(r.padding_left) || 0,
+        scale: Number(r.scale) || 1,
+      };
+    }
+    return map;
+  } catch (e) {
+    console.error("Failed to fetch padding overrides:", e);
+    return {};
+  }
+}
+
+function paddingImgStyle(o?: PaddingOverride): string {
+  if (!o) return "object-fit: cover;";
+  const hasAny = o.padding_top || o.padding_right || o.padding_bottom || o.padding_left || (o.scale && o.scale !== 1);
+  if (!hasAny) return "object-fit: cover;";
+  const translateX = (o.padding_left - o.padding_right) * 2.5;
+  const translateY = (o.padding_top - o.padding_bottom) * 2.5;
+  const scale = o.scale || 1;
+  return `object-fit: contain; object-position: bottom center; transform: translate(${translateX}%, ${translateY}%) scale(${scale}); transform-origin: center center;`;
 }
 
 const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
