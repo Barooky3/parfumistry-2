@@ -1113,17 +1113,19 @@ export default function AdminOrders() {
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 items-end">
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground">Gross</p>
-              <p className="text-sm font-semibold">€{liveCounter.gross.toFixed(2)}</p>
-            </div>
+          <div className={`grid ${isRestrictedAdmin ? "grid-cols-2" : "grid-cols-3"} gap-4 items-end`}>
+            {!isRestrictedAdmin && (
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">Gross</p>
+                <p className="text-sm font-semibold">€{liveCounter.gross.toFixed(2)}</p>
+              </div>
+            )}
             <div className="text-center">
               <p className="text-xs text-muted-foreground">Ad Spend</p>
               <p className="text-sm font-semibold text-destructive">−€{adSpend.toFixed(2)}</p>
             </div>
             <div className="text-center border-l pl-4">
-              <p className="text-xs text-muted-foreground">Net Total</p>
+              <p className="text-xs text-muted-foreground">{isRestrictedAdmin ? "Total" : "Net Total"}</p>
               <p
                 className={`text-lg font-bold ${
                   liveCounter.net < 0 ? "text-destructive" : "text-green-500"
