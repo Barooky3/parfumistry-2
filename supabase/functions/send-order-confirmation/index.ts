@@ -594,6 +594,7 @@ serve(async (req) => {
           quantity: item.quantity,
           selectedMl: item.selectedMl,
           affiliateUrl: item.product.affiliateUrl || item.affiliateUrl,
+          product_id: item.product.id || item.product_id,
         };
       }
       return item as OrderItem;
@@ -601,8 +602,10 @@ serve(async (req) => {
 
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
+    const paddingMap = await fetchPaddingOverrides(normalizedItems.map((i) => i.product_id || "").filter(Boolean));
+
     const origin = "https://parfumistry.net";
-    const itemsHtml = buildItemsHtml(normalizedItems, origin);
+    const itemsHtml = buildItemsHtml(normalizedItems, origin, paddingMap);
 
     const shippingMethod = (shippingAddress as any)?.shippingMethod || null;
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent, shippingMethod);
