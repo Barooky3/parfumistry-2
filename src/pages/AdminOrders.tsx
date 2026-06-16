@@ -1137,7 +1137,7 @@ export default function AdminOrders() {
           </div>
 
           {/* Current live orders expandable */}
-          {liveCounter.orders.length > 0 && (
+          {!isRestrictedAdmin && liveCounter.orders.length > 0 && (
             <div className="mt-3 border-t pt-2">
               <button
                 onClick={() => setLiveOrdersExpanded((v) => !v)}
