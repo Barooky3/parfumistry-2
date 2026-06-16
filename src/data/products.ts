@@ -29,6 +29,7 @@ import bornInRomaGreenStravaganzaGallery from '@/assets/products/born-in-roma-gr
 import strongerWithYouAbsolutelyGallery from '@/assets/products/stronger-with-you-absolutely-gallery.png.asset.json';
 import strongerWithYouAmberGallery from '@/assets/products/stronger-with-you-amber-gallery.png.asset.json';
 import strongerWithYouParfumGallery from '@/assets/products/stronger-with-you-parfum-gallery.png.asset.json';
+import strongerWithYouParfum50mlGallery from '@/assets/products/stronger-with-you-parfum-50ml-gallery.png.asset.json';
 import theMostWantedEdpIntenseGallery from '@/assets/products/the-most-wanted-edp-intense-gallery.png.asset.json';
 import eveningSweetheartGallery from '@/assets/products/evening-sweetheart-gallery.png.asset.json';
 import sleekAndCleanGallery from '@/assets/products/sleek-and-clean-gallery.png.asset.json';
