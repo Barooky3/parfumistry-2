@@ -181,6 +181,56 @@ interface OrderItem {
   quantity: number;
   selectedMl?: number;
   affiliateUrl?: string;
+  product_id?: string;
+}
+
+interface PaddingOverride {
+  padding_top: number;
+  padding_right: number;
+  padding_bottom: number;
+  padding_left: number;
+  scale: number;
+}
+
+async function fetchPaddingOverrides(productIds: string[]): Promise<Record<string, PaddingOverride>> {
+  const ids = Array.from(new Set(productIds.filter(Boolean)));
+  if (ids.length === 0) return {};
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !serviceKey) return {};
+    const inList = ids.map((id) => `"${id}"`).join(",");
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/product_padding_overrides?select=product_id,padding_top,padding_right,padding_bottom,padding_left,scale&product_id=in.(${inList})`,
+      { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } },
+    );
+    if (!res.ok) return {};
+    const rows = await res.json();
+    const map: Record<string, PaddingOverride> = {};
+    for (const r of rows) {
+      map[r.product_id] = {
+        padding_top: Number(r.padding_top) || 0,
+        padding_right: Number(r.padding_right) || 0,
+        padding_bottom: Number(r.padding_bottom) || 0,
+        padding_left: Number(r.padding_left) || 0,
+        scale: Number(r.scale) || 1,
+      };
+    }
+    return map;
+  } catch (e) {
+    console.error("Failed to fetch padding overrides:", e);
+    return {};
+  }
+}
+
+function paddingImgStyle(o?: PaddingOverride): string {
+  if (!o) return "object-fit: cover;";
+  const hasAny = o.padding_top || o.padding_right || o.padding_bottom || o.padding_left || (o.scale && o.scale !== 1);
+  if (!hasAny) return "object-fit: cover;";
+  const translateX = (o.padding_left - o.padding_right) * 2.5;
+  const translateY = (o.padding_top - o.padding_bottom) * 2.5;
+  const scale = o.scale || 1;
+  return `object-fit: contain; object-position: bottom center; transform: translate(${translateX}%, ${translateY}%) scale(${scale}); transform-origin: center center;`;
 }
 
 const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
@@ -216,7 +266,7 @@ function getBundleBonusLinks(name: string): { label: string; url: string }[] {
   return [];
 }
 
-function buildItemRow(item: OrderItem, origin: string, showImage: boolean): string {
+function buildItemRow(item: OrderItem, origin: string, showImage: boolean, padding?: PaddingOverride): string {
   const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
   const lineTotal = (item.price * item.quantity).toFixed(2);
   const imageUrl = resolveProductImage(item.name, item.image);
@@ -229,12 +279,15 @@ function buildItemRow(item: OrderItem, origin: string, showImage: boolean): stri
     ? `<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 8px;border-radius:3px;margin-bottom:6px;">Complimentary 2ml Sample</div>`
     : '';
   const rowBg = isSample ? 'background-color:#fdf8ee;' : '';
+  const imgFit = paddingImgStyle(padding);
 
   return `<tr>
 <td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top; ${rowBg}">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 ${showImage ? `<td style="width: 80px; vertical-align: top;">
-<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />
+<div style="width:72px;height:72px;border-radius:8px;border:1px solid #eee;overflow:hidden;background:#fafafa;">
+<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; width:72px; height:72px; ${imgFit}" />
+</div>
 </td>` : ""}
 <td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">
 ${giftBadge}
@@ -245,8 +298,8 @@ ${giftBadge}
 </td></tr>`;
 }
 
-function buildItemsHtml(items: OrderItem[], origin: string): string {
-  return items.map((item) => buildItemRow(item, origin, true)).join("");
+function buildItemsHtml(items: OrderItem[], origin: string, paddingMap: Record<string, PaddingOverride> = {}): string {
+  return items.map((item) => buildItemRow(item, origin, true, item.product_id ? paddingMap[item.product_id] : undefined)).join("");
 }
 
 function buildEmailHtml(
@@ -541,6 +594,7 @@ serve(async (req) => {
           quantity: item.quantity,
           selectedMl: item.selectedMl,
           affiliateUrl: item.product.affiliateUrl || item.affiliateUrl,
+          product_id: item.product.id || item.product_id,
         };
       }
       return item as OrderItem;
@@ -548,8 +602,10 @@ serve(async (req) => {
 
     const calculatedTotal = totalAmount || normalizedItems.reduce((sum, i) => sum + i.price * i.quantity, 0).toFixed(2);
 
+    const paddingMap = await fetchPaddingOverrides(normalizedItems.map((i) => i.product_id || "").filter(Boolean));
+
     const origin = "https://parfumistry.net";
-    const itemsHtml = buildItemsHtml(normalizedItems, origin);
+    const itemsHtml = buildItemsHtml(normalizedItems, origin, paddingMap);
 
     const shippingMethod = (shippingAddress as any)?.shippingMethod || null;
     const html = buildEmailHtml(customerName || "Valued Customer", itemsHtml, calculatedTotal, shippingAddress || { line1: "", city: "", postalCode: "", country: "" }, orderNumber, discountCode, discountPercent, shippingMethod);
