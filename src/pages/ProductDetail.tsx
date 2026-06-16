@@ -190,27 +190,35 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 {(product.bundleImages && product.bundleImages.length > 0
                   ? [...(product.additionalImages || []), '__BUNDLE__']
                   : [...(product.additionalImages || []), product.image]
-                ).map((src, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImageIndex(idx)}
-                    className={cn(
-                      "w-20 h-20 md:w-24 md:h-24 bg-secondary overflow-hidden border-2 transition-all flex items-center justify-center",
-                      selectedImageIndex === idx ? "border-accent" : "border-transparent opacity-70 hover:opacity-100"
-                    )}
-                    aria-label={`View image ${idx + 1}`}
-                  >
-                    {src === '__BUNDLE__' && product.bundleImages ? (
-                      <div className="relative w-full h-full">
-                        <img src={product.bundleImages[0]} alt="" className="absolute top-[10%] left-[4%] h-[55%] w-auto object-contain z-10" />
-                        <img src={product.bundleImages[2]} alt="" className="absolute top-[10%] right-[4%] h-[55%] w-auto object-contain z-10" />
-                        <img src={product.bundleImages[1]} alt="" className="absolute bottom-[6%] left-1/2 -translate-x-1/2 h-[60%] w-auto object-contain z-20" />
-                      </div>
-                    ) : (
-                      <img src={src} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                    )}
-                  </button>
-                ))}
+                ).map((src, idx) => {
+                  const isProductShot = src === product.image;
+                  const { innerStyle: thumbStyle, hasOverride: thumbHasOverride } = computePaddingAndScale(paddingOverride);
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedImageIndex(idx)}
+                      className={cn(
+                        "w-20 h-20 md:w-24 md:h-24 bg-secondary overflow-hidden border-2 transition-all flex items-center justify-center",
+                        selectedImageIndex === idx ? "border-accent" : "border-transparent opacity-70 hover:opacity-100"
+                      )}
+                      aria-label={`View image ${idx + 1}`}
+                    >
+                      {src === '__BUNDLE__' && product.bundleImages ? (
+                        <div className="relative w-full h-full">
+                          <img src={product.bundleImages[0]} alt="" className="absolute top-[10%] left-[4%] h-[55%] w-auto object-contain z-10" />
+                          <img src={product.bundleImages[2]} alt="" className="absolute top-[10%] right-[4%] h-[55%] w-auto object-contain z-10" />
+                          <img src={product.bundleImages[1]} alt="" className="absolute bottom-[6%] left-1/2 -translate-x-1/2 h-[60%] w-auto object-contain z-20" />
+                        </div>
+                      ) : isProductShot ? (
+                        <div style={thumbStyle || undefined} className="w-full h-full flex items-end justify-center">
+                          <img src={src} alt={`${product.name} ${idx + 1}`} className={cn("w-full h-full", thumbHasOverride ? "object-contain object-bottom" : "object-cover")} loading="lazy" />
+                        </div>
+                      ) : (
+                        <img src={src} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
 
