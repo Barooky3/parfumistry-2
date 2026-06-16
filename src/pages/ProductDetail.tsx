@@ -119,7 +119,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
               const extras = product.additionalImages || [];
               // For bundles: first slot is the composite, then extras. For others: extras + product image.
               const imageList = hasBundle
-                ? ['__BUNDLE__', ...extras]
+                ? [...extras, '__BUNDLE__']
                 : (extras.length > 0 ? [...extras, product.image] : [product.image]);
               const currentSrc = imageList[selectedImageIndex] || imageList[0];
               const showingBundle = hasBundle && currentSrc === '__BUNDLE__';
@@ -188,7 +188,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {((product.additionalImages && product.additionalImages.length > 0) || (product.bundleImages && product.bundleImages.length > 0 && (product.additionalImages?.length ?? 0) > 0)) && (
               <div className="flex gap-3 px-1">
                 {(product.bundleImages && product.bundleImages.length > 0
-                  ? ['__BUNDLE__', ...(product.additionalImages || [])]
+                  ? [...(product.additionalImages || []), '__BUNDLE__']
                   : [...(product.additionalImages || []), product.image]
                 ).map((src, idx) => (
                   <button
