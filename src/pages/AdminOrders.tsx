@@ -1170,6 +1170,7 @@ export default function AdminOrders() {
           )}
 
           {/* Reset history */}
+          {!isRestrictedAdmin && (
           <div className="mt-4 border-t pt-3">
             <button
               onClick={() => setHistoryOpen((v) => !v)}
