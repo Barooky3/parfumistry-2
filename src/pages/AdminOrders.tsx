@@ -1731,30 +1731,34 @@ export default function AdminOrders() {
 
                   {/* Action Buttons */}
                   <div className="mt-4 flex gap-3 flex-wrap">
-                    <Button
-                      size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => handleAction(order.id, "approve")}
-                      disabled={actionLoading.has(order.id)}
-                    >
-                      <Check className="h-4 w-4 mr-1" /> {actionLoading.has(order.id) ? "Processing..." : order.status === "approved" ? "Re-Approve" : "Approve"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => {
-                        const payMethod = getPaymentMethod(order.checkout_reference);
-                        if (payMethod === "Revolut") {
-                          setRevolutRejectingOrder(order);
-                          setRevolutRejectMessage("");
-                        } else {
-                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
-                        }
-                      }}
-                      disabled={actionLoading.has(order.id)}
-                    >
-                      <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
-                    </Button>
+                    {!isRestrictedAdmin && (
+                      <>
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          onClick={() => handleAction(order.id, "approve")}
+                          disabled={actionLoading.has(order.id)}
+                        >
+                          <Check className="h-4 w-4 mr-1" /> {actionLoading.has(order.id) ? "Processing..." : order.status === "approved" ? "Re-Approve" : "Approve"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => {
+                            const payMethod = getPaymentMethod(order.checkout_reference);
+                            if (payMethod === "Revolut") {
+                              setRevolutRejectingOrder(order);
+                              setRevolutRejectMessage("");
+                            } else {
+                              setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
+                            }
+                          }}
+                          disabled={actionLoading.has(order.id)}
+                        >
+                          <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
+                        </Button>
+                      </>
+                    )}
                     <Button
                       size="sm"
                       variant="outline"
