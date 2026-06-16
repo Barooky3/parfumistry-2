@@ -484,8 +484,8 @@ export default function BancontactPanel({ userEmail }: Props) {
         </div>
       )}
 
-      {/* Contributing entries */}
-      {snapshot.orders.length > 0 && (
+      {/* Contributing entries — hidden for restricted bancontact admin */}
+      {snapshot.orders.length > 0 && !isBancontactAdmin && (
         <div className="mt-3 border-t pt-2">
           <button onClick={() => setLiveOrdersOpen(v => !v)} className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors">
             <p className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -512,7 +512,8 @@ export default function BancontactPanel({ userEmail }: Props) {
         </div>
       )}
 
-      {/* Reset history */}
+      {/* Reset history — hidden for restricted bancontact admin */}
+      {!isBancontactAdmin && (
       <div className="mt-4 border-t pt-3">
         <button onClick={() => setHistoryOpen(v => !v)} className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors">
           <p className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -573,6 +574,7 @@ export default function BancontactPanel({ userEmail }: Props) {
           </div>
         )}
       </div>
+      )}
 
       {/* Ad Budget dialog */}
       <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>

@@ -1253,7 +1253,7 @@ export default function AdminOrders() {
           )}
         </div>
 
-        {!isRestrictedAdmin && <BancontactPanel userEmail={user?.email || ""} />}
+        <BancontactPanel userEmail={user?.email || ""} />
 
         <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>
           <DialogContent>
