@@ -75,6 +75,7 @@ const PAYMENT_METHODS = ["All", "Rewarble", "Bancontact", "Cash on Delivery"];
 
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
+  const isRestrictedAdmin = (user?.email || "").toLowerCase() === RESTRICTED_ADMIN;
   const navigate = useNavigate();
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
