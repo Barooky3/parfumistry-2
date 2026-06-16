@@ -2046,8 +2046,8 @@ export const products: Product[] = [
     affiliateUrl: '/product/stronger-with-you-parfum',
     inStock: true,
     variants: [
-      { ml: 50, price: 22.99, inStock: true },
-      { ml: 100, price: 29.99, inStock: true },
+      { ml: 50, price: 22.99, inStock: true, galleryImage: strongerWithYouParfum50mlGallery.url },
+      { ml: 100, price: 29.99, inStock: true, galleryImage: strongerWithYouParfumGallery.url },
     ],
   },
   {
