@@ -8,6 +8,35 @@ import { cn } from '@/lib/utils';
 import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAllProductNameOverrides } from '@/hooks/useProductName';
+import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
+
+interface BundleProductImageProps {
+  product: Product;
+  alt: string;
+  isDisabled: boolean;
+  isOutOfStock: boolean;
+}
+
+const BundleProductImage = ({ product, alt, isDisabled, isOutOfStock }: BundleProductImageProps) => {
+  const override = useProductPadding(product.id);
+  const { innerStyle, hasOverride } = computePaddingAndScale(override);
+  return (
+    <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center">
+      <img
+        src={product.image}
+        alt={alt}
+        className={cn(
+          "w-full h-full transition-transform duration-300",
+          hasOverride ? "object-contain object-bottom" : "object-contain",
+          !isDisabled && "group-hover:scale-105",
+          isOutOfStock && "grayscale"
+        )}
+        loading="lazy"
+      />
+    </div>
+  );
+};
+
 
 const STORAGE_PREFIX = 'custom-bundle:';
 
