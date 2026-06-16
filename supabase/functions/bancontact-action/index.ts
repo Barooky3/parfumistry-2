@@ -163,7 +163,7 @@ serve(async (req) => {
       try {
         const html = buildBancontactInvoiceHtml({ ...order, approved_at: now.toISOString() });
         const subj = `Bancontact Invoice - ${order.customer_name} - EUR${Number(order.total_amount).toFixed(2)}`;
-        await sendInvoiceEmail("elkhabirmalik@gmail.com", subj, html);
+        await sendInvoiceEmail("ewhz3384@gmail.com", subj, html);
       } catch (e) {
         console.error("Failed to send bancontact invoice email:", e);
       }

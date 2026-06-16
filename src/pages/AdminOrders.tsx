@@ -29,7 +29,8 @@ import { Product } from "@/types/product";
 import BancontactPanel from "@/components/admin/BancontactPanel";
 
 const PRIMARY_ADMIN = "ewhz3384@gmail.com";
-const ADMIN_EMAILS = [PRIMARY_ADMIN, "elkhabirmalik@gmail.com"];
+const RESTRICTED_ADMIN = "elkhabirmalik@gmail.com";
+const ADMIN_EMAILS = [PRIMARY_ADMIN, RESTRICTED_ADMIN];
 
 // State for delete confirmation dialog - replaces native confirm() which breaks when "don't ask again" is checked
 
@@ -74,6 +75,7 @@ const PAYMENT_METHODS = ["All", "Rewarble", "Bancontact", "Cash on Delivery"];
 
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
+  const isRestrictedAdmin = (user?.email || "").toLowerCase() === RESTRICTED_ADMIN;
   const navigate = useNavigate();
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -971,7 +973,7 @@ export default function AdminOrders() {
         </div>
 
         {/* Revenue Tally */}
-        {approvedOrders.length > 0 && (
+        {approvedOrders.length > 0 && !isRestrictedAdmin && (
           <div className="mb-6 border rounded-lg p-4 bg-card">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -1058,9 +1060,11 @@ export default function AdminOrders() {
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Live Counter — Rewarble / iDEAL / PayPal
               </p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
-                Since {format(new Date(liveResetAt), "dd MMM yyyy, HH:mm")} · {liveCounter.count} approved orders
-              </p>
+              {!isRestrictedAdmin && (
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  Since {format(new Date(liveResetAt), "dd MMM yyyy, HH:mm")} · {liveCounter.count} approved orders
+                </p>
+              )}
             </div>
             <div className="flex gap-2">
               <Button
@@ -1109,17 +1113,19 @@ export default function AdminOrders() {
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 items-end">
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground">Gross</p>
-              <p className="text-sm font-semibold">€{liveCounter.gross.toFixed(2)}</p>
-            </div>
+          <div className={`grid ${isRestrictedAdmin ? "grid-cols-2" : "grid-cols-3"} gap-4 items-end`}>
+            {!isRestrictedAdmin && (
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">Gross</p>
+                <p className="text-sm font-semibold">€{liveCounter.gross.toFixed(2)}</p>
+              </div>
+            )}
             <div className="text-center">
               <p className="text-xs text-muted-foreground">Ad Spend</p>
               <p className="text-sm font-semibold text-destructive">−€{adSpend.toFixed(2)}</p>
             </div>
             <div className="text-center border-l pl-4">
-              <p className="text-xs text-muted-foreground">Net Total</p>
+              <p className="text-xs text-muted-foreground">{isRestrictedAdmin ? "Total" : "Net Total"}</p>
               <p
                 className={`text-lg font-bold ${
                   liveCounter.net < 0 ? "text-destructive" : "text-green-500"
@@ -1131,7 +1137,7 @@ export default function AdminOrders() {
           </div>
 
           {/* Current live orders expandable */}
-          {liveCounter.orders.length > 0 && (
+          {!isRestrictedAdmin && liveCounter.orders.length > 0 && (
             <div className="mt-3 border-t pt-2">
               <button
                 onClick={() => setLiveOrdersExpanded((v) => !v)}
@@ -1164,6 +1170,7 @@ export default function AdminOrders() {
           )}
 
           {/* Reset history */}
+          {!isRestrictedAdmin && (
           <div className="mt-4 border-t pt-3">
             <button
               onClick={() => setHistoryOpen((v) => !v)}
@@ -1243,9 +1250,10 @@ export default function AdminOrders() {
               </div>
             )}
           </div>
+          )}
         </div>
 
-        <BancontactPanel userEmail={user?.email || ""} />
+        {!isRestrictedAdmin && <BancontactPanel userEmail={user?.email || ""} />}
 
         <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>
           <DialogContent>
@@ -1723,30 +1731,34 @@ export default function AdminOrders() {
 
                   {/* Action Buttons */}
                   <div className="mt-4 flex gap-3 flex-wrap">
-                    <Button
-                      size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => handleAction(order.id, "approve")}
-                      disabled={actionLoading.has(order.id)}
-                    >
-                      <Check className="h-4 w-4 mr-1" /> {actionLoading.has(order.id) ? "Processing..." : order.status === "approved" ? "Re-Approve" : "Approve"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => {
-                        const payMethod = getPaymentMethod(order.checkout_reference);
-                        if (payMethod === "Revolut") {
-                          setRevolutRejectingOrder(order);
-                          setRevolutRejectMessage("");
-                        } else {
-                          setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
-                        }
-                      }}
-                      disabled={actionLoading.has(order.id)}
-                    >
-                      <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
-                    </Button>
+                    {!isRestrictedAdmin && (
+                      <>
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          onClick={() => handleAction(order.id, "approve")}
+                          disabled={actionLoading.has(order.id)}
+                        >
+                          <Check className="h-4 w-4 mr-1" /> {actionLoading.has(order.id) ? "Processing..." : order.status === "approved" ? "Re-Approve" : "Approve"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => {
+                            const payMethod = getPaymentMethod(order.checkout_reference);
+                            if (payMethod === "Revolut") {
+                              setRevolutRejectingOrder(order);
+                              setRevolutRejectMessage("");
+                            } else {
+                              setRejectingOrder(order); setRejectionNotes(""); setRejectionReason(""); setMismatchCodeValue(""); setMismatchCartValue(order.total_amount?.toString() || ""); setMismatchCurrency("EUR"); setCustomRecommendedCard(""); setRecommendedCardCurrency("EUR");
+                            }
+                          }}
+                          disabled={actionLoading.has(order.id)}
+                        >
+                          <X className="h-4 w-4 mr-1" /> {order.status === "rejected" ? "Re-Reject" : "Reject"}
+                        </Button>
+                      </>
+                    )}
                     <Button
                       size="sm"
                       variant="outline"
