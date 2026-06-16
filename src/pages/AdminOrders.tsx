@@ -973,7 +973,7 @@ export default function AdminOrders() {
         </div>
 
         {/* Revenue Tally */}
-        {approvedOrders.length > 0 && (
+        {approvedOrders.length > 0 && !isRestrictedAdmin && (
           <div className="mb-6 border rounded-lg p-4 bg-card">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
