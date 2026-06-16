@@ -266,7 +266,7 @@ function getBundleBonusLinks(name: string): { label: string; url: string }[] {
   return [];
 }
 
-function buildItemRow(item: OrderItem, origin: string, showImage: boolean): string {
+function buildItemRow(item: OrderItem, origin: string, showImage: boolean, padding?: PaddingOverride): string {
   const mlLabel = item.selectedMl ? ` — ${item.selectedMl}ml` : "";
   const lineTotal = (item.price * item.quantity).toFixed(2);
   const imageUrl = resolveProductImage(item.name, item.image);
@@ -279,12 +279,15 @@ function buildItemRow(item: OrderItem, origin: string, showImage: boolean): stri
     ? `<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 8px;border-radius:3px;margin-bottom:6px;">Complimentary 2ml Sample</div>`
     : '';
   const rowBg = isSample ? 'background-color:#fdf8ee;' : '';
+  const imgFit = paddingImgStyle(padding);
 
   return `<tr>
 <td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top; ${rowBg}">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 ${showImage ? `<td style="width: 80px; vertical-align: top;">
-<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; border-radius: 8px; object-fit: cover; border: 1px solid #eee;" />
+<div style="width:72px;height:72px;border-radius:8px;border:1px solid #eee;overflow:hidden;background:#fafafa;">
+<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; width:72px; height:72px; ${imgFit}" />
+</div>
 </td>` : ""}
 <td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">
 ${giftBadge}
@@ -295,8 +298,8 @@ ${giftBadge}
 </td></tr>`;
 }
 
-function buildItemsHtml(items: OrderItem[], origin: string): string {
-  return items.map((item) => buildItemRow(item, origin, true)).join("");
+function buildItemsHtml(items: OrderItem[], origin: string, paddingMap: Record<string, PaddingOverride> = {}): string {
+  return items.map((item) => buildItemRow(item, origin, true, item.product_id ? paddingMap[item.product_id] : undefined)).join("");
 }
 
 function buildEmailHtml(
