@@ -353,15 +353,11 @@ const CustomBundle = () => {
               >
                 {/* Image */}
                 <div className="aspect-square bg-secondary flex items-center justify-center p-4 relative overflow-hidden">
-                  <img
-                    src={product.image}
+                  <BundleProductImage
+                    product={product}
                     alt={displayName(product)}
-                    className={cn(
-                      "w-full h-full object-contain transition-transform duration-300",
-                      !isDisabled && "group-hover:scale-105",
-                      isOutOfStock && "grayscale"
-                    )}
-                    loading="lazy"
+                    isDisabled={isDisabled}
+                    isOutOfStock={isOutOfStock}
                   />
                   {timesSelected > 0 && (
                     <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md">
