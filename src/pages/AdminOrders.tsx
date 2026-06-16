@@ -1060,9 +1060,11 @@ export default function AdminOrders() {
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Live Counter — Rewarble / iDEAL / PayPal
               </p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
-                Since {format(new Date(liveResetAt), "dd MMM yyyy, HH:mm")} · {liveCounter.count} approved orders
-              </p>
+              {!isRestrictedAdmin && (
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  Since {format(new Date(liveResetAt), "dd MMM yyyy, HH:mm")} · {liveCounter.count} approved orders
+                </p>
+              )}
             </div>
             <div className="flex gap-2">
               <Button
