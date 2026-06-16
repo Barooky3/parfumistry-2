@@ -574,6 +574,7 @@ export default function BancontactPanel({ userEmail }: Props) {
           </div>
         )}
       </div>
+      )}
 
       {/* Ad Budget dialog */}
       <Dialog open={adSpendDialogOpen} onOpenChange={setAdSpendDialogOpen}>
