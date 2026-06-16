@@ -116,7 +116,8 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
             {(() => {
               const { innerStyle, hasOverride } = computePaddingAndScale(paddingOverride);
               const hasBundle = product.bundleImages && product.bundleImages.length > 0;
-              const extras = product.additionalImages || [];
+              const variantGallery = selectedVariant?.galleryImage;
+              const extras = variantGallery ? [variantGallery] : (product.additionalImages || []);
               // For bundles: first slot is the composite, then extras. For others: extras + product image.
               const imageList = hasBundle
                 ? [...extras, '__BUNDLE__']
