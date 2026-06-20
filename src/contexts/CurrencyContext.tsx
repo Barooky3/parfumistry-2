@@ -116,7 +116,7 @@ export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Japan': 'JPY', 'South Korea': 'KRW', 'China': 'CNY', 'India': 'INR',
   'Thailand': 'THB', 'Vietnam': 'VND', 'Indonesia': 'IDR', 'Malaysia': 'MYR',
   'Singapore': 'SGD', 'Philippines': 'PHP',
-  'United Arab Emirates': 'AED', 'Saudi Arabia': 'SAR',
+  'United Arab Emirates': 'AED', 'Saudi Arabia': 'SAR', 'Iraq': 'USD',
   'Sri Lanka': 'USD', 'Nepal': 'USD', 'Cambodia': 'USD', 'Myanmar': 'USD', 'Macao': 'USD',
   'Australia': 'AUD', 'New Zealand': 'NZD',
   'South Africa': 'ZAR', 'Egypt': 'EGP', 'Morocco': 'MAD', 'Nigeria': 'NGN',
