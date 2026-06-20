@@ -85,7 +85,7 @@ const COUNTRY_CODE_CURRENCY_MAP: Record<string, Currency> = {
   // Asia
   JP: 'JPY', KR: 'KRW', CN: 'CNY', IN: 'INR', TH: 'THB',
   VN: 'VND', ID: 'IDR', MY: 'MYR', SG: 'SGD', PH: 'PHP',
-  AE: 'AED', SA: 'SAR',
+  AE: 'AED', SA: 'SAR', IQ: 'USD',
   // Oceania
   AU: 'AUD', NZ: 'NZD',
   // Africa
