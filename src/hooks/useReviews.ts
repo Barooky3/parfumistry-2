@@ -89,15 +89,20 @@ const subscribeSettings = (cb: () => void) => {
 };
 const notify = () => { listeners.forEach((l) => l()); };
 
+let publicSeeds: UnifiedReview[] | null = null;
+
 let remoteLoadPromise: Promise<void> | null = null;
 const loadRemoteSettings = async (): Promise<void> => {
   if (remoteLoadPromise) return remoteLoadPromise;
   remoteLoadPromise = (async () => {
+    // Try admin-scoped direct DB read first (works only for the primary admin
+    // due to RLS). Falls back to the public edge function for everyone else.
     const { data, error } = await supabase
       .from('review_order' as any)
       .select('order_ids, seed_overrides, hidden_seeds')
       .eq('id', 1)
       .maybeSingle();
+
     if (!error && data) {
       const d = data as any;
       if (Array.isArray(d.order_ids)) settingsState.order = d.order_ids as string[];
@@ -108,10 +113,31 @@ const loadRemoteSettings = async (): Promise<void> => {
       writeLS(SEED_OVERRIDES_KEY, settingsState.overrides);
       writeLS(HIDDEN_SEEDS_KEY, settingsState.hidden);
       notify();
+      return;
+    }
+
+    // Public path — overrides/hidden are not exposed; the edge function returns
+    // the pre-processed visible seed list and the display order.
+    try {
+      const { data: fnData } = await supabase.functions.invoke('get-review-display');
+      if (fnData && typeof fnData === 'object') {
+        const d = fnData as any;
+        if (Array.isArray(d.order_ids)) {
+          settingsState.order = d.order_ids as string[];
+          writeLS(REVIEW_ORDER_KEY, settingsState.order);
+        }
+        if (Array.isArray(d.seeds)) {
+          publicSeeds = d.seeds as UnifiedReview[];
+        }
+        notify();
+      }
+    } catch {
+      // keep cached values
     }
   })();
   return remoteLoadPromise;
 };
+
 
 const saveRemoteSettings = async (patch: Partial<{ order_ids: string[]; seed_overrides: Record<string, SeedOverride>; hidden_seeds: string[] }>) => {
   return supabase
