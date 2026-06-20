@@ -258,8 +258,14 @@ export const useReviews = () => {
 
   const allDbUnified = dbReviews.map((r) => dbToUnified(r, user?.id));
 
-  const hiddenSeeds = getHiddenSeedIds();
-  const visibleSeeds = buildSeedAsUnified().filter((r) => !hiddenSeeds.includes(r.id));
+  // For the primary admin we use the raw overrides/hidden lists loaded from
+  // the DB. Public visitors use the pre-processed list returned by the
+  // get-review-display edge function, which never exposes which seeds are
+  // hidden or which have been overridden.
+  const visibleSeeds: UnifiedReview[] =
+    publicSeeds && !isAdmin
+      ? publicSeeds
+      : buildSeedAsUnified().filter((r) => !getHiddenSeedIds().includes(r.id));
 
   // Public-facing list = approved db reviews + user's own pending + seed (minus admin-hidden)
   const visibleReviews: UnifiedReview[] = [
