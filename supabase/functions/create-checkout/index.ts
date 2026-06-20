@@ -72,7 +72,7 @@ const COUNTRY_CODE_MAP: Record<string, string> = {
   'Dominican Republic': 'DO', 'Jamaica': 'JM', 'Trinidad and Tobago': 'TT', 'Barbados': 'BB',
   'Curaçao': 'CW', 'Suriname': 'SR',
   'United Arab Emirates': 'AE', 'Saudi Arabia': 'SA', 'Qatar': 'QA', 'Kuwait': 'KW',
-  'Bahrain': 'BH', 'Oman': 'OM', 'Israel': 'IL', 'Jordan': 'JO', 'Lebanon': 'LB',
+  'Bahrain': 'BH', 'Oman': 'OM', 'Israel': 'IL', 'Jordan': 'JO', 'Lebanon': 'LB', 'Iraq': 'IQ',
   'Japan': 'JP', 'South Korea': 'KR', 'China': 'CN', 'India': 'IN', 'Thailand': 'TH',
   'Vietnam': 'VN', 'Indonesia': 'ID', 'Malaysia': 'MY', 'Singapore': 'SG', 'Philippines': 'PH',
   'Hong Kong': 'HK', 'Taiwan': 'TW', 'Pakistan': 'PK', 'Bangladesh': 'BD',

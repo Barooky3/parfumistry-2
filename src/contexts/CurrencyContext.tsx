@@ -85,7 +85,7 @@ const COUNTRY_CODE_CURRENCY_MAP: Record<string, Currency> = {
   // Asia
   JP: 'JPY', KR: 'KRW', CN: 'CNY', IN: 'INR', TH: 'THB',
   VN: 'VND', ID: 'IDR', MY: 'MYR', SG: 'SGD', PH: 'PHP',
-  AE: 'AED', SA: 'SAR',
+  AE: 'AED', SA: 'SAR', IQ: 'USD',
   // Oceania
   AU: 'AUD', NZ: 'NZD',
   // Africa
@@ -116,7 +116,7 @@ export const COUNTRY_CURRENCY_MAP: Record<string, Currency> = {
   'Japan': 'JPY', 'South Korea': 'KRW', 'China': 'CNY', 'India': 'INR',
   'Thailand': 'THB', 'Vietnam': 'VND', 'Indonesia': 'IDR', 'Malaysia': 'MYR',
   'Singapore': 'SGD', 'Philippines': 'PHP',
-  'United Arab Emirates': 'AED', 'Saudi Arabia': 'SAR',
+  'United Arab Emirates': 'AED', 'Saudi Arabia': 'SAR', 'Iraq': 'USD',
   'Sri Lanka': 'USD', 'Nepal': 'USD', 'Cambodia': 'USD', 'Myanmar': 'USD', 'Macao': 'USD',
   'Australia': 'AUD', 'New Zealand': 'NZD',
   'South Africa': 'ZAR', 'Egypt': 'EGP', 'Morocco': 'MAD', 'Nigeria': 'NGN',
