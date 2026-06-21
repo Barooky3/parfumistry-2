@@ -35,7 +35,7 @@ const COUNTRIES = [
   'United Arab Emirates', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Israel', 'Jordan', 'Lebanon', 'Iraq',
   'Japan', 'South Korea', 'China', 'India', 'Thailand', 'Vietnam', 'Indonesia', 'Malaysia', 'Singapore',
   'Philippines', 'Hong Kong', 'Taiwan', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Cambodia', 'Myanmar', 'Macao',
-  'Australia', 'New Zealand',
+  'Australia', 'New Zealand', 'Fiji',
   'South Africa', 'Egypt', 'Morocco', 'Nigeria', 'Kenya', 'Ghana', 'Tunisia', 'Algeria', 'Senegal',
   'Ivory Coast', 'Cameroon', 'Tanzania', 'Ethiopia', 'Mauritius', 'Zimbabwe',
 ].sort();
