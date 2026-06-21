@@ -77,7 +77,7 @@ const COUNTRY_CODE_MAP: Record<string, string> = {
   'Vietnam': 'VN', 'Indonesia': 'ID', 'Malaysia': 'MY', 'Singapore': 'SG', 'Philippines': 'PH',
   'Hong Kong': 'HK', 'Taiwan': 'TW', 'Pakistan': 'PK', 'Bangladesh': 'BD',
   'Sri Lanka': 'LK', 'Nepal': 'NP', 'Cambodia': 'KH', 'Myanmar': 'MM', 'Macao': 'MO',
-  'Australia': 'AU', 'New Zealand': 'NZ',
+  'Australia': 'AU', 'New Zealand': 'NZ', 'Fiji': 'FJ',
   'South Africa': 'ZA', 'Egypt': 'EG', 'Morocco': 'MA', 'Nigeria': 'NG',
   'Kenya': 'KE', 'Ghana': 'GH', 'Tunisia': 'TN',
   'Zimbabwe': 'ZW',
