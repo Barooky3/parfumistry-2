@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import virginIslandWaterImg from '@/assets/products/creed-virgin-island-water.png.asset.json';
-import mindGamesBlockadeImg from '@/assets/products/mind-games-blockade.png.asset.json';
 import godOfFireImg from '@/assets/products/shl-god-of-fire.png.asset.json';
+import lesSablesRosesImg from '@/assets/products/lv-les-sables-roses.png.asset.json';
+import ombreNomadeImg from '@/assets/products/lv-ombre-nomade-poll.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12-c';
+const POLL_ID = 'next-arrival-2026-12-d';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'mind-games-blockade',
-    label: 'Mind Games Blockade',
-    image: mindGamesBlockadeImg.url,
+    key: 'lv-les-sables-roses',
+    label: 'LV Les Sables Roses',
+    image: lesSablesRosesImg.url,
   },
   {
-    key: 'shl-god-of-fire',
-    label: 'SHL God of Fire',
-    image: godOfFireImg.url,
+    key: 'lv-ombre-nomade',
+    label: 'LV Ombre Nomade',
+    image: ombreNomadeImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Creed Virgin Island Water',
-  image: virginIslandWaterImg.url,
+  name: 'SHL God of Fire',
+  image: godOfFireImg.url,
 };
 
 function getFingerprint(): string {

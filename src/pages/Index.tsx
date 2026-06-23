@@ -23,7 +23,7 @@ const Index = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const newArrivals = [
-    getProductById('creed-virgin-island-water'),
+    getProductById('shl-god-of-fire'),
     getProductById('initio-side-effect'),
     getProductById('lv-afternoon-swim'),
   ].filter(Boolean);
