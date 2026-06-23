@@ -9,6 +9,7 @@ import { X, Sparkles, Plus, Search, ShoppingBag, Tag } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAllProductNameOverrides } from '@/hooks/useProductName';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
+import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
 
 interface BundleProductImageProps {
   product: Product;
