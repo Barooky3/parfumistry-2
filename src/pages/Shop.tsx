@@ -33,7 +33,7 @@ const Shop = () => {
   const brandFilter = searchParams.get('brand');
   const { t } = useLanguage();
   
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [priceRange, setPriceRange] = useState([0, 200]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>(category === 'all' || !category ? 'newest' : 'featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -118,14 +118,14 @@ const Shop = () => {
       )}
       <div>
         <h3 className="text-xs font-semibold tracking-[0.1em] uppercase text-foreground mb-4">{t('shop.priceRange')}</h3>
-        <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={100} step={5} className="mb-3" />
+        <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={200} step={5} className="mb-3" />
         <div className="flex justify-between text-sm text-muted-foreground">
           <span>€{priceRange[0]}</span>
           <span>€{priceRange[1]}</span>
         </div>
       </div>
       <Button variant="outline" size="sm" className="w-full rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background"
-        onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}>
+        onClick={() => { setSelectedCategories([]); setPriceRange([0, 200]); }}>
         {t('shop.resetFilters')}
       </Button>
     </div>
@@ -224,7 +224,7 @@ const Shop = () => {
               {filteredProducts.length === 0 ? (
                 <div className="text-center py-20">
                   <p className="text-muted-foreground mb-6">{t('shop.noMatch')}</p>
-                  <Button variant="outline" className="rounded-none border-foreground" onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}>
+                  <Button variant="outline" className="rounded-none border-foreground" onClick={() => { setSelectedCategories([]); setPriceRange([0, 200]); }}>
                     {t('shop.clearFilters')}
                   </Button>
                 </div>
