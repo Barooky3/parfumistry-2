@@ -92,7 +92,7 @@ const shuffleArray = <T,>(arr: T[], seed: number): T[] => {
 const SESSION_SEED = Math.floor(Math.random() * 2147483647);
 
 const CustomBundle = () => {
-  const [selections, setSelections] = useState<BundleSelection[]>([]);
+  const [selectionRefs, setSelectionRefs] = useState<Array<{ productId: string; ml: number }>>([]);
   const [bundleName, setBundleName] = useState('');
   const [search, setSearch] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
@@ -100,6 +100,8 @@ const CustomBundle = () => {
   const [searchParams] = useSearchParams();
   const { addItem } = useCart();
   const nameOverrides = useAllProductNameOverrides();
+  // Subscribe to price override cache changes so prices update live after admin edits
+  useProductPriceOverride('__custom_bundle_subscription__');
   const displayName = (p: Product) => nameOverrides[p.id] || p.name;
 
   // Rehydrate from a previously added custom bundle (cart link with ?edit=id)
@@ -113,17 +115,8 @@ const CustomBundle = () => {
         bundleName?: string;
         items: Array<{ productId: string; ml: number }>;
       };
-      const all = getFragrances();
-      const restored: BundleSelection[] = [];
-      saved.items.forEach((it) => {
-        const product = all.find((p) => p.id === it.productId);
-        if (!product || !product.variants) return;
-        const variant = product.variants.find((v) => v.ml === it.ml) || product.variants[0];
-        if (!variant) return;
-        restored.push({ product, variant, bundlePrice: getBundlePrice(variant.price) });
-      });
-      if (restored.length > 0) {
-        setSelections(restored);
+      if (saved.items?.length) {
+        setSelectionRefs(saved.items.map((it) => ({ productId: it.productId, ml: it.ml })));
         setBundleName(saved.bundleName || '');
         setEditId(id);
       }
@@ -133,12 +126,29 @@ const CustomBundle = () => {
   }, [searchParams]);
 
 
+  // Apply current price overrides to all fragrances (re-runs when overrides change)
   const fragrances = useMemo(() => {
-    const all = getFragrances().filter(p => p.variants && p.variants.length > 0);
+    const all = getFragrances()
+      .filter(p => p.variants && p.variants.length > 0)
+      .map(applyPriceOverride);
     const designers = all.filter(p => DESIGNER_BRANDS.includes(p.brand));
     const others = all.filter(p => !DESIGNER_BRANDS.includes(p.brand));
     return [...shuffleArray(designers, SESSION_SEED), ...shuffleArray(others, SESSION_SEED + 1)];
-  }, []);
+  });
+
+  // Resolve selection refs against current (override-applied) fragrances so bundle
+  // prices are always a direct percentage of the live variant price.
+  const selections: BundleSelection[] = useMemo(() => {
+    return selectionRefs
+      .map((ref) => {
+        const product = fragrances.find((p) => p.id === ref.productId);
+        if (!product || !product.variants) return null;
+        const variant = product.variants.find((v) => v.ml === ref.ml) || product.variants[0];
+        if (!variant) return null;
+        return { product, variant, bundlePrice: getBundlePrice(variant.price) };
+      })
+      .filter((s): s is BundleSelection => s !== null);
+  }, [selectionRefs, fragrances]);
 
   const filteredFragrances = useMemo(() => {
     if (!search.trim()) return fragrances;
@@ -157,12 +167,11 @@ const CustomBundle = () => {
     if (!product.inStock) return;
     const variant = getStandardVariant(product);
     if (!variant || !variant.inStock) return;
-    const bundlePrice = getBundlePrice(variant.price);
-    setSelections(prev => [...prev, { product, variant, bundlePrice }]);
+    setSelectionRefs(prev => [...prev, { productId: product.id, ml: variant.ml }]);
   };
 
   const handleRemove = (index: number) => {
-    setSelections(prev => prev.filter((_, i) => i !== index));
+    setSelectionRefs(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleAddToCart = () => {
@@ -193,6 +202,8 @@ const CustomBundle = () => {
     addItem(bundleProduct, undefined, totalPrice);
     navigate('/');
   };
+
+
 
   return (
     <div className="min-h-screen bg-background">
