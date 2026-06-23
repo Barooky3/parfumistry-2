@@ -118,7 +118,7 @@ const Shop = () => {
       )}
       <div>
         <h3 className="text-xs font-semibold tracking-[0.1em] uppercase text-foreground mb-4">{t('shop.priceRange')}</h3>
-        <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={100} step={5} className="mb-3" />
+        <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={200} step={5} className="mb-3" />
         <div className="flex justify-between text-sm text-muted-foreground">
           <span>€{priceRange[0]}</span>
           <span>€{priceRange[1]}</span>
