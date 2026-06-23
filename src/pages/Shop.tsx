@@ -224,7 +224,7 @@ const Shop = () => {
               {filteredProducts.length === 0 ? (
                 <div className="text-center py-20">
                   <p className="text-muted-foreground mb-6">{t('shop.noMatch')}</p>
-                  <Button variant="outline" className="rounded-none border-foreground" onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}>
+                  <Button variant="outline" className="rounded-none border-foreground" onClick={() => { setSelectedCategories([]); setPriceRange([0, 200]); }}>
                     {t('shop.clearFilters')}
                   </Button>
                 </div>
