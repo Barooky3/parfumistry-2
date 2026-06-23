@@ -127,14 +127,14 @@ const CustomBundle = () => {
 
 
   // Apply current price overrides to all fragrances (re-runs when overrides change)
-  const fragrances = useMemo(() => {
+  const fragrances = (() => {
     const all = getFragrances()
       .filter(p => p.variants && p.variants.length > 0)
       .map(applyPriceOverride);
     const designers = all.filter(p => DESIGNER_BRANDS.includes(p.brand));
     const others = all.filter(p => !DESIGNER_BRANDS.includes(p.brand));
     return [...shuffleArray(designers, SESSION_SEED), ...shuffleArray(others, SESSION_SEED + 1)];
-  });
+  })();
 
   // Resolve selection refs against current (override-applied) fragrances so bundle
   // prices are always a direct percentage of the live variant price.
