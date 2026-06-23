@@ -125,7 +125,7 @@ const Shop = () => {
         </div>
       </div>
       <Button variant="outline" size="sm" className="w-full rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background"
-        onClick={() => { setSelectedCategories([]); setPriceRange([0, 100]); }}>
+        onClick={() => { setSelectedCategories([]); setPriceRange([0, 200]); }}>
         {t('shop.resetFilters')}
       </Button>
     </div>
