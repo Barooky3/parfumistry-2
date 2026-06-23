@@ -33,7 +33,7 @@ const Shop = () => {
   const brandFilter = searchParams.get('brand');
   const { t } = useLanguage();
   
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [priceRange, setPriceRange] = useState([0, 200]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>(category === 'all' || !category ? 'newest' : 'featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
