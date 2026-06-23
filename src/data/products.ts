@@ -77,6 +77,8 @@ import initioSideEffect from '@/assets/products/initio-side-effect.png.asset.jso
 import initioSideEffectGalleryAi from '@/assets/products/initio-side-effect-gallery-ai.webp.asset.json';
 import creedVirginIslandWater from '@/assets/products/creed-virgin-island-water.png.asset.json';
 import creedVirginIslandWaterGalleryAi from '@/assets/products/creed-virgin-island-water-gallery-ai.webp.asset.json';
+import shlGodOfFire from '@/assets/products/shl-god-of-fire.png.asset.json';
+import shlGodOfFireGalleryAi from '@/assets/products/shl-god-of-fire-gallery-ai.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
