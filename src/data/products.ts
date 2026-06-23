@@ -2277,6 +2277,39 @@ export const products: Product[] = [
       { ml: 100, price: 119.99, inStock: true },
     ],
   },
+  {
+    id: 'shl-god-of-fire',
+    addedAt: '2026-06-23',
+    name: 'God of Fire',
+    brand: 'Stephane Humbert Lucas',
+    price: 119.99,
+    category: 'unisex',
+    description: 'God of Fire by Stephane Humbert Lucas is a radiant honeycomb fantasy — ripe mango and ginger flicker over lemon and pink berries, opening into a luminous heart of blue coumarin, jasmine and dry woods. The base smolders with oud, nagarmotha, musk and amber for a creamy, resinous, gold-trimmed signature that feels both regal and intimate.',
+    scentNotes: {
+      top: ['Mango', 'Lemon', 'Pink Berries', 'Ginger'],
+      heart: ['Blue Coumarin', 'Jasmine', 'Dry Woods'],
+      base: ['Oud', 'Nagarmotha', 'Musk', 'Amber'],
+    },
+    scentNoteImages: {
+      'Lemon': '/scent-notes/lemon.png',
+      'Ginger': '/scent-notes/ginger.png',
+      'Jasmine': '/scent-notes/jasmine.png',
+      'Dry Woods': '/scent-notes/cedar.png',
+      'Oud': '/scent-notes/oud.png',
+      'Musk': '/scent-notes/musk.png',
+      'Amber': '/scent-notes/amber.png',
+    },
+    accentColor: '#2BA8D1',
+    image: shlGodOfFire.url,
+    additionalImages: [shlGodOfFireGalleryAi.url],
+    affiliateUrl: '/product/shl-god-of-fire',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 119.99, inStock: true },
+      { ml: 100, price: 159.99, inStock: true },
+    ],
+  },
 ];
 
 
