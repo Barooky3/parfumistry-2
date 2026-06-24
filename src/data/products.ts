@@ -2313,7 +2313,6 @@ export const products: Product[] = [
     featured: true,
     variants: [
       { ml: 50, price: 119.99, inStock: true },
-      { ml: 100, price: 159.99, inStock: true },
     ],
   },
 ];
