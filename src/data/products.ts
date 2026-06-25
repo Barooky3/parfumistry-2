@@ -42,6 +42,8 @@ import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json'
 import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
 import lvAfternoonSwimImage from '@/assets/products/lv-afternoon-swim.png.asset.json';
 import lvAfternoonSwimGallery from '@/assets/products/lv-afternoon-swim-gallery.webp.asset.json';
+import lvOmbreNomadeImage from '@/assets/products/lv-ombre-nomade.png.asset.json';
+import lvOmbreNomadeGallery from '@/assets/products/lv-ombre-nomade-gallery.webp.asset.json';
 import amoreCaffeGallery from '@/assets/products/amore-caffe-gallery.png.asset.json';
 import paradoxeGallery from '@/assets/products/paradoxe-gallery.png.asset.json';
 import monParisGallery from '@/assets/products/mon-paris-gallery.png.asset.json';
@@ -2313,6 +2315,41 @@ export const products: Product[] = [
     featured: true,
     variants: [
       { ml: 50, price: 119.99, inStock: true },
+    ],
+  },
+  {
+    id: 'lv-ombre-nomade',
+    addedAt: '2026-06-25',
+    name: 'Ombré Nomade',
+    brand: 'Louis Vuitton',
+    price: 74.99,
+    category: 'unisex',
+    description: 'Louis Vuitton Ombré Nomade is a smoky, resinous oud masterpiece — juicy raspberry and saffron glow over a smoldering heart of rose, geranium and birch tar, drying down to a deep, leathery base of agarwood, incense, amberwood and benzoin. Dark, opulent, and unmistakably regal.',
+    scentNotes: {
+      top: ['Raspberry', 'Saffron', 'Rose'],
+      heart: ['Geranium', 'Birch'],
+      base: ['Agarwood (Oud)', 'Incense', 'Amberwood', 'Benzoin'],
+    },
+    scentNoteImages: {
+      'Raspberry': '/scent-notes/raspberry.png',
+      'Saffron': '/scent-notes/saffron.png',
+      'Rose': '/scent-notes/rose.png',
+      'Geranium': '/scent-notes/geranium.png',
+      'Birch': '/scent-notes/birch.png',
+      'Agarwood (Oud)': '/scent-notes/oud.png',
+      'Incense': '/scent-notes/incense.png',
+      'Amberwood': '/scent-notes/amberwood.png',
+      'Benzoin': '/scent-notes/benzoin.png',
+    },
+    accentColor: '#5C2E1F',
+    image: lvOmbreNomadeImage.url,
+    additionalImages: [lvOmbreNomadeGallery.url],
+    affiliateUrl: '/product/lv-ombre-nomade',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 100, price: 74.99, inStock: true },
+      { ml: 200, price: 92.99, inStock: true },
     ],
   },
 ];
