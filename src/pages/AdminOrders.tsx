@@ -1339,9 +1339,6 @@ export default function AdminOrders() {
                 onClick={() => {
                   if (confirm("Reset your personal custom tally to €0.00?")) {
                     const now = new Date().toISOString();
-                    localStorage.setItem(PERSONAL_RESET_KEY, now);
-                    localStorage.removeItem("admin_personal_rewarble_adjustment");
-                    localStorage.setItem(PERSONAL_ADJUSTMENTS_KEY, JSON.stringify([]));
                     setPersonalResetAt(now);
                     setPersonalAdjustments([]);
                     setAdjustInput("");
