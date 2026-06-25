@@ -1312,9 +1312,10 @@ export default function AdminOrders() {
                   if (confirm("Reset your personal custom tally to €0.00?")) {
                     const now = new Date().toISOString();
                     localStorage.setItem(PERSONAL_RESET_KEY, now);
-                    localStorage.setItem(PERSONAL_ADJUST_KEY, "0");
+                    localStorage.removeItem("admin_personal_rewarble_adjustment");
+                    localStorage.setItem(PERSONAL_ADJUSTMENTS_KEY, JSON.stringify([]));
                     setPersonalResetAt(now);
-                    setPersonalAdjustment(0);
+                    setPersonalAdjustments([]);
                     setAdjustInput("");
                     toast.success("Personal tally reset");
                   }
