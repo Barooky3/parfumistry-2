@@ -21,6 +21,8 @@ import { PriceEditor } from '@/components/admin/PriceEditor';
 import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
 import { applyStockOverride, useProductStockOverride } from '@/hooks/useProductStock';
 import { StockEditor } from '@/components/admin/StockEditor';
+import { DescriptionEditor } from '@/components/admin/DescriptionEditor';
+import { useDisplayDescription } from '@/hooks/useProductDescription';
 
 const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const { id } = useParams<{ id: string }>();
@@ -42,6 +44,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const product = rawProduct ? applyStockOverride(applyPriceOverride(rawProduct)) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const displayName = useDisplayName(id || '', product?.name || '');
+  const displayDescription = useDisplayDescription(id || '', product?.description || '');
   const relatedProducts = (() => {
     const all = getFeaturedProducts().filter(p => p.id !== id);
     const shuffled = [...all].sort(() => Math.random() - 0.5);
@@ -362,11 +365,16 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
 
             {/* Description */}
             <div className="space-y-3 py-6 border-t border-border">
-              <h3 className="text-lg font-semibold text-foreground">
-                {product.isBundle ? t('productDetail.aboutBundle') : t('productDetail.aboutFragrance')}
-              </h3>
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-foreground">
+                  {product.isBundle ? t('productDetail.aboutBundle') : t('productDetail.aboutFragrance')}
+                </h3>
+                {isAdmin && (
+                  <DescriptionEditor productId={product.id} originalDescription={product.description} />
+                )}
+              </div>
               <p className="text-[15px] md:text-base text-foreground/80 leading-relaxed whitespace-pre-line">
-                {product.description}
+                {displayDescription}
               </p>
             </div>
 
