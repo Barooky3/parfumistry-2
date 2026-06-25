@@ -1329,6 +1329,27 @@ export default function AdminOrders() {
               <p className="text-xs text-muted-foreground">Total</p>
               <p className="text-2xl font-bold text-green-500">€{personalTotal.toFixed(2)}</p>
             </div>
+
+            {/* Contributing Adjustments */}
+            {personalAdjustments.length > 0 && (
+              <div className="mb-3 border-t pt-2">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                  Contributing Adjustments
+                </p>
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  {personalAdjustments.slice().reverse().map((adj, idx) => (
+                    <div key={idx} className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">
+                        {format(new Date(adj.timestamp), "dd MMM yyyy, HH:mm")}
+                      </span>
+                      <span className={adj.amount >= 0 ? "text-green-500 font-medium" : "text-red-400 font-medium"}>
+                        {adj.amount >= 0 ? "+" : ""}€{adj.amount.toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
               <Input
                 type="number"
