@@ -459,27 +459,22 @@ export default function AdminOrders() {
     return { gross, count, net: gross - adSpendValue, orders };
   }, []);
 
-  // Personal Rewarble tally — ONLY for primary admin (ewhz3384@gmail.com).
-  // Mirrors the Live Counter calculation but uses its own reset anchor stored
-  // in localStorage. Resetting this does NOT affect the shared Live Counter.
+  // Personal custom tally — ONLY for primary admin (ewhz3384@gmail.com).
+  // Fully manual: not affected by approved orders. Add/subtract values freely.
   const isPrimaryAdmin = (user?.email || "").toLowerCase() === PRIMARY_ADMIN;
-  const PERSONAL_TALLY_KEY = "admin_personal_rewarble_reset_at";
   const PERSONAL_ADJUST_KEY = "admin_personal_rewarble_adjustment";
-  const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
-    if (typeof window === "undefined") return LIVE_COUNTER_DEFAULT_ANCHOR;
-    return localStorage.getItem(PERSONAL_TALLY_KEY) || LIVE_COUNTER_DEFAULT_ANCHOR;
-  });
+  const PERSONAL_RESET_KEY = "admin_personal_rewarble_reset_at";
   const [personalAdjustment, setPersonalAdjustment] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
     const v = parseFloat(localStorage.getItem(PERSONAL_ADJUST_KEY) || "0");
     return Number.isFinite(v) ? v : 0;
   });
+  const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
+    if (typeof window === "undefined") return new Date().toISOString();
+    return localStorage.getItem(PERSONAL_RESET_KEY) || new Date().toISOString();
+  });
   const [adjustInput, setAdjustInput] = useState<string>("");
-  const personalTally = useMemo(
-    () => buildLiveCounterSnapshot(allOrders, personalResetAt, 0),
-    [allOrders, personalResetAt, buildLiveCounterSnapshot],
-  );
-  const personalTotal = personalTally.gross + personalAdjustment;
+  const personalTotal = personalAdjustment;
   const applyPersonalAdjustment = (delta: number) => {
     setPersonalAdjustment((prev) => {
       const next = Math.round((prev + delta) * 100) / 100;
@@ -487,7 +482,6 @@ export default function AdminOrders() {
       return next;
     });
   };
-  const [personalOrdersExpanded, setPersonalOrdersExpanded] = useState(false);
 
   // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
