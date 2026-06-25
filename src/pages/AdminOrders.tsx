@@ -462,23 +462,38 @@ export default function AdminOrders() {
   // Personal custom tally — ONLY for primary admin (ewhz3384@gmail.com).
   // Fully manual: not affected by approved orders. Add/subtract values freely.
   const isPrimaryAdmin = (user?.email || "").toLowerCase() === PRIMARY_ADMIN;
-  const PERSONAL_ADJUST_KEY = "admin_personal_rewarble_adjustment";
+  const PERSONAL_ADJUSTMENTS_KEY = "admin_personal_rewarble_adjustments";
   const PERSONAL_RESET_KEY = "admin_personal_rewarble_reset_at";
-  const [personalAdjustment, setPersonalAdjustment] = useState<number>(() => {
-    if (typeof window === "undefined") return 0;
-    const v = parseFloat(localStorage.getItem(PERSONAL_ADJUST_KEY) || "0");
-    return Number.isFinite(v) ? v : 0;
+
+  interface PersonalAdj {
+    amount: number;
+    timestamp: string;
+  }
+
+  const [personalAdjustments, setPersonalAdjustments] = useState<PersonalAdj[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem(PERSONAL_ADJUSTMENTS_KEY);
+      const parsed = raw ? (JSON.parse(raw) as PersonalAdj[]) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
   });
+
   const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
     if (typeof window === "undefined") return new Date().toISOString();
     return localStorage.getItem(PERSONAL_RESET_KEY) || new Date().toISOString();
   });
   const [adjustInput, setAdjustInput] = useState<string>("");
-  const personalTotal = personalAdjustment;
+  const personalTotal = useMemo(() => {
+    return Math.round(personalAdjustments.reduce((sum, a) => sum + a.amount, 0) * 100) / 100;
+  }, [personalAdjustments]);
+
   const applyPersonalAdjustment = (delta: number) => {
-    setPersonalAdjustment((prev) => {
-      const next = Math.round((prev + delta) * 100) / 100;
-      try { localStorage.setItem(PERSONAL_ADJUST_KEY, String(next)); } catch {}
+    setPersonalAdjustments((prev) => {
+      const next = [...prev, { amount: delta, timestamp: new Date().toISOString() }];
+      try { localStorage.setItem(PERSONAL_ADJUSTMENTS_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
   };
