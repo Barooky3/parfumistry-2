@@ -2317,6 +2317,41 @@ export const products: Product[] = [
       { ml: 50, price: 119.99, inStock: true },
     ],
   },
+  {
+    id: 'lv-ombre-nomade',
+    addedAt: '2026-06-25',
+    name: 'Ombré Nomade',
+    brand: 'Louis Vuitton',
+    price: 74.99,
+    category: 'unisex',
+    description: 'Louis Vuitton Ombré Nomade is a smoky, resinous oud masterpiece — juicy raspberry and saffron glow over a smoldering heart of rose, geranium and birch tar, drying down to a deep, leathery base of agarwood, incense, amberwood and benzoin. Dark, opulent, and unmistakably regal.',
+    scentNotes: {
+      top: ['Raspberry', 'Saffron', 'Rose'],
+      heart: ['Geranium', 'Birch'],
+      base: ['Agarwood (Oud)', 'Incense', 'Amberwood', 'Benzoin'],
+    },
+    scentNoteImages: {
+      'Raspberry': '/scent-notes/raspberry.png',
+      'Saffron': '/scent-notes/saffron.png',
+      'Rose': '/scent-notes/rose.png',
+      'Geranium': '/scent-notes/geranium.png',
+      'Birch': '/scent-notes/birch.png',
+      'Agarwood (Oud)': '/scent-notes/oud.png',
+      'Incense': '/scent-notes/incense.png',
+      'Amberwood': '/scent-notes/amberwood.png',
+      'Benzoin': '/scent-notes/benzoin.png',
+    },
+    accentColor: '#5C2E1F',
+    image: lvOmbreNomadeImage.url,
+    additionalImages: [lvOmbreNomadeGallery.url],
+    affiliateUrl: '/product/lv-ombre-nomade',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 100, price: 74.99, inStock: true },
+      { ml: 200, price: 92.99, inStock: true },
+    ],
+  },
 ];
 
 
