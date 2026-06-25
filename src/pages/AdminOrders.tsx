@@ -464,14 +464,29 @@ export default function AdminOrders() {
   // in localStorage. Resetting this does NOT affect the shared Live Counter.
   const isPrimaryAdmin = (user?.email || "").toLowerCase() === PRIMARY_ADMIN;
   const PERSONAL_TALLY_KEY = "admin_personal_rewarble_reset_at";
+  const PERSONAL_ADJUST_KEY = "admin_personal_rewarble_adjustment";
   const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
     if (typeof window === "undefined") return LIVE_COUNTER_DEFAULT_ANCHOR;
     return localStorage.getItem(PERSONAL_TALLY_KEY) || LIVE_COUNTER_DEFAULT_ANCHOR;
   });
+  const [personalAdjustment, setPersonalAdjustment] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    const v = parseFloat(localStorage.getItem(PERSONAL_ADJUST_KEY) || "0");
+    return Number.isFinite(v) ? v : 0;
+  });
+  const [adjustInput, setAdjustInput] = useState<string>("");
   const personalTally = useMemo(
     () => buildLiveCounterSnapshot(allOrders, personalResetAt, 0),
     [allOrders, personalResetAt, buildLiveCounterSnapshot],
   );
+  const personalTotal = personalTally.gross + personalAdjustment;
+  const applyPersonalAdjustment = (delta: number) => {
+    setPersonalAdjustment((prev) => {
+      const next = Math.round((prev + delta) * 100) / 100;
+      try { localStorage.setItem(PERSONAL_ADJUST_KEY, String(next)); } catch {}
+      return next;
+    });
+  };
   const [personalOrdersExpanded, setPersonalOrdersExpanded] = useState(false);
 
   // Revenue tally from approved orders filtered by date
@@ -1285,10 +1300,13 @@ export default function AdminOrders() {
                 size="sm"
                 className="text-xs"
                 onClick={() => {
-                  if (confirm("Reset your personal Rewarble tally? This does NOT affect the shared Live Counter.")) {
+                  if (confirm("Reset your personal Rewarble tally? This clears manual adjustments too and does NOT affect the shared Live Counter.")) {
                     const now = new Date().toISOString();
                     localStorage.setItem(PERSONAL_TALLY_KEY, now);
+                    localStorage.setItem(PERSONAL_ADJUST_KEY, "0");
                     setPersonalResetAt(now);
+                    setPersonalAdjustment(0);
+                    setAdjustInput("");
                     toast.success("Personal tally reset");
                   }
                 }}
@@ -1297,15 +1315,66 @@ export default function AdminOrders() {
                 Reset
               </Button>
             </div>
-            <div className="grid grid-cols-2 gap-4 items-end">
+            <div className="grid grid-cols-3 gap-4 items-end">
               <div className="text-center">
                 <p className="text-xs text-muted-foreground">Gross</p>
                 <p className="text-sm font-semibold">€{personalTally.gross.toFixed(2)}</p>
               </div>
               <div className="text-center border-l pl-4">
-                <p className="text-xs text-muted-foreground">Total</p>
-                <p className="text-lg font-bold text-green-500">€{personalTally.gross.toFixed(2)}</p>
+                <p className="text-xs text-muted-foreground">Adjustment</p>
+                <p className={`text-sm font-semibold ${personalAdjustment < 0 ? "text-red-500" : personalAdjustment > 0 ? "text-green-500" : ""}`}>
+                  {personalAdjustment >= 0 ? "+" : "−"}€{Math.abs(personalAdjustment).toFixed(2)}
+                </p>
               </div>
+              <div className="text-center border-l pl-4">
+                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-lg font-bold text-green-500">€{personalTotal.toFixed(2)}</p>
+              </div>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
+              <Input
+                type="number"
+                step="0.01"
+                inputMode="decimal"
+                placeholder="Amount (€)"
+                value={adjustInput}
+                onChange={(e) => setAdjustInput(e.target.value)}
+                className="h-8 text-xs w-32"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs"
+                onClick={() => {
+                  const v = parseFloat(adjustInput);
+                  if (!Number.isFinite(v) || v <= 0) { toast.error("Enter a positive amount"); return; }
+                  applyPersonalAdjustment(v);
+                  setAdjustInput("");
+                }}
+              >+ Add</Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs"
+                onClick={() => {
+                  const v = parseFloat(adjustInput);
+                  if (!Number.isFinite(v) || v <= 0) { toast.error("Enter a positive amount"); return; }
+                  applyPersonalAdjustment(-v);
+                  setAdjustInput("");
+                }}
+              >− Subtract</Button>
+              {personalAdjustment !== 0 && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 text-xs ml-auto"
+                  onClick={() => {
+                    localStorage.setItem(PERSONAL_ADJUST_KEY, "0");
+                    setPersonalAdjustment(0);
+                    toast.success("Adjustment cleared");
+                  }}
+                >Clear adjustment</Button>
+              )}
             </div>
             {personalTally.orders.length > 0 && (
               <div className="mt-3 border-t pt-2">
