@@ -42,6 +42,8 @@ import symphonyGallery from '@/assets/products/symphony-gallery.webp.asset.json'
 import libreGallery from '@/assets/products/libre-gallery.png.asset.json';
 import lvAfternoonSwimImage from '@/assets/products/lv-afternoon-swim.png.asset.json';
 import lvAfternoonSwimGallery from '@/assets/products/lv-afternoon-swim-gallery.webp.asset.json';
+import lvOmbreNomadeImage from '@/assets/products/lv-ombre-nomade.png.asset.json';
+import lvOmbreNomadeGallery from '@/assets/products/lv-ombre-nomade-gallery.webp.asset.json';
 import amoreCaffeGallery from '@/assets/products/amore-caffe-gallery.png.asset.json';
 import paradoxeGallery from '@/assets/products/paradoxe-gallery.png.asset.json';
 import monParisGallery from '@/assets/products/mon-paris-gallery.png.asset.json';
