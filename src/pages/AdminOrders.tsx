@@ -1277,16 +1277,16 @@ export default function AdminOrders() {
           )}
         </div>
 
-        {/* Personal Rewarble Tally — primary admin only */}
+        {/* Personal Custom Tally — primary admin only */}
         {isPrimaryAdmin && (
           <div className="mb-6 border rounded-lg p-4 bg-card">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                  Personal Rewarble Tally
+                  Personal Custom Tally
                 </p>
                 <p className="text-[11px] text-muted-foreground mt-0.5">
-                  Since {format(new Date(personalResetAt), "dd MMM yyyy, HH:mm")} · {personalTally.count} approved orders · independent reset
+                  Since {format(new Date(personalResetAt), "dd MMM yyyy, HH:mm")} · fully manual · not affected by orders
                 </p>
               </div>
               <Button
@@ -1294,9 +1294,9 @@ export default function AdminOrders() {
                 size="sm"
                 className="text-xs"
                 onClick={() => {
-                  if (confirm("Reset your personal Rewarble tally? This clears manual adjustments too and does NOT affect the shared Live Counter.")) {
+                  if (confirm("Reset your personal custom tally to €0.00?")) {
                     const now = new Date().toISOString();
-                    localStorage.setItem(PERSONAL_TALLY_KEY, now);
+                    localStorage.setItem(PERSONAL_RESET_KEY, now);
                     localStorage.setItem(PERSONAL_ADJUST_KEY, "0");
                     setPersonalResetAt(now);
                     setPersonalAdjustment(0);
@@ -1309,21 +1309,9 @@ export default function AdminOrders() {
                 Reset
               </Button>
             </div>
-            <div className="grid grid-cols-3 gap-4 items-end">
-              <div className="text-center">
-                <p className="text-xs text-muted-foreground">Gross</p>
-                <p className="text-sm font-semibold">€{personalTally.gross.toFixed(2)}</p>
-              </div>
-              <div className="text-center border-l pl-4">
-                <p className="text-xs text-muted-foreground">Adjustment</p>
-                <p className={`text-sm font-semibold ${personalAdjustment < 0 ? "text-red-500" : personalAdjustment > 0 ? "text-green-500" : ""}`}>
-                  {personalAdjustment >= 0 ? "+" : "−"}€{Math.abs(personalAdjustment).toFixed(2)}
-                </p>
-              </div>
-              <div className="text-center border-l pl-4">
-                <p className="text-xs text-muted-foreground">Total</p>
-                <p className="text-lg font-bold text-green-500">€{personalTotal.toFixed(2)}</p>
-              </div>
+            <div className="text-center mb-3">
+              <p className="text-xs text-muted-foreground">Total</p>
+              <p className="text-2xl font-bold text-green-500">€{personalTotal.toFixed(2)}</p>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
               <Input
@@ -1357,50 +1345,7 @@ export default function AdminOrders() {
                   setAdjustInput("");
                 }}
               >− Subtract</Button>
-              {personalAdjustment !== 0 && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-8 text-xs ml-auto"
-                  onClick={() => {
-                    localStorage.setItem(PERSONAL_ADJUST_KEY, "0");
-                    setPersonalAdjustment(0);
-                    toast.success("Adjustment cleared");
-                  }}
-                >Clear adjustment</Button>
-              )}
             </div>
-            {personalTally.orders.length > 0 && (
-              <div className="mt-3 border-t pt-2">
-                <button
-                  onClick={() => setPersonalOrdersExpanded((v) => !v)}
-                  className="w-full flex items-center justify-between text-left hover:bg-muted/30 rounded px-1 py-1 transition-colors"
-                >
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Contributing Orders — {personalTally.orders.length} {personalTally.orders.length === 1 ? "order" : "orders"}
-                  </p>
-                  <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${personalOrdersExpanded ? "rotate-180" : ""}`} />
-                </button>
-                {personalOrdersExpanded && (
-                  <div className="mt-2 pl-4 border-l border-border/60 space-y-1 max-h-64 overflow-y-auto">
-                    {personalTally.orders.map((o) => (
-                      <div key={o.id} className="flex items-center justify-between gap-2 py-0.5 text-xs">
-                        <div className="text-muted-foreground truncate">
-                          <span className="font-mono opacity-70">#{o.order_number ?? "—"}</span>
-                          <span className="ml-2">{o.customer_name}</span>
-                          <span className="ml-1 opacity-60">· {o.customer_email}</span>
-                          <span className="ml-2 uppercase text-[10px] opacity-70">{o.method}</span>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className="opacity-60">{format(new Date(o.approvedAt), "HH:mm")}</span>
-                          <strong>€{o.total_amount.toFixed(2)}</strong>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         )}
 
