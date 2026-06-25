@@ -462,23 +462,38 @@ export default function AdminOrders() {
   // Personal custom tally — ONLY for primary admin (ewhz3384@gmail.com).
   // Fully manual: not affected by approved orders. Add/subtract values freely.
   const isPrimaryAdmin = (user?.email || "").toLowerCase() === PRIMARY_ADMIN;
-  const PERSONAL_ADJUST_KEY = "admin_personal_rewarble_adjustment";
+  const PERSONAL_ADJUSTMENTS_KEY = "admin_personal_rewarble_adjustments";
   const PERSONAL_RESET_KEY = "admin_personal_rewarble_reset_at";
-  const [personalAdjustment, setPersonalAdjustment] = useState<number>(() => {
-    if (typeof window === "undefined") return 0;
-    const v = parseFloat(localStorage.getItem(PERSONAL_ADJUST_KEY) || "0");
-    return Number.isFinite(v) ? v : 0;
+
+  interface PersonalAdj {
+    amount: number;
+    timestamp: string;
+  }
+
+  const [personalAdjustments, setPersonalAdjustments] = useState<PersonalAdj[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem(PERSONAL_ADJUSTMENTS_KEY);
+      const parsed = raw ? (JSON.parse(raw) as PersonalAdj[]) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
   });
+
   const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
     if (typeof window === "undefined") return new Date().toISOString();
     return localStorage.getItem(PERSONAL_RESET_KEY) || new Date().toISOString();
   });
   const [adjustInput, setAdjustInput] = useState<string>("");
-  const personalTotal = personalAdjustment;
+  const personalTotal = useMemo(() => {
+    return Math.round(personalAdjustments.reduce((sum, a) => sum + a.amount, 0) * 100) / 100;
+  }, [personalAdjustments]);
+
   const applyPersonalAdjustment = (delta: number) => {
-    setPersonalAdjustment((prev) => {
-      const next = Math.round((prev + delta) * 100) / 100;
-      try { localStorage.setItem(PERSONAL_ADJUST_KEY, String(next)); } catch {}
+    setPersonalAdjustments((prev) => {
+      const next = [...prev, { amount: delta, timestamp: new Date().toISOString() }];
+      try { localStorage.setItem(PERSONAL_ADJUSTMENTS_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
   };
@@ -1297,9 +1312,10 @@ export default function AdminOrders() {
                   if (confirm("Reset your personal custom tally to €0.00?")) {
                     const now = new Date().toISOString();
                     localStorage.setItem(PERSONAL_RESET_KEY, now);
-                    localStorage.setItem(PERSONAL_ADJUST_KEY, "0");
+                    localStorage.removeItem("admin_personal_rewarble_adjustment");
+                    localStorage.setItem(PERSONAL_ADJUSTMENTS_KEY, JSON.stringify([]));
                     setPersonalResetAt(now);
-                    setPersonalAdjustment(0);
+                    setPersonalAdjustments([]);
                     setAdjustInput("");
                     toast.success("Personal tally reset");
                   }
@@ -1313,6 +1329,27 @@ export default function AdminOrders() {
               <p className="text-xs text-muted-foreground">Total</p>
               <p className="text-2xl font-bold text-green-500">€{personalTotal.toFixed(2)}</p>
             </div>
+
+            {/* Contributing Adjustments */}
+            {personalAdjustments.length > 0 && (
+              <div className="mb-3 border-t pt-2">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                  Contributing Adjustments
+                </p>
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  {personalAdjustments.slice().reverse().map((adj, idx) => (
+                    <div key={idx} className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">
+                        {format(new Date(adj.timestamp), "dd MMM yyyy, HH:mm")}
+                      </span>
+                      <span className={adj.amount >= 0 ? "text-green-500 font-medium" : "text-red-400 font-medium"}>
+                        {adj.amount >= 0 ? "+" : ""}€{adj.amount.toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
               <Input
                 type="number"
