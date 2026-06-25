@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import godOfFireImg from '@/assets/products/shl-god-of-fire.png.asset.json';
-import lesSablesRosesImg from '@/assets/products/lv-les-sables-roses.png.asset.json';
 import ombreNomadeImg from '@/assets/products/lv-ombre-nomade-poll.png.asset.json';
+import jpgUltraMaleImg from '@/assets/products/jpg-ultra-male.png.asset.json';
+import invictusVictoryElixirImg from '@/assets/products/invictus-victory-elixir.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12-d';
+const POLL_ID = 'next-arrival-2026-12-e';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'lv-les-sables-roses',
-    label: 'LV Les Sables Roses',
-    image: lesSablesRosesImg.url,
+    key: 'jpg-ultra-male',
+    label: 'JPG Ultra Male',
+    image: jpgUltraMaleImg.url,
   },
   {
-    key: 'lv-ombre-nomade',
-    label: 'LV Ombre Nomade',
-    image: ombreNomadeImg.url,
+    key: 'invictus-victory-elixir',
+    label: 'Invictus Victory Elixir',
+    image: invictusVictoryElixirImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'SHL God of Fire',
-  image: godOfFireImg.url,
+  name: 'LV Ombré Nomade',
+  image: ombreNomadeImg.url,
 };
 
 function getFingerprint(): string {
