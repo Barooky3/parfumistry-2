@@ -50,6 +50,30 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_personal_tallies: {
+        Row: {
+          adjustments: Json
+          admin_email: string
+          id: string
+          reset_at: string
+          updated_at: string
+        }
+        Insert: {
+          adjustments?: Json
+          admin_email: string
+          id?: string
+          reset_at?: string
+          updated_at?: string
+        }
+        Update: {
+          adjustments?: Json
+          admin_email?: string
+          id?: string
+          reset_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bancontact_live_counter: {
         Row: {
           ad_spend: number
