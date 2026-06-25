@@ -459,6 +459,21 @@ export default function AdminOrders() {
     return { gross, count, net: gross - adSpendValue, orders };
   }, []);
 
+  // Personal Rewarble tally — ONLY for primary admin (ewhz3384@gmail.com).
+  // Mirrors the Live Counter calculation but uses its own reset anchor stored
+  // in localStorage. Resetting this does NOT affect the shared Live Counter.
+  const isPrimaryAdmin = (user?.email || "").toLowerCase() === PRIMARY_ADMIN;
+  const PERSONAL_TALLY_KEY = "admin_personal_rewarble_reset_at";
+  const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
+    if (typeof window === "undefined") return LIVE_COUNTER_DEFAULT_ANCHOR;
+    return localStorage.getItem(PERSONAL_TALLY_KEY) || LIVE_COUNTER_DEFAULT_ANCHOR;
+  });
+  const personalTally = useMemo(
+    () => buildLiveCounterSnapshot(allOrders, personalResetAt, 0),
+    [allOrders, personalResetAt, buildLiveCounterSnapshot],
+  );
+  const [personalOrdersExpanded, setPersonalOrdersExpanded] = useState(false);
+
   // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
     const byMethod: Record<string, number> = {};
