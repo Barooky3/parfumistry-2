@@ -462,29 +462,15 @@ export default function AdminOrders() {
   // Personal custom tally — ONLY for primary admin (ewhz3384@gmail.com).
   // Fully manual: not affected by approved orders. Add/subtract values freely.
   const isPrimaryAdmin = (user?.email || "").toLowerCase() === PRIMARY_ADMIN;
-  const PERSONAL_ADJUSTMENTS_KEY = "admin_personal_rewarble_adjustments";
-  const PERSONAL_RESET_KEY = "admin_personal_rewarble_reset_at";
 
   interface PersonalAdj {
     amount: number;
     timestamp: string;
   }
 
-  const [personalAdjustments, setPersonalAdjustments] = useState<PersonalAdj[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem(PERSONAL_ADJUSTMENTS_KEY);
-      const parsed = raw ? (JSON.parse(raw) as PersonalAdj[]) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [personalResetAt, setPersonalResetAt] = useState<string>(() => {
-    if (typeof window === "undefined") return new Date().toISOString();
-    return localStorage.getItem(PERSONAL_RESET_KEY) || new Date().toISOString();
-  });
+  const [personalAdjustments, setPersonalAdjustments] = useState<PersonalAdj[]>([]);
+  const [personalResetAt, setPersonalResetAt] = useState<string>(new Date().toISOString());
+  const [personalTallyHydrated, setPersonalTallyHydrated] = useState(false);
   const [adjustInput, setAdjustInput] = useState<string>("");
   const personalTotal = useMemo(() => {
     return Math.round(personalAdjustments.reduce((sum, a) => sum + a.amount, 0) * 100) / 100;
@@ -493,10 +479,52 @@ export default function AdminOrders() {
   const applyPersonalAdjustment = (delta: number) => {
     setPersonalAdjustments((prev) => {
       const next = [...prev, { amount: delta, timestamp: new Date().toISOString() }];
-      try { localStorage.setItem(PERSONAL_ADJUSTMENTS_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
   };
+
+  // Hydrate personal tally from DB (cross-device sync)
+  useEffect(() => {
+    if (!isPrimaryAdmin || !user?.email) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await (supabase as any)
+        .from("admin_personal_tallies")
+        .select("*")
+        .eq("admin_email", user.email)
+        .maybeSingle();
+      if (cancelled) return;
+      if (data && !error) {
+        setPersonalAdjustments(Array.isArray(data.adjustments) ? data.adjustments : []);
+        setPersonalResetAt(data.reset_at || new Date().toISOString());
+      } else {
+        // Seed from legacy localStorage once if present
+        try {
+          const legacyAdj = JSON.parse(localStorage.getItem("admin_personal_rewarble_adjustments") || "[]");
+          const legacyReset = localStorage.getItem("admin_personal_rewarble_reset_at") || new Date().toISOString();
+          if (Array.isArray(legacyAdj) && legacyAdj.length > 0) {
+            setPersonalAdjustments(legacyAdj);
+            setPersonalResetAt(legacyReset);
+          }
+        } catch {}
+      }
+      setPersonalTallyHydrated(true);
+    })();
+    return () => { cancelled = true; };
+  }, [isPrimaryAdmin, user]);
+
+  // Persist personal tally to DB whenever it changes
+  useEffect(() => {
+    if (!isPrimaryAdmin || !user?.email || !personalTallyHydrated) return;
+    (async () => {
+      await (supabase as any).from("admin_personal_tallies").upsert({
+        admin_email: user.email,
+        adjustments: personalAdjustments,
+        reset_at: personalResetAt,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "admin_email" });
+    })();
+  }, [personalAdjustments, personalResetAt, isPrimaryAdmin, user, personalTallyHydrated]);
 
   // Revenue tally from approved orders filtered by date
   const revenueTally = useMemo(() => {
