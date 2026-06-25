@@ -44,6 +44,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
   const product = rawProduct ? applyStockOverride(applyPriceOverride(rawProduct)) : undefined;
   const paddingOverride = useProductPadding(id || '');
   const displayName = useDisplayName(id || '', product?.name || '');
+  const displayDescription = useDisplayDescription(id || '', product?.description || '');
   const relatedProducts = (() => {
     const all = getFeaturedProducts().filter(p => p.id !== id);
     const shuffled = [...all].sort(() => Math.random() - 0.5);
@@ -373,7 +374,7 @@ const ProductDetail = forwardRef<HTMLDivElement>((_, ref) => {
                 )}
               </div>
               <p className="text-[15px] md:text-base text-foreground/80 leading-relaxed whitespace-pre-line">
-                {useDisplayDescription(product.id, product.description)}
+                {displayDescription}
               </p>
             </div>
 
