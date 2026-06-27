@@ -152,11 +152,10 @@ const CustomBundle = () => {
   const totalOriginal = selections.reduce((sum, s) => sum + s.variant.price, 0);
   const totalSavings = totalOriginal - totalPrice;
 
-  const handleSelect = (product: Product) => {
+  const handleSelect = (product: Product, variant: ProductVariant) => {
     if (selections.length >= MAX_ITEMS) return;
     if (!product.inStock) return;
-    const variant = getStandardVariant(product);
-    if (!variant || !variant.inStock) return;
+    if (!variant.inStock || isTesterVariant(variant)) return;
     setSelectionRefs(prev => [...prev, { productId: product.id, ml: variant.ml }]);
   };
 
