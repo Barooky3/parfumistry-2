@@ -58,6 +58,8 @@ import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.
 import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
 import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
+import invictusVictoryElixirImage from '@/assets/products/invictus-victory-elixir.png.asset.json';
+import invictusVictoryElixirGallery from '@/assets/products/invictus-victory-elixir-gallery.webp.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
 import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asset.json';
