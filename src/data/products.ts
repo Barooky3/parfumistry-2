@@ -2354,6 +2354,39 @@ export const products: Product[] = [
       { ml: 200, price: 92.99, inStock: true },
     ],
   },
+  {
+    id: 'invictus-victory-elixir',
+    addedAt: '2026-06-27',
+    name: 'Invictus Victory Elixir',
+    brand: 'Paco Rabanne',
+    price: 39.99,
+    category: 'men',
+    description: 'Paco Rabanne Invictus Victory Elixir is a regal, intensely masculine parfum — aromatic lavender, spicy cardamom and crackling black pepper open onto a smoky heart of incense and patchouli, drying down to a rich, addictive base of vanilla pod and tonka bean. Bold, warm, and triumphant.',
+    scentNotes: {
+      top: ['Lavender', 'Cardamom', 'Black Pepper'],
+      heart: ['Incense', 'Patchouli'],
+      base: ['Vanilla Pod', 'Tonka Bean'],
+    },
+    scentNoteImages: {
+      'Lavender': '/scent-notes/lavender.png',
+      'Cardamom': '/scent-notes/cardamom.png',
+      'Black Pepper': '/scent-notes/black-pepper.png',
+      'Incense': '/scent-notes/incense.png',
+      'Patchouli': '/scent-notes/patchouli.png',
+      'Vanilla Pod': '/scent-notes/vanilla.png',
+      'Tonka Bean': '/scent-notes/tonka-bean.png',
+    },
+    accentColor: '#1B2A52',
+    image: invictusVictoryElixirImage.url,
+    additionalImages: [invictusVictoryElixirGallery.url],
+    affiliateUrl: '/product/invictus-victory-elixir',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 39.99, inStock: true },
+      { ml: 100, price: 54.99, inStock: true },
+    ],
+  },
 ];
 
 
