@@ -19,12 +19,14 @@ const brandMap: Record<string, string[]> = {
   valentino: ['Valentino'], azzaro: ['Azzaro'], armani: ['Giorgio Armani', 'Armani', 'Emporio Armani'],
   lv: ['Louis Vuitton'], pdm: ['Parfums de Marly'], creed: ['Creed'], mancera: ['Mancera'],
   dior: ['Dior', 'Christian Dior'], tomford: ['Tom Ford'], viktor: ['Viktor & Rolf'], xerjoff: ['Xerjoff'],
+  paco: ['Paco Rabanne'],
 };
 
 const brandDisplayNames: Record<string, string> = {
   versace: 'Versace', jpg: 'Jean Paul Gaultier', ysl: 'Yves Saint Laurent', valentino: 'Valentino',
   azzaro: 'Azzaro', armani: 'Giorgio Armani', lv: 'Louis Vuitton', pdm: 'Parfums de Marly',
   creed: 'Creed', mancera: 'Mancera', dior: 'Dior', tomford: 'Tom Ford', viktor: 'Viktor & Rolf', xerjoff: 'Xerjoff',
+  paco: 'Paco Rabanne',
 };
 
 const Shop = () => {
