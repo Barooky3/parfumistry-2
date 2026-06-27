@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAllProductNameOverrides } from '@/hooks/useProductName';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
+import { applyStockOverride, useStockOverridesVersion } from '@/hooks/useProductStock';
 
 interface BundleProductImageProps {
   product: Product;
@@ -92,6 +93,8 @@ const CustomBundle = () => {
   const nameOverrides = useAllProductNameOverrides();
   // Subscribe to price override cache changes so prices update live after admin edits
   useProductPriceOverride('__custom_bundle_subscription__');
+  // Subscribe to stock override changes so manually-set out-of-stock variants reflect here
+  useStockOverridesVersion();
   const displayName = (p: Product) => nameOverrides[p.id] || p.name;
 
   // Rehydrate from a previously added custom bundle (cart link with ?edit=id)
@@ -116,11 +119,12 @@ const CustomBundle = () => {
   }, [searchParams]);
 
 
-  // Apply current price overrides to all fragrances (re-runs when overrides change)
+  // Apply current price + stock overrides to all fragrances (re-runs when overrides change)
   const fragrances = (() => {
     const all = getFragrances()
       .filter(p => p.variants && p.variants.length > 0)
-      .map(applyPriceOverride);
+      .map(applyPriceOverride)
+      .map(applyStockOverride);
     const designers = all.filter(p => DESIGNER_BRANDS.includes(p.brand));
     const others = all.filter(p => !DESIGNER_BRANDS.includes(p.brand));
     return [...shuffleArray(designers, SESSION_SEED), ...shuffleArray(others, SESSION_SEED + 1)];
