@@ -58,6 +58,8 @@ import erbaGoldGalleryAi from '@/assets/products/erba-gold-gallery-ai.png.asset.
 import oneMillionParfumGalleryAi from '@/assets/products/one-million-parfum-gallery-ai.png.asset.json';
 import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gallery-ai.png.asset.json';
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
+import invictusVictoryElixirImage from '@/assets/products/invictus-victory-elixir.png.asset.json';
+import invictusVictoryElixirGallery from '@/assets/products/invictus-victory-elixir-gallery.webp.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
 import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asset.json';
@@ -2350,6 +2352,39 @@ export const products: Product[] = [
     variants: [
       { ml: 100, price: 74.99, inStock: true },
       { ml: 200, price: 92.99, inStock: true },
+    ],
+  },
+  {
+    id: 'invictus-victory-elixir',
+    addedAt: '2026-06-27',
+    name: 'Invictus Victory Elixir',
+    brand: 'Paco Rabanne',
+    price: 39.99,
+    category: 'men',
+    description: 'Paco Rabanne Invictus Victory Elixir is a regal, intensely masculine parfum — aromatic lavender, spicy cardamom and crackling black pepper open onto a smoky heart of incense and patchouli, drying down to a rich, addictive base of vanilla pod and tonka bean. Bold, warm, and triumphant.',
+    scentNotes: {
+      top: ['Lavender', 'Cardamom', 'Black Pepper'],
+      heart: ['Incense', 'Patchouli'],
+      base: ['Vanilla Pod', 'Tonka Bean'],
+    },
+    scentNoteImages: {
+      'Lavender': '/scent-notes/lavender.png',
+      'Cardamom': '/scent-notes/cardamom.png',
+      'Black Pepper': '/scent-notes/black-pepper.png',
+      'Incense': '/scent-notes/incense.png',
+      'Patchouli': '/scent-notes/patchouli.png',
+      'Vanilla Pod': '/scent-notes/vanilla.png',
+      'Tonka Bean': '/scent-notes/tonka-bean.png',
+    },
+    accentColor: '#1B2A52',
+    image: invictusVictoryElixirImage.url,
+    additionalImages: [invictusVictoryElixirGallery.url],
+    affiliateUrl: '/product/invictus-victory-elixir',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 39.99, inStock: true },
+      { ml: 100, price: 54.99, inStock: true },
     ],
   },
 ];

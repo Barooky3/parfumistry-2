@@ -23,9 +23,9 @@ const Index = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const newArrivals = [
+    getProductById('invictus-victory-elixir'),
     getProductById('lv-ombre-nomade'),
     getProductById('shl-god-of-fire'),
-    getProductById('initio-side-effect'),
   ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
 
