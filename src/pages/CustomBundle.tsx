@@ -60,21 +60,11 @@ const getBundlePrice = (variantPrice: number): number => {
   return Math.round(variantPrice * 0.55 * 100) / 100;
 };
 
-// Standard size targets by brand
-const BRAND_TARGET_ML: Record<string, number> = {
-  'Jean Paul Gaultier': 125,
-  'Mancera': 120,
-};
-const DEFAULT_TARGET_ML = 100;
-
-// Get the standard variant closest to the brand's target ML
-const getStandardVariant = (product: Product): ProductVariant | null => {
-  if (!product.variants || product.variants.length === 0) return null;
-  const target = BRAND_TARGET_ML[product.brand] || DEFAULT_TARGET_ML;
-  // Pick the variant closest to the target
-  return product.variants.reduce((best, v) => {
-    return Math.abs(v.ml - target) < Math.abs(best.ml - target) ? v : best;
-  }, product.variants[0]);
+// Eligible variants: in stock and not testers
+const isTesterVariant = (v: ProductVariant) => /tester/i.test(v.label || '');
+const getEligibleVariants = (product: Product): ProductVariant[] => {
+  if (!product.variants || product.variants.length === 0) return [];
+  return product.variants.filter((v) => v.inStock && !isTesterVariant(v));
 };
 
 // Seeded shuffle so order is stable per session but random
@@ -162,11 +152,10 @@ const CustomBundle = () => {
   const totalOriginal = selections.reduce((sum, s) => sum + s.variant.price, 0);
   const totalSavings = totalOriginal - totalPrice;
 
-  const handleSelect = (product: Product) => {
+  const handleSelect = (product: Product, variant: ProductVariant) => {
     if (selections.length >= MAX_ITEMS) return;
     if (!product.inStock) return;
-    const variant = getStandardVariant(product);
-    if (!variant || !variant.inStock) return;
+    if (!variant.inStock || isTesterVariant(variant)) return;
     setSelectionRefs(prev => [...prev, { productId: product.id, ml: variant.ml }]);
   };
 
@@ -343,25 +332,21 @@ const CustomBundle = () => {
           {filteredFragrances.map((product) => {
             const timesSelected = selections.filter(s => s.product.id === product.id).length;
             const isFull = selections.length >= MAX_ITEMS;
-            const variant = getStandardVariant(product);
-            if (!variant) return null;
-            const bundlePrice = getBundlePrice(variant.price);
-            const isOutOfStock = !product.inStock || !variant.inStock;
+            const eligibleVariants = getEligibleVariants(product);
+            const isOutOfStock = !product.inStock || eligibleVariants.length === 0;
             const isDisabled = isFull || isOutOfStock;
 
             return (
               <motion.div
                 key={product.id}
                 className={cn(
-                  "border border-border bg-background overflow-hidden transition-all group relative",
+                  "border border-border bg-background overflow-hidden transition-all group relative flex flex-col",
                   timesSelected > 0 && "ring-2 ring-accent",
-                  isDisabled && timesSelected === 0 ? "opacity-50" : "cursor-pointer"
+                  isDisabled && timesSelected === 0 && "opacity-50"
                 )}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-20px" }}
-                whileHover={!isDisabled ? { y: -4, transition: { duration: 0.2 } } : {}}
-                onClick={() => !isDisabled && handleSelect(product)}
               >
                 {/* Image */}
                 <div className="aspect-square bg-secondary flex items-center justify-center p-4 relative overflow-hidden">
@@ -383,38 +368,55 @@ const CustomBundle = () => {
                       </span>
                     </div>
                   )}
-                  {!isDisabled && timesSelected === 0 && (
-                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-accent text-accent-foreground rounded-full p-2 shadow-lg">
-                        <Plus size={18} />
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Info */}
-                <div className="p-3">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
-                    {product.brand}
-                  </p>
-                  <h3 className="text-sm font-medium text-foreground mb-1 line-clamp-1">
-                    {displayName(product)}
-                  </h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">{variant.ml}ml</span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[11px] line-through text-muted-foreground">€{variant.price.toFixed(2)}</span>
-                      <span className="text-sm font-bold text-accent">€{bundlePrice.toFixed(2)}</span>
-                    </div>
+                <div className="p-3 flex flex-col gap-2 flex-1">
+                  <div>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
+                      {product.brand}
+                    </p>
+                    <h3 className="text-sm font-medium text-foreground line-clamp-1">
+                      {displayName(product)}
+                    </h3>
                   </div>
-                  {(() => {
-                    const savings = Math.round((1 - bundlePrice / variant.price) * 100);
-                    return (
-                      <div className="mt-1 text-[10px] font-semibold text-accent uppercase tracking-wider">
-                        Save {savings}%
+
+                  {!isOutOfStock && (
+                    <div className="mt-auto space-y-1.5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                        Choose size
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {eligibleVariants.map((v) => {
+                          const bp = getBundlePrice(v.price);
+                          const disabledBtn = isFull;
+                          return (
+                            <button
+                              key={`${v.ml}-${v.label || ''}`}
+                              type="button"
+                              disabled={disabledBtn}
+                              onClick={() => handleSelect(product, v)}
+                              className={cn(
+                                "flex-1 min-w-0 flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md border text-[11px] transition-all",
+                                disabledBtn
+                                  ? "border-border bg-secondary/40 text-muted-foreground cursor-not-allowed"
+                                  : "border-border bg-secondary hover:border-accent hover:bg-accent/10 cursor-pointer"
+                              )}
+                            >
+                              <span className="font-semibold text-foreground">{v.ml}ml</span>
+                              <span className="flex items-center gap-1 leading-none">
+                                <span className="line-through text-muted-foreground text-[9px]">€{v.price.toFixed(0)}</span>
+                                <span className="font-bold text-accent">€{bp.toFixed(2)}</span>
+                              </span>
+                            </button>
+                          );
+                        })}
                       </div>
-                    );
-                  })()}
+                      <div className="text-[10px] font-semibold text-accent uppercase tracking-wider text-center">
+                        Save 45%
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             );
