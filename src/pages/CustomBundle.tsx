@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAllProductNameOverrides } from '@/hooks/useProductName';
 import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
 import { applyPriceOverride, useProductPriceOverride } from '@/hooks/useProductPrice';
+import { applyStockOverride, useStockOverridesVersion } from '@/hooks/useProductStock';
 
 interface BundleProductImageProps {
   product: Product;
