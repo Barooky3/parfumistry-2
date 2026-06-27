@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import ombreNomadeImg from '@/assets/products/lv-ombre-nomade-poll.png.asset.json';
-import jpgUltraMaleImg from '@/assets/products/jpg-ultra-male.png.asset.json';
 import invictusVictoryElixirImg from '@/assets/products/invictus-victory-elixir.png.asset.json';
+import biancoLatteImg from '@/assets/products/bianco-latte.png.asset.json';
+import baccaratRouge540ExtraitImg from '@/assets/products/baccarat-rouge-540-extrait.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12-e';
+const POLL_ID = 'next-arrival-2026-12-f';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'jpg-ultra-male',
-    label: 'JPG Ultra Male',
-    image: jpgUltraMaleImg.url,
+    key: 'bianco-latte',
+    label: 'Giardini di Toscana Bianco Latte',
+    image: biancoLatteImg.url,
   },
   {
-    key: 'invictus-victory-elixir',
-    label: 'Invictus Victory Elixir',
-    image: invictusVictoryElixirImg.url,
+    key: 'baccarat-rouge-540-extrait',
+    label: 'MFK Baccarat Rouge 540 Extrait',
+    image: baccaratRouge540ExtraitImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'LV Ombré Nomade',
-  image: ombreNomadeImg.url,
+  name: 'Invictus Victory Elixir',
+  image: invictusVictoryElixirImg.url,
 };
 
 function getFingerprint(): string {
