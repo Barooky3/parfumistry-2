@@ -60,21 +60,11 @@ const getBundlePrice = (variantPrice: number): number => {
   return Math.round(variantPrice * 0.55 * 100) / 100;
 };
 
-// Standard size targets by brand
-const BRAND_TARGET_ML: Record<string, number> = {
-  'Jean Paul Gaultier': 125,
-  'Mancera': 120,
-};
-const DEFAULT_TARGET_ML = 100;
-
-// Get the standard variant closest to the brand's target ML
-const getStandardVariant = (product: Product): ProductVariant | null => {
-  if (!product.variants || product.variants.length === 0) return null;
-  const target = BRAND_TARGET_ML[product.brand] || DEFAULT_TARGET_ML;
-  // Pick the variant closest to the target
-  return product.variants.reduce((best, v) => {
-    return Math.abs(v.ml - target) < Math.abs(best.ml - target) ? v : best;
-  }, product.variants[0]);
+// Eligible variants: in stock and not testers
+const isTesterVariant = (v: ProductVariant) => /tester/i.test(v.label || '');
+const getEligibleVariants = (product: Product): ProductVariant[] => {
+  if (!product.variants || product.variants.length === 0) return [];
+  return product.variants.filter((v) => v.inStock && !isTesterVariant(v));
 };
 
 // Seeded shuffle so order is stable per session but random
