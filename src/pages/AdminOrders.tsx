@@ -2031,6 +2031,19 @@ export default function AdminOrders() {
                 <span className="font-medium text-sm">🔢 Order Number Provided Instead</span>
                 <p className="text-xs text-muted-foreground mt-1">Customer sent the Rewarble order number instead of the actual gift card code. Email includes step-by-step instructions (open email → Get Order → Display Key).</p>
               </button>
+              {/* Option 3b: Eneba Order Number Provided */}
+              <button
+                type="button"
+                onClick={() => { setRejectionReason("eneba_order_number"); setRejectionNotes(""); }}
+                className={`text-left p-3 rounded-lg border-2 transition-colors ${
+                  rejectionReason === "eneba_order_number"
+                    ? "border-red-500 bg-red-50"
+                    : "border-input bg-background hover:bg-accent"
+                }`}
+              >
+                <span className="font-medium text-sm">🧾 Eneba Order Number Provided Instead</span>
+                <p className="text-xs text-muted-foreground mt-1">Customer sent the Eneba order number instead of the gift card code. Email tells them to open the Eneba email → press "Product details" to reveal the 16-char code.</p>
+              </button>
               {/* Option 4: Custom Reason */}
               <button
                 type="button"
