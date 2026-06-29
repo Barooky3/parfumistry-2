@@ -274,6 +274,23 @@ export default function BancontactPanel({ userEmail }: Props) {
     }
   };
 
+  const handleBulkGenerate = async (count: number, customerSource: "seed" | "history") => {
+    setBusy(true);
+    let ok = 0;
+    let fail = 0;
+    for (let i = 0; i < count; i++) {
+      try {
+        await invokeFn("bancontact-generate", { mode: "random", customerSource });
+        ok++;
+      } catch (e: any) {
+        fail++;
+      }
+    }
+    setBusy(false);
+    if (fail === 0) toast.success(`Generated ${ok} Bancontact orders [${customerSource}]`);
+    else toast.error(`Generated ${ok}/${count} — ${fail} failed`);
+  };
+
   const handleCustomSubmit = async () => {
     const cleaned = customItems
       .map((i) => ({ ...i, price: Number(i.price) || 0, quantity: Math.max(1, Math.floor(Number(i.quantity) || 1)) }))
@@ -348,6 +365,12 @@ export default function BancontactPanel({ userEmail }: Props) {
               </Button>
               <Button variant="outline" size="sm" className="text-xs" onClick={() => handleGenerate("random", { customerSource: "history" })} disabled={busy}>
                 <Zap className="h-3 w-3 mr-1" /> Generate (History Names)
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleBulkGenerate(5, "seed")} disabled={busy}>
+                <Zap className="h-3 w-3 mr-1" /> Bulk x5 (Seed)
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleBulkGenerate(5, "history")} disabled={busy}>
+                <Zap className="h-3 w-3 mr-1" /> Bulk x5 (History)
               </Button>
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setCustomOpen(true)} disabled={busy}>
                 <Plus className="h-3 w-3 mr-1" /> Custom Bancontact Order
