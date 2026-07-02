@@ -2408,7 +2408,7 @@ export const products: Product[] = [
       'Egyptian Jasmine': '/scent-notes/jasmine.png',
       'Virginia Cedar': '/scent-notes/cedar.png',
       'Ambergris': '/scent-notes/ambergris.png',
-      'Woody Notes': '/scent-notes/woody.png',
+      'Woody Notes': '/scent-notes/woody-notes.png',
       'Musk': '/scent-notes/musk.png',
       'Ambroxan': '/scent-notes/ambroxan.png',
       'Cashmeran': '/scent-notes/cashmeran.png',
