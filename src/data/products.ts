@@ -60,6 +60,8 @@ import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gall
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
 import invictusVictoryElixirImage from '@/assets/products/invictus-victory-elixir.png.asset.json';
 import invictusVictoryElixirGallery from '@/assets/products/invictus-victory-elixir-gallery.webp.asset.json';
+import baccaratRouge540ExtraitImage from '@/assets/products/baccarat-rouge-540-extrait.png.asset.json';
+import baccaratRouge540ExtraitGallery from '@/assets/products/baccarat-rouge-540-extrait-gallery.png.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
 import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asset.json';
