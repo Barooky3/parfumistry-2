@@ -60,6 +60,8 @@ import diorHommeIntenseGalleryAi from '@/assets/products/dior-homme-intense-gall
 import oneMillionElixirGalleryAi from '@/assets/products/one-million-elixir-gallery-ai.png.asset.json';
 import invictusVictoryElixirImage from '@/assets/products/invictus-victory-elixir.png.asset.json';
 import invictusVictoryElixirGallery from '@/assets/products/invictus-victory-elixir-gallery.webp.asset.json';
+import baccaratRouge540ExtraitImage from '@/assets/products/baccarat-rouge-540-extrait.png.asset.json';
+import baccaratRouge540ExtraitGallery from '@/assets/products/baccarat-rouge-540-extrait-gallery.png.asset.json';
 import leBeauEdtGalleryAi from '@/assets/products/le-beau-edt-gallery-ai.png.asset.json';
 import frenchRivieraGalleryAi from '@/assets/products/french-riviera-gallery-ai.png.asset.json';
 import tonkaColaGalleryAi from '@/assets/products/tonka-cola-gallery-ai.png.asset.json';
@@ -2385,6 +2387,41 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 39.99, inStock: true },
       { ml: 100, price: 54.99, inStock: true },
+    ],
+  },
+  {
+    id: 'baccarat-rouge-540-extrait',
+    addedAt: '2026-07-02',
+    name: 'Baccarat Rouge 540 Extrait de Parfum',
+    brand: 'Maison Francis Kurkdjian',
+    price: 89.99,
+    category: 'unisex',
+    description: 'Maison Francis Kurkdjian Baccarat Rouge 540 Extrait de Parfum is the deeper, more sensual sibling to the icon — luminous bitter almond and saffron dazzle over a heart of Egyptian jasmine and Virginia cedar, sinking into a plush, addictive base of ambergris, woody notes, musk, ambroxan and cashmeran. Radiant, warm, and unforgettable.',
+    scentNotes: {
+      top: ['Bitter Almond', 'Saffron'],
+      heart: ['Egyptian Jasmine', 'Virginia Cedar'],
+      base: ['Ambergris', 'Woody Notes', 'Musk', 'Ambroxan', 'Cashmeran'],
+    },
+    scentNoteImages: {
+      'Bitter Almond': '/scent-notes/almond.png',
+      'Saffron': '/scent-notes/saffron.png',
+      'Egyptian Jasmine': '/scent-notes/jasmine.png',
+      'Virginia Cedar': '/scent-notes/cedar.png',
+      'Ambergris': '/scent-notes/ambergris.png',
+      'Woody Notes': '/scent-notes/woody.png',
+      'Musk': '/scent-notes/musk.png',
+      'Ambroxan': '/scent-notes/ambroxan.png',
+      'Cashmeran': '/scent-notes/cashmeran.png',
+    },
+    accentColor: '#7A1D1D',
+    image: baccaratRouge540ExtraitImage.url,
+    additionalImages: [baccaratRouge540ExtraitGallery.url],
+    affiliateUrl: '/product/baccarat-rouge-540-extrait',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 35, price: 89.99, inStock: true },
+      { ml: 70, price: 129.99, inStock: true },
     ],
   },
 ];

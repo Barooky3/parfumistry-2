@@ -23,8 +23,8 @@ const Index = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const newArrivals = [
+    getProductById('baccarat-rouge-540-extrait'),
     getProductById('invictus-victory-elixir'),
-    getProductById('lv-ombre-nomade'),
     getProductById('shl-god-of-fire'),
   ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
