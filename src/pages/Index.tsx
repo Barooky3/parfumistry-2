@@ -106,7 +106,7 @@ const Index = () => {
             </div>
             
             {/* Tagline */}
-            <p className="font-display text-[11px] md:text-xs lg:text-sm text-white/70 tracking-[0.2em] uppercase -mt-8 md:-mt-12 lg:-mt-16 mb-6 hero-tagline-animate">
+            <p className="font-display text-xs md:text-sm lg:text-base text-white/70 tracking-[0.2em] uppercase -mt-10 md:-mt-14 lg:-mt-20 mb-6 hero-tagline-animate">
               The Fragrance Library
             </p>
             
