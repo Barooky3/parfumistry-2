@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import baccaratRouge540ExtraitImg from '@/assets/products/baccarat-rouge-540-extrait.png.asset.json';
-import nishaneHacivatImg from '@/assets/products/nishane-hacivat.png.asset.json';
 import exNihiloBlueTalismanImg from '@/assets/products/ex-nihilo-blue-talisman.png.asset.json';
+import lvCityOfStarsImg from '@/assets/products/lv-city-of-stars.png.asset.json';
+import lvLesSablesRosesImg from '@/assets/products/lv-les-sables-roses.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12-g';
+const POLL_ID = 'next-arrival-2026-12-h';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'nishane-hacivat',
-    label: 'Nishane Hacivat Extrait',
-    image: nishaneHacivatImg.url,
+    key: 'lv-city-of-stars',
+    label: 'Louis Vuitton City of Stars',
+    image: lvCityOfStarsImg.url,
   },
   {
-    key: 'ex-nihilo-blue-talisman',
-    label: 'Ex Nihilo Blue Talisman',
-    image: exNihiloBlueTalismanImg.url,
+    key: 'lv-les-sables-roses',
+    label: 'Louis Vuitton Les Sables Roses',
+    image: lvLesSablesRosesImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Baccarat Rouge 540 Extrait',
-  image: baccaratRouge540ExtraitImg.url,
+  name: 'Ex Nihilo Blue Talisman',
+  image: exNihiloBlueTalismanImg.url,
 };
 
 function getFingerprint(): string {
