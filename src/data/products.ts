@@ -85,6 +85,8 @@ import creedVirginIslandWater from '@/assets/products/creed-virgin-island-water.
 import creedVirginIslandWaterGalleryAi from '@/assets/products/creed-virgin-island-water-gallery-ai.webp.asset.json';
 import shlGodOfFire from '@/assets/products/shl-god-of-fire.png.asset.json';
 import shlGodOfFireGalleryAi from '@/assets/products/shl-god-of-fire-gallery-ai.webp.asset.json';
+import exNihiloBlueTalismanImage from '@/assets/products/ex-nihilo-blue-talisman.png.asset.json';
+import exNihiloBlueTalismanGallery from '@/assets/products/ex-nihilo-blue-talisman-gallery.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -2422,6 +2424,41 @@ export const products: Product[] = [
     variants: [
       { ml: 35, price: 89.99, inStock: true },
       { ml: 70, price: 129.99, inStock: true },
+    ],
+  },
+  {
+    id: 'ex-nihilo-blue-talisman',
+    addedAt: '2026-07-07',
+    name: 'Blue Talisman',
+    brand: 'Ex Nihilo',
+    price: 79.99,
+    category: 'unisex',
+    description: 'Ex Nihilo Blue Talisman is a luminous, protective aura in a bottle — juicy pear and sparkling bergamot open into a radiant heart of orange blossom and jasmine sambac, resting on a plush base of amberwood, ambrofix, musk, sandalwood and vanilla. Refined, sunlit, and quietly magnetic.',
+    scentNotes: {
+      top: ['Pear', 'Bergamot'],
+      heart: ['Orange Blossom', 'Jasmine Sambac'],
+      base: ['Amberwood', 'Ambrofix', 'Musk', 'Sandalwood', 'Vanilla'],
+    },
+    scentNoteImages: {
+      'Pear': '/scent-notes/pear.png',
+      'Bergamot': '/scent-notes/bergamot.png',
+      'Orange Blossom': '/scent-notes/orange-blossom.png',
+      'Jasmine Sambac': '/scent-notes/jasmine.png',
+      'Amberwood': '/scent-notes/amberwood.png',
+      'Ambrofix': '/scent-notes/ambrofix.png',
+      'Musk': '/scent-notes/musk.png',
+      'Sandalwood': '/scent-notes/sandalwood.png',
+      'Vanilla': '/scent-notes/vanilla.png',
+    },
+    accentColor: '#1E3A8A',
+    image: exNihiloBlueTalismanImage.url,
+    additionalImages: [exNihiloBlueTalismanGallery.url],
+    affiliateUrl: '/product/ex-nihilo-blue-talisman',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 50, price: 79.99, inStock: true },
+      { ml: 100, price: 119.99, inStock: true },
     ],
   },
 ];

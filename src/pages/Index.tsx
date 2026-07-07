@@ -25,7 +25,7 @@ const Index = () => {
   const newArrivals = [
     getProductById('baccarat-rouge-540-extrait'),
     getProductById('invictus-victory-elixir'),
-    getProductById('shl-god-of-fire'),
+    getProductById('ex-nihilo-blue-talisman'),
   ].filter(Boolean);
   const [searchQuery, setSearchQuery] = useState('');
 
