@@ -3,6 +3,32 @@ import { X } from 'lucide-react';
 import { products, bestsellerIds } from '@/data/products';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
+import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
+import type { Product } from '@/types/product';
+
+const ProofProductImage = ({ product }: { product: Product }) => {
+  const override = useProductPadding(product.id);
+  const { innerStyle, hasOverride } = computePaddingAndScale(override);
+  if (product.bundleImages && product.bundleImages.length > 0) {
+    return (
+      <div className="flex items-end justify-center gap-0.5 h-full p-1">
+        {product.bundleImages.map((img, imgIdx) => (
+          <img key={imgIdx} src={img} alt="" className="h-[70%] w-auto object-contain" />
+        ))}
+      </div>
+    );
+  }
+  const legacyPad = ['born-in-roma-intense', 'born-in-roma-green-stravaganza', 'ysl-y-edp'].includes(product.id);
+  return (
+    <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center overflow-hidden">
+      <img
+        src={product.image}
+        alt={product.name}
+        className={`w-full h-full ${(hasOverride || product.imagePadding || legacyPad) ? 'object-contain object-bottom' : 'object-cover'}`}
+      />
+    </div>
+  );
+};
 
 type NameEntry = { display: string; country: string };
 
@@ -208,23 +234,7 @@ export const SocialProofPopup = () => {
             <div className="w-[72px] h-[82px] rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-border/50"
               style={{ background: 'hsl(30 20% 94%)' }}
             >
-              {notification.product.bundleImages && notification.product.bundleImages.length > 0 ? (
-                <div className="flex items-end justify-center gap-0.5 h-full p-1">
-                  {notification.product.bundleImages.map((img, imgIdx) => (
-                    <img key={imgIdx} src={img} alt="" className="h-[70%] w-auto object-contain" />
-                  ))}
-                </div>
-              ) : (
-                <img
-                  src={notification.product.image}
-                  alt={notification.product.name}
-                  className={`w-full h-full ${
-                    ['born-in-roma-intense', 'born-in-roma-green-stravaganza', 'ysl-y-edp'].includes(notification.product.id)
-                      ? 'object-contain p-1'
-                      : 'object-cover'
-                  }`}
-                />
-              )}
+              <ProofProductImage product={notification.product} />
             </div>
 
             <div className="flex-1 min-w-0">
