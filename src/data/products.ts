@@ -87,6 +87,8 @@ import shlGodOfFire from '@/assets/products/shl-god-of-fire.png.asset.json';
 import shlGodOfFireGalleryAi from '@/assets/products/shl-god-of-fire-gallery-ai.webp.asset.json';
 import exNihiloBlueTalismanImage from '@/assets/products/ex-nihilo-blue-talisman.png.asset.json';
 import exNihiloBlueTalismanGallery from '@/assets/products/ex-nihilo-blue-talisman-gallery.webp.asset.json';
+import lvCityOfStarsImage from '@/assets/products/lv-city-of-stars.png.asset.json';
+import lvCityOfStarsGallery from '@/assets/products/lv-city-of-stars-gallery.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
@@ -2459,6 +2461,41 @@ export const products: Product[] = [
     variants: [
       { ml: 50, price: 79.99, inStock: true },
       { ml: 100, price: 119.99, inStock: true },
+    ],
+  },
+  {
+    id: 'lv-city-of-stars',
+    addedAt: '2026-07-09',
+    name: 'City of Stars',
+    brand: 'Louis Vuitton',
+    price: 149.99,
+    category: 'unisex',
+    description: 'Louis Vuitton City of Stars is a luminous citrus reverie — a sparkling burst of lime, blood orange, blood mandarin, lemon and bergamot dissolves into a solitary, sunlit tiare flower, resting on a powdery bed of musk and creamy sandalwood. Radiant, airy, and quietly cinematic.',
+    scentNotes: {
+      top: ['Lime', 'Blood Orange', 'Blood Mandarin', 'Lemon', 'Bergamot'],
+      heart: ['Tiare Flower'],
+      base: ['Powdery Notes', 'Musk', 'Sandalwood'],
+    },
+    scentNoteImages: {
+      'Lime': '/scent-notes/lime.png',
+      'Blood Orange': '/scent-notes/blood-orange.png',
+      'Blood Mandarin': '/scent-notes/blood-mandarin.png',
+      'Lemon': '/scent-notes/lemon.png',
+      'Bergamot': '/scent-notes/bergamot.png',
+      'Tiare Flower': '/scent-notes/tiare-flower.png',
+      'Powdery Notes': '/scent-notes/powdery-notes.png',
+      'Musk': '/scent-notes/musk.png',
+      'Sandalwood': '/scent-notes/sandalwood.png',
+    },
+    accentColor: '#E58BB4',
+    image: lvCityOfStarsImage.url,
+    additionalImages: [lvCityOfStarsGallery.url],
+    affiliateUrl: '/product/lv-city-of-stars',
+    inStock: true,
+    featured: true,
+    variants: [
+      { ml: 100, price: 149.99, inStock: true },
+      { ml: 200, price: 229.99, inStock: true },
     ],
   },
 ];

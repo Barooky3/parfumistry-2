@@ -4,29 +4,29 @@ import { Trophy, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import exNihiloBlueTalismanImg from '@/assets/products/ex-nihilo-blue-talisman.png.asset.json';
 import lvCityOfStarsImg from '@/assets/products/lv-city-of-stars.png.asset.json';
-import lvLesSablesRosesImg from '@/assets/products/lv-les-sables-roses.png.asset.json';
+import ultraMaleImg from '@/assets/products/jpg-ultra-male.png.asset.json';
+import acquaDiGioImg from '@/assets/products/acqua-di-gio-parfum.png.asset.json';
 
-const POLL_ID = 'next-arrival-2026-12-h';
+const POLL_ID = 'next-arrival-2026-12-i';
 const ADMIN_EMAILS = ['ewhz3384@gmail.com', 'elkhabirmalik@gmail.com'];
 
 const OPTIONS = [
   {
-    key: 'lv-city-of-stars',
-    label: 'Louis Vuitton City of Stars',
-    image: lvCityOfStarsImg.url,
+    key: 'jpg-ultra-male',
+    label: 'Jean Paul Gaultier Ultra Male',
+    image: ultraMaleImg.url,
   },
   {
-    key: 'lv-les-sables-roses',
-    label: 'Louis Vuitton Les Sables Roses',
-    image: lvLesSablesRosesImg.url,
+    key: 'acqua-di-gio-parfum',
+    label: 'Giorgio Armani Acqua di Giò Parfum',
+    image: acquaDiGioImg.url,
   },
 ] as const;
 
 const LAST_WINNER = {
-  name: 'Ex Nihilo Blue Talisman',
-  image: exNihiloBlueTalismanImg.url,
+  name: 'Louis Vuitton City of Stars',
+  image: lvCityOfStarsImg.url,
 };
 
 function getFingerprint(): string {

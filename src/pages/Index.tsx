@@ -23,7 +23,7 @@ const Index = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const newArrivals = [
-    getProductById('baccarat-rouge-540-extrait'),
+    getProductById('lv-city-of-stars'),
     getProductById('invictus-victory-elixir'),
     getProductById('ex-nihilo-blue-talisman'),
   ].filter(Boolean);
