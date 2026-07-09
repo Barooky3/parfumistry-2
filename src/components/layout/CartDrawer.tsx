@@ -69,16 +69,8 @@ export const CartDrawer = () => {
                   const productHref = isCustomBundle ? `/custom-bundle?edit=${item.product.id}` : `/product/${item.product.id}`;
                   return (
                     <div key={cartKey} className="flex gap-4">
-                      <Link to={productHref} onClick={closeCart} className={cn("w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden", item.product.imagePadding && "p-1")}>
-                        {item.product.bundleImages && item.product.bundleImages.length > 0 ? (
-                          <div className="flex items-end justify-center gap-0.5 h-full p-1">
-                            {item.product.bundleImages.map((img, imgIdx) => (
-                              <img key={imgIdx} src={img} alt="" className="h-[70%] w-auto object-contain" />
-                            ))}
-                          </div>
-                        ) : (
-                          <img src={item.product.image} alt={item.product.name} className={cn("w-full h-full", item.product.imagePadding ? "object-contain" : "object-cover")} />
-                        )}
+                      <Link to={productHref} onClick={closeCart} className="w-20 h-24 bg-secondary flex-shrink-0 overflow-hidden">
+                        <CartItemImage item={item} />
                       </Link>
                       <div className="flex-1 min-w-0">
                         <Link to={productHref} onClick={closeCart} className="text-sm font-medium text-foreground hover:text-accent transition-colors line-clamp-2">
