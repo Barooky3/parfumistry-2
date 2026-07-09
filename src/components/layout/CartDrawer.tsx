@@ -6,6 +6,31 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { useProductPadding, computePaddingAndScale } from '@/hooks/useProductPadding';
+import type { CartItem as CartItemType } from '@/types/product';
+
+const CartItemImage = ({ item }: { item: CartItemType }) => {
+  const override = useProductPadding(item.product.id);
+  const { innerStyle, hasOverride } = computePaddingAndScale(override);
+  if (item.product.bundleImages && item.product.bundleImages.length > 0) {
+    return (
+      <div className="flex items-end justify-center gap-0.5 h-full p-1">
+        {item.product.bundleImages.map((img, imgIdx) => (
+          <img key={imgIdx} src={img} alt="" className="h-[70%] w-auto object-contain" />
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div style={innerStyle || undefined} className="w-full h-full flex items-end justify-center overflow-hidden">
+      <img
+        src={item.product.image}
+        alt={item.product.name}
+        className={cn("w-full h-full", (item.product.imagePadding || hasOverride) ? "object-contain object-bottom" : "object-cover")}
+      />
+    </div>
+  );
+};
 
 export const CartDrawer = () => {
   const { isOpen, closeCart, items, removeItem, updateQuantity, totalPrice, subtotalBeforeDiscount, freeItemDiscount, freeItemsCount } = useCart();
