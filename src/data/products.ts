@@ -87,6 +87,8 @@ import shlGodOfFire from '@/assets/products/shl-god-of-fire.png.asset.json';
 import shlGodOfFireGalleryAi from '@/assets/products/shl-god-of-fire-gallery-ai.webp.asset.json';
 import exNihiloBlueTalismanImage from '@/assets/products/ex-nihilo-blue-talisman.png.asset.json';
 import exNihiloBlueTalismanGallery from '@/assets/products/ex-nihilo-blue-talisman-gallery.webp.asset.json';
+import lvCityOfStarsImage from '@/assets/products/lv-city-of-stars.png.asset.json';
+import lvCityOfStarsGallery from '@/assets/products/lv-city-of-stars-gallery.webp.asset.json';
 
 
 // Bestseller IDs matching profparfums.store homepage order
