@@ -199,12 +199,12 @@ export const products: Product[] = [
       '/__l5e/assets-v1/807ffe41-fb70-4b63-9421-7c3d4f0cb6b1/cd9d450b-b45d-4ab9-9750-9bd6ad00db2f-png-only-1.png',
     ],
     additionalImages: [jpgBundleGalleryAiV2.url],
-    affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/jpg-bundle',
     inStock: true,
     isBundle: true,
     bundleContents: [
-      { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917', affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU' },
-      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000', affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH' },
+      { name: 'Le Male Elixir', topNote: 'Lavender', heartNote: 'Vanilla', baseNote: 'Honey', accentColor: '#C58917' },
+      { name: 'Le Male Le Parfum', topNote: 'Cardamom', heartNote: 'Lavender', baseNote: 'Vanilla', accentColor: '#000000' },
       { name: 'Le Beau Le Parfum', topNote: 'Coconut', heartNote: 'Tonka Bean', baseNote: 'Sandalwood', accentColor: '#003B5C' },
     ],
     variants: [
@@ -441,7 +441,7 @@ export const products: Product[] = [
     accentColor: '#DAA520',
     image: '/images/scent-notes/1-million-elixir.png',
     imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
-    affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/1-million-elixir',
     inStock: true,
     variants: [
       { ml: 50, price: 22.99, inStock: true },
@@ -503,7 +503,7 @@ export const products: Product[] = [
     image: '/images/scent-notes/born-in-roma-intense.png',
     additionalImages: [bornInRomaIntenseLifestyle],
     imagePadding: 'p-[1.3rem] md:p-[2.925rem]',
-    affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/born-in-roma-intense',
     inStock: true,
     variants: [
       { ml: 50, price: 26.99, inStock: true },
@@ -533,7 +533,7 @@ export const products: Product[] = [
     image: '/images/scent-notes/born-in-roma-green-stravaganza.png',
     imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
     additionalImages: [bornInRomaGreenStravaganzaGallery.url],
-    affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/born-in-roma-green-stravaganza',
     inStock: true,
     variants: [
       { ml: 50, price: 26.99, inStock: true },
@@ -565,7 +565,7 @@ export const products: Product[] = [
     accentColor: '#8B4513',
     image: '/__l5e/assets-v1/99242d30-00d0-4ca6-9dc4-d1f7f85a7cae/valentino-born-in-roma-8991381.png',
     additionalImages: [bornInRomaLifestyle],
-    affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/born-in-roma',
     inStock: true,
     variants: [
       { ml: 50, price: 26.99, inStock: true },
@@ -839,7 +839,7 @@ export const products: Product[] = [
     image: '/images/scent-notes/prada-paradoxe.png',
     additionalImages: [paradoxeGallery.url],
     imagePadding: 'p-[0.8rem] md:p-[1.8rem]',
-    affiliateUrl: 'https://litbuy.com/product/0/953992936772?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/prada-paradoxe',
     inStock: true,
     variants: [
       { ml: 50, price: 23.99, inStock: true },
@@ -934,7 +934,7 @@ export const products: Product[] = [
     accentColor: '#F5C542',
     image: '/__l5e/assets-v1/e7eb0188-1275-4fe3-a298-e27d81313aad/product-4-matched-1.png',
     additionalImages: [imaginationLifestyle],
-    affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/imagination',
     inStock: true,
     featured: true,
     variants: [
@@ -1140,7 +1140,7 @@ export const products: Product[] = [
     accentColor: '#003B5C',
     image: '/__l5e/assets-v1/807ffe41-fb70-4b63-9421-7c3d4f0cb6b1/cd9d450b-b45d-4ab9-9750-9bd6ad00db2f-png-only-1.png',
     additionalImages: [leBeauLeParfumLifestyle],
-    affiliateUrl: 'https://litbuy.com/product/0/870771590908?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/le-beau-le-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -1243,7 +1243,7 @@ export const products: Product[] = [
     accentColor: '#E8734A',
     image: '/__l5e/assets-v1/f64f21af-3795-456a-a265-c441ffbf6e3e/valentino.png',
     additionalImages: [bornInRomaCoralFantasyGallery.url],
-    affiliateUrl: 'https://litbuy.com/product/0/942511489889?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/born-in-roma-coral-fantasy',
     inStock: true,
     featured: true,
     variants: [
@@ -1278,7 +1278,7 @@ export const products: Product[] = [
     accentColor: '#DAA520',
     image: '/images/scent-notes/1-million-parfum.png',
     imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
-    affiliateUrl: 'https://litbuy.com/product/0/995959242718?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/1-million-parfum',
     inStock: true,
     variants: [
       { ml: 50, price: 23.99, inStock: true },
@@ -1311,7 +1311,7 @@ export const products: Product[] = [
     accentColor: '#C58917',
     image: '/__l5e/assets-v1/e4dff361-e02c-43a6-9a18-c0876933c5cc/f5db0f17-85a7-4892-bb9e-f7be8d91b966-converted-1.png',
     additionalImages: [leMaleElixirLifestyle2],
-    affiliateUrl: 'https://litbuy.com/product/0/858098262202?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/le-male-elixir',
     inStock: true,
     featured: true,
     variants: [
@@ -1408,7 +1408,7 @@ export const products: Product[] = [
     accentColor: '#000000',
     image: '/__l5e/assets-v1/817ab087-4466-497e-a09d-2eafb7b02489/jean-paul-gaultier-le-male-le-parfum-9203208.png',
     additionalImages: [leMaleLeParfumLifestyle],
-    affiliateUrl: 'https://litbuy.shop/lit/JeaFpAPH',
+    affiliateUrl: '/product/le-male-le-parfum',
     inStock: true,
     featured: true,
     variants: [
@@ -1509,7 +1509,7 @@ export const products: Product[] = [
     accentColor: '#2C2C2C',
     image: '/__l5e/assets-v1/c2c894c4-fa65-41a7-b6bd-061f60e02b9a/ysl-libre-8359553.png',
     additionalImages: [libreGallery.url],
-    affiliateUrl: 'https://litbuy.com/product/0/873128790811?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/libre',
     inStock: true,
     featured: true,
     variants: [
@@ -1545,7 +1545,7 @@ export const products: Product[] = [
     accentColor: '#D4548E',
     image: '/__l5e/assets-v1/4d69057c-ca6d-4e67-b05b-4b0de852cb3e/yves-saint-laurent-mon-paris-7356496.png',
     additionalImages: [monParisGallery.url],
-    affiliateUrl: 'https://litbuy.com/product/0/762497810755?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/mon-paris',
     inStock: true,
     variants: [
       { ml: 30, price: 20.99, inStock: true },
@@ -1616,7 +1616,7 @@ export const products: Product[] = [
     image: '/images/scent-notes/phantom-parfum.png',
     additionalImages: [phantomParfumGalleryAi.url],
     imagePadding: 'p-[1.2rem] md:p-[2.7rem]',
-    affiliateUrl: 'https://litbuy.com/product/0/966979827880?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/phantom-parfum',
     inStock: true,
     variants: [
       { ml: 50, price: 22.99, inStock: true },
@@ -1652,7 +1652,7 @@ export const products: Product[] = [
     accentColor: '#1A3A5C',
     image: '/images/scent-notes/ysl-y-edp.png',
     additionalImages: [yslYEdpLifestyle],
-    affiliateUrl: 'https://litbuy.com/product/0/980330643616?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/ysl-y-edp',
     inStock: true,
     variants: [
       { ml: 40, price: 21.99, inStock: true },
@@ -1827,7 +1827,7 @@ export const products: Product[] = [
     },
     accentColor: '#87CEEB',
     image: '/__l5e/assets-v1/23f86d1b-1383-4340-ae4e-f7a816687c2c/image-6261aa49-3221-4a96-91e9-c8d120107fc0.png',
-    affiliateUrl: 'https://litbuy.com/product/0/997021564651?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/pacific-chill',
     additionalImages: [pacificChillGalleryAi.url],
     inStock: true,
     variants: [
@@ -2086,7 +2086,7 @@ export const products: Product[] = [
     accentColor: '#E8C8A0',
     image: '/__l5e/assets-v1/e2424f6a-66f8-416f-aec4-9e7d631c2491/image-f5380ed8-72f9-4429-ae98-588f5395b6ba.png',
     additionalImages: [symphonyGallery.url],
-    affiliateUrl: 'https://litbuy.com/product/0/951498715527?inviteCode=4W9SCOLDU',
+    affiliateUrl: '/product/symphony',
     inStock: false,
     variants: [
       { ml: 100, price: 67.99, inStock: false },
