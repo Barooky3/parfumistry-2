@@ -223,14 +223,24 @@ async function fetchPaddingOverrides(productIds: string[]): Promise<Record<strin
   }
 }
 
-function paddingImgStyle(o?: PaddingOverride): string {
-  if (!o) return "object-fit: cover;";
-  const hasAny = o.padding_top || o.padding_right || o.padding_bottom || o.padding_left || (o.scale && o.scale !== 1);
-  if (!hasAny) return "object-fit: cover;";
-  const translateX = (o.padding_left - o.padding_right) * 2.5;
-  const translateY = (o.padding_top - o.padding_bottom) * 2.5;
-  const scale = o.scale || 1;
-  return `object-fit: contain; object-position: bottom center; transform: translate(${translateX}%, ${translateY}%) scale(${scale}); transform-origin: center center;`;
+// Email-safe padding: most clients (Gmail, Outlook, Apple Mail) strip CSS `transform`,
+// so we translate the padding/scale override into concrete width/height + margin values
+// on the <img> itself. Returns the full inner <img> tag to place inside a 72x72 box.
+function paddingImgTag(imageUrl: string, alt: string, o?: PaddingOverride): string {
+  const BOX = 72;
+  const hasAny = o && (o.padding_top || o.padding_right || o.padding_bottom || o.padding_left || (o.scale && o.scale !== 1));
+  if (!o || !hasAny) {
+    return `<img src="${imageUrl}" alt="${alt}" width="${BOX}" height="${BOX}" style="display:block;width:${BOX}px;height:${BOX}px;object-fit:cover;" />`;
+  }
+  const scale = Math.max(0.2, Math.min(2, o.scale || 1));
+  const size = Math.round(BOX * scale);
+  // Same 2.5% per unit as the on-site transform, applied to the 72px box.
+  const shiftX = Math.round(((o.padding_left - o.padding_right) * 2.5 / 100) * BOX);
+  const shiftY = Math.round(((o.padding_top - o.padding_bottom) * 2.5 / 100) * BOX);
+  // Center the (possibly scaled) image in the 72x72 box, then apply directional shifts.
+  const marginTop = Math.round((BOX - size) / 2) + shiftY;
+  const marginLeft = Math.round((BOX - size) / 2) + shiftX;
+  return `<img src="${imageUrl}" alt="${alt}" width="${size}" height="${size}" style="display:block;width:${size}px;height:${size}px;margin:${marginTop}px 0 0 ${marginLeft}px;object-fit:contain;object-position:bottom center;" />`;
 }
 
 const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
@@ -279,14 +289,14 @@ function buildItemRow(item: OrderItem, origin: string, showImage: boolean, paddi
     ? `<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 8px;border-radius:3px;margin-bottom:6px;">Complimentary 2ml Sample</div>`
     : '';
   const rowBg = isSample ? 'background-color:#fdf8ee;' : '';
-  const imgFit = paddingImgStyle(padding);
+  const imgTag = paddingImgTag(imageUrl, cleanName, padding);
 
   return `<tr>
 <td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top; ${rowBg}">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 ${showImage ? `<td style="width: 80px; vertical-align: top;">
 <div style="width:72px;height:72px;border-radius:8px;border:1px solid #eee;overflow:hidden;background:#fafafa;">
-<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; width:72px; height:72px; ${imgFit}" />
+${imgTag}
 </div>
 </td>` : ""}
 <td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">
