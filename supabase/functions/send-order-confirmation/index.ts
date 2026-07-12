@@ -223,14 +223,24 @@ async function fetchPaddingOverrides(productIds: string[]): Promise<Record<strin
   }
 }
 
-function paddingImgStyle(o?: PaddingOverride): string {
-  if (!o) return "object-fit: cover;";
-  const hasAny = o.padding_top || o.padding_right || o.padding_bottom || o.padding_left || (o.scale && o.scale !== 1);
-  if (!hasAny) return "object-fit: cover;";
-  const translateX = (o.padding_left - o.padding_right) * 2.5;
-  const translateY = (o.padding_top - o.padding_bottom) * 2.5;
-  const scale = o.scale || 1;
-  return `object-fit: contain; object-position: bottom center; transform: translate(${translateX}%, ${translateY}%) scale(${scale}); transform-origin: center center;`;
+// Email-safe padding: most clients (Gmail, Outlook, Apple Mail) strip CSS `transform`,
+// so we translate the padding/scale override into concrete width/height + margin values
+// on the <img> itself. Returns the full inner <img> tag to place inside a 72x72 box.
+function paddingImgTag(imageUrl: string, alt: string, o?: PaddingOverride): string {
+  const BOX = 72;
+  const hasAny = o && (o.padding_top || o.padding_right || o.padding_bottom || o.padding_left || (o.scale && o.scale !== 1));
+  if (!o || !hasAny) {
+    return `<img src="${imageUrl}" alt="${alt}" width="${BOX}" height="${BOX}" style="display:block;width:${BOX}px;height:${BOX}px;object-fit:cover;" />`;
+  }
+  const scale = Math.max(0.2, Math.min(2, o.scale || 1));
+  const size = Math.round(BOX * scale);
+  // Same 2.5% per unit as the on-site transform, applied to the 72px box.
+  const shiftX = Math.round(((o.padding_left - o.padding_right) * 2.5 / 100) * BOX);
+  const shiftY = Math.round(((o.padding_top - o.padding_bottom) * 2.5 / 100) * BOX);
+  // Center the (possibly scaled) image in the 72x72 box, then apply directional shifts.
+  const marginTop = Math.round((BOX - size) / 2) + shiftY;
+  const marginLeft = Math.round((BOX - size) / 2) + shiftX;
+  return `<img src="${imageUrl}" alt="${alt}" width="${size}" height="${size}" style="display:block;width:${size}px;height:${size}px;margin:${marginTop}px 0 0 ${marginLeft}px;object-fit:contain;object-position:bottom center;" />`;
 }
 
 const BUNDLE_BONUS_LINKS: Record<string, { label: string; url: string }[]> = {
