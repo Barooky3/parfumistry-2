@@ -289,14 +289,14 @@ function buildItemRow(item: OrderItem, origin: string, showImage: boolean, paddi
     ? `<div style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a;background:#c9a96e;padding:2px 8px;border-radius:3px;margin-bottom:6px;">Complimentary 2ml Sample</div>`
     : '';
   const rowBg = isSample ? 'background-color:#fdf8ee;' : '';
-  const imgFit = paddingImgStyle(padding);
+  const imgTag = paddingImgTag(imageUrl, cleanName, padding);
 
   return `<tr>
 <td style="padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: top; ${rowBg}">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 ${showImage ? `<td style="width: 80px; vertical-align: top;">
 <div style="width:72px;height:72px;border-radius:8px;border:1px solid #eee;overflow:hidden;background:#fafafa;">
-<img src="${imageUrl}" alt="${cleanName}" width="72" height="72" style="display: block; width:72px; height:72px; ${imgFit}" />
+${imgTag}
 </div>
 </td>` : ""}
 <td style="padding-left: 16px; vertical-align: top; font-family: Helvetica Neue, Arial, sans-serif;">
