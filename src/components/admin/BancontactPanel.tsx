@@ -372,6 +372,12 @@ export default function BancontactPanel({ userEmail }: Props) {
               <Button variant="outline" size="sm" className="text-xs" onClick={() => handleBulkGenerate(5, "history")} disabled={busy}>
                 <Zap className="h-3 w-3 mr-1" /> Bulk x5 (History)
               </Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleBulkGenerate(15, "seed")} disabled={busy}>
+                <Zap className="h-3 w-3 mr-1" /> Bulk x15 (Seed)
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => handleBulkGenerate(15, "history")} disabled={busy}>
+                <Zap className="h-3 w-3 mr-1" /> Bulk x15 (History)
+              </Button>
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setCustomOpen(true)} disabled={busy}>
                 <Plus className="h-3 w-3 mr-1" /> Custom Bancontact Order
               </Button>
