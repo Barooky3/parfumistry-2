@@ -712,6 +712,36 @@ const Checkout = () => {
 
 
           {/* Card / Apple Pay / Google Pay */}
+          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
+              <h3 className="text-xs font-semibold tracking-wide text-foreground">Watch how to pay with card or Apple Pay</h3>
+              <button
+                type="button"
+                onClick={handleRewarbleFullscreen}
+                aria-label="Fullscreen"
+                className="rounded-md bg-black/60 hover:bg-black/80 text-white p-1.5 backdrop-blur-sm transition-colors"
+              >
+                <Maximize2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <div className="relative">
+              <video
+                ref={rewarbleVideoRef}
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full aspect-video bg-black"
+              >
+                <source src="/videos/rewarble-tutorial.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div className="px-4 py-2.5 border-t border-border">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Step-by-step: open G2A → choose your amount → pay with card, Apple Pay or Google Pay → paste the code here after purchase.
+              </p>
+            </div>
+          </div>
+
           <Button
             type="button"
             disabled={!isFormValid() || isProcessing}
