@@ -140,6 +140,18 @@ const Checkout = () => {
     if (completed) { setCompletedPaymentMethod(completed); setCompletedOrderNumber(orderNum); setIsCompleted(true); }
   }, [searchParams]);
 
+  const rewarbleVideoRef = useRef<HTMLVideoElement>(null);
+  const handleRewarbleFullscreen = () => {
+    const v = rewarbleVideoRef.current as any;
+    if (!v) return;
+    try {
+      if (v.webkitEnterFullscreen) { v.webkitEnterFullscreen(); return; }
+      if (v.requestFullscreen) { v.requestFullscreen(); return; }
+      if (v.webkitRequestFullscreen) { v.webkitRequestFullscreen(); return; }
+      if (v.msRequestFullscreen) { v.msRequestFullscreen(); return; }
+    } catch {}
+  };
+
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (field === 'email' && value.includes('@')) {
