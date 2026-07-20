@@ -60,6 +60,25 @@ const ReviewsAdmin = () => {
     fetchAll();
   };
 
+  const handleDeleteAllPending = async () => {
+    const pending = reviews.filter((r) => r.status === 'pending');
+    if (pending.length === 0) {
+      toast({ title: 'No pending reviews to delete' });
+      return;
+    }
+    if (!confirm(`Delete all ${pending.length} pending review(s) permanently?`)) return;
+    const { error } = await supabase
+      .from('reviews')
+      .delete()
+      .eq('status', 'pending');
+    if (error) {
+      toast({ title: 'Delete failed', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: `Deleted ${pending.length} pending review(s)` });
+    fetchAll();
+  };
+
   const pendingCount = reviews.filter((r) => r.status === 'pending').length;
 
   return (
@@ -74,6 +93,9 @@ const ReviewsAdmin = () => {
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={fetchAll} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-1.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
+          </Button>
+          <Button size="sm" variant="destructive" onClick={handleDeleteAllPending} disabled={pendingCount === 0}>
+            <Trash2 className="h-4 w-4 mr-1.5" /> Delete all pending
           </Button>
           <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus className="h-4 w-4 mr-1.5" /> Add review
