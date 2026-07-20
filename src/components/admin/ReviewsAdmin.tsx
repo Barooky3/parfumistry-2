@@ -94,6 +94,9 @@ const ReviewsAdmin = () => {
           <Button size="sm" variant="outline" onClick={fetchAll} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-1.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
           </Button>
+          <Button size="sm" variant="destructive" onClick={handleDeleteAllPending} disabled={pendingCount === 0}>
+            <Trash2 className="h-4 w-4 mr-1.5" /> Delete all pending
+          </Button>
           <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus className="h-4 w-4 mr-1.5" /> Add review
           </Button>
