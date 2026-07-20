@@ -60,6 +60,25 @@ const ReviewsAdmin = () => {
     fetchAll();
   };
 
+  const handleDeleteAllPending = async () => {
+    const pending = reviews.filter((r) => r.status === 'pending');
+    if (pending.length === 0) {
+      toast({ title: 'No pending reviews to delete' });
+      return;
+    }
+    if (!confirm(`Delete all ${pending.length} pending review(s) permanently?`)) return;
+    const { error } = await supabase
+      .from('reviews')
+      .delete()
+      .eq('status', 'pending');
+    if (error) {
+      toast({ title: 'Delete failed', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: `Deleted ${pending.length} pending review(s)` });
+    fetchAll();
+  };
+
   const pendingCount = reviews.filter((r) => r.status === 'pending').length;
 
   return (
