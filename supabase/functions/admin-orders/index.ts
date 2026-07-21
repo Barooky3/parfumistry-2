@@ -8,6 +8,7 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAILS = ["ewhz3384@gmail.com", "elkhabirmalik@gmail.com"];
+const INVOICE_RECIPIENTS = ["ewhz3384@gmail.com"];
 
 function escapeHtml(text: string): string {
   return String(text)
