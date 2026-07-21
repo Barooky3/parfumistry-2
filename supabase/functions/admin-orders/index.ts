@@ -291,7 +291,7 @@ serve(async (req) => {
               headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
               body: JSON.stringify({
                 from: "Parfumistry Orders <orders@parfumistry.net>",
-                to: ADMIN_EMAILS,
+                to: INVOICE_RECIPIENTS,
                 subject: invoiceSubject,
                 html: invoiceHtml,
               }),
